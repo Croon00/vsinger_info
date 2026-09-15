@@ -15,7 +15,7 @@ function archive(id: number, title: string, korean: string | null = null, artist
 
 describe('full archive statistics', () => {
   it('excludes broadcast chapters for every artist and both setlist formats', () => {
-    const chapters = ['開始', '1開始 (시작)', '2お知らせ (공지사항)', '3Cパート (C파트)',
+    const chapters = ['開始', '開幕', '閉幕', '1開始 (시작)', '2開幕', '2お知らせ (공지사항)', '3Cパート (C파트)',
       '4🗓️今週のスケジュール (이번 주 스케줄)', '5🐺 ((・△・))', '雑談', '配信終了', '01. お知らせ', '🗓️来週の予定']
     const rows = chapters.flatMap((title, index) => {
       const performance = archive(index, title)
@@ -28,6 +28,20 @@ describe('full archive statistics', () => {
   it('keeps song titles containing chapter words and numeric titles', () => {
     const titles = ['始まりの歌', 'お知らせの歌', 'START DASH', 'The Beginning', 'Cパートの歌', '366日', 'アイドル']
     expect(buildSongStats(titles.map((title, index) => archive(index, title)), '', 'desc')).toHaveLength(titles.length)
+  })
+  it('removes separator-less setlist indexes before grouping songs', () => {
+    const stats = buildSongStats([
+      archive(1, '11HOT LIMIT'),
+      archive(2, 'HOT LIMIT'),
+      archive(3, '12夏の大三角形'),
+      archive(4, '夏の大三角形'),
+      archive(5, '366日'),
+    ], '', 'desc')
+    expect(stats).toEqual(expect.arrayContaining([
+      expect.objectContaining({ title: 'HOT LIMIT', count: 2 }),
+      expect.objectContaining({ title: '夏の大三角形', count: 2 }),
+      expect.objectContaining({ title: '366日', count: 1 }),
+    ]))
   })
   it('counts older broadcasts beyond the first hundred before sorting or rendering', () => {
     const rows = Array.from({ length: 123 }, (_, index) => archive(index, 'いきのこり●ぼくら'))
