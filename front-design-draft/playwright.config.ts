@@ -6,7 +6,7 @@ export default defineConfig({
   workers: 2,
   timeout: 30000,
   use: {
-    baseURL: 'http://127.0.0.1:5174',
+    baseURL: 'http://localhost:5174',
     launchOptions: {
       executablePath:
         process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -28,7 +28,7 @@ export default defineConfig({
   ],
   webServer: {
     command: 'npm run dev',
-    url: 'http://127.0.0.1:5174',
+    url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
   },
 })

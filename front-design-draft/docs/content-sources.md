@@ -15,6 +15,8 @@
 
 | 영상 | 영상 출처 | 세트리스트 |
 | --- | --- | --- |
+| HACHI Honeycomb Station #182 | [공식 YouTube](https://www.youtube.com/watch?v=rCLT8jX9Xhw) | 미등록 |
+| HACHI Honeycomb Station #181 | [공식 YouTube](https://www.youtube.com/watch?v=w-tVhpv07LA) | 미등록 |
 | HACHI Honeycomb Station #171 | [YouTube](https://www.youtube.com/watch?v=jtzjXOVw7_Q) | [VSinger Moment](https://vsinger-moment.jp/videos/f998b4d1-35fe-45e0-bf2e-b254b63c25ec), 14곡 |
 | 세토노 토토 YouTube 2,000일 | [YouTube](https://www.youtube.com/watch?v=s6BZdVRPH_o) | [VSinger Moment](https://vsinger-moment.jp/videos/2c07018d-305a-4a4b-8944-8c6187d94333), 7곡 |
 | 세토노 토토 노래 릴레이 | [YouTube](https://www.youtube.com/watch?v=Ycu3iehv_ow) | [VSinger Moment](https://vsinger-moment.jp/videos/6f5e6195-01eb-410b-a80e-d81b5c1e2dc7), 4곡 |
@@ -23,6 +25,8 @@
 | 花譜 불가해 참(상) 다이제스트 | [공식 YouTube](https://www.youtube.com/watch?v=508Xwh5xwvQ) | 다이제스트임을 제목에 표시; 미제공 |
 
 제목·길이·날짜는 YouTube 공개 메타데이터를 확인했습니다. 다이제스트의 날짜는 업로드 날짜입니다. 세트리스트는 공개 기록의 원곡명·원곡 아티스트·타임스탬프를 fixture로 옮겼으며 모든 영상 시점을 직접 청취 검수한 것은 아닙니다. 한국어 검색 별칭은 편의상 추가했습니다. 영상의 삭제·지역 제한·외부 재생 허용 상태는 바뀔 수 있습니다.
+
+2026-09-16 추가 확인: #182는 2025-10-03 12:00:14 UTC 시작·5,449초, #181은 2025-09-12 12:00:57 UTC 시작·5,378초로 공식 YouTube 공개 메타데이터를 확인했다. 두 영상 모두 `status: OK`, `playableInEmbed: true`였다. 공식 설명에 곡별 시점이 없어 세트리스트를 임의로 생성하지 않았다. HACHI 3개 영상의 `maxresdefault.jpg`는 실제 1280×720 이미지이며, 영상 재생 검증은 `qa.md`에 기록한다.
 
 ## 디스코그래피
 

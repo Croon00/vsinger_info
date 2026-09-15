@@ -1,21 +1,43 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Play, ListMusic } from '@lucide/vue'
 import type { Live } from '@/api/types'
 import { formatDate, formatTime } from '@/lib/dates'
 import { Badge } from '@/components/ui/badge'
-defineProps<{ live: Live }>()
-const imageFailed = ref(false)
+const props = defineProps<{ live: Live }>()
+const qualities = ['maxresdefault', 'mqdefault', 'hqdefault']
+const imageIndex = ref(0)
+const imageFailed = computed(() => imageIndex.value >= qualities.length)
+const thumbnail = computed(
+  () => `https://i.ytimg.com/vi/${props.live.video_id}/${qualities[imageIndex.value]}.jpg`,
+)
+watch(
+  () => props.live.video_id,
+  () => {
+    imageIndex.value = 0
+  },
+)
+function nextThumbnail() {
+  imageIndex.value++
+}
+function checkThumbnail(event: Event) {
+  // YouTube sometimes returns a 120px placeholder with HTTP 200 for a missing size.
+  if ((event.target as HTMLImageElement).naturalWidth <= 120) nextThumbnail()
+}
 </script>
 <template>
   <RouterLink :to="`/lives/${live.id}`" class="live-card">
     <div class="live-thumb">
       <img
         v-if="!imageFailed"
-        :src="`https://i.ytimg.com/vi/${live.video_id}/hqdefault.jpg`"
+        :src="thumbnail"
         :alt="live.title"
         loading="lazy"
-        @error="imageFailed = true"
+        width="1280"
+        height="720"
+        referrerpolicy="strict-origin-when-cross-origin"
+        @load="checkThumbnail"
+        @error="nextThumbnail"
       />
       <ListMusic v-else class="size-12" />
       <span class="live-play"><Play fill="currentColor" class="size-5" /></span>

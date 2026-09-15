@@ -27,7 +27,7 @@ for (const [name, width, height, colorScheme] of [
     ['/artists/1?tab=concerts&event=301', 'concert'],
   ]) {
     if (name === 'dark' && label !== 'home') continue
-    await page.goto(`http://127.0.0.1:5174${route}`, { waitUntil: 'domcontentloaded' })
+    await page.goto(`http://localhost:5174${route}`, { waitUntil: 'domcontentloaded' })
     await page.locator('h1').waitFor()
     await page.waitForTimeout(1000)
     await page.screenshot({ path: `docs/screenshots/${name}-${label}.png`, fullPage: true })

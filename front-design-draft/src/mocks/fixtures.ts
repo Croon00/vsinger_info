@@ -39,6 +39,30 @@ const songs = [
 ] as const
 export const lives: Live[] = [
   {
+    id: 107,
+    artist_id: 1,
+    title: '【歌枠】復活！！！！！！！！！！- ハニカムステーション！-182【HACHI 】',
+    title_ko: '다시 돌아온 노래 시간 · Honeycomb Station #182',
+    video_id: 'rCLT8jX9Xhw',
+    broadcast_at: '2025-10-03T12:00:14Z',
+    duration_seconds: 5449,
+    performances: [],
+    source_url: 'https://www.youtube.com/watch?v=rCLT8jX9Xhw',
+    metadata_note: '공식 아카이브 · 세트리스트 미등록',
+  },
+  {
+    id: 108,
+    artist_id: 1,
+    title: '【歌枠】ゆったり歌枠！- ハニカムステーション！-181【HACHI 】',
+    title_ko: '여유롭게 노래하는 시간 · Honeycomb Station #181',
+    video_id: 'w-tVhpv07LA',
+    broadcast_at: '2025-09-12T12:00:57Z',
+    duration_seconds: 5378,
+    performances: [],
+    source_url: 'https://www.youtube.com/watch?v=w-tVhpv07LA',
+    metadata_note: '공식 아카이브 · 세트리스트 미등록',
+  },
+  {
     id: 106,
     artist_id: 2,
     title: '花譜 #132 3rd ONE-MAN LIVE「不可解参(想)」【Digest Trailer】',

@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-접속: [http://127.0.0.1:5174](http://127.0.0.1:5174)
+접속: [http://localhost:5174](http://localhost:5174)
 
 이 PC에서 nvm 프록시가 `No active Node configured`를 출력하면 현재 터미널에서만 다음 경로를 먼저 설정할 수 있습니다.
 
@@ -20,7 +20,7 @@ $env:PATH = 'C:\Users\Homin\AppData\Local\nvm\installs\v24.21.0;' + $env:PATH
 npm.cmd run dev
 ```
 
-실행에 백엔드 서버, DB, API 키는 필요하지 않습니다. `localhost` 또는 `127.0.0.1`에서 Service Worker를 허용하는 브라우저를 사용하세요. 다른 장치에서 HTTP IP 주소로 접근하면 MSW가 요구하는 보안 컨텍스트가 충족되지 않을 수 있습니다.
+실행에 백엔드 서버, DB, API 키는 필요하지 않습니다. `localhost`에서 Service Worker를 허용하는 브라우저를 사용하세요. YouTube가 숫자 루프백 주소의 임베드를 거부하는 문제를 확인해, 개발·프리뷰 서버는 `127.0.0.1`의 HTML 요청을 같은 경로의 `localhost`로 이동시킵니다. 기존 IP 주소에 저장한 즐겨찾기·테마와 localhost의 저장 공간은 별개입니다. 다른 장치에서 HTTP IP 주소로 접근하면 MSW가 요구하는 보안 컨텍스트가 충족되지 않을 수 있습니다.
 
 ## 구현 화면
 
@@ -37,11 +37,11 @@ PC는 좌측 사이드바, 태블릿은 아이콘 사이드바, 모바일은 하
 
 | 예시 | 주소 |
 | --- | --- |
-| 원곡 아티스트 검색 | [/search?q=요루시카](http://127.0.0.1:5174/search?q=요루시카) |
-| 같은 곡을 부른 HACHI·세토노 토토 비교 | [/search?q=각성](http://127.0.0.1:5174/search?q=각성) |
-| 곡의 시작 시점 | [/lives/101?t=1088](http://127.0.0.1:5174/lives/101?t=1088) |
-| 디스코그래피 | [/artists/2?tab=originals](http://127.0.0.1:5174/artists/2?tab=originals) |
-| 가사 팝업 직접 접근 | [/artists/1?tab=originals&lyrics=201](http://127.0.0.1:5174/artists/1?tab=originals&lyrics=201) |
+| 원곡 아티스트 검색 | [/search?q=요루시카](http://localhost:5174/search?q=요루시카) |
+| 같은 곡을 부른 HACHI·세토노 토토 비교 | [/search?q=각성](http://localhost:5174/search?q=각성) |
+| 곡의 시작 시점 | [/lives/101?t=1088](http://localhost:5174/lives/101?t=1088) |
+| 디스코그래피 | [/artists/2?tab=originals](http://localhost:5174/artists/2?tab=originals) |
+| 가사 팝업 직접 접근 | [/artists/1?tab=originals&lyrics=201](http://localhost:5174/artists/1?tab=originals&lyrics=201) |
 
 ## 데이터와 API
 
@@ -58,7 +58,7 @@ PC는 좌측 사이드바, 태블릿은 아이콘 사이드바, 모바일은 하
 | `/api/draft/search?q=...` | 아티스트와 세트리스트 검색 |
 | `/api/songs/:id/lyrics` | 직접 작성한 예시 가사 |
 
-아티스트 12팀, 라이브 영상 6개(그중 공식 다이제스트 1개), 세트리스트 25곡, 앨범·싱글 4개, 가상 공연 27개를 제공합니다. 콘텐츠가 없는 아티스트에서는 빈 상태를 확인할 수 있습니다. 공연 날짜는 방문 날짜에 맞춰 생성되어 지난 공연과 예정 공연이 함께 표시됩니다.
+아티스트 12팀, 라이브 영상 8개(그중 공식 다이제스트 1개), 세트리스트 25곡, 앨범·싱글 4개, 가상 공연 27개를 제공합니다. 콘텐츠가 없는 아티스트에서는 빈 상태를 확인할 수 있습니다. 공연 날짜는 방문 날짜에 맞춰 생성되어 지난 공연과 예정 공연이 함께 표시됩니다.
 
 실제 영상·아티스트 정보의 출처는 [콘텐츠 출처](docs/content-sources.md)에 기록했습니다. **공연과 가격은 가상이며, 가사는 직접 작성한 예시입니다.** 아티스트·앨범 이미지는 공식 사이트 자산을 로컬에 보관했습니다. 실제 영상 재생과 썸네일, Google Fonts에는 인터넷 연결이 필요합니다. 영상 자체는 다운로드하거나 재배포하지 않습니다.
 

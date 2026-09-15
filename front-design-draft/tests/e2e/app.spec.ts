@@ -39,6 +39,7 @@ test('search finds original artists and songs and seeks through the YouTube API'
     ;(window as any).YT = {
       Player: class {
         constructor(target: HTMLElement, options: any) {
+          state.time = options.playerVars.start
           const frame = document.createElement('iframe')
           frame.title = 'YouTube video player'
           target.replaceWith(frame)

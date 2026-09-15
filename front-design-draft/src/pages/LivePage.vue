@@ -60,6 +60,7 @@ async function setup() {
   try {
     const YT = await loadYouTube()
     if (current !== version || !playerHost.value || !data.value) return
+    const startSeconds = currentTime.value
     const target = document.createElement('div')
     playerHost.value.replaceChildren(target)
     readyTimeout = setTimeout(() => {
@@ -76,7 +77,7 @@ async function setup() {
         playsinline: 1,
         rel: 0,
         origin: window.location.origin,
-        start: currentTime.value,
+        start: startSeconds,
       },
       events: {
         onReady() {
@@ -84,7 +85,10 @@ async function setup() {
           clearTimeout(readyTimeout)
           ready.value = true
           playerError.value = ''
-          player?.seekTo(clampTime(route.query.t, data.value!.duration_seconds), true)
+          // The embed's start parameter already sets the initial position.
+          // An unconditional seek here can start playback before a user click.
+          const requestedTime = clampTime(route.query.t, data.value!.duration_seconds)
+          if (requestedTime !== startSeconds) player?.seekTo(requestedTime, true)
           interval = setInterval(() => {
             if (
               player &&
