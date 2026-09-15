@@ -81,12 +81,6 @@ const activeIndex = computed(() => nav.findIndex((item) => item.href === active.
       </SidebarContent>
     </Sidebar>
     <SidebarInset class="min-w-0">
-      <header v-if="mobile" class="topbar">
-        <RouterLink to="/" class="brand">
-          <AudioLines class="size-6" />
-          <span>schedule_music</span>
-        </RouterLink>
-      </header>
       <main id="main-content" tabindex="-1"><RouterView /></main>
     </SidebarInset>
     <nav

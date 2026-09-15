@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { ArrowRight } from '@lucide/vue'
+import { ArrowRight, AudioLines } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
@@ -19,6 +19,10 @@ function search(q: string) {
 <template>
   <div class="home-page page-enter">
     <section class="home-search" aria-labelledby="home-heading">
+      <div class="home-title" aria-label="schedule_music">
+        <AudioLines class="size-5" aria-hidden="true" />
+        <span>schedule_music</span>
+      </div>
       <h1 id="home-heading" class="sr-only">통합검색</h1>
       <SearchForm large placeholder="아티스트 또는 원곡 검색" @search="search" />
       <p class="search-help">아티스트 이름, 원곡명, 원곡 아티스트로 검색</p>

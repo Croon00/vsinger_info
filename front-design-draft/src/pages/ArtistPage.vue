@@ -11,6 +11,7 @@ import {
   ListMusic,
   ChevronDown,
   FileText,
+  ChartNoAxesColumnIncreasing,
 } from '@lucide/vue'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
@@ -26,12 +27,13 @@ import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
 import ResourceState from '@/components/ResourceState.vue'
 import ConcertRow from '@/components/ConcertRow.vue'
+import ArtistStatistics from '@/components/ArtistStatistics.vue'
 const route = useRoute()
 const router = useRouter()
 const mobile = useMediaQuery('(max-width: 768px)')
 const id = computed(() => String(route.params.artistId))
 const tab = computed(() =>
-  ['lives', 'originals', 'concerts'].includes(String(route.query.tab))
+  ['lives', 'statistics', 'originals', 'concerts'].includes(String(route.query.tab))
     ? String(route.query.tab)
     : 'lives',
 )
@@ -96,9 +98,7 @@ function changeTab(value: string | number) {
               <FavoriteButton :id="data.artist.id" :name="data.artist.name" />
             </div>
             <p class="profile-reading">
-              {{ data.artist.display_name }}
-              <span>·</span>
-              {{ data.artist.roman }}
+                {{ data.artist.display_name }}
             </p>
             <div class="profile-links">
               <Button
@@ -122,6 +122,10 @@ function changeTab(value: string | number) {
               <Play />
               라이브
               <span class="tab-count">{{ data.lives.length }}</span>
+            </TabsTrigger>
+            <TabsTrigger value="statistics">
+              <ChartNoAxesColumnIncreasing />
+              통계
             </TabsTrigger>
             <TabsTrigger value="originals">
               <Disc3 />
@@ -176,6 +180,9 @@ function changeTab(value: string | number) {
                 <ChevronDown data-icon="inline-end" />
               </Button>
             </ResourceState>
+          </TabsContent>
+          <TabsContent value="statistics" class="pt-8">
+            <ArtistStatistics :key="id" :lives="data.lives" />
           </TabsContent>
           <TabsContent value="originals" class="pt-8">
             <div class="section-heading">

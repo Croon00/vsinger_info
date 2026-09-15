@@ -17,7 +17,7 @@ defineProps<{ artist: Artist; compact?: boolean }>()
     <div class="artist-tile-caption">
       <RouterLink :to="`/artists/${artist.id}`" class="artist-name-link">
         <h3 class="truncate">{{ artist.name }}</h3>
-        <p class="truncate">{{ compact ? artist.roman : artist.display_name }}</p>
+        <p class="truncate">{{ artist.display_name }}</p>
       </RouterLink>
       <FavoriteButton v-if="!compact" :id="artist.id" :name="artist.name" />
     </div>

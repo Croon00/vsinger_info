@@ -32,6 +32,21 @@ test('favorites persist and artist filtering accepts Korean and full-width names
   await expect(page.getByRole('heading', { name: 'HACHI', exact: true })).toBeVisible()
 })
 
+test('explore keeps its search query on Enter and clears only on request', async ({ page }) => {
+  await visit(page, '/explore')
+  const search = page.getByRole('textbox', { name: '아티스트 이름', exact: true })
+  await search.fill('하치')
+  await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(1)
+  await search.press('Enter')
+  await expect(search).toHaveValue('하치')
+  await expect(page).toHaveURL(`/explore?q=${encodeURIComponent('하치')}`)
+  await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(1)
+  await page.getByRole('button', { name: '검색어 지우기' }).click()
+  await expect(search).toHaveValue('')
+  await expect(page).toHaveURL('/explore')
+  await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(12)
+})
+
 test('search finds original artists and songs and seeks through the YouTube API', async ({
   page,
 }) => {
