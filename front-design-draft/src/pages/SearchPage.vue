@@ -127,7 +127,7 @@ function search(q: string) {
             >
               <div class="performance-art">
                 <ArtistAvatar :artist="p.artist" />
-                <span><Play class="size-4" /></span>
+                <span class="performance-play" aria-hidden="true"><Play class="size-4" /></span>
               </div>
               <div class="performance-song">
                 <h3>{{ p.song_title }}</h3>

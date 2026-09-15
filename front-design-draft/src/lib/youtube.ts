@@ -1,4 +1,6 @@
 export interface YouTubePlayer {
+  playVideo(): void
+  mute(): void
   seekTo(seconds: number, allowSeekAhead: boolean): void
   getCurrentTime(): number
   getDuration(): number
@@ -13,7 +15,11 @@ interface YouTubeAPI {
       width: string
       height: string
       playerVars: Record<string, string | number>
-      events: { onReady: () => void; onError: (event: { data: number }) => void }
+      events: {
+        onReady: () => void
+        onError: (event: { data: number }) => void
+        onAutoplayBlocked?: () => void
+      }
     },
   ) => YouTubePlayer
 }

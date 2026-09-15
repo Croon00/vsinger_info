@@ -26,6 +26,7 @@ const { data, loading, error, reload } = useResource((signal) => api.live(id.val
 const playerHost = ref<HTMLElement>()
 const ready = ref(false)
 const playerError = ref('')
+const autoplayMuted = ref(false)
 const currentTime = ref(0)
 let player: YouTubePlayer | undefined
 let interval: ReturnType<typeof setInterval> | undefined
@@ -53,6 +54,7 @@ function teardown() {
 async function setup() {
   teardown()
   playerError.value = ''
+  autoplayMuted.value = false
   currentTime.value = clampTime(route.query.t, data.value?.duration_seconds ?? 0)
   const current = version
   if (!data.value) return
@@ -73,7 +75,7 @@ async function setup() {
       width: '100%',
       height: '100%',
       playerVars: {
-        autoplay: 0,
+        autoplay: 1,
         playsinline: 1,
         rel: 0,
         origin: window.location.origin,
@@ -86,7 +88,7 @@ async function setup() {
           ready.value = true
           playerError.value = ''
           // The embed's start parameter already sets the initial position.
-          // An unconditional seek here can start playback before a user click.
+          // Only seek again if the requested timestamp changed while loading.
           const requestedTime = clampTime(route.query.t, data.value!.duration_seconds)
           if (requestedTime !== startSeconds) player?.seekTo(requestedTime, true)
           interval = setInterval(() => {
@@ -98,6 +100,12 @@ async function setup() {
             )
               currentTime.value = player.getCurrentTime()
           }, 500)
+        },
+        onAutoplayBlocked() {
+          if (current !== version || autoplayMuted.value) return
+          autoplayMuted.value = true
+          player?.mute()
+          player?.playVideo()
         },
         onError(event) {
           if (current !== version) return
@@ -154,6 +162,13 @@ function seek(seconds: number) {
                 <span>플레이어를 준비하고 있어요</span>
               </div>
             </div>
+            <p
+              v-if="autoplayMuted && !playerError"
+              class="mt-3 text-sm text-muted-foreground"
+              role="status"
+            >
+              음소거로 자동재생 중입니다. 영상에서 소리를 켜 주세요.
+            </p>
             <Alert v-if="playerError" class="mt-4">
               <AlertTitle>영상을 재생하지 못했어요</AlertTitle>
               <AlertDescription>{{ playerError }}</AlertDescription>

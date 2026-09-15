@@ -36,6 +36,15 @@
 
 ## YouTube 검증 범위
 
+### 2026-09-16 후속: 자동재생 및 검색 이미지
+
+후속 여백 조정: 검색 결과 행의 내부 여백을 PC 16px·모바일 12px, 행 간격을 8px로 맞췄다. 배경 반경은 프로필의 14px 반경에 내부 여백을 더한 30px·26px로 계산한다. 하단 경계선을 제거하고 모바일 곡명·시간·라이브 정보를 grid로 정렬했다. 1440·390·320px 호버 캡처에서 가로 넘침이 없었으며 빌드와 관련 PC·모바일 E2E 2개가 통과했다. 캡처: `screenshots/search-hover-spacing-*.png`.
+
+- 사용자 요청에 따라 뷰어의 `autoplay`를 켰다. 소리 있는 자동재생이 브라우저에서 차단되면 공식 `onAutoplayBlocked` 이벤트로 음소거 후 한 번 재생을 요청한다. 음소거 시작 시 영상에서 소리를 켤 수 있음을 표시한다. 아래 최초 재생 수정 당시의 수동 시작 동작을 대체한다.
+- `npm run check:video`에서 재생 버튼 클릭을 제거했다. 실제 Chrome에서 HACHI 3개 모두 재생 상태 1·시간 증가·디코딩 프레임 증가를 확인했으며 이 실행에서는 음소거가 필요하지 않았다. #171 시점 1,088초 자동 시작과 587초 세트리스트 이동도 통과했다.
+- 검색 결과의 `.performance-art > span` 규칙이 Avatar의 span 루트까지 숨겼다. 재생 아이콘 전용 `.performance-play`로 대상을 좁혀 사진은 항상 보이고 아이콘만 hover/focus에 나타나도록 수정했다.
+- 빌드와 PC·모바일 관련 E2E 2개 통과. E2E는 호버하지 않은 아바타의 opacity 1·사진 표시, 자동재생 요청, 차단 이벤트에서 mute/play 호출, 검색 시점 이동·새로고침 복원을 검증한다. 캡처: `screenshots/search-portraits-1440.png`, `screenshots/search-portraits-390.png`.
+
 실제 YouTube IFrame API를 사용합니다. 핵심 자동 테스트에서는 작은 API 테스트 더블을 통해 `/lives/101?t=1088`가 `seekTo(1088)`을 요청하고, `踊り子`를 선택하면 `seekTo(587)` 및 URL·세트리스트 선택이 일치하는지 검증했습니다.
 
 2026-09-16 재생 문제를 수정했습니다. 동일한 HACHI 영상을 숫자 루프백 주소 `127.0.0.1`에서 임베드하면 재생 불가였지만, `localhost`에서는 재생됨을 실제 Chrome에서 비교했습니다. Vite 개발·프리뷰 서버에 HTML 요청의 localhost 이동을 추가하고, 페이지에 `strict-origin-when-cross-origin` Referrer-Policy를 명시했습니다. YouTube 요청 헤더를 위조하거나 영상을 프록시하지 않습니다. 플레이어 준비 직후 무조건 `seekTo`를 호출하던 코드도 제거해 시작 시점은 embed `start` 파라미터를 사용하고 재생은 사용자의 버튼 클릭으로 시작합니다.

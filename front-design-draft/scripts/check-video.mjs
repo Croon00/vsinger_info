@@ -53,11 +53,10 @@ try {
           state: player?.getPlayerState?.(),
           decodedFrames: video?.webkitDecodedFrameCount,
           paused: video?.paused,
+          muted: player?.isMuted?.(),
         }
       })
-    const play = frame.getByRole('button', { name: /^(동영상 재생|재생|Play|Play video)$/i }).first()
-    await expect(play).toBeVisible({ timeout: 20000 })
-    await play.click()
+    // No click or script-triggered play: entering the viewer must autoplay.
     await expect.poll(async () => (await read()).state, { timeout: 25000 }).toBe(1)
     const before = await read()
     await expect
@@ -80,7 +79,7 @@ try {
     await page.screenshot({ path: `docs/screenshots/hachi-live-${id}-playing.png`, fullPage: true })
   }
   expect(errors).toEqual([])
-  console.log('PASS: localhost redirect, 3 real thumbnails, 3 real video playbacks, setlist seek.')
+  console.log('PASS: localhost redirect, 3 real thumbnails, 3 real video autoplays, setlist seek.')
 } finally {
   await browser.close()
 }

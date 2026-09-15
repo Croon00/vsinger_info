@@ -34,16 +34,26 @@ test('search finds original artists and songs and seeks through the YouTube API'
 }) => {
   // Deterministic integration contract; real YouTube is checked separately.
   await page.addInitScript(() => {
-    const state = { time: 0, destroyed: false }
+    const state = { time: 0, destroyed: false, autoplay: 0, muted: false, playCalls: 0 }
     ;(window as any).__playerTest = state
     ;(window as any).YT = {
       Player: class {
         constructor(target: HTMLElement, options: any) {
           state.time = options.playerVars.start
+          state.autoplay = options.playerVars.autoplay
           const frame = document.createElement('iframe')
           frame.title = 'YouTube video player'
           target.replaceWith(frame)
-          setTimeout(() => options.events.onReady(), 25)
+          setTimeout(() => {
+            options.events.onReady()
+            options.events.onAutoplayBlocked()
+          }, 25)
+        }
+        mute() {
+          state.muted = true
+        }
+        playVideo() {
+          state.playCalls++
         }
         seekTo(t: number) {
           state.time = t
@@ -67,9 +77,18 @@ test('search finds original artists and songs and seeks through the YouTube API'
   await page.getByRole('textbox').fill('요루시카')
   await page.getByRole('button', { name: '검색', exact: true }).click()
   await expect(page.locator('.performance-result')).toHaveCount(3)
+  await page.mouse.move(0, 0)
+  for (const avatar of await page.locator('.performance-art .artist-avatar').all()) {
+    await expect(avatar).toHaveCSS('opacity', '1')
+    await expect(avatar.locator('img')).toBeVisible()
+  }
+  await expect(page.locator('.performance-play').first()).toHaveCSS('opacity', '0')
   await page.locator('.performance-result').filter({ hasText: '晴る' }).click()
   await expect(page).toHaveURL(/\/lives\/101\?t=1088/)
   await expect.poll(() => page.evaluate(() => (window as any).__playerTest.time)).toBe(1088)
+  expect(await page.evaluate(() => (window as any).__playerTest.autoplay)).toBe(1)
+  await expect.poll(() => page.evaluate(() => (window as any).__playerTest.playCalls)).toBe(1)
+  expect(await page.evaluate(() => (window as any).__playerTest.muted)).toBe(true)
   await page.getByRole('button', { name: /踊り子.*Vaundy/ }).click()
   await expect.poll(() => page.evaluate(() => (window as any).__playerTest.time)).toBe(587)
   await expect(page.locator('.setlist-song[aria-current="true"]')).toContainText('踊り子')
@@ -109,7 +128,10 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await expect(page).toHaveURL(/tab=concerts$/)
 })
 
-test('calendar changes month, filters birthdays, and opens concerts', async ({ page, isMobile }) => {
+test('calendar changes month, filters birthdays, and opens concerts', async ({
+  page,
+  isMobile,
+}) => {
   await visit(page, '/calendar?month=2026-09-01')
   await page.getByRole('button', { name: '전체 아티스트', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
