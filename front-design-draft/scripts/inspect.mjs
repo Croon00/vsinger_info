@@ -21,6 +21,8 @@ for (const [name, width, height, colorScheme] of [
     ['/artists/1', 'artist'],
     ['/calendar', 'calendar'],
     ['/artists/1?tab=originals', 'originals'],
+    ['/artists/2?tab=originals', 'albums'],
+    ['/settings', 'settings'],
     ['/artists/1?tab=originals&lyrics=201', 'lyrics'],
     ['/artists/1?tab=concerts&event=301', 'concert'],
   ]) {

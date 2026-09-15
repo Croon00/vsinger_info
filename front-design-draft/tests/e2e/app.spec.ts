@@ -2,6 +2,14 @@ import { test, expect, type Page } from '@playwright/test'
 
 const visit = (page: Page, route: string) => page.goto(route, { waitUntil: 'domcontentloaded' })
 
+test.beforeEach(async ({ page }) => {
+  // Start each scenario on a document already controlled by MSW. Activating a
+  // worker halfway through the initial history can make Chrome reload on Back.
+  await visit(page, '/')
+  await expect(page.locator('#main-content')).toBeVisible()
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller)
+})
+
 test('favorites persist and artist filtering accepts Korean and full-width names', async ({
   page,
 }) => {
@@ -71,6 +79,13 @@ test('search finds original artists and songs and seeks through the YouTube API'
 test('lyrics and concert overlays preserve route state, keyboard focus and back behavior', async ({
   page,
 }) => {
+  await visit(page, '/artists/2?tab=originals')
+  await page.locator('.album-card').filter({ hasText: 'EAT THE PAST' }).click()
+  await expect(page.locator('.track-section h2')).toHaveText('EAT THE PAST')
+  await expect(page.locator('.album-card').filter({ hasText: 'EAT THE PAST' })).toHaveAttribute(
+    'data-state',
+    'on',
+  )
   await visit(page, '/artists/1')
   await page.getByRole('tab', { name: '오리곡' }).click()
   const lyrics = page.getByRole('button', { name: '가사', exact: true }).first()
@@ -93,7 +108,10 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await expect(page).toHaveURL(/tab=concerts$/)
 })
 
-test('calendar changes month, filters birthdays, and opens concerts', async ({ page }) => {
+test('calendar changes month, filters birthdays, and opens concerts', async ({
+  page,
+  isMobile,
+}) => {
   await visit(page, '/calendar?month=2026-09-01')
   await page.getByRole('button', { name: '전체 아티스트', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
@@ -101,11 +119,23 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({ p
   await expect(page.locator('.month-event').filter({ hasText: '샘플 공연' })).toHaveCount(0)
   await page.getByRole('button', { name: '다음 달', exact: true }).click()
   await expect(page).toHaveURL(/month=2026-10-01/)
-  await expect(page.locator('.calendar-agenda h2')).toContainText('10월 1일')
+  if (!isMobile) await expect(page.locator('.calendar-agenda h2')).toContainText('10월 1일')
   await page.goBack()
-  await expect(page.locator('.calendar-agenda h2')).toContainText('9월 1일')
+  if (!isMobile) await expect(page.locator('.calendar-agenda h2')).toContainText('9월 1일')
+  await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click()
+  await expect(page.locator('.calendar-agenda')).toContainText('KASUKA 생일')
+  if (isMobile) {
+    await expect(page.locator('.month-agenda')).toHaveCount(0)
+    await page.getByRole('button', { name: '월 전체 보기' }).click()
+    await expect(page.locator('.calendar-agenda')).toHaveCount(0)
+    await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
+    await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click()
+    await expect(page.locator('.calendar-agenda')).toContainText('KASUKA 생일')
+    await page.getByRole('button', { name: '월 전체 보기' }).click()
+  }
   await page.getByRole('button', { name: '공연', exact: true }).click()
   await page.getByRole('button', { name: '오늘', exact: true }).click()
+  if (isMobile) await page.getByRole('button', { name: '월 전체 보기' }).click()
   await page.locator('.month-event').filter({ hasText: '샘플 공연' }).first().click()
   await expect(page.getByRole('dialog')).toContainText('샘플 일정')
 })

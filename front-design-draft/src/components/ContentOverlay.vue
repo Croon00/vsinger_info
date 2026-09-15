@@ -26,6 +26,7 @@ import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { formatDate } from '@/lib/dates'
 import ResourceState from './ResourceState.vue'
+import ArtistAvatar from './ArtistAvatar.vue'
 const route = useRoute()
 const router = useRouter()
 const mobile = useMediaQuery('(max-width: 768px)')
@@ -132,12 +133,7 @@ async function restoreFocus(event: Event) {
           </div>
           <div v-if="data?.concert" class="concert-detail">
             <div class="concert-detail-art">
-              <img
-                v-if="data.artist"
-                :src="data.artist.image"
-                :style="{ objectPosition: data.artist.image_position }"
-                :alt="data.artist.name"
-              />
+              <ArtistAvatar v-if="data.artist" :artist="data.artist" />
               <div>
                 <Badge variant="secondary">샘플 일정</Badge>
                 <h3>{{ data.artist?.name }}</h3>

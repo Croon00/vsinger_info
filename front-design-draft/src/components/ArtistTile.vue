@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Artist } from '@/api/types'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import ArtistAvatar from './ArtistAvatar.vue'
 import { cn } from '@/lib/utils'
 import FavoriteButton from './FavoriteButton.vue'
 defineProps<{ artist: Artist; compact?: boolean }>()
@@ -12,15 +12,7 @@ defineProps<{ artist: Artist; compact?: boolean }>()
       class="artist-portrait-link"
       :aria-label="`${artist.name} 아티스트 상세`"
     >
-      <Avatar :class="cn(compact ? 'favorite-avatar' : 'explore-avatar')">
-        <AvatarImage
-          :src="artist.image"
-          :style="{ objectPosition: artist.image_position }"
-          :alt="artist.name"
-          class="object-cover"
-        />
-        <AvatarFallback>{{ artist.roman.slice(0, 2) }}</AvatarFallback>
-      </Avatar>
+      <ArtistAvatar :artist="artist" :class="cn(compact ? 'favorite-avatar' : 'explore-avatar')" />
     </RouterLink>
     <div class="artist-tile-caption">
       <RouterLink :to="`/artists/${artist.id}`">

@@ -4,6 +4,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeft, ArrowUpRight, Play, AudioLines, ListMusic, RotateCcw } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
@@ -190,48 +198,49 @@ function seek(seconds: number) {
             </div>
           </section>
           <aside class="setlist-panel">
-            <div class="setlist-heading">
-              <div>
-                <p class="eyebrow">EVERY SONG, EVERY MOMENT</p>
-                <h2>세트리스트</h2>
-              </div>
-              <ListMusic class="size-5" />
-            </div>
-            <p class="setlist-help">곡을 누르면 해당 순간으로 이동해요.</p>
-            <ResourceState
-              :empty="!data.performances.length"
-              title="세트리스트 준비 중"
-              description="이 라이브는 영상으로 먼저 만나보세요."
-            >
-              <ol class="setlist">
-                <li v-for="(song, index) in data.performances" :key="song.id">
-                  <button
-                    :class="cn('setlist-song', activeSong === song.id && 'is-playing')"
-                    :aria-current="activeSong === song.id ? 'true' : undefined"
-                    @click="seek(song.start_seconds)"
-                  >
-                    <span class="setlist-number">
-                      <AudioLines v-if="activeSong === song.id" class="size-4" />
-                      <template v-else>{{ String(index + 1).padStart(2, '0') }}</template>
-                    </span>
-                    <span class="setlist-name">
-                      <strong>{{ song.song_title }}</strong>
-                      <small>{{ song.original_artist }}</small>
-                    </span>
-                    <span class="setlist-time">{{ formatTime(song.start_seconds) }}</span>
-                  </button>
-                </li>
-              </ol>
-            </ResourceState>
-            <a
-              v-if="data.metadata_note"
-              :href="data.source_url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="setlist-source"
-            >
-              {{ data.metadata_note }} ↗
-            </a>
+            <Card size="sm">
+              <CardHeader>
+                <CardTitle>세트리스트</CardTitle>
+                <CardDescription>곡을 누르면 해당 순간으로 이동해요.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResourceState
+                  :empty="!data.performances.length"
+                  title="세트리스트 준비 중"
+                  description="등록된 곡 정보가 없습니다. 영상은 재생할 수 있습니다."
+                >
+                  <ol class="setlist">
+                    <li v-for="(song, index) in data.performances" :key="song.id">
+                      <button
+                        :class="cn('setlist-song', activeSong === song.id && 'is-playing')"
+                        :aria-current="activeSong === song.id ? 'true' : undefined"
+                        @click="seek(song.start_seconds)"
+                      >
+                        <span class="setlist-number">
+                          <AudioLines v-if="activeSong === song.id" class="size-4" />
+                          <template v-else>{{ String(index + 1).padStart(2, '0') }}</template>
+                        </span>
+                        <span class="setlist-name">
+                          <strong>{{ song.song_title }}</strong>
+                          <small>{{ song.original_artist }}</small>
+                        </span>
+                        <span class="setlist-time">{{ formatTime(song.start_seconds) }}</span>
+                      </button>
+                    </li>
+                  </ol>
+                </ResourceState>
+              </CardContent>
+              <CardFooter v-if="data.metadata_note">
+                <a
+                  :href="data.source_url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="setlist-source"
+                >
+                  {{ data.metadata_note }} ↗
+                </a>
+              </CardFooter>
+            </Card>
           </aside>
         </div>
       </template>

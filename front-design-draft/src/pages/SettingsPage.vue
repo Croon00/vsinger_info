@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Monitor, Moon, Sun, Palette, AudioLines } from '@lucide/vue'
+import { Monitor, Moon, Sun } from '@lucide/vue'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { FieldGroup, Field, FieldTitle, FieldDescription } from '@/components/ui/field'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -8,9 +8,7 @@ import { theme, type Theme } from '@/composables/preferences'
 <template>
   <div class="page-container settings-page page-enter">
     <div class="page-heading">
-      <p class="eyebrow">MAKE YOURSELF AT HOME</p>
-      <h1>나에게 편안한 공간.</h1>
-      <p>음악을 만나는 화면도, 내 취향에 맞게.</p>
+      <h1>설정</h1>
     </div>
     <Card>
       <CardHeader>
@@ -52,13 +50,5 @@ import { theme, type Theme } from '@/composables/preferences'
         </FieldGroup>
       </CardContent>
     </Card>
-    <div class="settings-note">
-      <AudioLines class="size-5" />
-      <p>
-        더 편안한 음악 생활을 위한 설정을
-        <br />
-        차근차근 준비하고 있어요.
-      </p>
-    </div>
   </div>
 </template>

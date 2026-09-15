@@ -6,10 +6,8 @@ import { AudioLines, House, Compass, CalendarDays, Settings2, Heart } from '@luc
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarInset,
   SidebarMenu,
@@ -18,9 +16,7 @@ import {
   SidebarProvider,
 } from '@/components/ui/sidebar'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { favoriteIds, statusMessage } from '@/composables/preferences'
-import { formatDate, todayKey } from '@/lib/dates'
+import { statusMessage } from '@/composables/preferences'
 import ContentOverlay from '@/components/ContentOverlay.vue'
 const route = useRoute()
 const wide = useMediaQuery('(min-width: 1024px)')
@@ -54,7 +50,6 @@ const active = computed(() =>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup class="px-4">
-          <SidebarGroupLabel v-if="wide">MY MUSIC SPACE</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu class="gap-2" aria-label="주 메뉴">
               <SidebarMenuItem v-for="item in nav" :key="item.href">
@@ -76,55 +71,16 @@ const active = computed(() =>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <div v-if="wide" class="sidebar-note">
-          <AudioLines class="size-5" />
-          <p>
-            좋아하는 목소리를,
-            <br />
-            조금 더 가까이.
-          </p>
-        </div>
       </SidebarContent>
-      <SidebarFooter class="p-5 pb-7">
-        <Separator />
-        <div class="flex items-center gap-3 pt-4">
-          <span class="profile-initial">M</span>
-          <div v-if="wide">
-            <p class="text-sm font-medium">나의 음악 서재</p>
-            <p class="mt-1 text-xs text-muted-foreground">
-              즐겨찾는 아티스트 {{ favoriteIds.length }}명
-            </p>
-          </div>
-        </div>
-      </SidebarFooter>
     </Sidebar>
     <SidebarInset class="min-w-0">
-      <header class="topbar">
-        <RouterLink v-if="mobile" to="/" class="brand">
+      <header v-if="mobile" class="topbar">
+        <RouterLink to="/" class="brand">
           <AudioLines class="size-6" />
           <span>schedule_music</span>
         </RouterLink>
-        <span v-else class="topbar-location">YOUR DAILY SOUNDTRACK</span>
-        <span class="today-label">
-          {{
-            formatDate(todayKey(), {
-              year: undefined,
-              month: 'long',
-              day: 'numeric',
-              weekday: 'long',
-            })
-          }}
-        </span>
       </header>
       <main id="main-content" tabindex="-1"><RouterView /></main>
-      <footer class="site-footer">
-        <span>좋아하는 음악으로 채우는 하루.</span>
-        <span>
-          schedule_music
-          <span class="footer-dot">·</span>
-          디자인 프리뷰
-        </span>
-      </footer>
     </SidebarInset>
     <nav v-if="mobile" class="mobile-dock" aria-label="주 메뉴">
       <Button

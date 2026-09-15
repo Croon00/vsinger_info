@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowUpRight, Play, ListMusic } from '@lucide/vue'
+import { ChevronRight, Play, ListMusic } from '@lucide/vue'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { formatDate, formatTime } from '@/lib/dates'
@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import SearchForm from '@/components/SearchForm.vue'
 import ArtistTile from '@/components/ArtistTile.vue'
+import ArtistAvatar from '@/components/ArtistAvatar.vue'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
@@ -50,8 +51,7 @@ function search(q: string) {
 <template>
   <div class="page-container page-enter">
     <div class="page-heading">
-      <p class="eyebrow">FIND THAT VOICE, FIND THAT SONG</p>
-      <h1>마음에 남은 그 노래.</h1>
+      <h1>검색 결과</h1>
       <p>아티스트 이름, 원곡명, 원곡 아티스트로 라이브 속 노래를 찾아보세요.</p>
     </div>
     <SearchForm :initial="query" @search="search" />
@@ -126,7 +126,7 @@ function search(q: string) {
               class="performance-result"
             >
               <div class="performance-art">
-                <img :src="p.artist.image" :alt="p.artist.name" />
+                <ArtistAvatar :artist="p.artist" />
                 <span><Play class="size-4" /></span>
               </div>
               <div class="performance-song">
@@ -145,7 +145,7 @@ function search(q: string) {
                 <Play class="size-3" />
                 {{ formatTime(p.start_seconds) }}
               </span>
-              <ArrowUpRight class="size-4 result-arrow" />
+              <ChevronRight class="size-4 result-arrow" />
             </RouterLink>
           </div>
         </ResourceState>

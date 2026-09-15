@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-import { ArrowUpRight, MapPin } from '@lucide/vue'
+import { ChevronRight, MapPin } from '@lucide/vue'
 import type { Concert } from '@/api/types'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { formatDate, dateKey } from '@/lib/dates'
 import { openOverlay } from '@/lib/overlays'
 defineProps<{ concert: Concert; past?: boolean }>()
@@ -10,7 +11,8 @@ const router = useRouter()
 const route = useRoute()
 </script>
 <template>
-  <button
+  <Button
+    variant="outline"
     type="button"
     class="concert-row"
     @click="openOverlay(router, route, 'event', concert.id)"
@@ -30,10 +32,10 @@ const route = useRoute()
       </div>
       <h3>{{ concert.title }}</h3>
       <p>
-        <MapPin class="size-3.5" />
+        <MapPin />
         {{ concert.venue }} · {{ concert.city }}
       </p>
     </div>
-    <ArrowUpRight class="size-5 shrink-0" />
-  </button>
+    <ChevronRight data-icon="inline-end" />
+  </Button>
 </template>

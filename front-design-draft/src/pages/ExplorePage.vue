@@ -34,11 +34,7 @@ const filtered = computed(() =>
 <template>
   <div class="page-container page-enter">
     <div class="page-heading">
-      <div>
-        <p class="eyebrow">DISCOVER YOUR NEXT FAVORITE</p>
-        <h1>새로운 목소리의 발견.</h1>
-        <p>당신의 플레이리스트에 새로운 이야기를 더해보세요.</p>
-      </div>
+      <h1>아티스트 탐색</h1>
     </div>
     <div class="explore-toolbar">
       <ToggleGroup
