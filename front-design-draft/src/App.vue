@@ -34,13 +34,18 @@ const active = computed(() =>
       ? route.path
       : '/explore',
 )
+const activeIndex = computed(() => nav.findIndex((item) => item.href === active.value))
 </script>
 <template>
   <a href="#main-content" class="skip-link">본문으로 이동</a>
   <SidebarProvider :open="wide" style="--sidebar-width: 232px; --sidebar-width-icon: 80px">
     <Sidebar v-if="!mobile" collapsible="icon">
-      <SidebarHeader class="px-5 pt-8 pb-10">
-        <RouterLink to="/" class="brand" aria-label="schedule_music 홈">
+      <SidebarHeader class="px-5 pt-8 pb-10 group-data-[collapsible=icon]:px-3">
+        <RouterLink
+          to="/"
+          class="brand group-data-[collapsible=icon]:justify-center"
+          aria-label="schedule_music 홈"
+        >
           <span class="brand-symbol"><AudioLines class="size-6" /></span>
           <span v-if="wide">
             schedule
@@ -49,7 +54,7 @@ const active = computed(() =>
         </RouterLink>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup class="px-4">
+        <SidebarGroup class="px-4 group-data-[collapsible=icon]:px-3">
           <SidebarGroupContent>
             <SidebarMenu class="gap-2" aria-label="주 메뉴">
               <SidebarMenuItem v-for="item in nav" :key="item.href">
@@ -57,14 +62,16 @@ const active = computed(() =>
                   as-child
                   :is-active="active === item.href"
                   :tooltip="item.title"
-                  class="h-12 px-4"
+                  size="lg"
+                  class="sidebar-nav-item group-data-[collapsible=icon]:size-14! group-data-[collapsible=icon]:justify-center"
                 >
                   <RouterLink
                     :to="item.href"
+                    :aria-label="item.title"
                     :aria-current="active === item.href ? 'page' : undefined"
                   >
                     <component :is="item.icon" />
-                    <span>{{ item.title }}</span>
+                    <span v-if="wide">{{ item.title }}</span>
                   </RouterLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -82,17 +89,27 @@ const active = computed(() =>
       </header>
       <main id="main-content" tabindex="-1"><RouterView /></main>
     </SidebarInset>
-    <nav v-if="mobile" class="mobile-dock" aria-label="주 메뉴">
+    <nav
+      v-if="mobile"
+      class="mobile-dock"
+      aria-label="주 메뉴"
+      :style="{ '--dock-index': activeIndex }"
+    >
+      <span class="dock-indicator" aria-hidden="true" />
       <Button
         v-for="item in nav"
         :key="item.href"
         as-child
-        :variant="active === item.href ? 'default' : 'ghost'"
+        variant="ghost"
+        size="icon-lg"
         class="dock-item"
       >
-        <RouterLink :to="item.href" :aria-current="active === item.href ? 'page' : undefined">
+        <RouterLink
+          :to="item.href"
+          :aria-label="item.title"
+          :aria-current="active === item.href ? 'page' : undefined"
+        >
           <component :is="item.icon" />
-          <span>{{ item.title }}</span>
         </RouterLink>
       </Button>
     </nav>

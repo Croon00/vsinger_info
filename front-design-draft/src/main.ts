@@ -11,7 +11,9 @@ async function start() {
       if (new URL(request.url).pathname.startsWith('/api/')) print.error()
     },
   })
-  createApp(App).use(router).mount('#app')
+  const app = createApp(App).use(router)
+  await router.isReady()
+  app.mount('#app')
 }
 start().catch(() => {
   const element = document.querySelector('#app')!
