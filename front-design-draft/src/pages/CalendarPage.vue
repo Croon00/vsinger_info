@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, shallowRef, watch } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { CalendarRoot, type DateValue } from 'reka-ui'
 import { parseDate } from '@internationalized/date'
@@ -20,9 +20,18 @@ import {
 } from '@/components/ui/calendar'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import ArtistAvatar from '@/components/ArtistAvatar.vue'
-import { ref } from 'vue'
 import { api } from '@/api/client'
 import type { CalendarEvent } from '@/api/types'
 import { useResource } from '@/composables/useResource'
@@ -68,6 +77,17 @@ const inMonth = computed(() =>
   allEvents.value.filter((e) => e.date.startsWith(month.value.slice(0, 7))),
 )
 const selectedEvents = computed(() => eventsOn(selected.value.toString()))
+const visibleEvents = computed(() => (dayChosen.value ? selectedEvents.value : inMonth.value))
+const agendaTitle = computed(() =>
+  dayChosen.value
+    ? formatDate(selected.value.toString(), {
+        year: undefined,
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+      })
+    : Number(month.value.slice(5, 7)) + '월 일정',
+)
 function eventsOn(date: string) {
   return allEvents.value.filter((e) => e.date === date)
 }
@@ -96,10 +116,8 @@ function openEvent(event: CalendarEvent) {
 </script>
 <template>
   <div class="page-container calendar-page page-enter">
-    <div class="page-heading">
+    <div class="page-heading calendar-page-heading">
       <h1>캘린더</h1>
-    </div>
-    <div class="calendar-toolbar">
       <ToggleGroup
         type="single"
         :model-value="calendarScope"
@@ -111,27 +129,13 @@ function openEvent(event: CalendarEvent) {
         variant="outline"
         aria-label="캘린더 아티스트 범위"
       >
-        <ToggleGroupItem value="favorites" aria-label="즐겨찾는 아티스트">
-          {{ mobile ? '즐겨찾기' : '즐겨찾는 아티스트' }}
-        </ToggleGroupItem>
-        <ToggleGroupItem value="all" aria-label="전체 아티스트">
-          {{ mobile ? '전체' : '전체 아티스트' }}
-        </ToggleGroupItem>
-      </ToggleGroup>
-      <ToggleGroup type="multiple" v-model="kinds" aria-label="일정 종류">
-        <ToggleGroupItem value="concert">
-          <CalendarIcon />
-          공연
-        </ToggleGroupItem>
-        <ToggleGroupItem value="birthday">
-          <Cake />
-          생일
-        </ToggleGroupItem>
+        <ToggleGroupItem value="favorites" aria-label="즐겨찾는 아티스트">즐겨찾기</ToggleGroupItem>
+        <ToggleGroupItem value="all" aria-label="전체 아티스트">전체 아티스트</ToggleGroupItem>
       </ToggleGroup>
     </div>
     <ResourceState :loading="loading" :error="error" @retry="reload">
-      <div class="calendar-layout">
-        <section class="calendar-surface">
+      <div class="calendar-workspace">
+        <Card class="calendar-board" :size="mobile ? 'sm' : 'default'">
           <CalendarRoot
             v-slot="{ grid, weekDays }"
             locale="ko-KR"
@@ -143,147 +147,191 @@ function openEvent(event: CalendarEvent) {
             @update:model-value="chooseDate"
             @update:placeholder="setMonth"
           >
-            <CalendarHeader class="mb-3 justify-between gap-3 px-0">
-              <CalendarHeading>
-                {{ formatDate(month, { day: undefined, year: 'numeric', month: 'long' }) }}
-              </CalendarHeading>
-              <div class="flex items-center gap-2">
-                <Button variant="outline" size="sm" @click="goToday">오늘</Button>
-                <CalendarPrevButton class="size-9" aria-label="이전 달" />
-                <CalendarNextButton class="size-9" aria-label="다음 달" />
+            <CardHeader>
+              <CalendarHeader class="justify-between gap-3 px-0">
+                <CalendarHeading>
+                  {{ formatDate(month, { day: undefined, year: 'numeric', month: 'long' }) }}
+                </CalendarHeading>
+                <div class="flex items-center gap-1">
+                  <Button variant="outline" size="sm" @click="goToday">오늘</Button>
+                  <CalendarPrevButton aria-label="이전 달" />
+                  <CalendarNextButton aria-label="다음 달" />
+                </div>
+              </CalendarHeader>
+              <div class="calendar-options">
+                <ToggleGroup type="multiple" v-model="kinds" :spacing="1" aria-label="일정 종류">
+                  <ToggleGroupItem value="concert" size="sm">
+                    <CalendarIcon data-icon="inline-start" />
+                    공연
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="birthday" size="sm">
+                    <Cake data-icon="inline-start" />
+                    생일
+                  </ToggleGroupItem>
+                </ToggleGroup>
+                <span class="calendar-count" aria-live="polite">{{ inMonth.length }}개 일정</span>
               </div>
-            </CalendarHeader>
-            <CalendarGrid v-for="m in grid" :key="m.value.toString()" class="schedule-grid">
-              <CalendarGridHead>
-                <CalendarGridRow>
-                  <CalendarHeadCell v-for="day in weekDays" :key="day" class="flex-1">
-                    {{ day }}
-                  </CalendarHeadCell>
-                </CalendarGridRow>
-              </CalendarGridHead>
-              <CalendarGridBody>
-                <CalendarGridRow v-for="(week, index) in m.rows" :key="index">
-                  <CalendarCell
-                    v-for="day in week"
-                    :key="day.toString()"
-                    :date="day"
-                    class="calendar-day-cell flex-1"
-                  >
-                    <CalendarCellTrigger
-                      :day="day"
-                      :month="m.value"
-                      class="calendar-trigger"
-                      :aria-label="`${formatDate(day.toString())}, ${eventsOn(day.toString()).length}개 일정`"
+            </CardHeader>
+            <CardContent class="calendar-board-content">
+              <CalendarGrid v-for="m in grid" :key="m.value.toString()" class="month-grid">
+                <CalendarGridHead>
+                  <CalendarGridRow>
+                    <CalendarHeadCell v-for="day in weekDays" :key="day">
+                      {{ day }}
+                    </CalendarHeadCell>
+                  </CalendarGridRow>
+                </CalendarGridHead>
+                <CalendarGridBody>
+                  <CalendarGridRow v-for="(week, index) in m.rows" :key="index">
+                    <CalendarCell
+                      v-for="day in week"
+                      :key="day.toString()"
+                      :date="day"
+                      class="month-cell"
                     >
-                      <span class="day-number">{{ day.day }}</span>
-                    </CalendarCellTrigger>
-                    <span class="day-events" aria-hidden="true">
-                      <span
-                        v-for="event in eventsOn(day.toString()).slice(0, 2)"
-                        :key="event.id"
-                        class="day-event"
+                      <CalendarCellTrigger
+                        :day="day"
+                        :month="m.value"
+                        class="month-date"
+                        :aria-label="
+                          formatDate(day.toString()) +
+                          ', ' +
+                          eventsOn(day.toString()).length +
+                          '개 일정'
+                        "
                       >
-                        <component
-                          :is="event.kind === 'birthday' ? Cake : CalendarIcon"
-                          class="size-3"
-                        />
+                        {{ day.day }}
+                      </CalendarCellTrigger>
+                      <div v-if="day.month === m.value.month" class="cell-events">
+                        <template v-if="!mobile">
+                          <button
+                            v-for="event in eventsOn(day.toString()).slice(0, 2)"
+                            :key="event.id"
+                            type="button"
+                            class="cell-event-link"
+                            :aria-label="event.title + ' 상세 보기'"
+                            @click="openEvent(event)"
+                          >
+                            <Badge
+                              :variant="event.kind === 'birthday' ? 'outline' : 'secondary'"
+                              class="w-full min-w-0 justify-start"
+                            >
+                              <component
+                                :is="event.kind === 'birthday' ? Cake : CalendarIcon"
+                                data-icon="inline-start"
+                              />
+                              <span class="truncate">
+                                {{
+                                  event.kind === 'birthday'
+                                    ? event.title
+                                    : artist(event.artist_id)?.name
+                                }}
+                              </span>
+                            </Badge>
+                          </button>
+                        </template>
+                        <span v-else class="cell-markers" aria-hidden="true">
+                          <component
+                            v-for="event in eventsOn(day.toString()).slice(0, 2)"
+                            :key="event.id"
+                            :is="event.kind === 'birthday' ? Cake : CalendarIcon"
+                            class="size-3"
+                          />
+                        </span>
+                        <button
+                          v-if="eventsOn(day.toString()).length > 2"
+                          type="button"
+                          class="cell-more"
+                          @click="chooseDate(day)"
+                        >
+                          +{{ eventsOn(day.toString()).length - 2 }}
+                        </button>
+                      </div>
+                    </CalendarCell>
+                  </CalendarGridRow>
+                </CalendarGridBody>
+              </CalendarGrid>
+            </CardContent>
+          </CalendarRoot>
+          <CardFooter class="calendar-board-footer">
+            <span>공연은 가상 일정 · 생일은 공식 프로필 기준</span>
+            <span>한국 시간</span>
+          </CardFooter>
+        </Card>
+        <aside class="calendar-agenda-panel" aria-label="일정 목록">
+          <Card
+            :size="mobile ? 'sm' : 'default'"
+            :class="cn(dayChosen ? 'calendar-agenda' : 'month-agenda')"
+          >
+            <CardHeader>
+              <div class="agenda-heading">
+                <CardTitle>
+                  <h2>{{ agendaTitle }}</h2>
+                </CardTitle>
+                <Button v-if="dayChosen" variant="ghost" size="sm" @click="dayChosen = false">
+                  월 전체 보기
+                </Button>
+                <Badge v-else variant="secondary">{{ visibleEvents.length }}</Badge>
+              </div>
+              <CardDescription>
+                {{
+                  dayChosen
+                    ? '선택한 날짜의 공연과 생일'
+                    : '날짜를 선택해 일정을 좁혀보세요.'
+                }}
+              </CardDescription>
+            </CardHeader>
+            <CardContent class="agenda-content">
+              <ResourceState
+                :empty="!visibleEvents.length"
+                :title="dayChosen ? '이 날짜에 일정이 없습니다' : '이번 달에 일정이 없습니다'"
+                :description="
+                  !kinds.length
+                    ? '공연 또는 생일 필터를 켜 주세요.'
+                    : '다른 날짜나 전체 아티스트를 확인해 보세요.'
+                "
+              >
+                <div class="agenda-list">
+                  <template v-for="(event, index) in visibleEvents" :key="event.id + event.date">
+                    <Separator v-if="index" />
+                    <Button
+                      variant="ghost"
+                      :class="cn('schedule-entry', dayChosen ? 'agenda-item' : 'month-event')"
+                      @click="openEvent(event)"
+                    >
+                      <span v-if="!dayChosen" class="entry-date">
+                        <strong>{{ Number(event.date.slice(-2)) }}</strong>
                         <span>
                           {{
-                            event.kind === 'birthday' ? event.title : artist(event.artist_id)?.name
+                            formatDate(event.date, {
+                              year: undefined,
+                              month: undefined,
+                              day: undefined,
+                              weekday: 'short',
+                            })
                           }}
                         </span>
                       </span>
-                      <span v-if="eventsOn(day.toString()).length > 2" class="day-more">
-                        +{{ eventsOn(day.toString()).length - 2 }}
+                      <ArtistAvatar :artist="artist(event.artist_id)" class="size-9" />
+                      <span class="entry-copy">
+                        <span class="entry-kind">
+                          <component :is="event.kind === 'birthday' ? Cake : CalendarIcon" />
+                          {{ event.kind === 'birthday' ? '생일' : '샘플 공연' }}
+                        </span>
+                        <span class="entry-title">{{ event.title }}</span>
+                        <span class="entry-place">
+                          {{ event.concert?.venue || artist(event.artist_id)?.name }}
+                        </span>
                       </span>
-                    </span>
-                  </CalendarCell>
-                </CalendarGridRow>
-              </CalendarGridBody>
-            </CalendarGrid>
-          </CalendarRoot>
-          <p class="calendar-footnote">공연은 가상 일정 · 생일은 공식 프로필 기준 · 한국 시간</p>
-        </section>
-        <aside v-if="!mobile || dayChosen" class="calendar-agenda" aria-label="선택 날짜 일정">
-          <div class="section-heading">
-            <h2>
-              {{
-                formatDate(selected.toString(), { year: undefined, month: 'long', day: 'numeric' })
-              }}
-              <span>
-                {{
-                  formatDate(selected.toString(), {
-                    year: undefined,
-                    month: undefined,
-                    day: undefined,
-                    weekday: 'short',
-                  })
-                }}
-              </span>
-            </h2>
-            <Button v-if="mobile" variant="ghost" size="sm" @click="dayChosen = false">
-              월 전체 보기
-            </Button>
-          </div>
-          <ResourceState
-            :empty="!selectedEvents.length"
-            title="선택한 날짜에 일정이 없습니다"
-            description="다른 날짜를 선택해 보세요."
-          >
-            <div class="agenda-items">
-              <button
-                v-for="event in selectedEvents"
-                :key="event.id"
-                class="agenda-item"
-                @click="openEvent(event)"
-              >
-                <ArtistAvatar :artist="artist(event.artist_id)" class="size-11" />
-                <div>
-                  <Badge variant="outline">
-                    {{ event.kind === 'birthday' ? '생일' : '샘플 공연' }}
-                  </Badge>
-                  <h3>{{ event.title }}</h3>
-                  <p>{{ event.concert?.venue || artist(event.artist_id)?.name }}</p>
+                      <ChevronRight data-icon="inline-end" />
+                    </Button>
+                  </template>
                 </div>
-                <ChevronRight class="size-4 shrink-0" />
-              </button>
-            </div>
-          </ResourceState>
+              </ResourceState>
+            </CardContent>
+          </Card>
         </aside>
       </div>
-      <section v-if="!mobile || !dayChosen" class="month-agenda" aria-label="월 일정">
-        <div class="section-heading">
-          <h2>
-            {{ Number(month.slice(5, 7)) }}월 일정
-            <span>{{ inMonth.length }}</span>
-          </h2>
-        </div>
-        <ResourceState
-          :empty="!inMonth.length"
-          title="이번 달에 일정이 없습니다"
-          description="다음 달을 살펴보거나 전체 아티스트로 전환해 보세요."
-        >
-          <div class="month-event-list">
-            <button
-              v-for="event in inMonth"
-              :key="event.id"
-              class="month-event"
-              @click="openEvent(event)"
-            >
-              <span class="month-event-day">{{ event.date.slice(-2) }}</span>
-              <component :is="event.kind === 'birthday' ? Cake : CalendarIcon" class="size-4" />
-              <div>
-                <h3>{{ event.title }}</h3>
-                <p>{{ artist(event.artist_id)?.name }}</p>
-              </div>
-              <Badge variant="outline">
-                {{ event.kind === 'birthday' ? '생일' : '샘플 공연' }}
-              </Badge>
-              <ChevronRight class="size-4 ml-auto" />
-            </button>
-          </div>
-        </ResourceState>
-      </section>
     </ResourceState>
   </div>
 </template>

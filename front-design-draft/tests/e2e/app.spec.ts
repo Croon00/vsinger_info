@@ -108,36 +108,41 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await expect(page).toHaveURL(/tab=concerts$/)
 })
 
-test('calendar changes month, filters birthdays, and opens concerts', async ({
-  page,
-  isMobile,
-}) => {
+test('calendar changes month, filters birthdays, and opens concerts', async ({ page, isMobile }) => {
   await visit(page, '/calendar?month=2026-09-01')
   await page.getByRole('button', { name: '전체 아티스트', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
   await page.getByRole('button', { name: '공연', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: '샘플 공연' })).toHaveCount(0)
+  await page.getByRole('button', { name: '생일', exact: true }).click()
+  await expect(page.locator('.month-agenda')).toContainText('공연 또는 생일 필터를 켜 주세요.')
+  await expect(page.locator('.month-event')).toHaveCount(0)
+  await page.getByRole('button', { name: '생일', exact: true }).click()
   await page.getByRole('button', { name: '다음 달', exact: true }).click()
   await expect(page).toHaveURL(/month=2026-10-01/)
-  if (!isMobile) await expect(page.locator('.calendar-agenda h2')).toContainText('10월 1일')
+  await expect(page.locator('.month-agenda h2')).toContainText('10월 일정')
   await page.goBack()
-  if (!isMobile) await expect(page.locator('.calendar-agenda h2')).toContainText('9월 1일')
+  await expect(page.locator('.month-agenda h2')).toContainText('9월 일정')
   await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click()
   await expect(page.locator('.calendar-agenda')).toContainText('KASUKA 생일')
-  if (isMobile) {
-    await expect(page.locator('.month-agenda')).toHaveCount(0)
-    await page.getByRole('button', { name: '월 전체 보기' }).click()
-    await expect(page.locator('.calendar-agenda')).toHaveCount(0)
-    await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
-    await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click()
-    await expect(page.locator('.calendar-agenda')).toContainText('KASUKA 생일')
-    await page.getByRole('button', { name: '월 전체 보기' }).click()
-  }
+  await expect(page.locator('.month-agenda')).toHaveCount(0)
+  await page.getByRole('button', { name: '월 전체 보기' }).click()
+  await expect(page.locator('.calendar-agenda')).toHaveCount(0)
+  await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
+  await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click()
+  await expect(page.locator('.calendar-agenda')).toContainText('KASUKA 생일')
+  await page.getByRole('button', { name: '월 전체 보기' }).click()
   await page.getByRole('button', { name: '공연', exact: true }).click()
   await page.getByRole('button', { name: '오늘', exact: true }).click()
-  if (isMobile) await page.getByRole('button', { name: '월 전체 보기' }).click()
+  await page.getByRole('button', { name: '월 전체 보기' }).click()
   await page.locator('.month-event').filter({ hasText: '샘플 공연' }).first().click()
   await expect(page.getByRole('dialog')).toContainText('샘플 일정')
+  if (!isMobile) {
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog')).toHaveCount(0)
+    await page.locator('.cell-event-link').filter({ hasText: 'HACHI' }).first().click()
+    await expect(page.getByRole('dialog')).toContainText('샘플 일정')
+  }
 })
 
 test('system theme follows the device and explicit preference survives reload', async ({
