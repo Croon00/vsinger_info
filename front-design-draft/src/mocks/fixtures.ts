@@ -1,0 +1,316 @@
+import artistRecords from './artists.json'
+import type { Album, Artist, Concert, Live, Lyrics } from '@/api/types'
+import { addDays, todayKey } from '@/lib/dates'
+
+const intros: Record<number, string> = {
+  1: '투명한 목소리로, 당신의 마음 곁에 머무는 노래.',
+  2: '현실과 가상의 경계를 넘어 자신만의 세계를 노래합니다.',
+  3: '섬세함과 힘 있는 목소리로 전하는, 바다처럼 깊은 음악.',
+  4: '익숙한 감정에 새로운 색을 입히는 버추얼 싱어.',
+  5: '서로 다른 두 목소리가 만나 완성하는 강렬한 록 사운드.',
+  6: '노래와 이야기로 그려내는 또 하나의 세계.',
+}
+const imagePositions: Record<number, string> = {
+  2: '25% center',
+  4: '100% center',
+  12: '20% center',
+}
+export const artists: Artist[] = artistRecords.map((a) => ({
+  ...a,
+  birthday: a.id === 11 ? null : a.birthday,
+  image_position: imagePositions[a.id],
+  intro: intros[a.id] || `${a.agency}에서 만나는 ${a.display_name}의 음악 세계.`,
+}))
+const songs = [
+  ['斜陽', '사양', 'ヨルシカ', '요루시카', 69],
+  ['踊り子', '무희', 'Vaundy', '바운디', 587],
+  ['晴る', '맑게', 'ヨルシカ', '요루시카', 1088],
+  ['若者のすべて', '젊은이의 모든 것', 'フジファブリック', '후지패브릭', 1495],
+  ['inside you', '', 'Milet', '밀레', 1882],
+  ['狹心症', '협심증', 'RADWIMPS', '래드윔프스', 2178],
+  ['Heartache', '', 'ONE OK ROCK', '원 오크 록', 2456],
+  ['give it back', '', 'Cö shu Nie', '코슈니에', 2821],
+  ['Moon Crying', '', '倖田来未', '코다 쿠미', 3106],
+  ['誰か、海を。', '누군가, 바다를.', 'Aimer', '에메', 3385],
+  ['死神', '사신', '米津玄師', '요네즈 켄시', 3884],
+  ['完全感覚dreamer', '', 'ONE OK ROCK', '원 오크 록', 4162],
+  ['覚醒', '각성', 'Superfly', '슈퍼플라이', 4520],
+  ['タマシイレボリューション', '', 'Superfly', '슈퍼플라이', 4969],
+] as const
+export const lives: Live[] = [
+  {
+    id: 106,
+    artist_id: 2,
+    title: '花譜 #132 3rd ONE-MAN LIVE「不可解参(想)」【Digest Trailer】',
+    title_ko: '불가해 참(상) · 공식 라이브 다이제스트',
+    video_id: '508Xwh5xwvQ',
+    broadcast_at: '2024-01-09T10:00:33Z',
+    duration_seconds: 867,
+    performances: [],
+    source_url: 'https://www.youtube.com/watch?v=508Xwh5xwvQ',
+    metadata_note: '공식 다이제스트 영상 · 표시 날짜는 영상 공개일',
+  },
+  {
+    id: 104,
+    artist_id: 3,
+    title: '【 歌枠 / KARAOKE 】YouTube2000日記念らしいぞ！！祝って！！',
+    title_ko: 'YouTube 2,000일 · 함께 축하하는 밤',
+    video_id: 's6BZdVRPH_o',
+    broadcast_at: '2026-08-13T14:16:23Z',
+    duration_seconds: 5844,
+    source_url: 'https://vsinger-moment.jp/videos/2c07018d-305a-4a4b-8944-8c6187d94333',
+    metadata_note: '세트리스트·시점: VSinger Moment 공개 기록',
+    performances: [
+      {
+        id: 1101,
+        song_title: 'I LOVE...',
+        original_artist: 'Official髭男dism',
+        original_artist_ko: '오피셜히게단디즘',
+        start_seconds: 89,
+      },
+      {
+        id: 1102,
+        song_title: '52hzの鯨',
+        song_title_ko: '52hz의 고래',
+        original_artist: '隣町本舗',
+        start_seconds: 1213,
+      },
+      {
+        id: 1103,
+        song_title: '覚醒',
+        song_title_ko: '각성',
+        original_artist: 'Superfly',
+        original_artist_ko: '슈퍼플라이',
+        start_seconds: 1755,
+      },
+      {
+        id: 1104,
+        song_title: '空に歌えば',
+        song_title_ko: '하늘에 노래하면',
+        original_artist: 'amazarashi',
+        original_artist_ko: '아마자라시',
+        start_seconds: 2733,
+      },
+      {
+        id: 1105,
+        song_title: '僕が死のうと思ったのは',
+        song_title_ko: '내가 죽으려고 생각한 것은',
+        original_artist: '中島美嘉',
+        original_artist_ko: '나카시마 미카',
+        start_seconds: 4006,
+      },
+      {
+        id: 1106,
+        song_title: 'Meteor -ミーティア-',
+        original_artist: 'T.M.Revolution',
+        start_seconds: 4687,
+      },
+      {
+        id: 1107,
+        song_title: 'ヒバナ',
+        song_title_ko: '히바나',
+        original_artist: 'DECO*27',
+        start_seconds: 5177,
+      },
+    ],
+  },
+  {
+    id: 105,
+    artist_id: 3,
+    title: '【 #推しはなに味歌枠リレー2 】塩=潮味担当がきみを海に連れ出す夜',
+    title_ko: '당신을 바다로 데려가는 밤',
+    video_id: 'Ycu3iehv_ow',
+    broadcast_at: '2026-08-29T12:00:47Z',
+    duration_seconds: 1794,
+    source_url: 'https://vsinger-moment.jp/videos/6f5e6195-01eb-410b-a80e-d81b5c1e2dc7',
+    metadata_note: '세트리스트·시점: VSinger Moment 공개 기록',
+    performances: [
+      {
+        id: 1201,
+        song_title: '老人と海',
+        song_title_ko: '노인과 바다',
+        original_artist: 'ヨルシカ',
+        original_artist_ko: '요루시카',
+        start_seconds: 391,
+      },
+      {
+        id: 1202,
+        song_title: '美しい鰭',
+        song_title_ko: '아름다운 지느러미',
+        original_artist: 'スピッツ',
+        original_artist_ko: '스피츠',
+        start_seconds: 676,
+      },
+      { id: 1203, song_title: 'ebb and flow', original_artist: 'Ray', start_seconds: 922 },
+      {
+        id: 1204,
+        song_title: 'Goodbye,Azure',
+        original_artist: '瀬戸乃とと',
+        original_artist_ko: '세토노 토토',
+        start_seconds: 1311,
+      },
+    ],
+  },
+  {
+    id: 101,
+    artist_id: 1,
+    title: '【歌枠】ゆったり歌うぞ！- ハニカムステーション！-171【HACHI 】',
+    title_ko: '느긋하게 노래하는 밤 · Honeycomb Station #171',
+    video_id: 'jtzjXOVw7_Q',
+    broadcast_at: '2025-05-16T12:00:00Z',
+    duration_seconds: 7261,
+    source_url: 'https://vsinger-moment.jp/videos/f998b4d1-35fe-45e0-bf2e-b254b63c25ec',
+    metadata_note: '세트리스트·시점: VSinger Moment 공개 기록',
+    performances: songs.map(
+      ([song_title, song_title_ko, original_artist, original_artist_ko, start_seconds], i) => ({
+        id: 1001 + i,
+        song_title,
+        song_title_ko,
+        original_artist,
+        original_artist_ko,
+        start_seconds,
+      }),
+    ),
+  },
+  {
+    id: 102,
+    artist_id: 3,
+    title: '【 歌枠 / KARAOKE 】お知らせアリ！！ゲリラ短め歌枠♪',
+    title_ko: '깜짝 소식과 함께, 짧은 노래 시간',
+    video_id: 'EsptIdUKRIQ',
+    broadcast_at: '2026-07-28T16:05:59Z',
+    duration_seconds: 3878,
+    performances: [],
+    source_url: 'https://www.youtube.com/watch?v=EsptIdUKRIQ',
+  },
+  {
+    id: 103,
+    artist_id: 3,
+    title: '【 歌枠 / KARAOKE 】スケジュール間違えてごめんね歌枠',
+    title_ko: '세토노 토토와 함께하는 자유로운 노래 시간',
+    video_id: 'C1nKlZRM0cQ',
+    broadcast_at: '2026-01-25T05:53:09Z',
+    duration_seconds: 6238,
+    performances: [],
+    source_url: 'https://www.youtube.com/watch?v=C1nKlZRM0cQ',
+  },
+]
+export const albums: Album[] = [
+  {
+    id: 'midnight-blue',
+    artist_id: 1,
+    name: 'Midnight blue',
+    album_type: 'album',
+    release_date: '2022-12-25',
+    image_url: '/images/albums/midnight-blue.jpg',
+    source_url: 'https://linkco.re/t3pG1pgu',
+    is_sample: false,
+    tracks: [
+      'Weekend milk',
+      'ばいばい、テディベア',
+      'バスタイムプラネタリウム',
+      '夜迷い言',
+      '夏灯篭',
+      'Twilight Line',
+    ].map((title, i) => ({ id: 201 + i, title, title_ko: '', duration: '—', has_lyrics: i !== 5 })),
+  },
+  {
+    id: 'kaf-butte',
+    artist_id: 2,
+    name: '撃って',
+    album_type: 'single',
+    release_date: '2025-06-25',
+    image_url: '/images/albums/kaf-butte.png',
+    source_url: 'https://kamitsubaki.jp/artist/kaf/',
+    is_sample: false,
+    tracks: [{ id: 210, title: '撃って', title_ko: '쏴', duration: '—', has_lyrics: true }],
+  },
+  {
+    id: 'kaf-eat',
+    artist_id: 2,
+    name: 'EAT THE PAST',
+    album_type: 'single',
+    release_date: '2025-06-11',
+    image_url: '/images/albums/kaf-eat.jpg',
+    source_url: 'https://kamitsubaki.jp/artist/kaf/',
+    is_sample: false,
+    tracks: [{ id: 211, title: 'EAT THE PAST', title_ko: '', duration: '—', has_lyrics: true }],
+  },
+  {
+    id: 'kaf-my-life',
+    artist_id: 2,
+    name: 'My Life',
+    album_type: 'single',
+    release_date: '2025-01-29',
+    image_url: '/images/albums/kaf-my-life.jpg',
+    source_url: 'https://kamitsubaki.jp/artist/kaf/',
+    is_sample: false,
+    tracks: [{ id: 212, title: 'My Life', title_ko: '', duration: '—', has_lyrics: true }],
+  },
+]
+const anchor = todayKey()
+const venues = [
+  ['Zepp Shinjuku', '도쿄'],
+  ['KT Zepp Yokohama', '요코하마'],
+  ['Spotify O-EAST', '도쿄'],
+  ['豊洲PIT', '도쿄'],
+]
+export const concerts: Concert[] = artists.flatMap((artist, i) => [
+  {
+    id: 301 + i,
+    artist_id: artist.id,
+    title: `${artist.name} — A night to remember`,
+    starts_at: `${addDays(anchor, 3 + i * 3)}T19:00:00+09:00`,
+    venue: venues[i % 4][0],
+    city: venues[i % 4][1],
+    price_text: '¥7,500 (샘플)',
+    source_url: artist.official_url,
+    event_format: 'onsite' as const,
+    is_sample: true,
+  },
+  {
+    id: 401 + i,
+    artist_id: artist.id,
+    title: `${artist.name} — Our little universe`,
+    starts_at: `${addDays(anchor, -40 - i * 15)}T18:00:00+09:00`,
+    venue: venues[(i + 1) % 4][0],
+    city: venues[(i + 1) % 4][1],
+    price_text: '¥6,800 (샘플)',
+    source_url: artist.official_url,
+    event_format: 'onsite' as const,
+    is_sample: true,
+  },
+  ...(i < 3
+    ? [
+        {
+          id: 501 + i,
+          artist_id: artist.id,
+          title: `${artist.name} — First light`,
+          starts_at: `${addDays(anchor, -390 - i * 10)}T18:00:00+09:00`,
+          venue: 'LIVE HOUSE',
+          city: '도쿄',
+          price_text: '¥5,500 (샘플)',
+          source_url: artist.official_url,
+          event_format: 'onsite' as const,
+          is_sample: true,
+        },
+      ]
+    : []),
+])
+export function lyricsFor(id: number): Lyrics | undefined {
+  const album = albums.find((a) => a.tracks.some((t) => t.id === id && t.has_lyrics))
+  const track = album?.tracks.find((t) => t.id === id)
+  if (!album || !track) return undefined
+  return {
+    song_id: id,
+    original_title: track.title,
+    artist_name: artists.find((a) => a.id === album.artist_id)!.name,
+    is_sample: true,
+    original_lyrics:
+      '窓辺に小さな音を置いた\n名前のない朝が手を振った\n遠回りした今日の色を\nポケットにひとつしまっておこう\n明日はまだ白いページ\n好きな声で続きを描こう',
+    translation_ko:
+      '창가에 작은 소리를 놓았어\n이름 없는 아침이 손을 흔들었어\n돌아서 온 오늘의 색을\n주머니에 하나 간직해 두자\n내일은 아직 하얀 페이지\n좋아하는 목소리로 다음을 그리자',
+    pronunciation_ko:
+      '마도베니 치이사나 오토오 오이타\n나마에노 나이 아사가 테오 훗타\n토오마와리시타 쿄오노 이로오\n포켓토니 히토츠 시맛테 오코오\n아시타와 마다 시로이 페에지\n스키나 코에데 츠즈키오 에가코오',
+  }
+}

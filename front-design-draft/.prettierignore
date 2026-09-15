@@ -1,0 +1,6 @@
+.agents
+node_modules
+dist
+public
+src/components/ui
+package-lock.json

@@ -1,0 +1,39 @@
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
+import { ArrowUpRight, MapPin } from '@lucide/vue'
+import type { Concert } from '@/api/types'
+import { Badge } from '@/components/ui/badge'
+import { formatDate, dateKey } from '@/lib/dates'
+import { openOverlay } from '@/lib/overlays'
+defineProps<{ concert: Concert; past?: boolean }>()
+const router = useRouter()
+const route = useRoute()
+</script>
+<template>
+  <button
+    type="button"
+    class="concert-row"
+    @click="openOverlay(router, route, 'event', concert.id)"
+  >
+    <span class="concert-date">
+      <small>
+        {{ formatDate(concert.starts_at, { year: undefined, month: 'short', day: undefined }) }}
+      </small>
+      <strong>{{ Number(dateKey(new Date(concert.starts_at)).slice(-2)) }}</strong>
+    </span>
+    <div class="concert-summary">
+      <div class="flex flex-wrap items-center gap-2">
+        <Badge :variant="past ? 'outline' : 'secondary'">
+          {{ past ? '지난 공연' : '공연 예정' }}
+        </Badge>
+        <Badge variant="outline">샘플 일정</Badge>
+      </div>
+      <h3>{{ concert.title }}</h3>
+      <p>
+        <MapPin class="size-3.5" />
+        {{ concert.venue }} · {{ concert.city }}
+      </p>
+    </div>
+    <ArrowUpRight class="size-5 shrink-0" />
+  </button>
+</template>
