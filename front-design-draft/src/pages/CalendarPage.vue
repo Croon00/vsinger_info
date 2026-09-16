@@ -204,11 +204,12 @@ function openEvent(event: CalendarEvent) {
                       </CalendarCellTrigger>
                       <div v-if="day.month === m.value.month" class="cell-events">
                         <template v-if="!mobile">
-                          <button
+                          <Button
                             v-for="event in eventsOn(day.toString()).slice(0, 2)"
                             :key="event.id"
-                            type="button"
-                            class="cell-event-link"
+                            variant="ghost"
+                            size="xs"
+                            class="cell-event-link h-auto p-0"
                             :aria-label="event.title + ' 상세 보기'"
                             @click="openEvent(event)"
                           >
@@ -228,7 +229,7 @@ function openEvent(event: CalendarEvent) {
                                 }}
                               </span>
                             </Badge>
-                          </button>
+                          </Button>
                         </template>
                         <span v-else class="cell-markers" aria-hidden="true">
                           <component
@@ -238,14 +239,16 @@ function openEvent(event: CalendarEvent) {
                             class="size-3"
                           />
                         </span>
-                        <button
+                        <Button
                           v-if="eventsOn(day.toString()).length > 2"
-                          type="button"
+                          variant="ghost"
+                          size="xs"
                           class="cell-more"
+                          :aria-label="formatDate(day.toString()) + ' 일정 모두 보기'"
                           @click="chooseDate(day)"
                         >
                           +{{ eventsOn(day.toString()).length - 2 }}
-                        </button>
+                        </Button>
                       </div>
                     </CalendarCell>
                   </CalendarGridRow>
@@ -254,7 +257,6 @@ function openEvent(event: CalendarEvent) {
             </CardContent>
           </CalendarRoot>
           <CardFooter class="calendar-board-footer">
-            <span>공연은 가상 일정 · 생일은 공식 프로필 기준</span>
             <span>한국 시간</span>
           </CardFooter>
         </Card>
@@ -316,7 +318,7 @@ function openEvent(event: CalendarEvent) {
                       <span class="entry-copy">
                         <span class="entry-kind">
                           <component :is="event.kind === 'birthday' ? Cake : CalendarIcon" />
-                          {{ event.kind === 'birthday' ? '생일' : '샘플 공연' }}
+                          {{ event.kind === 'birthday' ? '생일' : '공연' }}
                         </span>
                         <span class="entry-title">{{ event.title }}</span>
                         <span class="entry-place">

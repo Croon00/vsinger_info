@@ -28,7 +28,6 @@ const route = useRoute()
         <Badge :variant="past ? 'outline' : 'secondary'">
           {{ past ? '지난 공연' : '공연 예정' }}
         </Badge>
-        <Badge variant="outline">샘플 일정</Badge>
       </div>
       <h3>{{ concert.title }}</h3>
       <p>

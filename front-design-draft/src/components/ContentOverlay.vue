@@ -18,7 +18,6 @@ import {
   DrawerDescription,
   DrawerClose,
 } from '@/components/ui/drawer'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ref } from 'vue'
@@ -83,8 +82,8 @@ async function restoreFocus(event: Event) {
         <component :is="mobile ? DrawerDescription : DialogDescription">
           {{
             mode === 'lyrics'
-              ? '노래 속에 담긴 문장을 함께 읽어보세요.'
-              : '무대에서 만나는 다음 순간.'
+              ? data?.lyrics?.artist_name || '가사를 불러오고 있어요.'
+              : '공연 일시 · 장소 · 티켓 정보'
           }}
         </component>
       </component>
@@ -97,7 +96,6 @@ async function restoreFocus(event: Event) {
         <ResourceState :loading="loading" :error="error" @retry="reload">
           <div v-if="data?.lyrics" class="lyrics-content">
             <div class="lyrics-toolbar">
-              <Badge variant="secondary">샘플 가사</Badge>
               <ToggleGroup
                 type="multiple"
                 v-model="visibleLyrics"
@@ -109,9 +107,6 @@ async function restoreFocus(event: Event) {
                 <ToggleGroupItem value="pronunciation">발음</ToggleGroupItem>
               </ToggleGroup>
             </div>
-            <p class="sample-explanation">
-              화면 확인용으로 작성한 문장입니다. 실제 곡의 가사가 아닙니다.
-            </p>
             <div class="lyric-stanzas">
               <div
                 v-for="(line, i) in data.lyrics.original_lyrics.split('\n')"
@@ -135,14 +130,10 @@ async function restoreFocus(event: Event) {
             <div class="concert-detail-art">
               <ArtistAvatar v-if="data.artist" :artist="data.artist" />
               <div>
-                <Badge variant="secondary">샘플 일정</Badge>
                 <h3>{{ data.artist?.name }}</h3>
                 <p>OFFLINE LIVE</p>
               </div>
             </div>
-            <p class="sample-explanation">
-              디자인 테스트용 가상 공연입니다. 실제 공연 일정이 아닙니다.
-            </p>
             <dl class="concert-facts">
               <div>
                 <dt>
@@ -177,7 +168,6 @@ async function restoreFocus(event: Event) {
                 </dt>
                 <dd>
                   {{ data.concert.price_text }}
-                  <small>샘플 가격 · 실제 판매하지 않습니다</small>
                 </dd>
               </div>
             </dl>

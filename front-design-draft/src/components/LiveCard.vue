@@ -40,7 +40,7 @@ function checkThumbnail(event: Event) {
         @error="nextThumbnail"
       />
       <ListMusic v-else class="size-12" />
-      <span class="live-play"><Play fill="currentColor" class="size-5" /></span>
+      <span class="live-play" aria-hidden="true"><Play fill="currentColor" class="size-5" /></span>
       <Badge variant="secondary" class="absolute bottom-3 right-3">
         {{ formatTime(live.duration_seconds) }}
       </Badge>
@@ -53,7 +53,6 @@ function checkThumbnail(event: Event) {
           ? `${live.performances.length}곡의 세트리스트`
           : '세트리스트 준비 중'
       }}
-      <span aria-hidden="true">↗</span>
     </p>
   </RouterLink>
 </template>

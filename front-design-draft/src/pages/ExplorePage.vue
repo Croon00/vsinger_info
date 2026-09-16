@@ -77,6 +77,7 @@ const filtered = computed(() =>
     </div>
     <p class="result-count" aria-live="polite">{{ filtered.length }}명의 아티스트</p>
     <ResourceState
+      loading-layout="artists"
       :loading="loading"
       :error="error"
       :empty="filtered.length === 0"

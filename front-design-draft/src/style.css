@@ -129,6 +129,7 @@
 :root {
   --duration-quick: 150ms;
   --duration-fast: 250ms;
+  --duration-medium: 350ms;
   --duration-slow: 400ms;
   --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
   --icon-swap-dur: 250ms;
@@ -193,13 +194,6 @@ a:focus-visible {
 .brand-symbol {
   display: flex;
   align-items: center;
-}
-
-.topbar {
-  min-height: 64px;
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
 }
 
 .page-container {
@@ -274,9 +268,18 @@ a:focus-visible {
   margin-top: 48px;
 }
 .favorite-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 24px;
+  --favorite-columns: 6;
+  --favorite-size: 116px;
+  --favorite-gap: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px var(--favorite-gap);
+  width: min(100%, calc(var(--favorite-columns) * var(--favorite-size) + (var(--favorite-columns) - 1) * var(--favorite-gap)));
+  margin-inline: auto;
+}
+.favorite-grid > .artist-tile {
+  flex: 0 0 calc((100% - (var(--favorite-columns) - 1) * var(--favorite-gap)) / var(--favorite-columns));
 }
 .artist-tile {
   min-width: 0;
@@ -315,7 +318,7 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  margin-top: 17px;
+  margin-top: 16px;
 }
 .artist-tile-caption h3 {
   font-size: 15px;
@@ -347,8 +350,7 @@ a:focus-visible {
 }
 .compact .artist-tile-caption p {
   margin-top: 1px;
-  font-size: 9px;
-  letter-spacing: 0.4px;
+  font-size: 11px;
 }
 
 .explore-toolbar {
@@ -373,10 +375,7 @@ a:focus-visible {
   row-gap: 40px;
 }
 .loading-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  padding: 18px 0;
+  width: 100%;
 }
 .back-link {
   margin-left: -12px;
@@ -385,7 +384,7 @@ a:focus-visible {
 .artist-profile {
   display: flex;
   align-items: center;
-  gap: 38px;
+  gap: 32px;
   margin: 6px 0 48px;
 }
 .profile-avatar {
@@ -541,6 +540,10 @@ a:focus-visible {
   gap: 12px;
   align-items: baseline;
 }
+.statistics-artists [data-slot='progress-indicator'] {
+  /* Page visibility must switch immediately; only the bar length animates. */
+  transition-property: transform;
+}
 .statistics-artists li > .statistics-rank {
   width: 18px;
   flex-shrink: 0;
@@ -661,15 +664,21 @@ a:focus-visible {
   opacity: 0;
   transition: opacity var(--duration-fast);
 }
-.live-card:hover .live-play {
+.live-card:focus-visible .live-play {
   opacity: 1;
 }
-.live-card:hover img {
-  transform: scale(1.035);
+@media (hover: hover) and (pointer: fine) {
+  .live-card:hover .live-play {
+    opacity: 1;
+  }
+  .live-card:hover img {
+    transform: scale(1.035);
+  }
 }
 .live-card .eyebrow {
-  margin-top: 7px;
-  font-size: 9px;
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: 0.4px;
 }
 .live-card h3 {
   font-size: 14px;
@@ -834,7 +843,7 @@ a:focus-visible {
   background: var(--foreground);
 }
 .search-section {
-  margin-top: 45px;
+  margin-top: 40px;
 }
 .search-artist-grid {
   display: grid;
@@ -857,7 +866,7 @@ a:focus-visible {
   gap: 16px;
   padding: var(--result-padding);
   border-radius: calc(var(--radius-xl) + var(--result-padding));
-  transition: background var(--duration-quick);
+  transition: background-color var(--duration-quick);
 }
 .performance-result:hover,
 .performance-result:focus-visible {
@@ -886,6 +895,7 @@ a:focus-visible {
   background: rgb(0 0 0 / 15%);
   border-radius: var(--radius-xl);
   opacity: 0;
+  transition: opacity var(--duration-quick);
 }
 .performance-result:hover .performance-art > .performance-play,
 .performance-result:focus-visible .performance-art > .performance-play {
@@ -901,9 +911,9 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 .performance-song p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted-foreground);
-  margin-top: 7px;
+  margin-top: 4px;
 }
 .performance-context {
   flex: 1;
@@ -921,7 +931,7 @@ a:focus-visible {
   color: var(--muted-foreground);
 }
 .performance-context small {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--muted-foreground);
 }
 .timestamp {
@@ -939,6 +949,7 @@ a:focus-visible {
 }
 .theme-picker > button {
   flex: 1;
+  min-width: 0;
   height: 48px;
   display: flex;
   gap: 8px;
@@ -956,14 +967,8 @@ a:focus-visible {
 .lyrics-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
-}
-.sample-explanation {
-  font-size: 11px;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-  margin-top: 16px;
 }
 .lyric-stanzas {
   padding: 26px 0 20px;
@@ -998,7 +1003,7 @@ a:focus-visible {
 .concert-detail-art h3 {
   font-size: 25px;
   font-weight: 600;
-  margin: 12px 0 6px;
+  margin: 0 0 6px;
 }
 .concert-detail-art p {
   font-size: 10px;
@@ -1106,20 +1111,23 @@ a:focus-visible {
 .setlist-song {
   display: flex;
   width: 100%;
+  height: auto;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  padding: 14px 12px;
+  padding: 12px;
   text-align: left;
-  border-radius: var(--radius);
-  transition: background var(--duration-quick);
+  white-space: normal;
+  transition-property: background-color, box-shadow, translate;
+  transition-duration: var(--duration-quick);
 }
-.setlist-song:hover,
 .setlist-song.is-playing {
-  background: var(--secondary);
+  background: var(--accent);
 }
 .setlist-number {
   width: 18px;
-  font-size: 10px;
+  flex-shrink: 0;
+  font-size: 11px;
   color: var(--muted-foreground);
 }
 .setlist-name {
@@ -1128,18 +1136,20 @@ a:focus-visible {
 }
 .setlist-name strong {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   overflow-wrap: anywhere;
 }
 .setlist-name small {
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 400;
   color: var(--muted-foreground);
   margin-top: 4px;
   display: block;
 }
 .setlist-time {
-  font-size: 10px;
+  font-size: 11px;
+  flex-shrink: 0;
   color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
@@ -1247,12 +1257,25 @@ a:focus-visible {
   transform: scale(var(--icon-swap-start-scale));
 }
 
+[data-slot='dialog-overlay'][data-state='open'],
 [data-slot='dialog-content'][data-state='open'] {
   animation-duration: var(--duration-fast);
   animation-timing-function: var(--ease-smooth-out);
 }
+[data-slot='dialog-overlay'][data-state='closed'],
 [data-slot='dialog-content'][data-state='closed'] {
   animation-duration: var(--duration-quick);
+  animation-timing-function: var(--ease-smooth-out);
+}
+[data-slot='drawer-overlay'][data-state='open'],
+[data-slot='drawer-content'][data-state='open'] {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-smooth-out);
+}
+[data-slot='drawer-overlay'][data-state='closed'],
+[data-slot='drawer-content'][data-state='closed'] {
+  animation-duration: var(--duration-medium);
+  animation-timing-function: var(--ease-smooth-out);
 }
 @media (min-width: 1440px) {
   .artist-grid {
@@ -1264,14 +1287,12 @@ a:focus-visible {
     padding-left: 32px;
     padding-right: 32px;
   }
-  .topbar {
-    padding: 0 32px;
-  }
   .home-page {
     width: calc(100% - 64px);
   }
   .favorite-grid {
-    gap: 16px;
+    --favorite-size: 100px;
+    --favorite-gap: 16px;
   }
   .favorite-avatar {
     max-width: 100px;
@@ -1312,14 +1333,6 @@ a:focus-visible {
   }
 }
 @media (max-width: 768px) {
-  .topbar {
-    min-height: 56px;
-    padding: 0 24px;
-  }
-  .topbar .brand {
-    font-size: 14px;
-  }
-
   .page-container {
     padding: 22px 24px 54px;
   }
@@ -1329,18 +1342,24 @@ a:focus-visible {
 
   .section-heading {
     gap: 12px;
-    margin-bottom: 23px;
+    margin-bottom: 20px;
   }
   .section-heading h2 {
     font-size: 18px;
   }
   .section-heading .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
   }
   .favorite-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    column-gap: 12px;
-    row-gap: 24px;
+    --favorite-size: min(88px, calc((100vw - 84px) / 4));
+    --favorite-gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--favorite-size));
+    width: 100%;
+    justify-content: center;
+  }
+  .favorite-grid > .artist-tile {
+    flex-basis: var(--favorite-size);
   }
   .favorite-avatar {
     max-width: 88px;
@@ -1355,7 +1374,7 @@ a:focus-visible {
     font-size: 12px;
   }
   .compact .artist-tile-caption p {
-    font-size: 8px;
+    font-size: 10px;
   }
   .favorites-section {
     margin-bottom: 34px;
@@ -1394,7 +1413,7 @@ a:focus-visible {
     height: 32px;
   }
   .artist-tile-caption p {
-    font-size: 10px;
+    font-size: 11px;
   }
   .result-count {
     margin-top: 20px;
@@ -1403,7 +1422,7 @@ a:focus-visible {
     gap: 16px;
     flex-direction: row;
     align-items: flex-start;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
   }
   .profile-avatar {
     width: 80px;
@@ -1450,7 +1469,7 @@ a:focus-visible {
     font-size: 13px;
   }
   .concert-summary p {
-    font-size: 10px;
+    font-size: 11px;
     flex-wrap: wrap;
   }
   .concert-date {
@@ -1504,6 +1523,9 @@ a:focus-visible {
   .search-section .section-heading {
     flex-wrap: wrap;
   }
+  .search-section {
+    margin-top: 32px;
+  }
   .search-filters {
     width: 100%;
   }
@@ -1537,13 +1559,13 @@ a:focus-visible {
     font-size: 13px;
   }
   .performance-song p {
-    font-size: 10px;
+    font-size: 11px;
   }
   .timestamp {
     grid-column: 3;
     grid-row: 1;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .viewer-heading h1 {
@@ -1556,9 +1578,12 @@ a:focus-visible {
     flex-wrap: wrap;
   }
 
-  .loading-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+}
+@media (max-width: 480px) {
+  .theme-picker > button {
+    flex-direction: column;
+    height: 64px;
+    gap: 6px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1664,9 +1689,6 @@ a:focus-visible {
     margin-top: 0;
     margin-bottom: 0;
   }
-  .favorite-grid {
-    row-gap: 24px;
-  }
   .search-help {
     font-size: 11px;
   }
@@ -1760,16 +1782,8 @@ a:focus-visible {
   min-width: 0;
   text-align: left;
 }
-.cell-event-link:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: var(--radius);
-}
 .cell-more {
-  font-size: 11px;
-  color: var(--muted-foreground);
-  text-align: left;
-  padding-left: 6px;
+  align-self: flex-start;
 }
 .calendar-board-footer {
   display: flex;
@@ -1887,11 +1901,10 @@ a:focus-visible {
     min-height: 12px;
   }
   .cell-more {
-    text-align: center;
-    padding: 0;
+    align-self: center;
   }
   .calendar-board-footer {
-    font-size: 9px;
+    font-size: 11px;
   }
   .schedule-entry {
     padding: 12px 0;

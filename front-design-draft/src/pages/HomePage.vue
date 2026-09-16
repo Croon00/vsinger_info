@@ -43,6 +43,7 @@ function search(q: string) {
         </Button>
       </div>
       <ResourceState
+        loading-layout="favorites"
         :loading="loading"
         :error="error"
         :empty="favorites.length === 0"

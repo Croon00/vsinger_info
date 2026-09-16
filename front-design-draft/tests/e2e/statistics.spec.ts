@@ -1,5 +1,27 @@
 import { test, expect } from '@playwright/test'
 
+test('artist bars hide immediately when their page becomes inactive', async ({ page }) => {
+  await page.goto('/artists/1?tab=statistics', { waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('progressbar')).toHaveCount(10)
+  for (const label of ['다음 페이지', '이전 페이지']) {
+    const hiddenBars = await page.evaluate(async (buttonLabel) => {
+      const section = document.querySelector('.original-artist-statistics')!
+      section.querySelector<HTMLButtonElement>(`[aria-label="${buttonLabel}"]`)!.click()
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
+      return [...section.querySelectorAll('[inert] [data-slot="progress-indicator"]')].map((bar) => ({
+        visibility: getComputedStyle(bar).visibility,
+        visibilityTransition: bar.getAnimations().some((animation) =>
+          animation instanceof CSSTransition && animation.transitionProperty === 'visibility'),
+      }))
+    }, label)
+    expect(hiddenBars.length).toBeGreaterThan(0)
+    for (const bar of hiddenBars) {
+      expect(bar.visibility).toBe('hidden')
+      expect(bar.visibilityTransition).toBe(false)
+    }
+  }
+})
+
 test('artist statistics paginate, retain Enter searches, filter aliases and paginate all artists independently', async ({
   page,
 }) => {
@@ -73,10 +95,18 @@ test('statistics pagination preserves document height, scroll and controls in bo
   await expect(page.locator('.statistics-song-row')).toHaveCount(10)
   for (const width of [320, 1440]) {
     await page.setViewportSize({ width, height: 844 })
+    // Finish font loading and responsive sidebar transitions before measuring
+    // pagination. A viewport transition is not a page-change scroll jump.
+    await page.evaluate(async () => {
+      await document.fonts.ready
+      await Promise.all(document.getAnimations()
+        .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
+        .map(animation => animation.finished.catch(() => {})))
+    })
     for (const selector of ['.song-statistics', '.original-artist-statistics']) {
       const section = page.locator(selector)
       const next = section.getByRole('button', { name: '다음 페이지', exact: true })
-      await next.evaluate((el) => el.scrollIntoView({ block: 'center' }))
+      await next.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }))
       const measure = () =>
         section.evaluate((el) => ({
           scroll: scrollY,

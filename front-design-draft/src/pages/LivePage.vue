@@ -230,13 +230,14 @@ function seek(seconds: number) {
                 >
                   <ol class="setlist">
                     <li v-for="(song, index) in data.performances" :key="song.id">
-                      <button
+                      <Button
+                        variant="ghost"
                         :class="cn('setlist-song', activeSong === song.id && 'is-playing')"
                         :aria-current="activeSong === song.id ? 'true' : undefined"
                         @click="seek(song.start_seconds)"
                       >
                         <span class="setlist-number">
-                          <AudioLines v-if="activeSong === song.id" class="size-4" />
+                          <AudioLines v-if="activeSong === song.id" />
                           <template v-else>{{ String(index + 1).padStart(2, '0') }}</template>
                         </span>
                         <span class="setlist-name">
@@ -244,7 +245,7 @@ function seek(seconds: number) {
                           <small>{{ song.original_artist }}</small>
                         </span>
                         <span class="setlist-time">{{ formatTime(song.start_seconds) }}</span>
-                      </button>
+                      </Button>
                     </li>
                   </ol>
                 </ResourceState>

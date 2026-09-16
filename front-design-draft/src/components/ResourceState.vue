@@ -16,15 +16,42 @@ defineProps<{
   empty?: boolean
   title?: string
   description?: string
+  loadingLayout?: 'artists' | 'favorites'
 }>()
 defineEmits<{ retry: [] }>()
 </script>
 <template>
   <div v-if="loading" class="loading-grid" role="status" aria-label="불러오는 중">
-    <div v-for="n in 6" :key="n" class="flex flex-col gap-4">
-      <Skeleton class="aspect-square w-full" />
-      <Skeleton class="h-4 w-2/3" />
-      <Skeleton class="h-3 w-1/3" />
+    <div v-if="loadingLayout === 'artists'" class="artist-grid" aria-hidden="true">
+      <div v-for="n in 12" :key="n" class="artist-tile">
+        <Skeleton class="aspect-square w-full" />
+        <div class="artist-tile-caption">
+          <div class="flex w-full flex-col gap-2">
+            <Skeleton class="h-5 w-2/3" />
+            <Skeleton class="h-3 w-1/3" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else-if="loadingLayout === 'favorites'" class="favorite-grid" aria-hidden="true">
+      <div v-for="n in 6" :key="n" class="artist-tile compact">
+        <Skeleton class="favorite-avatar" />
+        <div class="artist-tile-caption">
+          <div class="flex w-full flex-col items-center gap-1">
+            <Skeleton class="h-5 w-2/3" />
+            <Skeleton class="h-3 w-1/2" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="flex flex-col gap-6 py-4" aria-hidden="true">
+      <div v-for="n in 3" :key="n" class="flex items-center gap-4">
+        <Skeleton class="size-12 shrink-0" />
+        <div class="flex flex-1 flex-col gap-2">
+          <Skeleton class="h-4 w-2/3" />
+          <Skeleton class="h-3 w-1/3" />
+        </div>
+      </div>
     </div>
   </div>
   <Empty v-else-if="error || empty">

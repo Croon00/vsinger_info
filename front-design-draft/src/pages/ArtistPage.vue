@@ -17,7 +17,6 @@ import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import ArtistAvatar from '@/components/ArtistAvatar.vue'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate, todayKey } from '@/lib/dates'
@@ -264,7 +263,6 @@ function changeTab(value: string | number) {
                 <div>
                   <h2>예정된 공연</h2>
                 </div>
-                <Badge variant="outline">가상 일정으로 구성한 프리뷰</Badge>
               </div>
               <ResourceState :empty="!upcoming.length" title="예정된 공연이 없어요">
                 <div class="concert-list">
