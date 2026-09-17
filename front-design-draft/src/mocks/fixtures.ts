@@ -323,6 +323,24 @@ export const concerts: Concert[] = artists.flatMap((artist, i) => [
       ]
     : []),
 ])
+// Keep this crowded-day preview deterministic as the other fixtures move with today.
+const crowdedDay = '2026-09-20'
+const existingOnCrowdedDay = concerts.filter(c => c.starts_at.startsWith(crowdedDay)).length
+for (let index = existingOnCrowdedDay; index < 5; index++) {
+  const artist = artists[index % 5]
+  concerts.push({
+    id: 900 + index,
+    artist_id: artist.id,
+    title: `${artist.name} — Autumn Session`,
+    starts_at: `${crowdedDay}T${String(14 + index).padStart(2, '0')}:00:00+09:00`,
+    venue: venues[index % venues.length][0],
+    city: venues[index % venues.length][1],
+    price_text: '¥6,000',
+    source_url: artist.official_url,
+    event_format: 'onsite',
+    is_sample: true,
+  })
+}
 export function lyricsFor(id: number): Lyrics | undefined {
   const album = albums.find((a) => a.tracks.some((t) => t.id === id && t.has_lyrics))
   const track = album?.tracks.find((t) => t.id === id)

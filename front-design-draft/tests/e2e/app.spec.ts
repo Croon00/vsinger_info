@@ -157,6 +157,35 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   isMobile,
 }) => {
   await visit(page, '/calendar?month=2026-09-01')
+  if (!isMobile) {
+    const crowdedCell = page.getByRole('button', { name: '2026년 9월 20일, 5개 일정', exact: true }).locator('..')
+    await expect(crowdedCell.locator('.cell-event-link')).toHaveCount(3)
+    await expect(crowdedCell.locator('.cell-more')).toContainText('+2')
+    await page.setViewportSize({ width: 1440, height: 1400 })
+    await expect(crowdedCell.locator('.cell-event-link')).toHaveCount(5)
+    await expect(crowdedCell.locator('.cell-more')).toHaveCount(0)
+    await page.setViewportSize({ width: 1440, height: 1000 })
+    await expect(crowdedCell.locator('.cell-event-link')).toHaveCount(3)
+    await crowdedCell.locator('.cell-more').click()
+    await expect(page.getByRole('dialog')).toContainText('일정 리스트')
+    await expect(page.getByRole('dialog').locator('.schedule-entry')).toHaveCount(5)
+    await page.keyboard.press('Escape')
+    const board = page.locator('.calendar-board')
+    const height = (await board.boundingBox())!.height
+    await page.getByRole('button', { name: '리스트 보기', exact: true }).click()
+    await expect(page.locator('.calendar-list-view')).toBeVisible()
+    await expect(page.locator('.month-grid')).toHaveCount(0)
+    expect(Math.abs((await board.boundingBox())!.height - height)).toBeGreaterThan(2)
+    await page.getByRole('button', { name: '캘린더 보기', exact: true }).click()
+    await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click({ position: { x: 12, y: 100 } })
+    await expect(page.getByRole('dialog')).toContainText('KASUKA 생일')
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('dialog')).not.toBeVisible()
+    await page.getByRole('button', { name: '리스트 보기', exact: true }).click()
+    await page.locator('.calendar-list-view .month-event').filter({ hasText: '공연' }).first().click()
+    await expect(page.getByRole('dialog')).toContainText('공연 일시 · 장소 · 티켓 정보')
+    return
+  }
   await page.getByRole('button', { name: '전체 아티스트', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: 'KASUKA 생일' })).toBeVisible()
   await page.getByRole('button', { name: '공연', exact: true }).click()
