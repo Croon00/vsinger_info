@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
+const mobile = useMediaQuery('(max-width: 768px)')
 import { Search, X, ChevronLeft, ChevronRight } from '@lucide/vue'
 import type { Live } from '@/api/types'
 import { artistStatistics, filterAndSortSongs, type SongSort } from '@/lib/artist-statistics'
@@ -71,7 +73,21 @@ const date = (value: string | null) =>
       <section class="song-statistics" aria-labelledby="song-statistics-heading">
         <div class="section-heading">
           <h2 id="song-statistics-heading">부른 곡</h2>
-          <span class="statistics-note">{{ number(stats.uniqueSongs) }}곡</span>
+          <span v-if="!mobile" class="statistics-note">{{ number(stats.uniqueSongs) }}곡</span>
+          <Field v-else class="statistics-sort">
+            <FieldLabel for="statistics-sort" class="sr-only">곡 정렬순서</FieldLabel>
+            <Select v-model="sort">
+              <SelectTrigger id="statistics-sort" class="w-full"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="most">많이 부른 순</SelectItem>
+                  <SelectItem value="least">적게 부른 순</SelectItem>
+                  <SelectItem value="recent">최근에 부른 순</SelectItem>
+                  <SelectItem value="oldest">오래전에 부른 순</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
         </div>
         <form role="search" aria-label="부른 곡 검색" @submit.prevent>
           <FieldGroup class="statistics-toolbar">
@@ -99,7 +115,7 @@ const date = (value: string | null) =>
                 </InputGroupAddon>
               </InputGroup>
             </Field>
-            <Field class="statistics-sort">
+            <Field v-if="!mobile" class="statistics-sort">
               <FieldLabel for="statistics-sort" class="sr-only">곡 정렬순서</FieldLabel>
               <Select v-model="sort">
                 <SelectTrigger id="statistics-sort" class="w-full"><SelectValue /></SelectTrigger>
@@ -134,7 +150,7 @@ const date = (value: string | null) =>
             >
               <Table class="statistics-table" aria-label="부른 곡 통계">
                 <TableHeader>
-                  <TableRow>
+                  <TableRow class="hover:bg-transparent">
                     <TableHead class="w-12">순위</TableHead>
                     <TableHead>곡 / 아티스트</TableHead>
                     <TableHead class="statistics-date-column w-28">최근 부른 날</TableHead>
@@ -145,6 +161,7 @@ const date = (value: string | null) =>
                   <TableRow
                     v-for="song in entries"
                     :key="song.key"
+                    class="hover:bg-transparent"
                     :class="{ 'statistics-song-row': pageIndex === page - 1 }"
                   >
                     <TableCell>

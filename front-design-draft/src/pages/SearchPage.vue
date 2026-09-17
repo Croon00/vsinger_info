@@ -47,18 +47,12 @@ function search(q: string) {
   router.push({ path: '/search', query: { q } })
 }
 function koreanName(original: string, korean?: string) {
-  // Latin-only original names are already the display name; aliases remain searchable.
-  if (
-    !korean?.trim() ||
-    korean === original ||
-    /^[\p{Script=Latin}\p{N}\p{P}\p{Z}\p{S}]+$/u.test(original)
-  )
-    return ''
-  return korean
+  return korean?.trim() && korean !== original ? korean : ''
 }
+
 </script>
 <template>
-  <div class="page-container page-enter">
+  <div class="page-container search-page page-enter">
     <div class="page-heading">
       <h1>검색 결과</h1>
       <p>아티스트 이름, 원곡명, 원곡 아티스트로 라이브 속 노래를 찾아보세요.</p>
@@ -136,33 +130,19 @@ function koreanName(original: string, korean?: string) {
             >
               <ArchiveThumbnail :video-id="p.live.video_id" />
               <div class="performance-song">
-                <h3 class="performance-title">
-                  <span>
-                    {{ p.song_title }}
-                    <span
-                      v-if="koreanName(p.song_title, p.song_title_ko)"
-                      class="performance-korean"
-                    >
-                      ({{ p.song_title_ko }})
-                    </span>
-                  </span>
-                  <span class="performance-divider">{{ ' – ' }}</span>
-                  <span class="performance-original">
-                    {{ p.original_artist }}
-                    <span
-                      v-if="koreanName(p.original_artist, p.original_artist_ko)"
-                      class="performance-korean"
-                    >
-                      ({{ p.original_artist_ko }})
-                    </span>
-                  </span>
+                <h3 class="performance-title truncate">
+                  {{ p.song_title }} － {{ p.original_artist }}
                 </h3>
+                <p class="performance-translation truncate">
+                  {{ p.song_title_ko || p.song_title }} -
+                  {{ p.original_artist_ko || p.original_artist }}
+                </p>
                 <p class="performance-singer">
                   <span>
                     {{ p.artist.name }}
                     <span
                       v-if="koreanName(p.artist.name, p.artist.display_name)"
-                      class="performance-korean"
+                      class="performance-korean performance-singer-reading"
                     >
                       ({{ p.artist.display_name }})
                     </span>
