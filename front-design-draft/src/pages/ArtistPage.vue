@@ -135,7 +135,7 @@ function changeTab(value: string | number) {
               공연 정보
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="lives" class="pt-8">
+          <TabsContent value="lives" class="pt-4 min-[769px]:pt-6">
             <div class="section-heading">
               <div>
                 <h2>라이브 아카이브</h2>
@@ -180,10 +180,10 @@ function changeTab(value: string | number) {
               </Button>
             </ResourceState>
           </TabsContent>
-          <TabsContent value="statistics" class="pt-8">
+          <TabsContent value="statistics" class="pt-4 min-[769px]:pt-6">
             <ArtistStatistics :key="id" :lives="data.lives" />
           </TabsContent>
-          <TabsContent value="originals" class="pt-8">
+          <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">
             <div class="section-heading">
               <div>
                 <h2>디스코그래피</h2>
@@ -257,7 +257,7 @@ function changeTab(value: string | number) {
               </div>
             </ResourceState>
           </TabsContent>
-          <TabsContent value="concerts" class="pt-8">
+          <TabsContent value="concerts" class="pt-4 min-[769px]:pt-6">
             <section>
               <div class="section-heading">
                 <div>
