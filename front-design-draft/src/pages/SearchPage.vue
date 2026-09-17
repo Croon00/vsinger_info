@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ChevronRight, Play, ListMusic } from '@lucide/vue'
+import { ChevronRight } from '@lucide/vue'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
-import { formatDate, formatTime } from '@/lib/dates'
-import { Button } from '@/components/ui/button'
+import { formatDate } from '@/lib/dates'
 import {
   Select,
   SelectContent,
@@ -16,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import SearchForm from '@/components/SearchForm.vue'
 import ArtistTile from '@/components/ArtistTile.vue'
-import ArtistAvatar from '@/components/ArtistAvatar.vue'
+import ArchiveThumbnail from '@/components/ArchiveThumbnail.vue'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
@@ -46,6 +45,16 @@ const performances = computed(() =>
 )
 function search(q: string) {
   router.push({ path: '/search', query: { q } })
+}
+function koreanName(original: string, korean?: string) {
+  // Latin-only original names are already the display name; aliases remain searchable.
+  if (
+    !korean?.trim() ||
+    korean === original ||
+    /^[\p{Script=Latin}\p{N}\p{P}\p{Z}\p{S}]+$/u.test(original)
+  )
+    return ''
+  return korean
 }
 </script>
 <template>
@@ -125,27 +134,49 @@ function search(q: string) {
               :to="`/lives/${p.live.id}?t=${p.start_seconds}`"
               class="performance-result"
             >
-              <div class="performance-art">
-                <ArtistAvatar :artist="p.artist" />
-                <span class="performance-play" aria-hidden="true"><Play class="size-4" /></span>
-              </div>
+              <ArchiveThumbnail :video-id="p.live.video_id" />
               <div class="performance-song">
-                <h3>{{ p.song_title }}</h3>
-                <p>
-                  {{ p.original_artist }}
-                  <span v-if="p.original_artist_ko">· {{ p.original_artist_ko }}</span>
+                <h3 class="performance-title">
+                  <span>
+                    {{ p.song_title }}
+                    <span
+                      v-if="koreanName(p.song_title, p.song_title_ko)"
+                      class="performance-korean"
+                    >
+                      ({{ p.song_title_ko }})
+                    </span>
+                  </span>
+                  <span class="performance-divider">{{ ' – ' }}</span>
+                  <span class="performance-original">
+                    {{ p.original_artist }}
+                    <span
+                      v-if="koreanName(p.original_artist, p.original_artist_ko)"
+                      class="performance-korean"
+                    >
+                      ({{ p.original_artist_ko }})
+                    </span>
+                  </span>
+                </h3>
+                <p class="performance-singer">
+                  <span>
+                    {{ p.artist.name }}
+                    <span
+                      v-if="koreanName(p.artist.name, p.artist.display_name)"
+                      class="performance-korean"
+                    >
+                      ({{ p.artist.display_name }})
+                    </span>
+                  </span>
+                  <span class="performance-mobile-date">
+                    · {{ formatDate(p.live.broadcast_at) }}
+                  </span>
                 </p>
               </div>
               <div class="performance-context">
-                <span>{{ p.artist.name }}</span>
-                <p>{{ p.live.title_ko }}</p>
-                <small>{{ formatDate(p.live.broadcast_at) }}</small>
+                <p>{{ p.live.title_ko || p.live.title }}</p>
+                <time :datetime="p.live.broadcast_at">{{ formatDate(p.live.broadcast_at) }}</time>
               </div>
-              <span class="timestamp">
-                <Play class="size-3" />
-                {{ formatTime(p.start_seconds) }}
-              </span>
-              <ChevronRight class="size-4 result-arrow" />
+              <ChevronRight class="size-4 result-arrow" aria-hidden="true" />
             </RouterLink>
           </div>
         </ResourceState>

@@ -860,87 +860,66 @@ a:focus-visible {
   gap: 8px;
 }
 .performance-result {
-  --result-padding: 16px;
-  display: flex;
+  --result-padding: 12px;
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr) minmax(160px, 28%) 16px;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   padding: var(--result-padding);
-  border-radius: calc(var(--radius-xl) + var(--result-padding));
+  border-radius: calc(var(--radius) + var(--result-padding));
   transition: background-color var(--duration-quick);
 }
 .performance-result:hover,
-.performance-result:focus-visible {
-  background: var(--muted);
-}
+.performance-result:focus-visible { background: var(--muted); }
 .performance-result:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
-.performance-art {
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-  position: relative;
-}
-.performance-art .artist-avatar {
+.archive-thumbnail {
   width: 100%;
-  height: 100%;
-}
-.performance-art > .performance-play {
-  position: absolute;
-  inset: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--muted);
+  color: var(--muted-foreground);
   display: grid;
   place-items: center;
-  color: white;
-  background: rgb(0 0 0 / 15%);
-  border-radius: var(--radius-xl);
-  opacity: 0;
-  transition: opacity var(--duration-quick);
 }
-.performance-result:hover .performance-art > .performance-play,
-.performance-result:focus-visible .performance-art > .performance-play {
-  opacity: 1;
-}
-.performance-song {
-  width: 26%;
-  min-width: 0;
-}
-.performance-song h3 {
-  font-size: 15px;
+.archive-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.performance-song, .performance-context { min-width: 0; }
+.performance-title {
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.6;
   overflow-wrap: anywhere;
 }
-.performance-song p {
-  font-size: 12px;
+.performance-korean, .performance-divider {
   color: var(--muted-foreground);
-  margin-top: 4px;
+  font-weight: 400;
 }
-.performance-context {
-  flex: 1;
-  min-width: 0;
-}
-.performance-context > span {
+.performance-singer {
+  margin-top: 6px;
   font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
 }
+.performance-context { text-align: right; }
 .performance-context p {
-  margin-top: 4px;
-  font-size: 11px;
-  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.5;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--muted-foreground);
+  white-space: nowrap;
 }
-.performance-context small {
+.performance-context time {
+  display: block;
+  margin-top: 6px;
   font-size: 11px;
   color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
 }
-.timestamp {
-  font-size: 11px;
-  font-family: Inter;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
+.performance-mobile-date { display: none; }
+.result-arrow { color: var(--muted-foreground); }
 .settings-page {
   max-width: 1240px;
 }
@@ -1534,39 +1513,38 @@ a:focus-visible {
     min-width: 0;
   }
   .performance-result {
-    --result-padding: 12px;
-    display: grid;
-    grid-template-columns: 48px minmax(0, 1fr) auto;
-    gap: 12px;
+    --result-padding: 8px;
+    grid-template-columns: clamp(80px, 24vw, 112px) minmax(0, 1fr) 16px;
+    gap: 10px;
   }
-  .performance-art {
-    width: 48px;
-    height: 48px;
-  }
-  .performance-song {
-    width: auto;
-  }
-  .performance-context {
-    grid-column: 2 / -1;
-  }
-  .performance-context small {
-    display: none;
-  }
-  .result-arrow {
-    display: none;
-  }
-  .performance-song h3 {
-    font-size: 13px;
-  }
-  .performance-song p {
-    font-size: 11px;
-  }
-  .timestamp {
-    grid-column: 3;
-    grid-row: 1;
+  .performance-title { font-size: 13px; line-height: 1.5; }
+  .performance-title > span:first-child,
+  .performance-original {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 11px;
   }
+  .performance-original {
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted-foreground);
+  }
+  .performance-divider, .performance-context { display: none; }
+  .performance-singer {
+    display: flex;
+    gap: 3px;
+    margin-top: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .performance-singer > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .performance-mobile-date { display: inline; flex-shrink: 0; }
 
   .viewer-heading h1 {
     font-size: 21px;

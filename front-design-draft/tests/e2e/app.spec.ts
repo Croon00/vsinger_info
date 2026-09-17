@@ -96,11 +96,8 @@ test('search finds original artists and songs and seeks through the YouTube API'
   await page.getByRole('button', { name: '검색', exact: true }).click()
   await expect(page.locator('.performance-result')).toHaveCount(3)
   await page.mouse.move(0, 0)
-  for (const avatar of await page.locator('.performance-art .artist-avatar').all()) {
-    await expect(avatar).toHaveCSS('opacity', '1')
-    await expect(avatar.locator('img')).toBeVisible()
-  }
-  await expect(page.locator('.performance-play').first()).toHaveCSS('opacity', '0')
+  await expect(page.locator('.performance-result .archive-thumbnail')).toHaveCount(3)
+  await expect(page.locator('.performance-result .result-arrow').first()).toBeVisible()
   await page.locator('.performance-result').filter({ hasText: '晴る' }).click()
   await expect(page).toHaveURL(/\/lives\/101\?t=1088/)
   await expect.poll(() => page.evaluate(() => (window as any).__playerTest.time)).toBe(1088)
