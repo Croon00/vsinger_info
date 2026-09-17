@@ -25,6 +25,7 @@ export interface Performance {
   start_seconds: number
 }
 export interface Live {
+  is_sample?: boolean
   id: number
   artist_id: number
   title: string

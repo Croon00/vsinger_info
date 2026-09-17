@@ -57,7 +57,7 @@ async function setup() {
   autoplayMuted.value = false
   currentTime.value = clampTime(route.query.t, data.value?.duration_seconds ?? 0)
   const current = version
-  if (!data.value) return
+  if (!data.value?.video_id) return
   await nextTick()
   try {
     const YT = await loadYouTube()
@@ -157,7 +157,11 @@ function seek(seconds: number) {
           <section>
             <div class="video-frame">
               <div ref="playerHost" class="player-host" />
-              <div v-if="!ready && !playerError" class="player-loading">
+              <div v-if="!data.video_id" class="player-loading">
+                <ListMusic class="size-9" />
+                <span>등록된 영상이 없습니다.</span>
+              </div>
+              <div v-else-if="!ready && !playerError" class="player-loading">
                 <AudioLines class="size-9" />
                 <span>플레이어를 준비하고 있어요</span>
               </div>
@@ -203,7 +207,7 @@ function seek(seconds: number) {
                   {{ data.performances.length }}곡
                 </Badge>
                 <span>{{ formatTime(data.duration_seconds) }}</span>
-                <Button as-child variant="ghost" size="sm">
+                <Button v-if="data.video_id" as-child variant="ghost" size="sm">
                   <a
                     :href="`https://www.youtube.com/watch?v=${data.video_id}`"
                     target="_blank"

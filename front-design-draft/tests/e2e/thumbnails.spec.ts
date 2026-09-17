@@ -19,7 +19,10 @@ test('archive thumbnails keep 16:9 and recover from unavailable image sizes', as
   })
   await page.goto('http://127.0.0.1:5174/artists/1?tab=lives')
   await expect(page).toHaveURL('http://localhost:5174/artists/1?tab=lives')
-  await expect(page.locator('.live-card')).toHaveCount(3)
+  await expect(page.locator('.live-card').first()).toBeVisible()
+  while (await page.getByRole('button', { name: '라이브 더 보기' }).count()) {
+    await page.getByRole('button', { name: '라이브 더 보기' }).click()
+  }
   for (const id of [107, 108]) {
     const card = page.locator(`.live-card[href="/lives/${id}"]`)
     await card.scrollIntoViewIfNeeded()

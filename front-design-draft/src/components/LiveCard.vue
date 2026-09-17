@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { RouterLink } from 'vue-router'
 import { Play, ListMusic } from '@lucide/vue'
 import type { Live } from '@/api/types'
 import { formatDate, formatTime } from '@/lib/dates'
@@ -26,10 +27,14 @@ function checkThumbnail(event: Event) {
 }
 </script>
 <template>
-  <RouterLink :to="`/lives/${live.id}`" class="live-card">
+  <component
+    :is="live.video_id ? RouterLink : 'article'"
+    :to="live.video_id ? `/lives/${live.id}` : undefined"
+    class="live-card"
+  >
     <div class="live-thumb">
       <img
-        v-if="!imageFailed"
+        v-if="live.video_id && !imageFailed"
         :src="thumbnail"
         :alt="live.title"
         loading="lazy"
@@ -40,7 +45,9 @@ function checkThumbnail(event: Event) {
         @error="nextThumbnail"
       />
       <ListMusic v-else class="size-12" />
-      <span class="live-play" aria-hidden="true"><Play fill="currentColor" class="size-5" /></span>
+      <span v-if="live.video_id" class="live-play" aria-hidden="true">
+        <Play fill="currentColor" class="size-5" />
+      </span>
       <Badge variant="secondary" class="absolute bottom-3 right-3">
         {{ formatTime(live.duration_seconds) }}
       </Badge>
@@ -49,10 +56,12 @@ function checkThumbnail(event: Event) {
     <h3>{{ live.title_ko || live.title }}</h3>
     <p class="text-sm text-muted-foreground">
       {{
-        live.performances.length
-          ? `${live.performances.length}곡의 세트리스트`
-          : '세트리스트 준비 중'
+        !live.video_id
+          ? '영상 미등록'
+          : live.performances.length
+            ? `${live.performances.length}곡의 세트리스트`
+            : '세트리스트 준비 중'
       }}
     </p>
-  </RouterLink>
+  </component>
 </template>

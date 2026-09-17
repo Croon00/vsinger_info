@@ -439,6 +439,8 @@ a:focus-visible {
   flex-direction: column;
   gap: 48px;
 }
+.archive-activity { min-width: 0; }
+.activity-chart { height: 220px; aspect-ratio: auto; }
 .statistics-note {
   color: var(--muted-foreground);
   font-size: 12px;

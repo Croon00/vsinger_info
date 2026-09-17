@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/pagination'
 import { Progress } from '@/components/ui/progress'
 import ResourceState from '@/components/ResourceState.vue'
+import ArchiveActivity from '@/components/ArchiveActivity.vue'
 
 const props = defineProps<{ lives: Live[] }>()
 const query = ref('')
@@ -65,6 +66,7 @@ const date = (value: string | null) =>
 
 <template>
   <div class="artist-statistics">
+    <ArchiveActivity :lives="lives" />
     <div class="statistics-columns">
       <section class="song-statistics" aria-labelledby="song-statistics-heading">
         <div class="section-heading">
@@ -207,7 +209,7 @@ const date = (value: string | null) =>
 
       <section class="original-artist-statistics" aria-labelledby="original-artist-heading">
         <div class="section-heading">
-          <h2 id="original-artist-heading">원곡 아티스트</h2>
+          <h2 id="original-artist-heading">아티스트 순위</h2>
           <span class="statistics-note">{{ number(stats.uniqueArtists) }}명</span>
         </div>
         <ResourceState :empty="!stats.artists.length" title="아직 아티스트 기록이 없어요">

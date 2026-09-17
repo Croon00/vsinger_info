@@ -1,6 +1,7 @@
 import artistRecords from './artists.json'
 import type { Album, Artist, Concert, Live, Lyrics } from '@/api/types'
 import { addDays, todayKey } from '@/lib/dates'
+import { hachiArchiveHistory } from './archive-history'
 
 const intros: Record<number, string> = {
   1: '투명한 목소리로, 당신의 마음 곁에 머무는 노래.',
@@ -38,6 +39,7 @@ const songs = [
   ['タマシイレボリューション', '', 'Superfly', '슈퍼플라이', 4969],
 ] as const
 export const lives: Live[] = [
+  ...hachiArchiveHistory(),
   {
     id: 107,
     artist_id: 1,

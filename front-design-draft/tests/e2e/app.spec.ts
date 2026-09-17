@@ -124,7 +124,10 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
     'on',
   )
   await visit(page, '/artists/1')
-  const archive = page.locator('.live-card').first()
+  while (!await page.locator('a.live-card').count()) {
+    await page.getByRole('button', { name: '라이브 더 보기' }).click()
+  }
+  const archive = page.locator('a.live-card').first()
   await archive.focus()
   await expect(archive.locator('.live-play')).toHaveCSS('opacity', '1')
   await page.getByRole('tab', { name: '오리곡' }).click()
