@@ -8,6 +8,7 @@ import { FieldGroup, Field, FieldLabel } from '@/components/ui/field'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
+import { favoriteIds } from '@/composables/preferences'
 import { normalize } from '@/lib/search'
 import ArtistTile from '@/components/ArtistTile.vue'
 import ResourceState from '@/components/ResourceState.vue'
@@ -23,13 +24,24 @@ watch(
     query.value = String(q ?? '')
   },
 )
-const filtered = computed(() =>
-  (data.value ?? []).filter(
-    (a) =>
-      (agency.value === 'all' || a.agency === agency.value) &&
-      [a.name, a.display_name, a.roman].some((s) => normalize(s).includes(normalize(query.value))),
-  ),
-)
+const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
+const filtered = computed(() => {
+  const favorites = new Set(favoriteIds.value)
+  return (data.value ?? [])
+    .filter(
+      (a) =>
+        (agency.value === 'all' || a.agency === agency.value) &&
+        [a.name, a.display_name, a.roman].some((s) =>
+          normalize(s).includes(normalize(query.value)),
+        ),
+    )
+    .sort(
+      (a, b) =>
+        Number(favorites.has(b.id)) - Number(favorites.has(a.id)) ||
+        nameCollator.compare(a.roman || a.name, b.roman || b.name) ||
+        a.id - b.id,
+    )
+})
 </script>
 <template>
   <div class="page-container page-enter">
