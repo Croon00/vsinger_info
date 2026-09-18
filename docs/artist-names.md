@@ -42,6 +42,6 @@ idempotently, and presets/imports resolve curated aliases before inserting.
 Changes to catalogue grouping require deploying the backend and frontend.
 
 Checks: `python -m pytest tests/test_artist_identity.py tests/test_read_api.py`.
-For frontend validation see the [QA guide](../front-design-draft/docs/qa.md).
+For frontend validation see the [QA guide](../web/docs/qa.md).
 The official source links above are preserved provenance, not a new external
 verification performed during the documentation cleanup.
