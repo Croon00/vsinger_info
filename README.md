@@ -51,6 +51,8 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집 흐름, Discord 명령, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
+| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 설계안: 통합 아티스트 명부, 음악 카탈로그, 검수 후 새 DB 전환 |
+| [관리자 로컬 웹 개발 계획](docs/admin-web-plan.md) | 미구현 계획: JSON 검수·수동 입력·승인 후 반영·후속 관리 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
 | [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
 | [새 프론트 실행](web/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
@@ -59,4 +61,4 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [목업 콘텐츠 출처](web/docs/content-sources.md) | 공식 자료와 합성 데이터의 출처·한계 |
 | [기존 관리 웹](web.bak/README.md) | 기존 프론트 실행과 유지 범위 |
 
-`AGENTS.md`는 작업 규칙, README는 실행 안내, 각 설계 문서는 현재 동작의 기준이다. 검수 이력은 검증 문서에 모으고 폐기된 계획을 현재 사양과 나란히 유지하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.
+`AGENTS.md`는 작업 규칙, README는 실행 안내를 다룬다. 현재 동작 문서와 미구현 계획을 구분하고, 계획서의 제안을 실행된 기능으로 해석하지 않는다. 검수 이력은 검증 문서에 모으고 폐기된 계획을 현재 사양과 나란히 유지하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.
