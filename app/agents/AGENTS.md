@@ -19,9 +19,9 @@
 - LangGraph는 판단과 분기에 사용하고 단순 저장·조회·전송까지 억지로 node로 만들지 않는다.
 - node 사이에는 직렬화 가능한 명시적 state를 전달한다.
 
-## 처리 순서
+## 현재 동작과 확장 시 처리 순서
 
-기본 처리 순서를 유지한다.
+현재 scheduler는 X 새 글을 notice로 저장하고 소스별로 알린다. music_graph.py의 분류/추출과 Calendar 생성은 이 경로에 연결되어 있지 않다. 현재 상태는 [백엔드 구조](../../docs/backend-architecture.md)를 따른다. 아래 순서는 분류·일정 자동화를 확장할 때의 설계 원칙이며 현재 구현 완료 목록이 아니다.
 
 ```text
 collect

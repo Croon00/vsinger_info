@@ -1,10 +1,12 @@
 # 조회 API v2와 성능 개선
 
+[문서 안내](../README.md) · [구조·운영](backend-architecture.md) · [후속 작업](backend-roadmap.md)
+
 2026-09-18. 새 프론트는 `/api/v2` 조회 API를 사용한다. 기존 API·수집기·DB 테이블과 기존 데이터는 유지한다. 데이터 정제, 중복 삭제, 재수집, DB 인덱스/스키마 변경은 이번 범위에 포함하지 않았다.
 
 ## 적용
 
-일반 8000번 서버에서도 `/api/v2/artists`의 200 응답을 확인했다. `--reload`가 변경을 반영한 상태에서는 프론트를 새로고침하면 된다. 다른 실행 환경에서 새 경로가 404이면 백엔드 코드가 있는 루트 `D:\06_Dev\schedule_music`에서 API를 재시작한다.
+백엔드는 루트에서 실행한다. --reload가 변경을 반영한 상태에서는 프론트를 새로고침하면 된다. 새 경로가 404이면 오래된 API 프로세스를 재시작한다.
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -72,18 +74,14 @@ uvicorn app.main:app --reload
 
 목록 비교는 초기 표시까지 필요한 작업을 비교한 것으로, 전체 목록 전송 완료 시간 비교가 아니다. 기존 검색 두 요청은 병렬이므로 소요 시간을 단순 합산하지 않는다. 실제 달력은 월 범위 조건을 추가하므로 표의 전체 첫 페이지와 다를 수 있다.
 
-원시 측정값은 `performance-before.json`, `performance-after.json`, SQL 프로파일은 `performance-queries.json`이다. 재측정은 루트 가상환경 Python으로 `front-design-draft/scripts/benchmark-api.py before|after`를 실행한다. `BENCHMARK_API_URL`로 주소를 바꿀 수 있다. `profile-catalog.py`는 명시적인 읽기 전용 트랜잭션에서 SQL 횟수/시간만 측정하며 레코드·인증정보를 출력하지 않는다.
+원시 측정값은 [변경 전](../front-design-draft/docs/performance-before.json), [변경 후](../front-design-draft/docs/performance-after.json), [SQL 프로파일](../front-design-draft/docs/performance-queries.json)이다. 재측정은 루트 가상환경 Python으로 `front-design-draft/scripts/benchmark-api.py before|after`를 실행한다. `BENCHMARK_API_URL`로 주소를 바꿀 수 있다. `profile-catalog.py`는 명시적인 읽기 전용 트랜잭션에서 SQL 횟수/시간만 측정하며 레코드·인증정보를 출력하지 않는다.
 
 실제 SQL 프로파일에서 기존 목록은 94개 등록 아티스트의 대표 영상 조회를 94번 추가 실행했다. 총 96개 쿼리, 서비스 처리 약 7.47초 중 대표 영상 조회가 7.17초였다. 새 목록은 같은 75개 그룹을 2개 쿼리로 반환했고 같은 연결 조건에서 서비스 처리 약 0.17초였다. 이는 HTTP 전체 시간과는 다른 측정이다.
 
-## 검증 결과
+## 검증
 
-- 백엔드 회귀 테스트 30개 통과: 새 읽기 계약, 인증/범위 검증, 일정한 쿼리 수, 그룹 ID, 이름 연결, 통계 집계, 연결 풀 재사용, 캐시와 기존 Spotify/YouTube/아티스트 식별 동작.
-- 프론트 단위 테스트 24개 통과, TypeScript 검사와 프로덕션 빌드 통과.
-- mock 화면 E2E 28개, v2 응답 fixture를 사용하는 연결 E2E 2개 통과. PC·모바일 각각 확인했다.
-- 별도로 실제 Neon 데이터를 연결한 PC(1440px)·모바일(390px)에서 라이브 첫 6개와 더 보기 12개, 통계 10행, 캘린더 표시를 확인했다. 해당 경로에서 API 오류·런타임 오류·가로 넘침이 없었다. Spotify의 실제 외부 요청은 이 실데이터 화면 검증에 포함하지 않았다.
-- `git diff --check` 통과. 검증용 서버와 일반 실행 서버를 분리했으며 DB 스키마·레코드는 변경하지 않았다.
+테스트 명령·결과·실데이터 확인 범위는 [검증 가이드](../front-design-draft/docs/qa.md)에 모아 관리한다.
 
 ## 남은 범위
 
-기존 서비스 폐기는 승인되지 않았으므로 `/api`의 기존 경로를 삭제하지 않았다. 과거 코드의 psycopg 직접 연결·관리 작업은 유지된다. 기존 데이터 오염 정리, 공통 곡 ID, 계정 권한 개편, 대규모 통계 페이지 API, DB 인덱스 변경은 별도 단계다.
+기존 서비스가 유지되고 있어 `/api`의 기존 경로를 삭제하지 않았다. 과거 코드의 psycopg 직접 연결·관리 작업은 유지된다. 기존 데이터 오염 정리, 공통 곡 ID, 계정 권한 개편, 대규모 통계 페이지 API, DB 인덱스 변경은 별도 단계다.

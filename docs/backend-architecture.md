@@ -1,31 +1,95 @@
-# Backend architecture
+# 백엔드 구조와 운영
 
-The canonical HTTP namespace is `/api`. Unprefixed routes are temporarily kept
-for the existing Vue client and existing Discord links.
+기준: 2026-09-18, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
+
+## 구성과 데이터 경로
 
 ```text
-router -> service -> repository -> SQLAlchemy ORM / explicit SQL -> PostgreSQL
-                         |
-                         +-> integrations (Spotify, YouTube, OpenAI, Google)
+새 프론트 → /api/v2 → ReadCatalog / ReadSpotify → PostgreSQL / Spotify
+기존 웹·관리 API → router → service → repository → PostgreSQL / 외부 연동
+runtime → API + Discord bot + 선택적 scheduler
 ```
 
-- `app/api/routers/`: domain-specific HTTP endpoints and response status codes
-- `app/schemas/`: Pydantic request/response contracts
-- `app/services/`: use cases, orchestration, and external integrations
-- `app/repositories/`: database queries only
-- `app/db/models.py`: SQLAlchemy entity mappings
-- `app/db/session.py`: SQLAlchemy engine and request-scoped sessions
-- `app/core/config.py`: `pydantic-settings` configuration (the Python analogue
-  to `application.yml`); values are loaded from `.env`
-- `app/core/security.py`: optional `API_KEY` authentication dependency
+| 위치 | 책임 |
+| --- | --- |
+| `app/api/main.py`, `app/api/routers/` | 앱 수명주기, 라우터 등록, HTTP 상태·입출력 |
+| `app/schemas/` | Pydantic 요청·응답 모델 |
+| `app/services/` | 조회·업무 처리. v2의 명시적 SQL도 `read_catalog.py`에 있음 |
+| `app/repositories/` | 기존 도메인의 DB 조회·저장 |
+| `app/db/session.py` | URL별 공유 SQLAlchemy Engine/연결 풀, 요청별 Session |
+| `app/core/db.py` | 기존 psycopg 연결, 증분 스키마·시드 초기화 |
+| `app/integrations/` | YouTube, Spotify, X, OpenAI, Google 등 |
+| `app/agents/scheduler.py` | 주기 수집과 소스별 실패 격리 |
+| `app/bots/discord_bot.py` | Discord slash 명령과 전송 |
+| `app/core/config.py` | 환경변수·루트 `.env` 설정 |
 
-`app/core/db.py` remains responsible for the existing incremental schema
-bootstrap during migration. It must not be replaced by `Base.metadata.create_all`
-until all current schema changes are represented by migrations.
+모든 경로가 ORM이나 하나의 연결 풀로 통일된 상태는 아니다. 레거시 psycopg 직접 연결도 남아 있다. 스키마 초기화를 `Base.metadata.create_all`로 대체하지 않는다. 현재 증분 변경과 시드 동작을 먼저 마이그레이션으로 옮겨야 한다.
 
-## Security
+아티스트·소스·원문·공연 후보·알림 route/전송 이력·Google 연결/동기화·YouTube 아카이브/가창 기록·곡/가사·Spotify 연동 데이터를 PostgreSQL에 저장한다. 엔티티 매핑은 `app/db/models.py`, 실제 초기화 SQL은 `app/core/db.py`를 함께 확인한다. 신규 스키마는 이번 조회 성능 개선에서 추가하지 않았다.
 
-Set `API_KEY` in `.env` to require an `X-API-Key` header on newly migrated
-routers. It is intentionally optional for now, so deploying this refactor does
-not break the current unauthenticated web client. Enable it only after the
-frontend/client header is configured.
+## 현재 수집 흐름
+
+현재 scheduler의 X 처리는 다음과 같다.
+
+```text
+활성 X 소스 조회 → 신규 게시글 수집 → source_items 중복 제거
+→ notice로 기록 → 포함된 YouTube 라이브 링크 등록
+→ 해당 source의 Discord route로 새 글 알림 → 마지막 조회 ID 갱신
+```
+
+주기 실행에서는 J-POP Playlist 인덱스 갱신·매칭, 기존 YouTube 라이브 갱신, 채널 모니터 수집도 수행한다. X 설정/소스가 없어도 YouTube 관련 처리는 진행할 수 있다.
+
+`music_graph.py`에는 분류 → live_event/ticket 추출 workflow와 LangGraph 미설치 시 순차 fallback이 구현되어 있다. **현재 scheduler는 이 함수를 호출하지 않는다.** 따라서 X 글이 자동 분류되어 공연 후보·Google 일정으로 이어진다고 안내하지 않는다. Google OAuth·일정 생성 helper와 관련 테이블은 존재하지만, 현재 X loop의 자동 Calendar 생성 경로는 연결되어 있지 않다.
+
+향후 분류·일정 처리를 다시 연결할 때 원문 중복 제거 → 규칙 필터 → 필요한 LLM 분류/추출 → 저장 → 캘린더/알림 순서를 사용한다. 허용 타입은 notice, release, live_event, ticket, merch, irrelevant의 여섯 가지다. 모든 게시글을 LLM에 보내지 않고 원문 링크·외부 ID와 처리 이력을 보존한다.
+
+## Discord 사용
+
+현재 `route_add`는 특정 X 소스의 모든 새 글을 채널로 연결한다. 과거 README의 `item_type` 인수나 source 생략 기본 route 예시는 현재 slash 명령과 맞지 않는다.
+
+```text
+/artist_add name:RKMusic x_username:RKMusic_inc
+/artist_list
+/source_list
+/route_add source_id:3 channel:#공지
+/route_list
+/route_list source_id:3
+/route_delete route_id:5
+/route_test route_id:5
+/source_disable source_id:3
+/source_enable source_id:3
+/google_connect
+```
+
+source/route ID는 실제 목록 결과를 사용한다. route 관리는 서버의 `manage_guild` 권한을 확인한다. route가 없거나 봇이 준비되지 않았으면 전송을 건너뛴다. `route_test`, `source_test`, `route_replay`는 실제 메시지를 보낼 수 있는 운영 명령이다. `route_replay`는 저장된 미전송 게시글을 대상으로 전송 이력을 기록한다.
+
+Google 연결은 Discord 사용자별 OAuth다. 서버 공용 연결이나 웹 사용자 로그인과 동일하지 않다. 연결했다고 현재 X 수집 loop의 자동 일정 생성이 활성화되는 것은 아니다. 전체 slash 명령과 매개변수는 `app/bots/discord_bot.py`가 기준이다.
+
+## 설정과 실행 경계
+
+| 설정 | 용도 / 코드 기본값 |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL. 조회에 필요 |
+| `DATABASE_AUTO_INIT` | 시작 시 초기화, 기본 false |
+| `API_KEY` | 일부 기존 라우터와 v2의 선택적 X-API-Key 인증 |
+| `AGENT_ENABLED` / `AGENT_RUN_ON_START` | runtime 수집 / 시작 직후 실행, 코드 기본 false / false |
+| `AGENT_INTERVAL_SECONDS` | 코드 기본 86400초. 수집량과 제공자 제한을 보고 운영 환경에서 조정 |
+| `DISCORD_BOT_TOKEN`, `DISCORD_GUILD_ID` | 봇 인증과 명령 등록 범위 |
+| `X_PROVIDER` | auto / twscrape / x_api; 필요한 인증은 선택한 provider에 설정 |
+| `YOUTUBE_API_KEY` | YouTube 수집 |
+| `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | Spotify 조회·매칭 |
+| `OPENAI_API_KEY`, `OPENAI_MODEL` | 명시적으로 호출되는 추출·번역 등 |
+| `PUBLIC_BASE_URL`, `GOOGLE_CLIENT_*`, `GOOGLE_REDIRECT_URI` | OAuth 공개 주소와 Google 연결 |
+| `PORT` | runtime API 포트, 기본 8000 |
+
+`.env.example`은 AGENT_ENABLED=true를 제안하므로 복사 후 실제 활성화 여부를 확인한다. API만 실행하는 uvicorn 명령은 agent loop를 시작하지 않는다. 외부 연동 설정이 존재하는 것과 그 기능이 현재 실행 경로에 연결되어 있는 것은 별개다.
+
+## API 호환성과 접근 제어
+
+표준 namespace는 `/api`, 새 프론트는 `/api/v2`다. 기존 접두사 없는 경로도 호환용으로 남아 있다. `_deprecated_router` 자체는 미마운트지만 일부 함수는 Spotify/Google 라우터가 별도 등록하므로 이름만 보고 제거하지 않는다.
+
+v2 GET은 저장된 정보 조회와 필요한 Spotify 읽기만 수행한다. 일부 기존 GET에는 번역·보완 쓰기가 남아 있다. 기존 서비스 사용 여부를 확인하기 전 일괄 삭제하거나 동작을 바꾸지 않는다.
+
+현재 선택적 API 키는 완성된 사용자/관리자 권한 체계가 아니다. 새 프론트 개발 프록시는 서버 전용 키를 넣으며 GET/HEAD만 전달한다. 공개 배포에는 별도 API 라우팅과 읽기·쓰기 권한 검토가 필요하다. 토큰·DB URL은 로그나 프론트 번들에 넣지 않는다.
+
+구매·결제·응모 제출·CAPTCHA 우회는 구현 범위 밖이다. 공식 소스의 이용 조건과 rate limit을 지키며 테스트의 외부 전송은 mock 처리한다.

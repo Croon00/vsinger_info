@@ -4,7 +4,7 @@
 확인한 누락 채널을 아래 시드에 기록했다. 각 항목의 `source_url`은 공식 채널의
 확인 근거이며 `channel_url`은 수집에 사용할 주소다.
 
-적용 결과: 누락 모니터 20개를 DB에 추가해 전체 활성 채널이 27개에서 47개로
+당시 적용 기록(현재 DB 개수를 재측정한 값이 아님): 누락 모니터 20개를 DB에 추가해 전체 활성 채널이 27개에서 47개로
 늘었다. 재실행 미리보기에서는 20개 모두 `already_registered`로 확인했다.
 과거 영상 전체 수집은 이번 등록 작업에 포함하지 않았다.
 
@@ -51,3 +51,5 @@ python -m pytest tests/test_register_missing_youtube_channels.py tests/test_yout
 
 등록 미리보기의 무변경 동작, 재실행 중복 방지, 비활성 설정 보존, 실패 격리와
 실제 비동기 과거 수집 호출을 mock으로 검증한다.
+
+이 문서는 채널 등록 운영 절차와 확인 근거를 별도로 보존한다. 전체 실행 구조는 [백엔드 구조](backend-architecture.md), 후속 데이터 작업은 [로드맵](backend-roadmap.md)을 따른다.
