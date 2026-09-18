@@ -48,17 +48,28 @@ import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
 const mobile = useMediaQuery('(max-width: 768px)')
-const calendarContent = ref<InstanceType<typeof CardContent>>()
+const calendarContent = ref<InstanceType<typeof CardContent> | HTMLElement>()
 const pageElement = ref<HTMLElement>()
 const { height: viewportHeight } = useWindowSize()
 const eventSpace = ref(96)
 function measureCalendar() {
-  const root = calendarContent.value?.$el as HTMLElement | undefined
+  const content = calendarContent.value
+  const root = content instanceof HTMLElement ? content : (content?.$el as HTMLElement | undefined)
   const cell = root?.querySelector<HTMLElement>('.month-cell')
   const label = cell?.querySelector<HTMLElement>('.month-day-label')
   const page = pageElement.value
   const body = root?.querySelector('tbody')
-  if (!mobile.value && page && body) {
+  if (mobile.value && page) {
+    const dock = document.querySelector<HTMLElement>('.mobile-dock')
+    if (dock) {
+      const bottomGap = parseFloat(getComputedStyle(dock).bottom) || 14
+      page.style.setProperty(
+        '--calendar-dock-clearance',
+        `${dock.getBoundingClientRect().height + bottomGap * 2}px`,
+      )
+    }
+  }
+  if (page && body) {
     let pageTop = 0
     let element: HTMLElement | null = page
     while (element) {
@@ -68,6 +79,7 @@ function measureCalendar() {
     const surroundingHeight = page.offsetHeight - body.getBoundingClientRect().height
     const rowHeight =
       (viewportHeight.value - pageTop - surroundingHeight - 1) / Math.max(5, body.children.length)
+    page.style.setProperty('--calendar-week-count', String(Math.max(5, body.children.length)))
     page.style.setProperty('--calendar-row-height', `${rowHeight}px`)
   }
   if (cell && label) {
@@ -79,12 +91,12 @@ function measureCalendar() {
 useResizeObserver([calendarContent, pageElement], measureCalendar)
 watch(viewportHeight, () => nextTick(measureCalendar))
 function visibleEventCount(date: string) {
-  if (mobile.value) return monthWeekCount.value === 6 ? 2 : 3
-  const capacity = Math.floor((eventSpace.value + 2) / 24)
+  const rowStep = mobile.value ? 18 : 24
+  const capacity = Math.floor((eventSpace.value + 2) / rowStep)
   // Reserve only a compact text line when some events overflow.
   return eventsOn(date).length <= capacity
     ? capacity
-    : Math.max(3, Math.floor((eventSpace.value - 12) / 24))
+    : Math.max(mobile.value ? 1 : 3, Math.floor((eventSpace.value - 12) / rowStep))
 }
 const listView = ref(false)
 const dayDialog = ref(false)
@@ -273,17 +285,23 @@ async function openEvent(event: CalendarEvent) {
           <ToggleGroupItem value="favorites" aria-label="즐겨찾는 아티스트">
             즐겨찾기
           </ToggleGroupItem>
-          <ToggleGroupItem value="all" aria-label="전체 아티스트">전체 아티스트</ToggleGroupItem>
+          <ToggleGroupItem value="all" aria-label="전체 아티스트">
+            {{ mobile ? '전체' : '전체 아티스트' }}
+          </ToggleGroupItem>
         </ToggleGroup>
         <Button variant="outline" :aria-pressed="listView" @click="listView = !listView">
           <component :is="listView ? CalendarIcon : List" data-icon="inline-start" />
-          {{ listView ? '캘린더 보기' : '리스트 보기' }}
+          {{ listView ? (mobile ? '캘린더' : '캘린더 보기') : mobile ? '리스트' : '리스트 보기' }}
         </Button>
       </div>
     </div>
     <ResourceState :loading="loading" :error="error" @retry="reload">
       <div class="calendar-workspace">
-        <Card class="calendar-board" :size="mobile ? 'sm' : 'default'">
+        <component
+          :is="mobile ? 'div' : Card"
+          class="calendar-board"
+          :size="mobile ? undefined : 'default'"
+        >
           <CalendarRoot
             v-slot="{ grid, weekDays }"
             locale="ko-KR"
@@ -295,7 +313,7 @@ async function openEvent(event: CalendarEvent) {
             @update:model-value="chooseDate"
             @update:placeholder="setMonth"
           >
-            <CardHeader class="calendar-toolbar">
+            <component :is="mobile ? 'div' : CardHeader" class="calendar-toolbar">
               <CalendarHeader class="calendar-toolbar-main justify-between gap-3 px-0">
                 <CalendarHeading>
                   {{ formatDate(month, { day: undefined, year: 'numeric', month: 'long' }) }}
@@ -318,8 +336,9 @@ async function openEvent(event: CalendarEvent) {
                   </ToggleGroupItem>
                 </ToggleGroup>
               </div>
-            </CardHeader>
-            <CardContent
+            </component>
+            <component
+              :is="mobile ? 'div' : CardContent"
               ref="calendarContent"
               class="calendar-board-content"
               @touchstart.passive="startMonthSwipe"
@@ -444,9 +463,9 @@ async function openEvent(event: CalendarEvent) {
                   </template>
                 </div>
               </div>
-            </CardContent>
+            </component>
           </CalendarRoot>
-        </Card>
+        </component>
       </div>
     </ResourceState>
     <component :is="mobile ? Drawer : Dialog" :open="dayDialog" @update:open="dayDialog = $event">

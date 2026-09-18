@@ -192,7 +192,7 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await expect(page.getByRole('dialog').locator('.schedule-entry')).toHaveCount(5)
   await page.getByRole('button', { name: '닫기', exact: true }).click()
   await expect(page.getByRole('dialog')).not.toBeVisible()
-  await page.getByRole('button', { name: '리스트 보기', exact: true }).click()
+  await page.getByRole('button', { name: '리스트', exact: true }).click()
   await expect(page.locator('.month-grid')).toHaveCount(0)
   await expect(page.locator('.calendar-list-view')).toBeVisible()
   await page.getByRole('button', { name: '공연', exact: true }).click()
@@ -203,7 +203,7 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await page.locator('.month-event').first().click()
   await expect(page.getByRole('dialog')).toContainText('공연 일시 · 장소 · 티켓 정보')
   await page.getByRole('button', { name: '닫기', exact: true }).click()
-  await page.getByRole('button', { name: '캘린더 보기', exact: true }).click()
+  await page.getByRole('button', { name: '캘린더', exact: true }).click()
   await expect(page.getByRole('button', { name: '다음 달', exact: true })).toHaveCount(0)
   const client = await page.context().newCDPSession(page)
   const boardBox = (await page.locator('.calendar-board').boundingBox())!

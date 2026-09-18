@@ -2073,3 +2073,34 @@ a:focus-visible {
 @media (max-width: 768px) {
   .calendar-page[data-weeks="6"] .month-cell { height: 78px; }
 }
+
+@media (max-width: 768px) {
+  .calendar-page { padding-inline: 12px; }
+  .calendar-page .calendar-board { padding: 0; min-width: 0; }
+  .calendar-page .calendar-toolbar { padding-inline: 4px; }
+  .calendar-page .calendar-board-content { padding: 0; }
+  .calendar-page[data-weeks="5"] .month-cell { height: 93.6px; }
+}
+
+@media (max-width: 768px) {
+  .calendar-page .calendar-page-heading { margin-inline: 12px; flex-wrap: nowrap; gap: 8px; }
+  .calendar-page .calendar-page-heading h1 { width: auto; flex-shrink: 0; }
+  .calendar-page .calendar-view-controls { width: auto; margin-left: auto; gap: 6px; }
+  .calendar-page .calendar-view-controls button { height: 30px; min-width: 0; padding-inline: 8px; font-size: 11px; gap: 4px; }
+  .calendar-page .calendar-toolbar [data-slot='calendar-heading'] { font-size: 18px; }
+  .calendar-page .calendar-options button,
+  .calendar-page .calendar-navigation button { height: 28px; min-width: 0; padding-inline: 8px; font-size: 11px; gap: 4px; }
+  .calendar-page .calendar-options svg { width: 12px; height: 12px; }
+  .calendar-page .month-day-label { height: 14px; line-height: 14px; }
+  .calendar-page .cell-events { margin-top: 4px; }
+  .calendar-page[data-weeks="5"] .month-cell { height: 112px; }
+  .calendar-page[data-weeks="6"] .month-cell { height: calc(560px / 6); }
+}
+
+@media (max-width: 768px) {
+  #main-content:has(.calendar-page) { padding-bottom: 0; }
+  .calendar-page { padding-bottom: var(--calendar-dock-clearance, 90px); }
+  .calendar-page[data-weeks] .month-cell {
+    height: max(calc(348px / var(--calendar-week-count, 6)), var(--calendar-row-height, 58px));
+  }
+}
