@@ -2,6 +2,27 @@ import type { Live } from '@/api/types'
 import { dateKey } from '@/lib/dates'
 
 export type ActivityPeriod = '6M' | '12M' | 'All'
+export function monthlyActivity(
+  months: { month: string; count: number }[],
+  period: ActivityPeriod,
+  now = new Date(),
+) {
+  const toIndex = (key: string) => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7)) - 1
+  const end = toIndex(dateKey(now))
+  const counts = new Map(
+    months.filter((m) => toIndex(m.month) <= end).map((m) => [toIndex(m.month), m.count]),
+  )
+  const start =
+    period === 'All' ? Math.min(end, ...counts.keys()) : end - (period === '6M' ? 5 : 11)
+  return Array.from({ length: end - start + 1 }, (_, index) => {
+    const month = start + index
+    return {
+      index,
+      month: `${Math.floor(month / 12)}-${String((month % 12) + 1).padStart(2, '0')}`,
+      count: counts.get(month) ?? 0,
+    }
+  })
+}
 export function archiveActivity(lives: Live[], period: ActivityPeriod, now = new Date()) {
   const toIndex = (key: string) => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7)) - 1
   const end = toIndex(dateKey(now))

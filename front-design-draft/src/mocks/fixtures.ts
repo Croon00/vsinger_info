@@ -358,3 +358,8 @@ export function lyricsFor(id: number): Lyrics | undefined {
       '마도베니 치이사나 오토오 오이타\n나마에노 나이 아사가 테오 훗타\n토오마와리시타 쿄오노 이로오\n포켓토니 히토츠 시맛테 오코오\n아시타와 마다 시로이 페에지\n스키나 코에데 츠즈키오 에가코오',
   }
 }
+
+for (const [id, members] of [[5, [{ name: 'YOMI', date: '07-05' }, { name: 'KASUKA', date: '09-09' }]], [11, [{ name: 'LITA', date: '01-11' }, { name: 'TINA', date: '11-07' }, { name: 'NERO', date: '08-25' }]]] as const) {
+  const artist = artists.find(a => a.id === id)
+  if (artist) artist.member_birthdays = members.map(member => ({ ...member }))
+}

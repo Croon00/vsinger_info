@@ -34,12 +34,19 @@ export function calendarDays(month: string) {
   return Array.from({ length: 42 }, (_, i) => addDays(start, i))
 }
 export function formatDate(value: string, options: Intl.DateTimeFormatOptions = {}) {
+  if (!value) return '날짜 미정'
+  if (/^\d{4}$/.test(value)) return `${value}년`
+  if (/^\d{4}-\d{2}$/.test(value)) return `${value.slice(0, 4)}년 ${Number(value.slice(5))}월`
+  if (!Number.isFinite(Date.parse(value))) return '날짜 미정'
   return new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
     timeZone: SEOUL,
     ...options,
+    ...(value.length === 10
+      ? { hour: undefined, minute: undefined, second: undefined, timeZoneName: undefined }
+      : {}),
   }).format(value.length === 10 ? dayDate(value) : new Date(value))
 }
 export function formatTime(seconds: number) {
@@ -53,7 +60,10 @@ export function calendarEvents(
   year: number,
 ): CalendarEvent[] {
   const events: CalendarEvent[] = concerts
-    .filter((c) => c.event_format !== 'online')
+    .filter(
+      (c) =>
+        ['onsite', 'hybrid'].includes(c.event_format) && Number.isFinite(Date.parse(c.starts_at)),
+    )
     .map((c) => ({
       id: `concert-${c.id}`,
       artist_id: c.artist_id,
@@ -74,24 +84,19 @@ export function calendarEvents(
       kind: 'birthday',
     })
   }
-  // Official member birthdays belong to the individual, not the whole group.
-  const members = [
-    { artist_id: 5, person: 'YOMI', date: '07-05' },
-    { artist_id: 5, person: 'KASUKA', date: '09-09' },
-    { artist_id: 11, person: 'LITA', date: '01-11' },
-    { artist_id: 11, person: 'TINA', date: '11-07' },
-    { artist_id: 11, person: 'NERO', date: '08-25' },
-  ]
-  for (const member of members) {
-    if (!artists.some((a) => a.id === member.artist_id)) continue
-    events.push({
-      id: `birthday-${member.person}`,
-      artist_id: member.artist_id,
-      title: `${member.person} 생일`,
-      date: `${year}-${member.date}`,
-      kind: 'birthday',
-      person: member.person,
-    })
+  for (const artist of artists) {
+    for (const member of artist.member_birthdays ?? []) {
+      const date = `${year}-${member.date}`
+      if (dateKey(dayDate(date)) !== date) continue
+      events.push({
+        id: `birthday-${artist.id}-${member.name}`,
+        artist_id: artist.id,
+        title: `${member.name} 생일`,
+        date,
+        kind: 'birthday',
+        person: member.name,
+      })
+    }
   }
   return events.sort((a, b) => a.date.localeCompare(b.date))
 }

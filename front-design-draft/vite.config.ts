@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, type Plugin } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
@@ -32,7 +32,39 @@ const localPlayerOrigin: Plugin = {
   },
 }
 
-export default defineConfig({
-  plugins: [localPlayerOrigin, vue(), tailwindcss()],
-  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  const target = env.BACKEND_URL || 'http://127.0.0.1:8000'
+  const apiKey = env.BACKEND_API_KEY
+  const readOnlyApi: Plugin = {
+    name: 'read-only-backend-proxy',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.startsWith('/api/') && !['GET', 'HEAD'].includes(req.method ?? '')) {
+          res.writeHead(405, { 'Content-Type': 'application/json' })
+          res.end('{"detail":"Read-only frontend proxy"}')
+          return
+        }
+        next()
+      })
+    },
+  }
+  return {
+    define: {
+      'import.meta.env.VITE_DATA_MODE': JSON.stringify(
+        mode === 'mock' ? 'mock' : mode === 'integration' ? 'real' : env.VITE_DATA_MODE || 'real',
+      ),
+    },
+    server: {
+      proxy: {
+        '/api': {
+          target,
+          changeOrigin: true,
+          ...(apiKey ? { headers: { 'X-API-Key': apiKey } } : {}),
+        },
+      },
+    },
+    plugins: [localPlayerOrigin, readOnlyApi, vue(), tailwindcss()],
+    resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
+  }
 })

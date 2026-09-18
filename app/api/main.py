@@ -973,3 +973,7 @@ from app.api.routers.youtube import router as youtube_router
 for _router in (auth_router, songs_router, spotify_router, youtube_router):
     app.include_router(_router, prefix="/api")
     app.include_router(_router)
+
+
+from app.api.routers.read_api import router as frontend_read_router
+app.include_router(frontend_read_router, prefix="/api")

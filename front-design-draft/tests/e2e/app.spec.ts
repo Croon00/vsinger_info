@@ -124,17 +124,21 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
     'on',
   )
   await visit(page, '/artists/1')
-  while (!await page.locator('a.live-card').count()) {
+  while (!(await page.locator('a.live-card').count())) {
     await page.getByRole('button', { name: '라이브 더 보기' }).click()
   }
   const archive = page.locator('a.live-card').first()
   await archive.focus()
+  await page.keyboard.press('Shift+Tab')
+  await page.keyboard.press('Tab')
   await expect(archive.locator('.live-play')).toHaveCSS('opacity', '1')
   await page.getByRole('tab', { name: '오리곡' }).click()
   const lyrics = page.getByRole('button', { name: '가사', exact: true }).first()
   await lyrics.click()
   await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(page.getByRole('dialog').getByRole('button', { name: '닫기', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('dialog').getByRole('button', { name: '닫기', exact: true }),
+  ).toBeVisible()
   await expect(page.getByRole('dialog')).toContainText('Weekend milk')
   await page.getByRole('dialog').getByRole('button', { name: '발음', exact: true }).click()
   await expect(page.locator('.lyric-pronunciation').first()).toBeVisible()
@@ -158,7 +162,9 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
 }) => {
   await visit(page, '/calendar?month=2026-09-01')
   if (!isMobile) {
-    const crowdedCell = page.getByRole('button', { name: '2026년 9월 20일, 5개 일정', exact: true }).locator('..')
+    const crowdedCell = page
+      .getByRole('button', { name: '2026년 9월 20일, 5개 일정', exact: true })
+      .locator('..')
     await expect(crowdedCell.locator('.cell-event-link')).toHaveCount(3)
     await expect(crowdedCell.locator('.cell-more')).toContainText('+2')
     await page.setViewportSize({ width: 1440, height: 1400 })
@@ -177,12 +183,18 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
     await expect(page.locator('.month-grid')).toHaveCount(0)
     expect(Math.abs((await board.boundingBox())!.height - height)).toBeGreaterThan(2)
     await page.getByRole('button', { name: '캘린더 보기', exact: true }).click()
-    await page.getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true }).click({ position: { x: 12, y: 100 } })
+    await page
+      .getByRole('button', { name: '2026년 9월 9일, 1개 일정', exact: true })
+      .click({ position: { x: 12, y: 100 } })
     await expect(page.getByRole('dialog')).toContainText('KASUKA 생일')
     await page.keyboard.press('Escape')
     await expect(page.getByRole('dialog')).not.toBeVisible()
     await page.getByRole('button', { name: '리스트 보기', exact: true }).click()
-    await page.locator('.calendar-list-view .month-event').filter({ hasText: '공연' }).first().click()
+    await page
+      .locator('.calendar-list-view .month-event')
+      .filter({ hasText: '공연' })
+      .first()
+      .click()
     await expect(page.getByRole('dialog')).toContainText('공연 일시 · 장소 · 티켓 정보')
     return
   }
@@ -208,20 +220,38 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   const client = await page.context().newCDPSession(page)
   const boardBox = (await page.locator('.calendar-board').boundingBox())!
   const swipeY = boardBox.y + 180
-  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 300, y: swipeY }] })
-  await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: swipeY + 2 }] })
-  await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 80, y: swipeY + 3 }] })
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: 300, y: swipeY }],
+  })
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: 200, y: swipeY + 2 }],
+  })
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: 80, y: swipeY + 3 }],
+  })
   await expect(page.locator('.calendar-month-surface')).toHaveAttribute('style', /translateX\(-/)
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await expect(page).toHaveURL(/month=2026-10-01/)
-  await page.waitForFunction(() => !document.querySelector('.calendar-month-surface')?.getAnimations().length && !(document.querySelector('.calendar-month-surface') as HTMLElement)?.style.transform)
+  await page.waitForFunction(
+    () =>
+      !document.querySelector('.calendar-month-surface')?.getAnimations().length &&
+      !(document.querySelector('.calendar-month-surface') as HTMLElement)?.style.transform,
+  )
   await expect(page.getByRole('dialog')).not.toBeVisible()
-  await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 80, y: swipeY }] })
-  await client.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 300, y: swipeY }] })
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: 80, y: swipeY }],
+  })
+  await client.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: 300, y: swipeY }],
+  })
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await expect(page).toHaveURL(/month=2026-09-01/)
   await expect(page.locator('.month-grid')).toBeVisible()
-
 })
 
 test('system theme follows the device and explicit preference survives reload', async ({
@@ -248,7 +278,7 @@ test('error, empty, invalid routes and failed portraits stay usable', async ({ p
   await visit(page, '/explore?scenario=empty')
   await expect(page.locator('[data-slot="empty"]')).toBeVisible()
   await visit(page, '/explore?scenario=broken-images')
-    await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(12)
+  await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(12)
   await expect(page.locator('.artist-grid [data-slot="avatar-fallback"]').first()).toBeVisible()
   await visit(page, '/artists/9999')
   await expect(page.getByRole('button', { name: '다시 시도' })).toBeVisible()

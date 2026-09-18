@@ -60,6 +60,6 @@ export function loadYouTube(): Promise<YouTubeAPI> {
 export function clampTime(value: unknown, duration: number) {
   const time = Number(value)
   return Number.isFinite(time)
-    ? Math.max(0, Math.min(Math.floor(time), Math.max(0, duration - 1)))
+    ? Math.max(0, Math.min(Math.floor(time), duration > 0 ? Math.max(0, duration - 1) : Number.POSITIVE_INFINITY))
     : 0
 }

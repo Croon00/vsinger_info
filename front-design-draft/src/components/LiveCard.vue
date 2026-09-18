@@ -48,7 +48,7 @@ function checkThumbnail(event: Event) {
       <span v-if="live.video_id" class="live-play" aria-hidden="true">
         <Play fill="currentColor" class="size-5" />
       </span>
-      <Badge variant="secondary" class="absolute bottom-3 right-3">
+      <Badge v-if="live.duration_seconds > 0" variant="secondary" class="absolute bottom-3 right-3">
         {{ formatTime(live.duration_seconds) }}
       </Badge>
     </div>

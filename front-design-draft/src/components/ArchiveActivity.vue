@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { VisArea, VisAxis, VisXYContainer } from '@unovis/vue'
 import type { Live } from '@/api/types'
-import { archiveActivity, type ActivityPeriod } from '@/lib/archive-activity'
+import { archiveActivity, monthlyActivity, type ActivityPeriod } from '@/lib/archive-activity'
 import {
   ChartContainer,
   ChartTooltip,
@@ -12,9 +12,13 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-const props = defineProps<{ lives: Live[] }>()
+const props = defineProps<{ lives: Live[]; months?: { month: string; count: number }[] }>()
 const period = ref<ActivityPeriod>('6M')
-const data = computed(() => archiveActivity(props.lives, period.value))
+const data = computed(() =>
+  props.months
+    ? monthlyActivity(props.months, period.value)
+    : archiveActivity(props.lives, period.value),
+)
 type Month = ReturnType<typeof archiveActivity>[number]
 const config = { count: { label: '아카이브', color: 'var(--chart-2)' } } satisfies ChartConfig
 // Reserve at least 20% above the peak and keep four evenly spaced integer ticks.

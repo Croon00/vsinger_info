@@ -38,11 +38,12 @@ import {
   DrawerClose,
 } from '@/components/ui/drawer'
 import { Badge } from '@/components/ui/badge'
+import { capabilities } from '@/api/config'
 import { api } from '@/api/client'
 import type { CalendarEvent } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import { favoriteIds, calendarScope } from '@/composables/preferences'
-import { calendarEvents, formatDate, monthKey, todayKey } from '@/lib/dates'
+import { calendarEvents, formatDate, monthKey, todayKey, changeMonth } from '@/lib/dates'
 import { openOverlay } from '@/lib/overlays'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
@@ -115,11 +116,20 @@ watch(month, (value) => {
     selected.value = parseDate(value)
   }
 })
-const kinds = ref<string[]>(['concert', 'birthday'])
-const { data, loading, error, reload } = useResource(async (signal) => {
-  const [artists, concerts] = await Promise.all([api.artists(signal), api.concerts(signal)])
-  return { artists, concerts }
-})
+const kinds = ref<string[]>(capabilities.birthdays ? ['concert', 'birthday'] : ['concert'])
+const { data, loading, error, reload } = useResource(
+  async (signal) => {
+    const [artists, concerts] = await Promise.all([
+      api.artists(signal),
+      api.concerts(signal, {
+        start: changeMonth(month.value, -1),
+        end: changeMonth(month.value, 2),
+      }),
+    ])
+    return { artists, concerts }
+  },
+  [month],
+)
 const allEvents = computed(() => {
   if (!data.value) return []
   const year = Number(month.value.slice(0, 4))
@@ -330,7 +340,7 @@ async function openEvent(event: CalendarEvent) {
                     <CalendarIcon data-icon="inline-start" />
                     공연
                   </ToggleGroupItem>
-                  <ToggleGroupItem value="birthday" size="sm">
+                  <ToggleGroupItem v-if="capabilities.birthdays" value="birthday" size="sm">
                     <Cake data-icon="inline-start" />
                     생일
                   </ToggleGroupItem>

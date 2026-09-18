@@ -11,7 +11,10 @@
     "test:e2e": "playwright test",
     "format": "prettier --write src tests scripts/*.mjs *.ts *.json",
     "screenshots": "node scripts/inspect.mjs",
-    "check:video": "node scripts/check-video.mjs"
+    "check:video": "node scripts/check-video.mjs",
+    "dev:mock": "vite --host 127.0.0.1 --port 5175 --mode mock",
+    "build:mock": "vue-tsc -b && vite build --mode mock",
+    "test:integration": "playwright test --config playwright.real.config.ts"
   },
   "dependencies": {
     "@internationalized/date": "^3.12.4",

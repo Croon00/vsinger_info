@@ -24,6 +24,9 @@ watch(
     query.value = String(q ?? '')
   },
 )
+const agencies = computed(() =>
+  [...new Set((data.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
+)
 const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
 const filtered = computed(() => {
   const favorites = new Set(favoriteIds.value)
@@ -31,7 +34,7 @@ const filtered = computed(() => {
     .filter(
       (a) =>
         (agency.value === 'all' || a.agency === agency.value) &&
-        [a.name, a.display_name, a.roman].some((s) =>
+        [a.name, a.display_name, a.roman, ...(a.aliases ?? [])].some((s) =>
           normalize(s).includes(normalize(query.value)),
         ),
     )
@@ -57,8 +60,9 @@ const filtered = computed(() => {
         aria-label="소속사 필터"
       >
         <ToggleGroupItem value="all">전체</ToggleGroupItem>
-        <ToggleGroupItem value="RK Music">RK Music</ToggleGroupItem>
-        <ToggleGroupItem value="KAMITSUBAKI STUDIO">KAMITSUBAKI</ToggleGroupItem>
+        <ToggleGroupItem v-for="name in agencies" :key="name" :value="name">
+          {{ name }}
+        </ToggleGroupItem>
       </ToggleGroup>
       <form role="search" aria-label="아티스트 검색" class="explore-search" @submit.prevent>
         <FieldGroup>

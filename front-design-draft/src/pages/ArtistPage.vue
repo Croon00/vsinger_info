@@ -14,6 +14,7 @@ import {
   ChartNoAxesColumnIncreasing,
 } from '@lucide/vue'
 import { api } from '@/api/client'
+import type { Live } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import ArtistAvatar from '@/components/ArtistAvatar.vue'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -37,30 +38,115 @@ const tab = computed(() =>
     : 'lives',
 )
 const selectedAlbum = ref('')
-const liveLimit = ref(6)
+const extraLives = ref<Live[]>([])
+const moreLoading = ref(false)
+const moreError = ref('')
 watch(id, () => {
   selectedAlbum.value = ''
-  liveLimit.value = 6
+  extraLives.value = []
+  moreLoading.value = false
+  moreError.value = ''
 })
-const { data, loading, error, reload } = useResource(
-  async (signal) => {
-    const [artist, lives, albums, concerts] = await Promise.all([
-      api.artist(id.value, signal),
-      api.lives(Number(id.value), signal),
-      api.albums(Number(id.value), signal),
-      api.concerts(signal),
-    ])
-    return {
-      artist,
-      lives,
-      albums,
-      concerts: concerts.filter((c) => c.artist_id === Number(id.value)),
-    }
-  },
-  [id],
+const {
+  data: profile,
+  loading,
+  error,
+  reload,
+} = useResource((signal) => api.artist(id.value, signal), [id])
+const {
+  data: liveData,
+  loading: livesLoading,
+  error: livesError,
+  reload: reloadLives,
+} = useResource(
+  (signal) =>
+    tab.value === 'lives' ? api.livePage(Number(id.value), 0, 6, signal) : Promise.resolve(null),
+  [id, () => tab.value === 'lives'],
 )
-const album = computed(
+watch(liveData, () => {
+  extraLives.value = []
+  moreError.value = ''
+})
+const {
+  data: stats,
+  loading: statsLoading,
+  error: statsError,
+  reload: reloadStats,
+} = useResource(
+  (signal) =>
+    tab.value === 'statistics' ? api.statistics(Number(id.value), signal) : Promise.resolve(null),
+  [id, () => tab.value === 'statistics'],
+)
+async function loadMore() {
+  if (moreLoading.value) return
+  const artistId = id.value
+  const initial = liveData.value
+  moreLoading.value = true
+  moreError.value = ''
+  try {
+    const result = await api.livePage(
+      Number(artistId),
+      (initial?.items.length ?? 0) + extraLives.value.length,
+      6,
+    )
+    if (id.value === artistId && liveData.value === initial) extraLives.value.push(...result.items)
+  } catch (e) {
+    if (id.value === artistId)
+      moreError.value = e instanceof Error ? e.message : '불러오지 못했어요.'
+  } finally {
+    if (id.value === artistId) moreLoading.value = false
+  }
+}
+const {
+  data: albumData,
+  loading: albumsLoading,
+  error: albumsError,
+  reload: reloadAlbums,
+} = useResource(
+  (signal) =>
+    tab.value === 'originals' ? api.albums(Number(id.value), signal) : Promise.resolve(null),
+  [id, () => tab.value === 'originals'],
+)
+const {
+  data: concertData,
+  loading: concertsLoading,
+  error: concertsError,
+  reload: reloadConcerts,
+} = useResource(
+  (signal) =>
+    tab.value === 'concerts'
+      ? api.concerts(signal, { artistId: Number(id.value) })
+      : Promise.resolve(null),
+  [id, () => tab.value === 'concerts'],
+)
+const data = computed(() =>
+  profile.value
+    ? {
+        artist: profile.value,
+        lives: [...(liveData.value?.items ?? []), ...extraLives.value],
+        albums: albumData.value ?? [],
+        concerts: (concertData.value ?? []).filter((c) =>
+          (profile.value?.related_artist_ids ?? [Number(id.value)]).includes(c.artist_id),
+        ),
+      }
+    : null,
+)
+const albumSummary = computed(
   () => data.value?.albums.find((a) => a.id === selectedAlbum.value) ?? data.value?.albums[0],
+)
+const {
+  data: album,
+  loading: tracksLoading,
+  error: tracksError,
+  reload: reloadTracks,
+} = useResource(
+  (signal) =>
+    !albumSummary.value
+      ? Promise.resolve(null)
+      : albumSummary.value.tracks_loaded === false
+        ? api.album(albumSummary.value.id, Number(id.value), signal)
+        : Promise.resolve(albumSummary.value),
+  [id, () => albumSummary.value?.id],
 )
 const upcoming = computed(() =>
   (data.value?.concerts ?? [])
@@ -96,8 +182,8 @@ function changeTab(value: string | number) {
               <h1>{{ data.artist.name }}</h1>
               <FavoriteButton :id="data.artist.id" :name="data.artist.name" />
             </div>
-            <p class="profile-reading">
-                {{ data.artist.display_name }}
+            <p v-if="data.artist.display_name" class="profile-reading">
+              {{ data.artist.display_name }}
             </p>
             <div class="profile-links">
               <Button
@@ -120,7 +206,9 @@ function changeTab(value: string | number) {
             <TabsTrigger value="lives">
               <Play />
               라이브
-              <span class="tab-count">{{ data.lives.length }}</span>
+              <span v-if="liveData || stats" class="tab-count">
+                {{ liveData?.total ?? stats?.archives }}
+              </span>
             </TabsTrigger>
             <TabsTrigger value="statistics">
               <ChartNoAxesColumnIncreasing />
@@ -143,12 +231,22 @@ function changeTab(value: string | number) {
               <span class="text-xs text-muted-foreground">최신순</span>
             </div>
             <ResourceState
+              :loading="livesLoading"
+              :error="livesError"
+              @retry="reloadLives"
               :empty="!data.lives.length"
               title="등록된 라이브가 없습니다"
               description="공식 채널에서 영상을 확인할 수 있습니다."
             >
               <template #action>
-                <Button as-child variant="outline">
+                <Button
+                  v-if="
+                    data.artist.links.find((l) => l.label === 'YouTube')?.url ||
+                    data.artist.official_url
+                  "
+                  as-child
+                  variant="outline"
+                >
                   <a
                     :href="
                       data.artist.links.find((l) => l.label === 'YouTube')?.url ||
@@ -163,25 +261,27 @@ function changeTab(value: string | number) {
                 </Button>
               </template>
               <div class="live-grid">
-                <LiveCard
-                  v-for="live in data.lives.slice(0, liveLimit)"
-                  :key="live.id"
-                  :live="live"
-                />
+                <LiveCard v-for="live in data.lives" :key="live.id" :live="live" />
               </div>
               <Button
-                v-if="data.lives.length > liveLimit"
+                v-if="(liveData?.total ?? 0) > data.lives.length"
                 variant="outline"
                 class="mx-auto mt-8 flex"
-                @click="liveLimit += 6"
+                :disabled="moreLoading"
+                @click="loadMore"
               >
                 라이브 더 보기
                 <ChevronDown data-icon="inline-end" />
               </Button>
+              <p v-if="moreError" role="alert" class="text-sm text-destructive mt-3">
+                {{ moreError }}
+              </p>
             </ResourceState>
           </TabsContent>
           <TabsContent value="statistics" class="pt-4 min-[769px]:pt-6">
-            <ArtistStatistics :key="id" :lives="data.lives" />
+            <ResourceState :loading="statsLoading" :error="statsError" @retry="reloadStats">
+              <ArtistStatistics v-if="stats" :key="id" :lives="[]" :summary="stats" />
+            </ResourceState>
           </TabsContent>
           <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">
             <div class="section-heading">
@@ -189,13 +289,19 @@ function changeTab(value: string | number) {
                 <h2>디스코그래피</h2>
               </div>
             </div>
-            <ResourceState :empty="!data.albums.length" title="등록된 앨범이 없습니다">
+            <ResourceState
+              :loading="albumsLoading"
+              :error="albumsError"
+              @retry="reloadAlbums"
+              :empty="!data.albums.length"
+              title="등록된 앨범이 없습니다"
+            >
               <div class="discography-layout">
                 <ToggleGroup
                   :key="mobile ? 'horizontal' : 'vertical'"
                   type="single"
                   :orientation="mobile ? 'horizontal' : 'vertical'"
-                  :model-value="album?.id"
+                  :model-value="albumSummary?.id"
                   @update:model-value="
                     (v) => {
                       if (v) selectedAlbum = String(v)
@@ -223,76 +329,86 @@ function changeTab(value: string | number) {
                     </div>
                   </ToggleGroupItem>
                 </ToggleGroup>
-                <section v-if="album" class="track-section">
-                  <div class="section-heading">
-                    <div>
-                      <h2>{{ album.name }}</h2>
-                      <p>{{ formatDate(album.release_date) }} · {{ album.tracks.length }}곡</p>
+                <ResourceState :loading="tracksLoading" :error="tracksError" @retry="reloadTracks">
+                  <section v-if="album" class="track-section">
+                    <div class="section-heading">
+                      <div>
+                        <h2>{{ album.name }}</h2>
+                        <p>{{ formatDate(album.release_date) }} · {{ album.tracks.length }}곡</p>
+                      </div>
+                      <Button v-if="album.source_url" as-child variant="outline" size="sm">
+                        <a :href="album.source_url" target="_blank" rel="noopener noreferrer">
+                          공식 릴리스
+                          <ArrowUpRight data-icon="inline-end" />
+                        </a>
+                      </Button>
                     </div>
-                    <Button as-child variant="outline" size="sm">
-                      <a :href="album.source_url" target="_blank" rel="noopener noreferrer">
-                        공식 릴리스
-                        <ArrowUpRight data-icon="inline-end" />
-                      </a>
-                    </Button>
-                  </div>
-                  <div v-for="(track, index) in album.tracks" :key="track.id" class="track-row">
-                    <span class="track-number">{{ String(index + 1).padStart(2, '0') }}</span>
-                    <div>
-                      <h3>{{ track.title }}</h3>
-                      <p>{{ track.title_ko || data.artist.name }}</p>
+                    <div v-for="(track, index) in album.tracks" :key="track.id" class="track-row">
+                      <span class="track-number">{{ String(index + 1).padStart(2, '0') }}</span>
+                      <div>
+                        <h3>{{ track.title }}</h3>
+                        <p>{{ track.title_ko || data.artist.name }}</p>
+                      </div>
+                      <span class="track-duration">{{ track.duration }}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        :disabled="!track.has_lyrics"
+                        @click="
+                          openOverlay(router, route, 'lyrics', track.song_id ?? Number(track.id))
+                        "
+                      >
+                        <FileText data-icon="inline-start" />
+                        {{ track.has_lyrics ? '가사' : '가사 없음' }}
+                      </Button>
                     </div>
-                    <span class="track-duration">{{ track.duration }}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      :disabled="!track.has_lyrics"
-                      @click="openOverlay(router, route, 'lyrics', track.id)"
-                    >
-                      <FileText data-icon="inline-start" />
-                      {{ track.has_lyrics ? '가사' : '가사 없음' }}
-                    </Button>
-                  </div>
-                </section>
+                  </section>
+                </ResourceState>
               </div>
             </ResourceState>
           </TabsContent>
           <TabsContent value="concerts" class="pt-4 min-[769px]:pt-6">
-            <section>
-              <div class="section-heading">
-                <div>
-                  <h2>예정된 공연</h2>
-                </div>
-              </div>
-              <ResourceState :empty="!upcoming.length" title="예정된 공연이 없어요">
-                <div class="concert-list">
-                  <ConcertRow v-for="c in upcoming" :key="c.id" :concert="c" />
-                </div>
-              </ResourceState>
-            </section>
-            <section class="past-concerts">
-              <div class="section-heading">
-                <div>
-                  <h2>지난 공연</h2>
-                </div>
-              </div>
-              <ResourceState :empty="!past.length" title="지난 공연 기록이 없어요">
-                <div class="concert-timeline">
-                  <div v-for="(c, index) in past" :key="c.id" class="timeline-item">
-                    <h3
-                      v-if="
-                        index === 0 ||
-                        c.starts_at.slice(0, 4) !== past[index - 1]?.starts_at.slice(0, 4)
-                      "
-                      class="timeline-year"
-                    >
-                      {{ c.starts_at.slice(0, 4) }}
-                    </h3>
-                    <ConcertRow :concert="c" past />
+            <ResourceState
+              :loading="concertsLoading"
+              :error="concertsError"
+              @retry="reloadConcerts"
+            >
+              <section>
+                <div class="section-heading">
+                  <div>
+                    <h2>예정된 공연</h2>
                   </div>
                 </div>
-              </ResourceState>
-            </section>
+                <ResourceState :empty="!upcoming.length" title="예정된 공연이 없어요">
+                  <div class="concert-list">
+                    <ConcertRow v-for="c in upcoming" :key="c.id" :concert="c" />
+                  </div>
+                </ResourceState>
+              </section>
+              <section class="past-concerts">
+                <div class="section-heading">
+                  <div>
+                    <h2>지난 공연</h2>
+                  </div>
+                </div>
+                <ResourceState :empty="!past.length" title="지난 공연 기록이 없어요">
+                  <div class="concert-timeline">
+                    <div v-for="(c, index) in past" :key="c.id" class="timeline-item">
+                      <h3
+                        v-if="
+                          index === 0 ||
+                          c.starts_at.slice(0, 4) !== past[index - 1]?.starts_at.slice(0, 4)
+                        "
+                        class="timeline-year"
+                      >
+                        {{ c.starts_at.slice(0, 4) }}
+                      </h3>
+                      <ConcertRow :concert="c" past />
+                    </div>
+                  </div>
+                </ResourceState>
+              </section>
+            </ResourceState>
           </TabsContent>
         </Tabs>
       </template>

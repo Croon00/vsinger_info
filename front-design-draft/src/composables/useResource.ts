@@ -15,6 +15,7 @@ export function useResource<T>(
     controller = new AbortController()
     loading.value = true
     error.value = ''
+    data.value = null
     try {
       const value = await loader(controller.signal)
       if (current === generation) data.value = value

@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ChevronRight } from '@lucide/vue'
 import { api } from '@/api/client'
+import type { SearchPerformance } from '@/api/types'
+import { Button } from '@/components/ui/button'
 import { useResource } from '@/composables/useResource'
 import { formatDate } from '@/lib/dates'
 import {
@@ -22,24 +24,48 @@ const router = useRouter()
 const query = computed(() => String(route.query.q ?? ''))
 const performer = ref('all')
 const original = ref('all')
+const extra = ref<SearchPerformance[]>([])
+const moreLoading = ref(false)
+const moreError = ref('')
 const { data, loading, error, reload } = useResource(
   (signal) => api.search(query.value, signal),
   [query],
 )
+watch(data, () => {
+  extra.value = []
+  moreError.value = ''
+})
+const results = computed(() => [...(data.value?.performances ?? []), ...extra.value])
+async function loadMore() {
+  if (moreLoading.value) return
+  const initial = data.value
+  moreLoading.value = true
+  moreError.value = ''
+  try {
+    const result = await api.search(query.value, undefined, results.value.length)
+    if (data.value === initial) {
+      const known = new Set(results.value.map((p) => p.id))
+      extra.value.push(...result.performances.filter((p) => !known.has(p.id)))
+    }
+  } catch (e) {
+    if (data.value === initial)
+      moreError.value = e instanceof Error ? e.message : '불러오지 못했어요.'
+  } finally {
+    moreLoading.value = false
+  }
+}
 watch(query, () => {
   performer.value = 'all'
   original.value = 'all'
 })
 const singers = computed(() => [
-  ...new Map((data.value?.performances ?? []).map((p) => [p.artist.id, p.artist])).values(),
+  ...new Map(results.value.map((p) => [p.artist.id ?? p.artist.name, p.artist])).values(),
 ])
-const originals = computed(() => [
-  ...new Set((data.value?.performances ?? []).map((p) => p.original_artist)),
-])
+const originals = computed(() => [...new Set(results.value.map((p) => p.original_artist))])
 const performances = computed(() =>
-  (data.value?.performances ?? []).filter(
+  results.value.filter(
     (p) =>
-      (performer.value === 'all' || String(p.artist.id) === performer.value) &&
+      (performer.value === 'all' || String(p.artist.id ?? p.artist.name) === performer.value) &&
       (original.value === 'all' || p.original_artist === original.value),
   ),
 )
@@ -49,7 +75,6 @@ function search(q: string) {
 function koreanName(original: string, korean?: string) {
   return korean?.trim() && korean !== original ? korean : ''
 }
-
 </script>
 <template>
   <div class="page-container search-page page-enter">
@@ -95,7 +120,11 @@ function koreanName(original: string, korean?: string) {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="all">부른 아티스트 전체</SelectItem>
-                  <SelectItem v-for="a in singers" :key="a.id" :value="String(a.id)">
+                  <SelectItem
+                    v-for="a in singers"
+                    :key="a.id ?? a.name"
+                    :value="String(a.id ?? a.name)"
+                  >
                     {{ a.name }}
                   </SelectItem>
                 </SelectGroup>
@@ -121,6 +150,9 @@ function koreanName(original: string, korean?: string) {
           title="선택한 조건의 노래가 없어요"
           description="아티스트 필터를 바꿔보세요."
         >
+          <p v-if="data?.limited" class="text-sm text-muted-foreground mb-4">
+            검색 결과가 많아 일부만 표시합니다. 더 구체적인 곡명이나 아티스트명으로 검색해 주세요.
+          </p>
           <div class="performance-results">
             <RouterLink
               v-for="p in performances"
@@ -160,6 +192,16 @@ function koreanName(original: string, korean?: string) {
             </RouterLink>
           </div>
         </ResourceState>
+        <Button
+          v-if="(data?.total ?? 0) > results.length"
+          variant="outline"
+          class="mx-auto mt-6 flex"
+          :disabled="moreLoading"
+          @click="loadMore"
+        >
+          검색 결과 더 보기
+        </Button>
+        <p v-if="moreError" role="alert" class="mt-3 text-sm text-destructive">{{ moreError }}</p>
       </section>
     </ResourceState>
   </div>

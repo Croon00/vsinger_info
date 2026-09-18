@@ -14,6 +14,6 @@ defineProps<{
       :alt="artist?.name || ''"
       :style="{ objectPosition: artist?.image_position }"
     />
-    <AvatarFallback>{{ artist?.roman.slice(0, 2) || '—' }}</AvatarFallback>
+    <AvatarFallback>{{ (artist?.roman || artist?.name || '').slice(0, 2) || '—' }}</AvatarFallback>
   </Avatar>
 </template>

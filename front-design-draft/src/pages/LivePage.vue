@@ -146,7 +146,7 @@ function seek(seconds: number) {
 <template>
   <div class="page-container viewer-page page-enter">
     <Button v-if="data" as-child variant="ghost" class="back-link">
-      <RouterLink :to="`/artists/${data.artist_id}?tab=lives`">
+      <RouterLink :to="data.artist_id ? `/artists/${data.artist_id}?tab=lives` : '/explore'">
         <ArrowLeft data-icon="inline-start" />
         아티스트의 라이브
       </RouterLink>
@@ -206,7 +206,7 @@ function seek(seconds: number) {
                   <ListMusic />
                   {{ data.performances.length }}곡
                 </Badge>
-                <span>{{ formatTime(data.duration_seconds) }}</span>
+                <span v-if="data.duration_seconds > 0">{{ formatTime(data.duration_seconds) }}</span>
                 <Button v-if="data.video_id" as-child variant="ghost" size="sm">
                   <a
                     :href="`https://www.youtube.com/watch?v=${data.video_id}`"

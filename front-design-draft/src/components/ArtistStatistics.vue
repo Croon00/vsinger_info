@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useMediaQuery } from '@vueuse/core'
 const mobile = useMediaQuery('(max-width: 768px)')
 import { Search, X, ChevronLeft, ChevronRight } from '@lucide/vue'
-import type { Live } from '@/api/types'
+import type { Live, Statistics } from '@/api/types'
 import { artistStatistics, filterAndSortSongs, type SongSort } from '@/lib/artist-statistics'
 import { formatDate } from '@/lib/dates'
 import { Button } from '@/components/ui/button'
@@ -37,13 +37,13 @@ import { Progress } from '@/components/ui/progress'
 import ResourceState from '@/components/ResourceState.vue'
 import ArchiveActivity from '@/components/ArchiveActivity.vue'
 
-const props = defineProps<{ lives: Live[] }>()
+const props = defineProps<{ lives: Live[]; summary?: Statistics }>()
 const query = ref('')
 const sort = ref<SongSort>('most')
 const page = ref(1)
 const artistPage = ref(1)
 const pageSize = 10
-const stats = computed(() => artistStatistics(props.lives))
+const stats = computed(() => props.summary ?? artistStatistics(props.lives))
 const songs = computed(() => filterAndSortSongs(stats.value.songs, query.value, sort.value))
 function paginate<T>(items: T[]): T[][] {
   return Array.from({ length: Math.ceil(items.length / pageSize) }, (_, index) =>
@@ -68,7 +68,7 @@ const date = (value: string | null) =>
 
 <template>
   <div class="artist-statistics">
-    <ArchiveActivity :lives="lives" />
+    <ArchiveActivity :lives="lives" :months="summary?.activity" />
     <div class="statistics-columns">
       <section class="song-statistics" aria-labelledby="song-statistics-heading">
         <div class="section-heading">

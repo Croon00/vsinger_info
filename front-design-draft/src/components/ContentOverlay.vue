@@ -21,6 +21,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ref } from 'vue'
+import { safeUrl } from '@/api/backend'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { formatDate } from '@/lib/dates'
@@ -46,9 +47,10 @@ const { data, loading, error, reload } = useResource(
     if (!itemId.value) return null
     if (mode.value === 'lyrics')
       return { lyrics: await api.lyrics(itemId.value, signal), concert: null, artist: null }
-    const [concerts, artists] = await Promise.all([api.concerts(signal), api.artists(signal)])
-    const concert = concerts.find((c) => String(c.id) === itemId.value)
-    if (!concert) throw new Error('찾으시는 공연이 없어요.')
+    const [concert, artists] = await Promise.all([
+      api.concert(itemId.value, signal),
+      api.artists(signal),
+    ])
     return { lyrics: null, concert, artist: artists.find((a) => a.id === concert.artist_id) }
   },
   [itemId, mode],
@@ -95,6 +97,18 @@ async function restoreFocus(event: Event) {
       <div class="overlay-scroll">
         <ResourceState :loading="loading" :error="error" @retry="reload">
           <div v-if="data?.lyrics" class="lyrics-content">
+            <p v-if="data.lyrics.needs_review" class="mb-4 text-sm text-muted-foreground">
+              검토가 필요한 가사입니다.
+            </p>
+            <a
+              v-if="safeUrl(data.lyrics.lyrics_source_url)"
+              :href="safeUrl(data.lyrics.lyrics_source_url)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm underline"
+            >
+              가사 출처
+            </a>
             <div class="lyrics-toolbar">
               <ToggleGroup
                 type="multiple"
@@ -148,7 +162,11 @@ async function restoreFocus(event: Event) {
                       minute: '2-digit',
                     })
                   }}
-                  <small>한국·일본 시간 (UTC+9)</small>
+                  <small>
+                    {{
+                      data.concert.starts_at.length === 10 ? '시간 미정' : '한국·일본 시간 (UTC+9)'
+                    }}
+                  </small>
                 </dd>
               </div>
               <div>
@@ -157,7 +175,7 @@ async function restoreFocus(event: Event) {
                   장소
                 </dt>
                 <dd>
-                  {{ data.concert.venue }}
+                  {{ data.concert.venue || '장소 미정' }}
                   <small>{{ data.concert.city }}</small>
                 </dd>
               </div>
@@ -167,13 +185,29 @@ async function restoreFocus(event: Event) {
                   티켓
                 </dt>
                 <dd>
-                  {{ data.concert.price_text }}
+                  {{ data.concert.price_text || '가격 미정' }}
                 </dd>
               </div>
             </dl>
-            <Button v-if="data.artist" as-child class="w-full">
-              <a :href="data.artist.official_url" target="_blank" rel="noopener noreferrer">
-                아티스트 공식 사이트
+            <Button
+              v-if="data.concert.ticket_url || data.concert.source_url || data.artist?.official_url"
+              as-child
+              class="w-full"
+            >
+              <a
+                :href="
+                  data.concert.ticket_url || data.concert.source_url || data.artist?.official_url
+                "
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{
+                  data.concert.ticket_url
+                    ? '티켓 페이지'
+                    : data.concert.source_url
+                      ? '공연 안내'
+                      : '아티스트 공식 사이트'
+                }}
                 <ArrowUpRight data-icon="inline-end" />
               </a>
             </Button>

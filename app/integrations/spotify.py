@@ -224,7 +224,7 @@ async def get_artist_discography(
     )
 
 
-async def get_album_detail(album_id: str) -> SpotifyAlbumDetail:
+async def get_album_detail(album_id: str, *, enrich_titles: bool = True) -> SpotifyAlbumDetail:
     token = await _get_spotify_access_token()
     album, track_items = await asyncio.gather(
         _spotify_get(f"/albums/{album_id}", token, params={"market": "KR"}),
@@ -239,7 +239,7 @@ async def get_album_detail(album_id: str) -> SpotifyAlbumDetail:
     from app.integrations.spotify_title_translation import resolve_korean_track_titles
 
     try:
-        translations = await resolve_korean_track_titles([(track.id, track.name) for track in tracks])
+        translations = await resolve_korean_track_titles([(track.id, track.name) for track in tracks]) if enrich_titles else {}
     except Exception:
         # 제목 번역 실패가 Spotify 앨범 조회 자체를 막으면 안 됩니다.
         # 번역하지 못한 이름은 원문 그대로 표시합니다.

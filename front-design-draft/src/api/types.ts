@@ -6,6 +6,9 @@ export interface Artist {
   id: number
   name: string
   display_name: string
+  aliases?: string[]
+  related_artist_ids?: number[]
+  member_birthdays?: { name: string; date: string }[]
   roman: string
   agency: string
   image: string
@@ -27,7 +30,7 @@ export interface Performance {
 export interface Live {
   is_sample?: boolean
   id: number
-  artist_id: number
+  artist_id: number | null
   title: string
   title_ko: string
   video_id: string
@@ -39,14 +42,28 @@ export interface Live {
 }
 export interface SearchPerformance extends Performance {
   live: Live
-  artist: Artist
+  artist: Pick<Artist, 'name' | 'display_name'> & { id: number | null }
 }
 export interface SearchResults {
+  total?: number
+  limited?: boolean
   artists: Artist[]
   performances: SearchPerformance[]
 }
+export interface Page<T> {
+  items: T[]
+  total: number
+  offset: number
+  limit: number
+}
+export interface Statistics extends ReturnType<
+  typeof import('@/lib/artist-statistics').artistStatistics
+> {
+  activity: { month: string; count: number }[]
+}
 export interface Track {
-  id: number
+  id: number | string
+  song_id?: number
   title: string
   title_ko: string
   duration: string
@@ -59,11 +76,16 @@ export interface Album {
   album_type: 'album' | 'single'
   release_date: string
   image_url: string
+  total_tracks?: number
+  tracks_loaded?: boolean
   tracks: Track[]
   source_url: string
   is_sample: boolean
 }
 export interface Lyrics {
+  needs_review?: boolean
+  lyrics_source_url?: string | null
+  lyrics_source_type?: string
   song_id: number
   original_title: string
   artist_name: string
@@ -73,6 +95,7 @@ export interface Lyrics {
   is_sample: boolean
 }
 export interface Concert {
+  ticket_url?: string
   id: number
   artist_id: number
   title: string

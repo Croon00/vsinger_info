@@ -2,11 +2,12 @@ import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
+  outputDir: './test-results/mock',
   fullyParallel: true,
   workers: 2,
   timeout: 30000,
   use: {
-    baseURL: 'http://localhost:5174',
+    baseURL: 'http://localhost:5195',
     launchOptions: {
       executablePath:
         process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -27,8 +28,8 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5174',
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run dev:mock -- --port 5195 --strictPort',
+    url: 'http://localhost:5195',
+    reuseExistingServer: false,
   },
 })

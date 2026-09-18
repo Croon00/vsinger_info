@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test'
 
-test('archive thumbnails keep 16:9 and recover from unavailable image sizes', async ({ page, context }) => {
+test('archive thumbnails keep 16:9 and recover from unavailable image sizes', async ({
+  page,
+  context,
+  baseURL,
+}) => {
   // MSW forwards these requests from its worker, so intercept at context level.
   await context.route('https://i.ytimg.com/vi/**', async (route) => {
     const url = route.request().url()
@@ -17,8 +21,8 @@ test('archive thumbnails keep 16:9 and recover from unavailable image sizes', as
       body: `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="180"><rect width="100%" height="100%" fill="gray"/></svg>`,
     })
   })
-  await page.goto('http://127.0.0.1:5174/artists/1?tab=lives')
-  await expect(page).toHaveURL('http://localhost:5174/artists/1?tab=lives')
+  await page.goto(`${baseURL!.replace('localhost', '127.0.0.1')}/artists/1?tab=lives`)
+  await expect(page).toHaveURL(`${baseURL}/artists/1?tab=lives`)
   await expect(page.locator('.live-card').first()).toBeVisible()
   while (await page.getByRole('button', { name: '라이브 더 보기' }).count()) {
     await page.getByRole('button', { name: '라이브 더 보기' }).click()

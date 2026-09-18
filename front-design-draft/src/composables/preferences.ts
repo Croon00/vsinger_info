@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue'
 
-const prefix = 'schedule-music-draft:'
+import { isMock } from '@/api/config'
+const prefix = isMock ? 'schedule-music-draft:' : 'schedule-music-api:'
 function read<T>(key: string, fallback: T, validate: (v: unknown) => boolean): T {
   try {
     const value = JSON.parse(localStorage.getItem(prefix + key) ?? 'null')
@@ -12,7 +13,7 @@ function read<T>(key: string, fallback: T, validate: (v: unknown) => boolean): T
 export const favoriteIds = ref(
   read<number[]>(
     'favorites',
-    [1, 2, 3, 4, 5, 6],
+    isMock ? [1, 2, 3, 4, 5, 6] : [],
     (v) => Array.isArray(v) && v.every(Number.isInteger),
   ),
 )
@@ -21,7 +22,11 @@ export const theme = ref(
   read<Theme>('theme', 'system', (v) => ['system', 'light', 'dark'].includes(v as string)),
 )
 export const calendarScope = ref(
-  read<'favorites' | 'all'>('calendar-scope', 'favorites', (v) => v === 'favorites' || v === 'all'),
+  read<'favorites' | 'all'>(
+    'calendar-scope',
+    isMock ? 'favorites' : 'all',
+    (v) => v === 'favorites' || v === 'all',
+  ),
 )
 export const statusMessage = ref('')
 let announceTimer: ReturnType<typeof setTimeout>
