@@ -27,3 +27,13 @@ api-dev.stderr.log
 *.log
 .tmp/
 pytest-cache-files-*/
+
+db-migration/
+
+# Generated artifacts of the archived frontend
+web.bak/node_modules/
+web.bak/dist/
+web.bak/test-results/
+web.bak/playwright-report/
+web.bak/auto-imports.d.ts
+web.bak/components.d.ts

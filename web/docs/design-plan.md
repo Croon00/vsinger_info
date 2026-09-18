@@ -4,7 +4,7 @@
 
 ## 범위와 디자인 기준
 
-- Vue 3 + TypeScript + Vite + Vue Router. 기존 web의 화면·스타일을 참고하거나 재사용하지 않는다.
+- Vue 3 + TypeScript + Vite + Vue Router. 기존 web.bak의 화면·스타일을 참고하거나 재사용하지 않는다.
 - CLI의 --preset a2vfHFI로 생성한 shadcn-vue Luma/Neutral/Inter/Lucide를 유지한다. components.json과 src/style.css가 기준이다.
 - 컴포넌트 구조·접근성·색상·폰트·반경은 shadcn-vue, 호환되는 모션은 transitions-dev를 따른다. 충돌 시 shadcn-vue 우선.
 - 의미 기반 색상 토큰과 사진·앨범 아트를 사용한다. 홍보 슬로건·가짜 계정·장식용 날짜를 넣지 않는다.

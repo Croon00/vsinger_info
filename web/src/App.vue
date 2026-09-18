@@ -1,73 +1,116 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import AppSidebarContent from '@/components/AppSidebarContent.vue'
-import { useUiStore } from '@/stores/ui'
-
-const ui = useUiStore()
+import { useMediaQuery } from '@vueuse/core'
+import { AudioLines, House, Compass, CalendarDays, Settings2, Heart } from '@lucide/vue'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+} from '@/components/ui/sidebar'
+import { Button } from '@/components/ui/button'
+import { statusMessage } from '@/composables/preferences'
+import ContentOverlay from '@/components/ContentOverlay.vue'
 const route = useRoute()
-const mobile = ref(false)
-let media: MediaQueryList | undefined
-
-function syncViewport(): void {
-  mobile.value = media?.matches ?? false
-  ui.closeSidebar()
-}
-onMounted(() => {
-  media = window.matchMedia('(max-width: 1024px)')
-  syncViewport()
-  media.addEventListener('change', syncViewport)
-})
-onUnmounted(() => media?.removeEventListener('change', syncViewport))
-watch(() => route.fullPath, () => ui.closeSidebar())
+const wide = useMediaQuery('(min-width: 1024px)')
+const mobile = useMediaQuery('(max-width: 768px)')
+const nav = [
+  { title: '홈', href: '/', icon: House },
+  { title: '탐색', href: '/explore', icon: Compass },
+  { title: '캘린더', href: '/calendar', icon: CalendarDays },
+  { title: '설정', href: '/settings', icon: Settings2 },
+]
+const active = computed(() =>
+  route.path === '/'
+    ? '/'
+    : ['/calendar', '/settings'].includes(route.path)
+      ? route.path
+      : '/explore',
+)
+const activeIndex = computed(() => nav.findIndex((item) => item.href === active.value))
 </script>
-
 <template>
-  <UApp>
-    <div class="app-shell" :class="{ 'app-shell--collapsed': ui.desktopSidebarCollapsed }">
-      <aside v-if="!mobile && !ui.desktopSidebarCollapsed" id="desktop-sidebar" class="sidebar">
-        <AppSidebarContent />
-      </aside>
-      <main class="main-content">
-        <header class="app-topbar">
-          <USlideover
-            v-if="mobile"
-            :open="ui.sidebarOpen"
-            side="left"
-            title="주요 메뉴"
-            description="Schedule Music 페이지 탐색"
-            :close="{ 'aria-label': '메뉴 닫기' }"
-            :ui="{ overlay: 'mobile-sidebar-overlay', content: 'mobile-sidebar', body: 'mobile-sidebar__body' }"
-            @update:open="ui.setSidebarOpen"
-          >
-            <UButton class="menu-toggle" aria-label="메뉴 열기" color="neutral" variant="ghost">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-            </UButton>
-            <template #body>
-              <AppSidebarContent close-on-navigate @navigate="ui.closeSidebar" />
-            </template>
-            <template #close>
-              <UButton class="mobile-sidebar__close menu-toggle" aria-label="메뉴 닫기" color="neutral" variant="ghost">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
-              </UButton>
-            </template>
-          </USlideover>
-          <UButton
-            v-else
-            class="menu-toggle"
-            :aria-label="ui.desktopSidebarCollapsed ? '사이드바 열기' : '사이드바 접기'"
-            :aria-expanded="!ui.desktopSidebarCollapsed"
-            aria-controls="desktop-sidebar"
-            color="neutral"
-            variant="ghost"
-            @click="ui.toggleDesktopSidebar"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </UButton>
-          <RouterLink to="/" class="app-topbar__brand">SCHEDULE MUSIC</RouterLink>
-        </header>
-        <RouterView />
-      </main>
+  <a href="#main-content" class="skip-link">본문으로 이동</a>
+  <SidebarProvider :open="wide" style="--sidebar-width: 232px; --sidebar-width-icon: 80px">
+    <Sidebar v-if="!mobile" collapsible="icon">
+      <SidebarHeader class="px-5 pt-8 pb-10 group-data-[collapsible=icon]:px-3">
+        <RouterLink
+          to="/"
+          class="brand group-data-[collapsible=icon]:justify-center"
+          aria-label="schedule_music 홈"
+        >
+          <span class="brand-symbol"><AudioLines class="size-6" /></span>
+          <span v-if="wide">
+            schedule
+            <span class="font-normal text-muted-foreground">_music</span>
+          </span>
+        </RouterLink>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup class="px-4 group-data-[collapsible=icon]:px-3">
+          <SidebarGroupContent>
+            <SidebarMenu class="gap-2" aria-label="주 메뉴">
+              <SidebarMenuItem v-for="item in nav" :key="item.href">
+                <SidebarMenuButton
+                  as-child
+                  :is-active="active === item.href"
+                  :tooltip="item.title"
+                  size="lg"
+                  class="sidebar-nav-item group-data-[collapsible=icon]:size-14! group-data-[collapsible=icon]:justify-center"
+                >
+                  <RouterLink
+                    :to="item.href"
+                    :aria-label="item.title"
+                    :aria-current="active === item.href ? 'page' : undefined"
+                  >
+                    <component :is="item.icon" />
+                    <span v-if="wide">{{ item.title }}</span>
+                  </RouterLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+    <SidebarInset class="min-w-0">
+      <main id="main-content" tabindex="-1"><RouterView /></main>
+    </SidebarInset>
+    <nav
+      v-if="mobile"
+      class="mobile-dock"
+      aria-label="주 메뉴"
+      :style="{ '--dock-index': activeIndex }"
+    >
+      <span class="dock-indicator" aria-hidden="true" />
+      <Button
+        v-for="item in nav"
+        :key="item.href"
+        as-child
+        variant="ghost"
+        size="icon-lg"
+        class="dock-item"
+      >
+        <RouterLink
+          :to="item.href"
+          :aria-label="item.title"
+          :aria-current="active === item.href ? 'page' : undefined"
+        >
+          <component :is="item.icon" />
+        </RouterLink>
+      </Button>
+    </nav>
+    <div class="sr-only" :data-visible="!!statusMessage" role="status" aria-live="polite">
+      <Heart class="size-4" />
+      <span>{{ statusMessage }}</span>
     </div>
-  </UApp>
+    <ContentOverlay />
+  </SidebarProvider>
 </template>

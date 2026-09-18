@@ -1,6 +1,6 @@
 # schedule_music
 
-아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 기존 관리 웹(`web/`), 새 조회 프론트(`front-design-draft/`), Discord 봇과 수집 worker로 구성된다.
+아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 기존 관리 웹(`web.bak/`), 새 조회 프론트(`web/`), Discord 봇과 수집 worker로 구성된다.
 
 ## 시작하기
 
@@ -25,12 +25,12 @@ uvicorn app.main:app --reload
 다른 터미널에서 새 프론트를 실행한다.
 
 ```powershell
-cd front-design-draft
+cd web
 npm install
 npm run dev
 ```
 
-http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](front-design-draft/README.md)를 따른다.
+http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
 ## 실행 범위
 
@@ -38,8 +38,8 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | --- | --- |
 | `uvicorn app.main:app --reload` | API만 실행. Discord 로그인과 주기 수집 loop는 시작하지 않음 |
 | `python -m app.runtime` | API + Discord 봇, `AGENT_ENABLED=true`이면 수집 loop도 실행 |
-| `front-design-draft/` | 새 사용자 조회 화면. 기본 `/api/v2`, 별도 mock 모드 |
-| `web/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |
+| `web/` | 새 사용자 조회 화면. 기본 `/api/v2`, 별도 mock 모드 |
+| `web.bak/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |
 | `scripts/` | 정규화, 수집, 등록 등 운영 도구. 실행 전 조회/변경 여부 확인 |
 
 설정은 [`app/core/config.py`](app/core/config.py)와 [`.env.example`](.env.example)를 기준으로 한다. Python 코드 기본값과 예시 환경변수가 다를 수 있으며 실제 환경변수가 우선한다. DB·외부 서비스 키는 백엔드에 보관한다. 수집기 실행은 DB 저장·외부 알림을 동반하므로 화면 조회와 구분한다.
@@ -53,10 +53,10 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
 | [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
-| [새 프론트 실행](front-design-draft/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
-| [새 프론트 화면 설계](front-design-draft/docs/design-plan.md) | 현재 화면·반응형·접근성·디자인 기준 |
-| [검증 가이드](front-design-draft/docs/qa.md) | 테스트 실행법, 검증 범위, 최근 결과 |
-| [목업 콘텐츠 출처](front-design-draft/docs/content-sources.md) | 공식 자료와 합성 데이터의 출처·한계 |
-| [기존 관리 웹](web/README.md) | 기존 프론트 실행과 유지 범위 |
+| [새 프론트 실행](web/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
+| [새 프론트 화면 설계](web/docs/design-plan.md) | 현재 화면·반응형·접근성·디자인 기준 |
+| [검증 가이드](web/docs/qa.md) | 테스트 실행법, 검증 범위, 최근 결과 |
+| [목업 콘텐츠 출처](web/docs/content-sources.md) | 공식 자료와 합성 데이터의 출처·한계 |
+| [기존 관리 웹](web.bak/README.md) | 기존 프론트 실행과 유지 범위 |
 
 `AGENTS.md`는 작업 규칙, README는 실행 안내, 각 설계 문서는 현재 동작의 기준이다. 검수 이력은 검증 문서에 모으고 폐기된 계획을 현재 사양과 나란히 유지하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.

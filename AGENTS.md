@@ -2,7 +2,7 @@
 
 ## 현재 기준
 
-FastAPI + PostgreSQL 백엔드, 기존 관리 웹 `web/`, 새 조회 프론트 `front-design-draft/`, Discord 봇과 수집 worker를 함께 유지한다. 실행법과 문서 지도는 [README](README.md), 현재 처리 경로는 [백엔드 구조](docs/backend-architecture.md), 미완료 작업은 [후속 작업](docs/backend-roadmap.md)에 둔다.
+FastAPI + PostgreSQL 백엔드, 기존 관리 웹 `web.bak/`, 새 조회 프론트 `web/`, Discord 봇과 수집 worker를 함께 유지한다. 실행법과 문서 지도는 [README](README.md), 현재 처리 경로는 [백엔드 구조](docs/backend-architecture.md), 미완료 작업은 [후속 작업](docs/backend-roadmap.md)에 둔다.
 
 - 새 프론트는 조회 전용 `/api/v2`를 사용한다. 기존 API와 관리 기능은 사용 종료가 확인되기 전 제거하지 않는다.
 - scheduler의 현재 X 경로는 새 글 알림이다. LangGraph 분류와 Google 일정 생성 helper가 존재한다고 자동 연결된 것으로 간주하지 않는다.

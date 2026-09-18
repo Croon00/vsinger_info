@@ -15,7 +15,7 @@ uvicorn app.main:app --reload
 
 새 API가 등록됐는지는 `/docs`의 `frontend-read` 그룹으로 확인한다. 이미 실행 중인 오래된 프로세스는 `/health`에 성공하더라도 `/api/v2/artists`에 404를 반환할 수 있다.
 
-프론트는 `front-design-draft`에서 `npm run dev`로 실행한다. `BACKEND_URL` 기본값은 `http://127.0.0.1:8000`이다. 개발 프록시 외의 운영 환경에도 `/api` 라우팅이 필요하다. 검증용 8001/5198 포트는 일반 실행 기본값이 아니다.
+프론트는 `web`에서 `npm run dev`로 실행한다. `BACKEND_URL` 기본값은 `http://127.0.0.1:8000`이다. 개발 프록시 외의 운영 환경에도 `/api` 라우팅이 필요하다. 검증용 8001/5198 포트는 일반 실행 기본값이 아니다.
 
 ## 계약
 
@@ -74,13 +74,13 @@ uvicorn app.main:app --reload
 
 목록 비교는 초기 표시까지 필요한 작업을 비교한 것으로, 전체 목록 전송 완료 시간 비교가 아니다. 기존 검색 두 요청은 병렬이므로 소요 시간을 단순 합산하지 않는다. 실제 달력은 월 범위 조건을 추가하므로 표의 전체 첫 페이지와 다를 수 있다.
 
-원시 측정값은 [변경 전](../front-design-draft/docs/performance-before.json), [변경 후](../front-design-draft/docs/performance-after.json), [SQL 프로파일](../front-design-draft/docs/performance-queries.json)이다. 재측정은 루트 가상환경 Python으로 `front-design-draft/scripts/benchmark-api.py before|after`를 실행한다. `BENCHMARK_API_URL`로 주소를 바꿀 수 있다. `profile-catalog.py`는 명시적인 읽기 전용 트랜잭션에서 SQL 횟수/시간만 측정하며 레코드·인증정보를 출력하지 않는다.
+원시 측정값은 [변경 전](../web/docs/performance-before.json), [변경 후](../web/docs/performance-after.json), [SQL 프로파일](../web/docs/performance-queries.json)이다. 재측정은 루트 가상환경 Python으로 `web/scripts/benchmark-api.py before|after`를 실행한다. `BENCHMARK_API_URL`로 주소를 바꿀 수 있다. `profile-catalog.py`는 명시적인 읽기 전용 트랜잭션에서 SQL 횟수/시간만 측정하며 레코드·인증정보를 출력하지 않는다.
 
 실제 SQL 프로파일에서 기존 목록은 94개 등록 아티스트의 대표 영상 조회를 94번 추가 실행했다. 총 96개 쿼리, 서비스 처리 약 7.47초 중 대표 영상 조회가 7.17초였다. 새 목록은 같은 75개 그룹을 2개 쿼리로 반환했고 같은 연결 조건에서 서비스 처리 약 0.17초였다. 이는 HTTP 전체 시간과는 다른 측정이다.
 
 ## 검증
 
-테스트 명령·결과·실데이터 확인 범위는 [검증 가이드](../front-design-draft/docs/qa.md)에 모아 관리한다.
+테스트 명령·결과·실데이터 확인 범위는 [검증 가이드](../web/docs/qa.md)에 모아 관리한다.
 
 ## 남은 범위
 
