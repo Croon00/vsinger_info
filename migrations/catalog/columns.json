@@ -1,0 +1,1444 @@
+{
+  "artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "slug",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "name_native",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "name_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "name_latin",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "entity_kind",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "is_virtual",
+      "type": "BOOLEAN",
+      "nullable": true
+    },
+    {
+      "name": "agency_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "birthday_month",
+      "type": "SMALLINT",
+      "nullable": true
+    },
+    {
+      "name": "birthday_day",
+      "type": "SMALLINT",
+      "nullable": true
+    },
+    {
+      "name": "debut_date",
+      "type": "DATE",
+      "nullable": true
+    },
+    {
+      "name": "bio",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "theme_color",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "avatar_url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "show_in_catalog",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "artist_aliases": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "alias",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "normalized_alias",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "agencies": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "name_native",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "name_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "website_url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "artist_group_members": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "group_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "member_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "joined_on",
+      "type": "DATE",
+      "nullable": true
+    },
+    {
+      "name": "left_on",
+      "type": "DATE",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "external_accounts": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "platform",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "platform_id",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "handle",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "url",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "collection_enabled",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "artist_external_accounts": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "account_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "relationship",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "is_primary",
+      "type": "BOOLEAN",
+      "nullable": false
+    },
+    {
+      "name": "label",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "songs": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "title_native",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "title_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "title_latin",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "language_code",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "song_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "song_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "karaoke_numbers": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "song_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "provider",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "number",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "videos": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "platform",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "platform_video_id",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_account_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "title",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "published_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "duration_seconds",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "availability",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "live_archives": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "video_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "primary_artist_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "broadcast_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "setlist_state",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "archive_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archive_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "role",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "source_documents": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "source_kind",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "external_id",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "captured_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "content_text",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "content_hash",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_metadata",
+      "type": "JSONB",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "archive_sources": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archive_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "document_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "role",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "performances": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archive_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "ordinal",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "song_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "start_seconds",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "end_seconds",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "raw_title",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "raw_artist",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "raw_timestamp",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "source_document_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "performance_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "performance_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "role",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "concerts": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "title",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "event_format",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "event_date",
+      "type": "DATE",
+      "nullable": true
+    },
+    {
+      "name": "starts_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "ends_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "timezone_name",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "time_precision",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "city",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "venue",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "status",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_document_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "concert_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "concert_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "concert_ticket_windows": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "concert_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "label",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "opens_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "closes_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "price_text",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "albums": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "title_native",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "title_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "album_type",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "release_year",
+      "type": "SMALLINT",
+      "nullable": true
+    },
+    {
+      "name": "release_month",
+      "type": "SMALLINT",
+      "nullable": true
+    },
+    {
+      "name": "release_day",
+      "type": "SMALLINT",
+      "nullable": true
+    },
+    {
+      "name": "cover_image_url",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "spotify_album_id",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "album_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "album_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "recordings": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "song_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "title_native",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "title_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "version_label",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "duration_ms",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "official_video_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "recording_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "recording_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "role",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "recording_external_ids": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "recording_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "platform",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "external_id",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "album_tracks": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "album_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "recording_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "disc_number",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "track_number",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "recording_lyrics": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "recording_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "original_lyrics",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "translation_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "pronunciation_ko",
+      "type": "TEXT",
+      "nullable": true
+    },
+    {
+      "name": "source_document_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "covers": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "video_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "song_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "version",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "archived_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    }
+  ],
+  "cover_artists": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "cover_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "artist_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "role",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "position",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "catalog_instance": [
+    {
+      "name": "id",
+      "type": "UUID",
+      "nullable": false
+    },
+    {
+      "name": "singleton_key",
+      "type": "SMALLINT",
+      "nullable": false
+    },
+    {
+      "name": "schema_version",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "initial_import_id",
+      "type": "INTEGER",
+      "nullable": true
+    },
+    {
+      "name": "initialized_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": true
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "updated_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "catalog_imports": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "operation_id",
+      "type": "UUID",
+      "nullable": false
+    },
+    {
+      "name": "catalog_instance_id",
+      "type": "UUID",
+      "nullable": false
+    },
+    {
+      "name": "manifest_hash",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "source_kind",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "committed_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "result_mapping",
+      "type": "JSONB",
+      "nullable": false
+    },
+    {
+      "name": "result_summary",
+      "type": "JSONB",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ],
+  "catalog_changes": [
+    {
+      "name": "id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "import_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "entity_type",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "entity_id",
+      "type": "INTEGER",
+      "nullable": false
+    },
+    {
+      "name": "action",
+      "type": "TEXT",
+      "nullable": false
+    },
+    {
+      "name": "before_data",
+      "type": "JSONB",
+      "nullable": true
+    },
+    {
+      "name": "after_data",
+      "type": "JSONB",
+      "nullable": true
+    },
+    {
+      "name": "provenance",
+      "type": "JSONB",
+      "nullable": false
+    },
+    {
+      "name": "applied_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    },
+    {
+      "name": "created_at",
+      "type": "TIMESTAMPTZ",
+      "nullable": false
+    }
+  ]
+}

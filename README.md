@@ -32,6 +32,10 @@ npm run dev
 
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
+## 새 DB 관리자
+
+`admin-web`에서 `npm ci`, `npm run build` 후 프로젝트 루트에서 `.\.venv\Scripts\python.exe scripts/run_admin.py`를 실행하고 http://127.0.0.1:8010 을 연다. 새 DB 설정은 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`만 사용한다. [사용 안내](docs/admin-web-plan.md)를 따른다.
+
 ## 실행 범위
 
 | 명령/디렉터리 | 역할 |
@@ -39,6 +43,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | `uvicorn app.main:app --reload` | API만 실행. Discord 로그인과 주기 수집 loop는 시작하지 않음 |
 | `python -m app.runtime` | API + Discord 봇, `AGENT_ENABLED=true`이면 수집 loop도 실행 |
 | `web/` | 새 사용자 조회 화면. 기본 `/api/v2`, 별도 mock 모드 |
+| `admin-web/` / `python scripts/run_admin.py` | 새 카탈로그 로컬 관리자. 빌드 후 127.0.0.1:8010, 초기 데이터는 명시적 검수·반영 |
 | `web.bak/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |
 | `scripts/` | 정규화, 수집, 등록 등 운영 도구. 실행 전 조회/변경 여부 확인 |
 
@@ -51,8 +56,9 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집 흐름, Discord 명령, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
-| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 설계안: 통합 아티스트 명부, 음악 카탈로그, 검수 후 새 DB 전환 |
-| [관리자 로컬 웹 개발 계획](docs/admin-web-plan.md) | 미구현 계획: JSON 검수·수동 입력·승인 후 반영·후속 관리 |
+| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 빈 원격 스키마 적용 완료, 검수·앱 전환은 후속 작업 |
+| [새 DB 마이그레이션](migrations/catalog/README.md) | 실제 적용 DDL, 전용 접속 설정, 실행·검증 범위 |
+| [로컬 카탈로그 관리자](docs/admin-web-plan.md) | 실행·JSON 검수·승인 후 반영·수동 관리·백업 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
 | [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
 | [새 프론트 실행](web/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
