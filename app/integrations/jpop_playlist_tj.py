@@ -166,6 +166,22 @@ async def refresh_jpop_playlist_index(
     return len(rows)
 
 
+async def refresh_jpop_playlist_index_if_stale(max_age_days: int = 7) -> int:
+    """Refresh the public index at most once per period for new TJ entries."""
+    with get_connection() as conn:
+        row = conn.execute(
+            """SELECT MAX(fetched_at) AS fetched_at FROM karaoke_source_matches
+               WHERE source_name = %s""",
+            (SOURCE_NAME,),
+        ).fetchone()
+    if row and row["fetched_at"] is not None:
+        from datetime import datetime, timedelta, timezone
+
+        if row["fetched_at"] >= datetime.now(timezone.utc) - timedelta(days=max_age_days):
+            return 0
+    return await refresh_jpop_playlist_index()
+
+
 def apply_jpop_playlist_matches() -> int:
     """Write unambiguous cached TJ matches to performances still without a number."""
     with get_connection() as conn:
@@ -212,3 +228,35 @@ def apply_jpop_playlist_matches() -> int:
                 )
         conn.commit()
     return len(updates)
+
+
+def cached_jpop_playlist_matches(
+    songs: list[tuple[str, str | None]],
+) -> dict[int, PlaylistSong]:
+    """Return only unambiguous TJ matches already imported from J-POP Playlist."""
+    if not songs:
+        return {}
+    with get_connection() as conn:
+        rows = conn.execute(
+            """SELECT song_title, artist_name, tj_number, source_url
+               FROM karaoke_source_matches WHERE source_name = %s""",
+            (SOURCE_NAME,),
+        ).fetchall()
+    by_title: dict[str, list[PlaylistSong]] = defaultdict(list)
+    for row in rows:
+        key = normalize_karaoke_text(row["song_title"])
+        if key:
+            by_title[key].append(
+                PlaylistSong(row["song_title"], row["artist_name"], row["tj_number"], row["source_url"])
+            )
+
+    matches: dict[int, PlaylistSong] = {}
+    for index, (title, original_artist) in enumerate(songs):
+        candidates = by_title.get(normalize_karaoke_text(title), [])
+        artist_key = normalize_karaoke_text(original_artist)
+        if artist_key:
+            candidates = [song for song in candidates if normalize_karaoke_text(song.artist) == artist_key]
+        numbers = {song.tj_number for song in candidates}
+        if len(numbers) == 1 and candidates:
+            matches[index] = candidates[0]
+    return matches

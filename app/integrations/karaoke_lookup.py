@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from openai import AsyncOpenAI
 
 from app.core.config import settings
+from app.integrations.jpop_playlist_tj import cached_jpop_playlist_matches
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,13 @@ def split_song_credit(value: str) -> tuple[str, str | None]:
 async def lookup_karaoke_numbers(songs: list[tuple[str, str | None]]) -> list[KaraokeMatch]:
     """Use web search to verify TJ/KY registrations; unknown entries stay 등록X."""
     defaults = [KaraokeMatch(title, artist, "등록X", "등록X") for title, artist in songs]
+    source_matches = cached_jpop_playlist_matches(songs)
+    for index, source_match in source_matches.items():
+        defaults[index] = KaraokeMatch(
+            songs[index][0], songs[index][1] or source_match.artist, source_match.tj_number, "등록X"
+        )
+    if len(source_matches) == len(songs):
+        return defaults
     if not songs or not settings.openai_api_key:
         return defaults
 
@@ -60,7 +68,7 @@ async def lookup_karaoke_numbers(songs: list[tuple[str, str | None]]) -> list[Ka
         data = json.loads(raw)
         if not isinstance(data, list) or len(data) != len(songs):
             return defaults
-        return [
+        searched = [
             KaraokeMatch(
                 song_title=str(item.get("song_title") or songs[index][0]).strip(),
                 original_artist=(str(item["original_artist"]).strip() if item.get("original_artist") else songs[index][1]),
@@ -69,5 +77,6 @@ async def lookup_karaoke_numbers(songs: list[tuple[str, str | None]]) -> list[Ka
             )
             for index, item in enumerate(data)
         ]
+        return [defaults[index] if index in source_matches else searched[index] for index in range(len(songs))]
     except Exception:
         return defaults

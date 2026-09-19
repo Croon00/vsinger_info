@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 import httpx
 
 from app.core.config import settings
+from app.core.artist_identity import artist_name_aliases
 from app.core.db import RIOT_MUSIC_YOUTUBE_CHANNELS, get_connection
 from app.integrations.youtube_context import YOUTUBE_API_BASE_URL
 from app.integrations.youtube_live_archive import add_youtube_live_url
@@ -38,11 +39,17 @@ SINGING_STREAM_TITLE_KEYWORDS = (
     "閭뚧옞",
     "?먩춯?졼",
 )
+COVER_VIDEO_KEYWORDS = ("cover", "歌ってみた", "歌唱", "カバー", "covered by")
 
 
 def _is_singing_stream_title(title: str) -> bool:
     normalized = title.casefold()
     return any(keyword.casefold() in normalized for keyword in SINGING_STREAM_TITLE_KEYWORDS)
+
+
+def _is_cover_video(title: str, description: str = "") -> bool:
+    text = f"{title}\n{description}".casefold()
+    return any(keyword.casefold() in text for keyword in COVER_VIDEO_KEYWORDS)
 
 
 def _channel_locator(channel_url: str) -> tuple[str, str]:
@@ -144,7 +151,7 @@ async def poll_youtube_channel_monitors(
     *, monitor_id: int | None = None, limit: int = 25
 ) -> dict[str, int]:
     if not settings.youtube_api_key:
-        return {"channels_checked": 0, "videos_found": 0, "archives_created": 0}
+        return {"channels_checked": 0, "videos_found": 0, "archives_created": 0, "covers_saved": 0}
     with get_connection() as conn:
         monitors = conn.execute(
             """
@@ -157,12 +164,16 @@ async def poll_youtube_channel_monitors(
             (monitor_id, monitor_id, monitor_id, limit),
         ).fetchall()
 
-    result = {"channels_checked": 0, "videos_found": 0, "archives_created": 0}
+    result = {"channels_checked": 0, "videos_found": 0, "archives_created": 0, "covers_saved": 0}
     for monitor in monitors:
         try:
             videos = await _fetch_recent_singing_streams(monitor["uploads_playlist_id"])
+            # Routine polling checks the newest uploads. Historical imports use
+            # ``backfill_youtube_covers`` and deliberately traverse everything.
+            covers = await _fetch_recent_cover_videos(monitor["uploads_playlist_id"], max_videos=200)
             result["channels_checked"] += 1
             result["videos_found"] += len(videos)
+            result["covers_saved"] += _upsert_cover_videos(monitor["artist_name"], covers)
             _upsert_channel_videos(monitor["id"], videos)
             result["archives_created"] += await _collect_due_videos(monitor)
             _mark_monitor_checked(monitor["id"])
@@ -170,6 +181,122 @@ async def poll_youtube_channel_monitors(
             logger.exception("YouTube channel monitor #%s failed", monitor["id"])
             _mark_monitor_checked(monitor["id"], error=str(exc))
     return result
+
+
+async def backfill_youtube_covers(*, monitor_id: int | None = None) -> dict[str, int]:
+    """Import the complete cover catalogue for registered official channels."""
+    if not settings.youtube_api_key:
+        raise RuntimeError("YOUTUBE_API_KEY is not configured.")
+    with get_connection() as conn:
+        monitors = conn.execute(
+            """SELECT id, artist_name, uploads_playlist_id FROM youtube_channel_monitors
+               WHERE is_active = TRUE AND (%s::integer IS NULL OR id = %s)
+               ORDER BY id""",
+            (monitor_id, monitor_id),
+        ).fetchall()
+    result = {"channels_checked": 0, "covers_saved": 0, "failed": 0}
+    for monitor in monitors:
+        try:
+            covers = await _fetch_recent_cover_videos(monitor["uploads_playlist_id"])
+            result["channels_checked"] += 1
+            result["covers_saved"] += _upsert_cover_videos(monitor["artist_name"], covers)
+        except Exception:
+            result["failed"] += 1
+            logger.exception("YouTube cover import failed for channel monitor #%s", monitor["id"])
+    return result
+
+
+async def _fetch_recent_cover_videos(
+    uploads_playlist_id: str,
+    *,
+    max_videos: int | None = None,
+) -> list[dict[str, Any]]:
+    """Return every upload whose title or description identifies it as a cover."""
+    candidates: list[str] = []
+    page_token: str | None = None
+    async with httpx.AsyncClient(timeout=30) as client:
+        while True:
+            params = {
+                "part": "snippet,contentDetails", "playlistId": uploads_playlist_id,
+                "maxResults": "50", "key": settings.youtube_api_key,
+            }
+            if page_token:
+                params["pageToken"] = page_token
+            response = await client.get(f"{YOUTUBE_API_BASE_URL}/playlistItems", params=params)
+            response.raise_for_status()
+            payload = response.json()
+            candidates.extend(
+                (item.get("contentDetails") or {}).get("videoId")
+                for item in payload.get("items") or []
+                if (item.get("contentDetails") or {}).get("videoId")
+            )
+            if max_videos is not None and len(candidates) >= max_videos:
+                candidates = candidates[:max_videos]
+                break
+            page_token = payload.get("nextPageToken")
+            if not page_token:
+                break
+
+        items: list[dict[str, Any]] = []
+        for index in range(0, len(candidates), 50):
+            response = await client.get(
+                f"{YOUTUBE_API_BASE_URL}/videos",
+                params={"part": "snippet,liveStreamingDetails", "id": ",".join(candidates[index:index + 50]), "key": settings.youtube_api_key},
+            )
+            response.raise_for_status()
+            items.extend(response.json().get("items") or [])
+    covers = []
+    for item in items:
+        snippet = item.get("snippet") or {}
+        title = snippet.get("title") or ""
+        description = snippet.get("description") or ""
+        # A singing live archive can contain cover keywords in its description,
+        # but this catalogue is intentionally only for normal video uploads.
+        if not (item.get("liveStreamingDetails") or {}).get("actualStartTime") and _is_cover_video(title, description):
+            covers.append({
+                "youtube_video_id": item["id"], "video_title": title,
+                "video_description": description,
+                "published_at": _parse_datetime(snippet.get("publishedAt")),
+            })
+    return covers
+
+
+def _upsert_cover_videos(artist_name: str, covers: list[dict[str, Any]]) -> int:
+    """Store covers only when the monitor can be tied to one registered artist."""
+    if not covers:
+        return 0
+    with get_connection() as conn:
+        artist = conn.execute(
+            "SELECT id FROM artists WHERE LOWER(name) = LOWER(%s) OR LOWER(COALESCE(display_name, '')) = LOWER(%s) LIMIT 1",
+            (artist_name, artist_name),
+        ).fetchone()
+        if artist is None:
+            return 0
+        for cover in covers:
+            row = conn.execute(
+                """
+                INSERT INTO youtube_cover_videos (
+                    artist_id, youtube_video_id, youtube_url, video_title, video_description, published_at
+                ) VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (artist_id, youtube_video_id) DO UPDATE SET
+                    video_title = EXCLUDED.video_title,
+                    video_description = EXCLUDED.video_description,
+                    published_at = COALESCE(EXCLUDED.published_at, youtube_cover_videos.published_at),
+                    updated_at = CURRENT_TIMESTAMP
+                """,
+                (artist["id"], cover["youtube_video_id"], f"https://www.youtube.com/watch?v={cover['youtube_video_id']}",
+                 cover["video_title"], cover["video_description"], cover["published_at"]),
+            )
+            cover_row = conn.execute("SELECT id FROM youtube_cover_videos WHERE artist_id = %s AND youtube_video_id = %s", (artist["id"], cover["youtube_video_id"])).fetchone()
+            conn.execute("DELETE FROM youtube_cover_collaborators WHERE cover_id = %s", (cover_row["id"],))
+            text = f"{cover['video_title']}\n{cover['video_description']}".casefold()
+            candidates = conn.execute("SELECT id, name, display_name FROM artists WHERE id <> %s", (artist["id"],)).fetchall()
+            for candidate in candidates:
+                aliases = artist_name_aliases(candidate["name"]) + ([candidate["display_name"]] if candidate["display_name"] else [])
+                if any(alias and len(alias) >= 3 and alias.casefold() in text for alias in aliases):
+                    conn.execute("INSERT INTO youtube_cover_collaborators (cover_id, artist_id) VALUES (%s, %s) ON CONFLICT DO NOTHING", (cover_row["id"], candidate["id"]))
+        conn.commit()
+    return len(covers)
 
 
 async def _fetch_recent_singing_streams(

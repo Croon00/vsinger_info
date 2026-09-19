@@ -9,6 +9,7 @@ from app.integrations.youtube_channel_monitor import (
     _is_singing_stream_title,
     _performer_for_singing_stream,
 )
+from app.integrations.youtube_channel_monitor import _is_cover_video
 
 
 def test_channel_fetch_only_returns_completed_live_archives(monkeypatch) -> None:
@@ -56,6 +57,12 @@ def test_channel_locator_supports_handle_and_channel_id_urls() -> None:
 def test_channel_locator_rejects_video_and_custom_urls() -> None:
     with pytest.raises(ValueError):
         _channel_locator("https://www.youtube.com/watch?v=abcdefghijk")
+
+
+def test_cover_video_detection_uses_title_or_description() -> None:
+    assert _is_cover_video("【歌ってみた】테스트")
+    assert _is_cover_video("새 영상", "A new COVER is here")
+    assert not _is_cover_video("오리지널 싱글 공개")
 
 
 @pytest.mark.parametrize(

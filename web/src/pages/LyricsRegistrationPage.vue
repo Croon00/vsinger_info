@@ -95,3 +95,14 @@ function artistImage(artist: Artist): string | undefined {
 <style scoped>
 .lyrics-artist-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}.lyrics-artist-card{min-height:210px;padding:20px;border:1px solid var(--line);border-radius:11px;color:#8290a4;background:rgba(255,255,255,.015);cursor:pointer}.lyrics-artist-card>span{position:relative;display:grid;place-items:center;width:92px;height:92px;margin:0 auto 13px;overflow:hidden;border-radius:9px;color:var(--cyan);background:rgba(50,214,255,.08);font-size:22px}.lyrics-artist-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.lyrics-artist-card strong,.lyrics-artist-card small{display:block}.lyrics-artist-card strong{overflow:hidden;color:#dce5ef;font-size:15px;text-overflow:ellipsis;white-space:nowrap}.lyrics-artist-card small{margin-top:7px;font:10px ui-monospace,monospace}.lyrics-artist-card:hover,.lyrics-artist-card.active{border-color:var(--cyan);background:rgba(50,214,255,.07);transform:translateY(-2px)}.lyrics-song-form-panel{margin-top:18px}.selected-artist-line{display:flex;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}.selected-artist-line span,.lyrics-cost-note{color:#718096;font-size:9px}@media(max-width:1100px){.lyrics-artist-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.lyrics-artist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
+
+<style scoped>
+.lyrics-artist-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; }
+.lyrics-artist-card > span { flex: none; }
+.lyrics-artist-card strong { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .lyrics-artist-card { min-width: 0; min-height: 175px; padding: 12px; }
+  .lyrics-artist-card > span { width: min(80px, 100%); height: auto; aspect-ratio: 1; }
+  .selected-artist-line { flex-wrap: wrap; gap: 10px; }
+}
+</style>

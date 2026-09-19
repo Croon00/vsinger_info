@@ -56,6 +56,16 @@ def test_clean_setlist_title_removes_setlist_noise() -> None:
     assert clean_setlist_title("(please) forgive") == "(please) forgive"
     assert clean_setlist_title(", 0:15:04 , 0:15:43 ,") == ""
     assert clean_setlist_title("00 0:00") == ""
+def test_parse_setlist_comment_keeps_only_song_and_artist_from_timestamp_ranges() -> None:
+    comment = """
+    1曲目 08:36~13:14「変わらないもの／奥華子」 95.192点
+    2曲目 15:57〜20:39『茜色の約束 / いきものがかり』 96.446点
+    """
+
+    assert parse_setlist_comment(comment) == [
+        {"timestamp": "08:36", "title": "変わらないもの/奥華子"},
+        {"timestamp": "15:57", "title": "茜色の約束 / いきものがかり"},
+    ]
 
 
 def test_timestamp_to_seconds_supports_hour_timestamp() -> None:

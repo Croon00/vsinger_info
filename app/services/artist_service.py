@@ -3,6 +3,7 @@ from __future__ import annotations
 from sqlalchemy.orm import Session
 
 from app.core.models import ArtistCreate, ArtistUpdate, EventCandidateCreate, SourceCreate
+from app.core.artist_identity import display_artist_name, group_artists
 from app.db.models import ArtistAgencyModel, ArtistModel, ArtistSourceModel, EventCandidateModel
 from app.repositories.artist_agencies import ArtistAgencyRepository
 from app.repositories.artist_sources import ArtistSourceRepository
@@ -36,6 +37,7 @@ class ArtistService:
 
     def create_artist(self, payload: ArtistCreate) -> dict:
         values = payload.model_dump(exclude={"x_username"})
+        values['display_name'] = display_artist_name(values['name'], values.get('display_name'), values.get('agency'))
         artist = self.artists.create(values)
         if payload.x_username:
             self.sources.create(
@@ -44,14 +46,16 @@ class ArtistService:
             )
         return self._artist_data(self.artists.get(artist.id))
 
-    def list_artists(self) -> list[dict]:
-        return [self._artist_data(artist) for artist in self.artists.list()]
+    def list_artists(self, grouped: bool = False) -> list[dict]:
+        rows = [self._artist_data(artist) for artist in self.artists.list()]
+        return group_artists(rows) if grouped else rows
 
     def get_artist(self, artist_id: int) -> dict:
         return self._artist_data(self.artists.get(artist_id))
 
     def update_artist(self, artist_id: int, payload: ArtistUpdate) -> dict:
         artist = self.artists.update(artist_id, payload.model_dump(exclude_unset=True))
+        artist.display_name = display_artist_name(artist.name, artist.display_name, artist.agency)
         return self._artist_data(artist)
 
     def delete_artist(self, artist_id: int) -> None:
@@ -73,11 +77,18 @@ class ArtistService:
         return self.events.create(payload.model_dump())
 
     def list_event_candidates(self, **filters: object) -> list[EventCandidateModel]:
+        artist_id = filters.get('artist_id')
+        if artist_id is not None:
+            groups = group_artists([{'id': row.id, 'name': row.name, 'display_name': row.display_name, 'agency': row.agency}
+                                    for row in self.artists.list()])
+            group = next((row for row in groups if artist_id in row['related_artist_ids']), None)
+            if group:
+                filters['artist_id'] = group['related_artist_ids']
         return self.events.list(**filters)
 
     def _artist_data(self, artist: ArtistModel) -> dict:
         return {
-            "id": artist.id, "name": artist.name, "display_name": artist.display_name,
+            "id": artist.id, "name": artist.name, "display_name": display_artist_name(artist.name, artist.display_name, artist.agency),
             "artist_kind": artist.artist_kind, "agency": artist.agency, "notes": artist.notes,
             "profile_intro": artist.profile_intro, "debut_date": artist.debut_date,
             "show_in_spotify": artist.show_in_spotify, "show_in_lyrics": artist.show_in_lyrics,

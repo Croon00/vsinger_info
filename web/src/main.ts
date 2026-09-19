@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import { router } from './router'
 import './styles.css'
+import './responsive.css'
 
 const app = createApp(App)
 const queryClient = new QueryClient({

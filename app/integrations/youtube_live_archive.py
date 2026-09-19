@@ -9,6 +9,7 @@ from psycopg.types.json import Jsonb
 
 from app.core.config import settings
 from app.core.db import get_connection
+from app.core.artist_identity import artist_name_aliases, display_artist_name
 from app.integrations.youtube_context import fetch_setlist_comment, fetch_video_metadata
 from app.integrations.karaoke_lookup import lookup_karaoke_numbers, split_song_credit
 from app.integrations.spotify_title_translation import (
@@ -24,6 +25,14 @@ TIMESTAMP_LINE_RE = re.compile(
     r"(?:\s*[-–—|｜:：.]?\s*)"
     r"(?P<title>.+?)\s*$"
 )
+SETLIST_RANGE_END_RE = re.compile(
+    r"^\s*[~〜～\-–—]\s*(?:\d{1,2}:)?[0-5]?\d:[0-5]\d\s*"
+)
+SETLIST_SCORE_SUFFIX_RE = re.compile(
+    r"\s+[0-9０-９]+(?:[.．][0-9０-９]+)?(?:点|pts?\.?)?\s*$",
+    re.IGNORECASE,
+)
+SETLIST_QUOTED_SONG_RE = re.compile(r'[「『"](?P<song>.+?)[」』"]')
 MAX_ARCHIVE_ATTEMPTS = 168
 SETLIST_TITLE_PREFIX_RE = re.compile(
     r"^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+",
@@ -289,13 +298,13 @@ async def add_youtube_live_url(
 
 
 def parse_setlist_comment(text: str) -> list[dict[str, str]]:
-    """Extract timestamp/song pairs from a YouTube top comment."""
+    """Extract timestamp/song pairs, retaining only song title and artist credit."""
     entries: list[dict[str, str]] = []
     for line in text.splitlines():
         match = TIMESTAMP_LINE_RE.search(line)
         if not match:
             continue
-        title = clean_setlist_title(match.group("title"))
+        title = _normalise_setlist_song(match.group("title"))
         if not title or re.match(r"^start(?:\b|[：:\-])", title, re.IGNORECASE):
             continue
         entries.append(
@@ -307,29 +316,15 @@ def parse_setlist_comment(text: str) -> list[dict[str, str]]:
     return entries
 
 
-def clean_setlist_title(value: str) -> str:
-    """Remove setlist numbering, timestamps, and non-song labels."""
-    title = LEADING_SETLIST_DECORATION_RE.sub("", value).strip()
-    if NON_SONG_ATTENDEE_LABEL_RE.fullmatch(title):
-        return ""
-    title = DOUBLE_SETLIST_INDEX_PREFIX_RE.sub("", title).strip()
-    title = NUMBERED_HASH_PREFIX_RE.sub("", title).strip()
-    while True:
-        title = LEADING_SETLIST_DECORATION_RE.sub("", title).strip()
-        title = LEADING_TIMESTAMP_NOISE_RE.sub("", title).strip()
-        if TIMESTAMP_ONLY_TITLE_RE.fullmatch(title):
-            return ""
-        match = SETLIST_TIMESTAMP_PREFIX_RE.match(title)
-        if not match:
-            break
-        title = title[match.end():].strip()
-    if TIMESTAMP_ONLY_TITLE_RE.fullmatch(title):
-        return ""
-    had_trailing_timestamp = bool(TRAILING_TIMESTAMP_RE.search(title))
-    title = TRAILING_TIMESTAMP_RE.sub("", title).strip()
-    if had_trailing_timestamp and re.fullmatch(r"\d{1,2}", title):
-        return ""
-    return SETLIST_TITLE_PREFIX_RE.sub("", title).strip()
+def _normalise_setlist_song(value: str) -> str:
+    """Remove range endpoints, scores, labels, and quote wrappers from a song row."""
+    cleaned = SETLIST_TITLE_PREFIX_RE.sub("", value.strip())
+    cleaned = SETLIST_RANGE_END_RE.sub("", cleaned)
+    quoted = SETLIST_QUOTED_SONG_RE.search(cleaned)
+    if quoted:
+        cleaned = quoted.group("song")
+    cleaned = SETLIST_SCORE_SUFFIX_RE.sub("", cleaned).strip()
+    return cleaned.replace("／", "/").replace("｜", "/")
 
 
 async def refresh_pending_youtube_lives(limit: int = 10) -> int:
@@ -387,6 +382,7 @@ async def _save_check_result(
     comment: str | None,
     setlist: list[dict[str, str]],
     metadata: Any | None,
+    translate_titles: bool = True,
 ) -> None:
     status = "ready" if setlist else "pending"
     with get_connection() as conn:
@@ -417,7 +413,8 @@ async def _save_check_result(
         conn.commit()
     if setlist:
         _replace_song_performances(archive_id, setlist)
-        await _translate_korean_song_titles(archive_id)
+        if translate_titles:
+            await _translate_korean_song_titles(archive_id)
 
 
 def _timestamp_to_seconds(timestamp: str) -> int:
@@ -526,15 +523,18 @@ def list_youtube_live_archives(limit: int | None = 20, artist_name: str | None =
             LEFT JOIN artist_sources s ON s.id = y.source_id
             LEFT JOIN artists a ON a.id = s.artist_id
             LEFT JOIN source_items si ON si.id = y.source_item_id
-            WHERE (%s::text IS NULL OR COALESCE(a.name, y.performer_name, '') ILIKE '%%' || %s || '%%')
+            WHERE (%s::text IS NULL OR COALESCE(a.name, y.performer_name, '') ILIKE '%%' || %s || '%%'
+                OR LOWER(COALESCE(a.name, y.performer_name, '')) = ANY(%s))
               AND (y.duration_seconds IS NULL OR y.duration_seconds > 420)
             ORDER BY COALESCE(y.broadcast_at, y.published_at) DESC NULLS LAST, y.id DESC
             LIMIT %s
             """,
-            (artist_name, artist_name, limit),
+            (artist_name, artist_name, [alias.lower() for alias in artist_name_aliases(artist_name)] if artist_name else [], limit),
         ).fetchall()
         if not archives:
             return archives
+        for archive in archives:
+            archive['artist_name'] = display_artist_name(archive['artist_name'])
         archive_ids = [archive["id"] for archive in archives]
         performances = conn.execute(
             """
@@ -575,6 +575,7 @@ def get_youtube_live_archive(archive_id: int) -> dict[str, Any] | None:
         ).fetchone()
         if archive is None:
             return None
+        archive['artist_name'] = display_artist_name(archive['artist_name'])
         archive["performances"] = conn.execute(
             """
             SELECT id, performed_on, start_seconds, timestamp_text, song_title, song_title_ko,
@@ -595,11 +596,10 @@ def search_youtube_song_performances(
     limit: int = 200,
 ) -> list[dict[str, Any]]:
     """Search archived performances using OR matching within each selected filter."""
-    performer_patterns = [f"%{value.strip()}%" for value in artist_names or [] if value.strip()]
+    performer_patterns = list(dict.fromkeys(f"%{alias}%" for value in artist_names or [] if value.strip()
+                                           for alias in artist_name_aliases(value.strip())))
     song_patterns = [f"%{value.strip()}%" for value in song_titles or [] if value.strip()]
     original_artist_patterns = [f"%{value.strip()}%" for value in original_artists or [] if value.strip()]
-    if not song_patterns:
-        raise ValueError("song_title is required.")
 
     with get_connection() as conn:
         return conn.execute(
@@ -647,6 +647,16 @@ def search_youtube_song_performances(
         ).fetchall()
 
 
+def list_youtube_performance_stats(group_by: str, limit: int = 200) -> list[dict[str, Any]]:
+    field = "p.song_title" if group_by == "song" else "p.original_artist"
+    korean = "MAX(NULLIF(p.song_title_ko, ''))" if group_by == "song" else "MAX(NULLIF(p.original_artist_ko, ''))"
+    with get_connection() as conn:
+        return conn.execute(f"""SELECT {field} AS label, {korean} AS korean_label, COUNT(*)::integer AS count
+            FROM youtube_song_performances p JOIN youtube_live_archives y ON y.id = p.archive_id
+            WHERE {field} IS NOT NULL AND {field} <> '' AND (y.duration_seconds IS NULL OR y.duration_seconds > 420)
+            GROUP BY {field} ORDER BY count DESC, label LIMIT %s""", (max(1, min(limit, 500)),)).fetchall()
+
+
 def list_youtube_performance_filters(limit: int = 500) -> dict[str, list[str]]:
     """Return distinct values used by the multi-select performance search UI."""
     with get_connection() as conn:
@@ -681,4 +691,4 @@ def list_youtube_performance_filters(limit: int = 500) -> dict[str, list[str]]:
             """,
             (limit,),
         ).fetchall()
-    return {"performers": [row["value"] for row in performers], "original_artists": [row["value"] for row in original_artists], "songs": [row["value"] for row in songs]}
+    return {"performers": sorted({display_artist_name(row['value']) for row in performers}), "original_artists": [row["value"] for row in original_artists], "songs": [row["value"] for row in songs]}

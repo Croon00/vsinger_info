@@ -1,0 +1,70 @@
+.app-shell--collapsed { grid-template-columns: minmax(0, 1fr); }
+.sidebar { height: 100dvh; overflow-y: auto; }
+.sidebar__bottom { padding-top: 24px; }
+.app-topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 24px; border-bottom: 1px solid var(--line); background: var(--bg); }
+.menu-toggle { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 44px; height: 44px; color: var(--cyan); }
+.app-topbar__brand { font-size: 12px; font-weight: 700; letter-spacing: .12em; }
+.mobile-sidebar-overlay { z-index: 99; background: rgba(0, 0, 0, .6); }
+.mobile-sidebar { z-index: 100; width: min(320px, calc(100vw - 32px)); background: var(--bg); }
+.mobile-sidebar__close { position: absolute; top: 12px; right: 12px; }
+.mobile-sidebar__body { display: flex; flex-direction: column; padding: 20px 16px max(20px, env(safe-area-inset-bottom)); overflow-y: auto; }
+.mobile-sidebar__body nav { display: grid; gap: 6px; }
+.page, .page-header > *, .panel, .form-grid > *, .artist-row > *, .profile-hero > *, .album-detail__hero > * { min-width: 0; }
+.page { overflow-wrap: anywhere; }
+.artist-card, .release-card { display: block; }
+.page-header__actions, .form-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.filter-tabs { min-width: 0; max-width: 100%; overflow-x: auto; }
+.filter-tabs button { flex-shrink: 0; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+@media (min-width: 1025px) and (max-width: 1400px) {
+  .artist-row { grid-template-columns: 42px minmax(0, 1fr) minmax(0, 1fr); }
+  .artist-row__controls { grid-column: 2 / -1; }
+  .dashboard-grid, .studio-grid { grid-template-columns: minmax(0, 1fr); }
+  .output-panel { position: static; }
+}
+@media (max-width: 1024px) {
+  .app-shell { grid-template-columns: minmax(0, 1fr); }
+  .app-shell > .sidebar { display: none; }
+  .page { padding: 28px 24px 60px; }
+  .dashboard-grid, .studio-grid, .lyrics-reading-grid { grid-template-columns: minmax(0, 1fr); }
+  .output-panel { position: static; }
+}
+@media (max-width: 600px) {
+  .app-topbar { padding: max(8px, env(safe-area-inset-top)) 12px 8px; }
+  .page { padding: 24px 16px max(40px, env(safe-area-inset-bottom)); }
+  h1 { font-size: 30px; line-height: 1.2; }
+  .page-header { gap: 18px; margin-bottom: 24px; }
+  .page-header__actions { width: 100%; }
+  .page-header__actions > * { flex: 1 1 auto; justify-content: center; }
+  .panel:not(.panel--table):not(.calendar-panel), .relationship-panel, .detail-block, .live-detail-hero { padding: 16px; }
+  .panel__heading, .section-heading, .catalog-toolbar, .lyrics-source-line { flex-wrap: wrap; gap: 12px; }
+  .panel--table > .panel__heading, .toolbar, .artist-row { padding: 16px; }
+  .button, .icon-button, .filter-tabs button, .profile-tabs button, .agency-filter button { min-height: 44px; }
+  .icon-button { min-width: 44px; }
+  input, select, textarea, [role="combobox"] { min-width: 0; font-size: 16px; }
+  .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .modal { width: calc(100vw - 24px); max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); padding: 12px; }
+  .modal [data-slot="body"], .modal [data-slot="header"] { padding: 12px; }
+  .track-list__actions { min-width: 0; flex-wrap: wrap; gap: 8px; }
+  .track-list__actions a, .track-list__actions button { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+  .profile-hero { grid-template-columns: minmax(0, 1fr); padding: 18px; gap: 18px; }
+  .profile-hero__image { width: 120px; height: 120px; }
+  .profile-hero h1, .live-detail-hero h1 { font-size: 27px; }
+  .profile-hero dl { flex-wrap: wrap; gap: 16px; }
+  .live-facts { grid-template-columns: minmax(0, 1fr); }
+  .history-entry { grid-template-columns: 56px 18px minmax(0, 1fr); gap: 6px; }
+  .history-line::before { left: 70px; }
+  .history-entry__card { padding: 12px; }
+  .album-detail__hero { grid-template-columns: 72px minmax(0, 1fr); gap: 12px; }
+  .album-detail__hero img { width: 72px; height: 72px; }
+  .release-row .release-meta { padding-right: 0; }
+  .release-row .release-meta em { position: static; }
+  .release-card__body { padding: 10px; }
+  .relation-card { padding: 12px; }
+  .relation-card__artists { grid-template-columns: 64px minmax(0, 1fr) 64px; }
+  .safety-banner { align-items: flex-start; gap: 12px; padding: 16px; }
+  .integration-card__body > div:first-child { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

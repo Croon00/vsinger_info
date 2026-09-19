@@ -10,6 +10,7 @@ from psycopg import Connection
 from psycopg.rows import dict_row
 
 from app.core.config import settings
+from app.core.artist_identity import find_preset_artist, normalize_artist_display_names
 
 
 # RK Music 아티스트·발매 페이지에서 확인한 공식 X 계정입니다.
@@ -142,16 +143,7 @@ def _seed_rkmusic_x_sources(conn: Connection) -> None:
         # 보존합니다.
         if x_username == "Mikage_0916":
             artist_name = "MIKAGE"
-        artist = conn.execute(
-            """
-            SELECT id
-            FROM artists
-            WHERE discord_user_id = %s AND name = %s
-            ORDER BY id
-            LIMIT 1
-            """,
-            (RK_MUSIC_SYSTEM_USER_ID, artist_name),
-        ).fetchone()
+        artist = find_preset_artist(conn, RK_MUSIC_SYSTEM_USER_ID, artist_name, 'RK Music')
         if artist is None:
             artist = conn.execute(
                 """
@@ -219,14 +211,7 @@ def _seed_artist_x_sources(
 ) -> None:
     """Insert a named official-source preset without modifying user-owned artists."""
     for artist_name, x_username in sources:
-        artist = conn.execute(
-            """
-            SELECT id FROM artists
-            WHERE discord_user_id = %s AND name = %s
-            ORDER BY id LIMIT 1
-            """,
-            (owner_id, artist_name),
-        ).fetchone()
+        artist = find_preset_artist(conn, owner_id, artist_name, agency)
         if artist is None:
             artist = conn.execute(
                 """
@@ -538,6 +523,37 @@ def init_db() -> None:
         )
         conn.execute(
             """
+            CREATE TABLE IF NOT EXISTS youtube_cover_videos (
+                id SERIAL PRIMARY KEY,
+                artist_id INTEGER NOT NULL,
+                youtube_video_id TEXT NOT NULL,
+                youtube_url TEXT NOT NULL,
+                video_title TEXT NOT NULL,
+                video_description TEXT,
+                published_at TIMESTAMPTZ,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE,
+                UNIQUE (artist_id, youtube_video_id)
+            )
+            """
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS youtube_cover_videos_artist_date_idx "
+            "ON youtube_cover_videos (artist_id, published_at DESC)"
+        )
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS youtube_cover_collaborators (
+                cover_id INTEGER NOT NULL,
+                artist_id INTEGER NOT NULL,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (cover_id, artist_id),
+                FOREIGN KEY (cover_id) REFERENCES youtube_cover_videos(id) ON DELETE CASCADE,
+                FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE
+            )"""
+        )
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS karaoke_source_matches (
                 id SERIAL PRIMARY KEY,
                 song_title TEXT NOT NULL,
@@ -784,6 +800,7 @@ def init_db() -> None:
         )
         conn.execute("ALTER TABLE namuwiki_templates ADD COLUMN IF NOT EXISTS discord_user_id TEXT")
         _repair_online_live_dates(conn)
+        normalize_artist_display_names(conn, apply=True)
         conn.commit()
 
 

@@ -21,16 +21,16 @@ const releaseFilter = ref<'all' | 'album' | 'single' | 'appears_on'>('all')
 
 const artistsQuery = useQuery({ queryKey: ['spotify-artists'], queryFn: api.spotify.artists })
 const artist = computed(() =>
-  (artistsQuery.data.value ?? []).find((item) => item.local_artist_id === artistId.value),
+  (artistsQuery.data.value ?? []).find((item) => item.local_artist_id === artistId.value || item.related_artist_ids?.includes(artistId.value)),
 )
 const discographyQuery = useQuery({
   queryKey: ['spotify-discography', artistId],
-  queryFn: () => api.spotify.discography(artistId.value),
+  queryFn: () => api.spotify.discography(artist.value!.local_artist_id),
   enabled: computed(() => Boolean(artist.value?.matched)),
 })
 const artistProfileQuery = useQuery({
   queryKey: ['spotify-artist-profile', artistId],
-  queryFn: () => api.spotify.artistProfile(artistId.value),
+  queryFn: () => api.spotify.artistProfile(artist.value!.local_artist_id),
   enabled: computed(() => Boolean(artist.value?.matched)),
   staleTime: 60 * 60_000,
 })
@@ -101,7 +101,7 @@ function duration(milliseconds: number | null): string {
 
 function confirmExclusion(): void {
   if (!artist.value) return
-  if (window.confirm(`${artist.value.spotify_name || artist.value.local_name}의 Spotify 연결을 제거할까요? X 계정은 유지됩니다.`)) {
+  if (window.confirm(`${artist.value.local_name}의 Spotify 연결을 제거할까요? X 계정은 유지됩니다.`)) {
     excludeArtist.mutate(artist.value.local_artist_id)
   }
 }
@@ -116,7 +116,7 @@ function saveYouTubeLink(): void {
   linkYouTube.mutate({
     spotify_track_id: selectedYouTubeTrack.value.id,
     title: selectedYouTubeTrack.value.name,
-    artist_name: artist.value.spotify_name || artist.value.local_name,
+    artist_name: artist.value.local_name,
     album_name: albumQuery.data.value?.name,
     youtube_url: youtubeUrl.value,
   })
@@ -161,11 +161,11 @@ function runYouTubeAutoLink(): void {
     <div v-else-if="!artist" class="empty-state"><strong>아티스트를 찾을 수 없습니다</strong><RouterLink to="/music">목록으로 돌아가기</RouterLink></div>
     <template v-else>
       <section class="artist-profile-hero">
-        <img v-if="artist.image_url" :src="artist.image_url" :alt="artist.spotify_name || artist.local_name" />
+        <img v-if="artist.image_url" :src="artist.image_url" :alt="artist.local_name" />
         <div v-else class="artist-profile-hero__fallback">{{ artist.local_name.slice(0, 1) }}</div>
         <div class="artist-profile-hero__info">
           <p class="eyebrow">{{ artist.agency || (artist.artist_kind === 'vtuber' ? 'VTUBER' : 'SINGER') }}</p>
-          <h1>{{ artist.spotify_name || artist.local_name }}</h1>
+          <h1>{{ artist.local_name }}</h1>
           <span>{{ artist.artist_kind === 'vtuber' ? 'Virtual Artist' : 'Music Artist' }}</span>
           <a v-if="artist.spotify_url" :href="artist.spotify_url" target="_blank" rel="noreferrer" class="spotify-attribution">Spotify에서 확인 ↗</a>
           <div v-if="artistProfileQuery.data.value?.genres.length" class="artist-genre-list" aria-label="Spotify 장르 태그">

@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from app.api.dependencies import get_youtube_service
 from app.core.models import YouTubePerformanceUpdate
 from app.core.security import require_api_key
-from app.schemas.youtube import YouTubeChannelBackfillCreate, YouTubeLiveCreate
+from app.schemas.youtube import YouTubeChannelBackfillCreate, YouTubeCoverVideo, YouTubeLiveCreate
 from app.services.youtube_service import YouTubeService
 
 router = APIRouter(tags=["youtube"], dependencies=[Depends(require_api_key)])
@@ -31,7 +31,7 @@ async def create_youtube_live(payload: YouTubeLiveCreate, service: Service) -> d
 @router.post("/youtube-lives/backfills", status_code=status.HTTP_202_ACCEPTED)
 async def create_youtube_live_backfill(payload: YouTubeChannelBackfillCreate, service: Service) -> dict[str, str]:
     """채널 과거 라이브 수집 작업을 백그라운드로 시작한다."""
-    task = asyncio.create_task(asyncio.to_thread(service.backfill_channel, str(payload.channel_url), payload.artist_name))
+    task = asyncio.create_task(service.backfill_channel(str(payload.channel_url), payload.artist_name))
     _backfill_tasks.add(task)
     task.add_done_callback(_backfill_tasks.discard)
     return {"status": "accepted"}
@@ -41,6 +41,12 @@ async def create_youtube_live_backfill(payload: YouTubeChannelBackfillCreate, se
 def get_youtube_lives(service: Service, limit: int = 50, artist_name: str | None = None, all_records: bool = False) -> list[dict]:
     """저장된 YouTube 라이브를 조회한다."""
     return service.list_lives(limit, artist_name, all_records=all_records)
+
+
+@router.get("/youtube-covers", response_model=list[YouTubeCoverVideo])
+def get_youtube_covers(service: Service, artist_id: int | None = None, collaborator_id: int | None = None, limit: int = 500) -> list[dict]:
+    """Return cover uploads collected from registered artists' official channels."""
+    return service.list_covers(artist_id=artist_id, collaborator_id=collaborator_id, limit=limit)
 
 
 @router.get("/youtube-lives/{archive_id}")
@@ -65,6 +71,13 @@ def search_youtube_performances(service: Service, artist_name: list[str] = Query
 def get_youtube_performance_filters(service: Service) -> dict[str, list[str]]:
     """공연 검색 필터를 조회한다."""
     return service.list_performance_filters()
+
+
+@router.get("/youtube-performance-stats")
+def get_youtube_performance_stats(service: Service, group_by: str = "song") -> list[dict]:
+    if group_by not in {"song", "original_artist"}:
+        raise HTTPException(status_code=400, detail="group_by must be song or original_artist")
+    return service.list_performance_stats(group_by)
 
 
 @router.patch("/youtube-performances/{performance_id}")

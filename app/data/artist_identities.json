@@ -1,0 +1,289 @@
+[
+  {"key":"mikage","agency":"RK Music","display_name":"深影 (MIKAGE)","aliases":["深影","MIKAGE","深影 (MIKAGE)"]},
+  {"key":"hao","agency":"RK Music","display_name":"羽緒 (HAO)","aliases":["羽緒","HAO","羽緒 (HAO)"]},
+  {"key":"kisaki","agency":"RK Music","display_name":"妃玖 (KISAKI)","aliases":["妃玖","KISAKI","妃玖 (KISAKI)"]},
+  {"key":"kakyoin","agency":"KAMITSUBAKI STUDIO","display_name":"佳鏡院 (KAKYOIN)","aliases":["佳鏡院","KAKYOIN","佳鏡院 (KAKYOIN)"]},
+  {"key":"orihime","agency":"KAMITSUBAKI STUDIO","display_name":"御莉姫 (ORIHIME)","aliases":["御莉姫","ORIHIME","御莉姫 (ORIHIME)"]},
+  {"key":"garasumiya","agency":"KAMITSUBAKI STUDIO","display_name":"硝子宮 (GARASUMIYA)","aliases":["硝子宮","GARASUMIYA","硝子宮 (GARASUMIYA)"]},
+  {"key":"mikoto","agency":"KAMITSUBAKI STUDIO","display_name":"美古途 (MIKOTO)","aliases":["美古途","MIKOTO","美古途 (MIKOTO)"]},
+  {"key":"yunagi","agency":"KAMITSUBAKI STUDIO","display_name":"夕凪機 (YUNAGI)","aliases":["夕凪機","YUNAGI","夕凪機 (YUNAGI)"]},
+  {"key":"hinageshi","agency":"KAMITSUBAKI STUDIO","display_name":"氷夏至 (HINAGESHI)","aliases":["氷夏至","HINAGESHI","氷夏至 (HINAGESHI)"]},
+  {
+    "key": "enma_ruri",
+    "agency": "RK Music",
+    "display_name": "焔魔 るり (Enma Ruri)",
+    "aliases": [
+      "焔魔るり",
+      "焔魔 るり",
+      "Enma Ruri",
+      "enma_ruri",
+      "焔魔 るり (Enma Ruri)",
+      "Enma_Ruri",
+      "EnmaRuri"
+    ]
+  },
+  {
+    "key": "setono_toto",
+    "agency": "RK Music",
+    "display_name": "瀬戸乃 とと (Setono Toto)",
+    "aliases": [
+      "瀬戸乃とと",
+      "瀬戸乃 とと",
+      "Setono Toto",
+      "setono_toto",
+      "瀬戸乃 とと (Setono Toto)",
+      "Setono_Toto",
+      "SetonoToto"
+    ]
+  },
+  {
+    "key": "minase_nagi",
+    "agency": "RK Music",
+    "display_name": "水瀬 凪 (Minase Nagi)",
+    "aliases": [
+      "水瀬凪",
+      "水瀬 凪",
+      "Minase Nagi",
+      "minase_nagi",
+      "水瀬 凪 (Minase Nagi)",
+      "Minase_Nagi",
+      "MinaseNagi"
+    ]
+  },
+  {
+    "key": "kaf",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "花譜 (KAF)",
+    "aliases": [
+      "花譜",
+      "花譜 / KAF",
+      "KAF",
+      "kaf",
+      "花譜 (KAF)"
+    ]
+  },
+  {
+    "key": "rim",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "理芽 (RIM)",
+    "aliases": [
+      "理芽",
+      "理芽 / RIM",
+      "RIM",
+      "rim",
+      "理芽 (RIM)"
+    ]
+  },
+  {
+    "key": "harusaruhi",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "春猿火 (Harusaruhi)",
+    "aliases": [
+      "春猿火",
+      "春猿火 / Harusaruhi",
+      "Harusaruhi",
+      "harusaruhi",
+      "春猿火 (Harusaruhi)"
+    ]
+  },
+  {
+    "key": "isekaijoucho",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "ヰ世界情緒 (Isekai Jouchou)",
+    "aliases": [
+      "ヰ世界情緒",
+      "ヰ世界情緒 / Isekai Jouchou",
+      "Isekai Jouchou",
+      "isekaijoucho",
+      "ヰ世界情緒 (Isekai Jouchou)",
+      "Isekai_Jouchou",
+      "IsekaiJouchou"
+    ]
+  },
+  {
+    "key": "koko",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "幸祜 (KOKO)",
+    "aliases": [
+      "幸祜",
+      "幸祜 / KOKO",
+      "KOKO",
+      "koko",
+      "幸祜 (KOKO)"
+    ]
+  },
+  {
+    "key": "asu",
+    "agency": "KAMITSUBAKI STUDIO",
+    "display_name": "明透 (ASU)",
+    "aliases": [
+      "明透",
+      "明透 / ASU",
+      "ASU",
+      "asu",
+      "明透 (ASU)"
+    ]
+  },
+  {
+    "key": "iori_matsunaga",
+    "agency": "RIOT MUSIC",
+    "display_name": "松永依織 (IORI MATSUNAGA)",
+    "aliases": [
+      "松永依織",
+      "松永依織 / IORI MATSUNAGA",
+      "IORI MATSUNAGA",
+      "iori_matsunaga",
+      "松永依織 (IORI MATSUNAGA)",
+      "IORI_MATSUNAGA",
+      "IORIMATSUNAGA"
+    ]
+  },
+  {
+    "key": "anko_asakura",
+    "agency": "RIOT MUSIC",
+    "display_name": "朝倉杏子 (ANKO ASAKURA)",
+    "aliases": [
+      "朝倉杏子",
+      "朝倉杏子 / ANKO ASAKURA",
+      "ANKO ASAKURA",
+      "anko_asakura",
+      "朝倉杏子 (ANKO ASAKURA)",
+      "ANKO_ASAKURA",
+      "ANKOASAKURA"
+    ]
+  },
+  {
+    "key": "miona_sumeragi",
+    "agency": "RIOT MUSIC",
+    "display_name": "皇 美緒奈 (MIONA SUMERAGI)",
+    "aliases": [
+      "皇美緒奈",
+      "皇 美緒奈 / MIONA SUMERAGI",
+      "MIONA SUMERAGI",
+      "miona_sumeragi",
+      "皇 美緒奈 (MIONA SUMERAGI)",
+      "MIONA_SUMERAGI",
+      "MIONASUMERAGI"
+    ]
+  },
+  {
+    "key": "chise_itsuki",
+    "agency": "RIOT MUSIC",
+    "display_name": "伊月知世 (CHISE ITSUKI)",
+    "aliases": [
+      "伊月知世",
+      "伊月知世 / CHISE ITSUKI",
+      "CHISE ITSUKI",
+      "chise_itsuki",
+      "伊月知世 (CHISE ITSUKI)",
+      "CHISE_ITSUKI",
+      "CHISEITSUKI"
+    ]
+  },
+  {
+    "key": "shirase_shirakawa",
+    "agency": "RIOT MUSIC",
+    "display_name": "白河しらせ (SHIRASE SHIRAKAWA)",
+    "aliases": [
+      "白河しらせ",
+      "白河しらせ / SHIRASE SHIRAKAWA",
+      "SHIRASE SHIRAKAWA",
+      "shirase_shirakawa",
+      "白河しらせ (SHIRASE SHIRAKAWA)",
+      "SHIRASE_SHIRAKAWA",
+      "SHIRASESHIRAKAWA"
+    ]
+  },
+  {
+    "key": "ranze_tokiniwa",
+    "agency": "RIOT MUSIC",
+    "display_name": "時庭らんぜ (RANZE TOKINIWA)",
+    "aliases": [
+      "時庭らんぜ",
+      "時庭らんぜ / RANZE TOKINIWA",
+      "RANZE TOKINIWA",
+      "ranze_tokiniwa",
+      "時庭らんぜ (RANZE TOKINIWA)",
+      "RANZE_TOKINIWA",
+      "RANZETOKINIWA"
+    ]
+  },
+  {
+    "key": "minami_izumi",
+    "agency": "RIOT MUSIC",
+    "display_name": "MINAMI IZUMI",
+    "aliases": [
+      "ミナミイズミ",
+      "ミナミイズミ / MINAMI IZUMI",
+      "MINAMI IZUMI",
+      "minami_izumi",
+      "MINAMI_IZUMI",
+      "MINAMIIZUMI"
+    ]
+  },
+  {
+    "key": "shuna",
+    "agency": "RIOT MUSIC",
+    "display_name": "朱名 (SHUNA)",
+    "aliases": [
+      "朱名",
+      "朱名 / SHUNA",
+      "SHUNA",
+      "shuna",
+      "朱名 (SHUNA)"
+    ]
+  },
+  {
+    "key": "memento_vanitas",
+    "agency": "RIOT MUSIC",
+    "display_name": "MEMENTO VANITAS",
+    "aliases": [
+      "メーメントヴァニタス",
+      "メーメントヴァニタス / MEMENTO VANITAS",
+      "MEMENTO VANITAS",
+      "memento_vanitas",
+      "MEMENTO_VANITAS",
+      "MEMENTOVANITAS"
+    ]
+  },
+  {
+    "key": "denshinbashira_chan",
+    "agency": "RIOT MUSIC",
+    "display_name": "電信柱ちゃん (DENSHINBASHIRA-CHAN)",
+    "aliases": [
+      "電信柱ちゃん",
+      "電信柱ちゃん / DENSHINBASHIRA-CHAN",
+      "DENSHINBASHIRA-CHAN",
+      "denshinbashira_chan",
+      "電信柱ちゃん (DENSHINBASHIRA-CHAN)"
+    ]
+  },
+  {
+    "key": "leciel_miyajima",
+    "agency": "RIOT MUSIC",
+    "display_name": "宮島ルシェル (LECIEL MIYAJIMA)",
+    "aliases": [
+      "宮島ルシェル",
+      "宮島ルシェル / LECIEL MIYAJIMA",
+      "LECIEL MIYAJIMA",
+      "leciel_miyajima",
+      "宮島ルシェル (LECIEL MIYAJIMA)",
+      "LECIEL_MIYAJIMA",
+      "LECIELMIYAJIMA"
+    ]
+  },
+  {
+    "key": "kuguru_kasaya",
+    "agency": "RIOT MUSIC",
+    "display_name": "傘屋くぐる (KUGURU KASAYA)",
+    "aliases": [
+      "傘屋くぐる",
+      "傘屋くぐる / KUGURU KASAYA",
+      "KUGURU KASAYA",
+      "kuguru_kasaya",
+      "傘屋くぐる (KUGURU KASAYA)",
+      "KUGURU_KASAYA",
+      "KUGURUKASAYA"
+    ]
+  }
+]

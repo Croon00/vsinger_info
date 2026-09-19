@@ -149,15 +149,28 @@ def _parse_youtube_datetime(value: str | None) -> datetime | None:
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
-async def fetch_setlist_comment(video_id: str, max_pages: int = 3) -> YouTubeContextText | None:
-    """Find the comment containing the most timestamp/song-looking lines."""
+SETLIST_TIMESTAMP_RE = re.compile(
+    r"(?<!\d)(?:\d{1,2}:)?[0-5]?\d:[0-5]\d(?!\d)"
+)
+
+
+async def fetch_setlist_comment(
+    video_id: str,
+    max_pages: int | None = None,
+) -> YouTubeContextText | None:
+    """Read all comment pages and return the strongest timestamped candidate.
+
+    Setlists use many separators, so selection counts timestamp-bearing lines
+    instead of depending on a particular separator.
+    """
     if not settings.youtube_api_key:
         raise RuntimeError("YOUTUBE_API_KEY is not configured.")
 
     candidates: list[str] = []
     page_token: str | None = None
     async with httpx.AsyncClient(timeout=30) as client:
-        for _ in range(max_pages):
+        pages_read = 0
+        while max_pages is None or pages_read < max_pages:
             params = {
                 "part": "snippet",
                 "videoId": video_id,
@@ -173,6 +186,7 @@ async def fetch_setlist_comment(video_id: str, max_pages: int = 3) -> YouTubeCon
             )
             response.raise_for_status()
             data = response.json()
+            pages_read += 1
             for item in data.get("items") or []:
                 snippet = (
                     ((item.get("snippet") or {}).get("topLevelComment") or {}).get("snippet")
@@ -188,11 +202,7 @@ async def fetch_setlist_comment(video_id: str, max_pages: int = 3) -> YouTubeCon
     def timestamp_line_count(text: str) -> int:
         return sum(
             1 for line in text.splitlines()
-            if re.search(
-                r"(?<!\d)(?:\d{1,2}:)?\d{1,2}:\d{2}(?!\d)"
-                r"(?:\s|[-|｜–—.])",
-                line,
-            )
+            if SETLIST_TIMESTAMP_RE.search(line)
         )
 
     best = max(candidates, key=timestamp_line_count, default="")

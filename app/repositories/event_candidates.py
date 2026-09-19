@@ -19,5 +19,6 @@ class EventCandidateRepository:
         statement = select(EventCandidateModel)
         for field, value in filters.items():
             if value is not None:
-                statement = statement.where(getattr(EventCandidateModel, field) == value)
+                column = getattr(EventCandidateModel, field)
+                statement = statement.where(column.in_(value) if isinstance(value, list) else column == value)
         return list(self.session.scalars(statement.order_by(EventCandidateModel.created_at.desc())))

@@ -11,6 +11,7 @@ from pydantic import BaseModel, HttpUrl
 from psycopg import Connection, errors
 
 from app.core.config import settings
+from app.core.artist_identity import group_artists
 from app.core.db import get_connection, init_db, row_to_dict
 from app.core.models import (
     Artist,
@@ -653,6 +654,7 @@ def list_spotify_artists() -> list[SpotifyRegisteredArtist]:
     return [
         SpotifyRegisteredArtist(
             local_artist_id=row["id"],
+            related_artist_ids=row["related_artist_ids"],
             local_name=row["display_name"] or row["name"],
             artist_kind=row["artist_kind"],
             agency=row["agency"],
@@ -662,7 +664,7 @@ def list_spotify_artists() -> list[SpotifyRegisteredArtist]:
             spotify_url=row["spotify_url"],
             matched=bool(row["spotify_artist_id"]),
         )
-        for row in rows
+        for row in group_artists(rows)
     ]
 
 

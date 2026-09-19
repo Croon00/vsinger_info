@@ -39,8 +39,8 @@ def create_artist(payload: ArtistCreate, service: Service) -> dict:
 
 
 @router.get("/artists", response_model=list[ArtistWithSources])
-def list_artists(service: Service) -> list[dict]:
-    return service.list_artists()
+def list_artists(service: Service, grouped: bool = False) -> list[dict]:
+    return service.list_artists(grouped=grouped)
 
 
 @router.get("/artists/{artist_id}", response_model=ArtistWithSources)

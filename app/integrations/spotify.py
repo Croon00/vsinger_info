@@ -93,6 +93,7 @@ class SpotifyRelationship(BaseModel):
 
 class SpotifyRegisteredArtist(BaseModel):
     local_artist_id: int
+    related_artist_ids: list[int] = Field(default_factory=list)
     local_name: str
     artist_kind: str
     agency: str | None = None

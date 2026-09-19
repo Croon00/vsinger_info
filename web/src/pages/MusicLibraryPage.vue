@@ -143,7 +143,7 @@ function selectArtistKind(kind: 'vtuber' | 'singer'): void {
 }
 
 function confirmSpotifyExclusion(artist: SpotifyArtist): void {
-  const name = artist.spotify_name || artist.local_name
+  const name = artist.local_name
   if (window.confirm(`${name}을 Spotify 목록과 이후 동기화 대상에서 제외할까요? X 계정은 유지됩니다.`)) {
     excludeArtist.mutate(artist.local_artist_id)
   }
@@ -218,12 +218,12 @@ function duration(milliseconds: number | null): string {
           :disabled="syncArtist.isPending.value"
           @click="selectArtist(artist)"
         >
-          <img v-if="artist.image_url" :src="artist.image_url" :alt="artist.spotify_name || artist.local_name" />
+          <img v-if="artist.image_url" :src="artist.image_url" :alt="artist.local_name" />
           <div v-else class="artist-card__fallback">{{ artist.local_name.slice(0, 1) }}</div>
           <div class="artist-card__shade" />
           <div class="artist-card__content">
             <span>{{ artist.matched ? 'SPOTIFY ARTIST' : 'MATCH NEEDED' }}</span>
-            <strong>{{ artist.spotify_name || artist.local_name }}</strong>
+            <strong>{{ artist.local_name }}</strong>
             <em>{{ artist.matched ? '카탈로그 보기 →' : (searchCandidates.isPending.value && searchCandidates.variables.value === artist.local_artist_id ? '후보 검색 중…' : '클릭하여 후보 선택') }}</em>
           </div>
         </UButton>
@@ -276,7 +276,7 @@ function duration(milliseconds: number | null): string {
       <section v-if="selectedArtist" class="artist-catalog-header">
         <div>
           <p class="eyebrow">DISCOGRAPHY</p>
-          <h2>{{ selectedArtist.spotify_name || selectedArtist.local_name }}</h2>
+          <h2>{{ selectedArtist.local_name }}</h2>
           <div class="catalog-stats">
             <span><b>{{ albumCount }}</b> Albums</span>
             <span><b>{{ singleCount }}</b> Singles / EPs</span>

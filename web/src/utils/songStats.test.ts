@@ -8,7 +8,7 @@ function archive(id: number, title: string, korean: string | null = null, artist
     artist_name: 'HACHI', status: 'ready', published_at: null, broadcast_at: null,
     last_checked_at: null, setlist: [], performances: [{
       id, song_title: title, song_title_ko: korean, original_artist: '青葉市子', original_artist_ko: artistKo,
-      start_seconds: 0, timestamp_text: '0:00',
+      start_seconds: 0, timestamp_text: '0:00', tj_number: '12345', ky_number: '등록X',
     } as YouTubePerformance],
   }
 }
@@ -58,5 +58,8 @@ describe('full archive statistics', () => {
   })
   it('finds the song despite the decorative dot in its stored title', () => {
     expect(buildSongStats([archive(1, 'いきのこり●ぼくら')], 'いきのこり ぼくら', 'asc')).toHaveLength(1)
+  })
+  it('keeps a TJ number with the aggregated song', () => {
+    expect(buildSongStats([archive(1, 'Song')], '', 'desc')[0]?.tjNumbers).toEqual(['12345'])
   })
 })

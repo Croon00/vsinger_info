@@ -23,6 +23,7 @@ from app.integrations.notifications import (
 )
 from app.integrations.web_pages import fetch_public_page_text
 from app.integrations.x_client import fetch_recent_posts, get_x_user_id, post_url, x_configured
+from app.integrations.jpop_playlist_tj import apply_jpop_playlist_matches, refresh_jpop_playlist_index_if_stale
 from app.integrations.youtube_live_archive import (
     refresh_pending_youtube_lives,
     register_youtube_live,
@@ -69,7 +70,13 @@ async def run_agent_once() -> dict[str, int]:
         "youtube_live_archives_updated": 0,
         "youtube_channels_checked": 0,
         "youtube_channel_archives_created": 0,
+        "youtube_covers_saved": 0,
+        "jpop_playlist_rows_loaded": 0,
+        "jpop_playlist_performances_updated": 0,
     }
+    playlist_result = await _refresh_jpop_playlist_safely()
+    result["jpop_playlist_rows_loaded"] = playlist_result["rows_loaded"]
+    result["jpop_playlist_performances_updated"] = playlist_result["performances_updated"]
     if not rows or not x_configured():
         result["youtube_live_archives_updated"] = (
             await _refresh_youtube_live_archives_safely()
@@ -77,6 +84,7 @@ async def run_agent_once() -> dict[str, int]:
         channel_result = await _poll_youtube_channels_safely()
         result["youtube_channels_checked"] = channel_result["channels_checked"]
         result["youtube_channel_archives_created"] = channel_result["archives_created"]
+        result["youtube_covers_saved"] = channel_result.get("covers_saved", 0)
         return result
 
     for source in rows:
@@ -93,6 +101,7 @@ async def run_agent_once() -> dict[str, int]:
     channel_result = await _poll_youtube_channels_safely()
     result["youtube_channels_checked"] = channel_result["channels_checked"]
     result["youtube_channel_archives_created"] = channel_result["archives_created"]
+    result["youtube_covers_saved"] = channel_result.get("covers_saved", 0)
     return result
 
 
@@ -101,7 +110,17 @@ async def _poll_youtube_channels_safely() -> dict[str, int]:
         return await poll_youtube_channel_monitors()
     except Exception:
         logger.exception("YouTube channel monitor polling failed.")
-        return {"channels_checked": 0, "videos_found": 0, "archives_created": 0}
+        return {"channels_checked": 0, "videos_found": 0, "archives_created": 0, "covers_saved": 0}
+
+
+async def _refresh_jpop_playlist_safely() -> dict[str, int]:
+    """Refresh the public TJ index weekly, then apply safe cached matches."""
+    try:
+        loaded = await refresh_jpop_playlist_index_if_stale()
+        return {"rows_loaded": loaded, "performances_updated": apply_jpop_playlist_matches()}
+    except Exception:
+        logger.exception("J-POP Playlist TJ refresh failed.")
+        return {"rows_loaded": 0, "performances_updated": 0}
 
 
 async def _process_x_source(source: dict[str, Any]) -> dict[str, int]:

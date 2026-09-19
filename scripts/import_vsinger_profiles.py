@@ -20,6 +20,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from app.core.db import get_connection, init_db
+from app.core.artist_identity import artist_name_aliases, display_artist_name, name_key
 
 
 DEFAULT_SEED = Path("data/seeds/vsinger_profiles.seed.json")
@@ -42,15 +43,17 @@ def find_matching_artists(conn: Any, item: dict[str, Any]) -> list[dict[str, Any
         """
         SELECT id, name, display_name, agency
         FROM artists
-        WHERE (LOWER(name) = LOWER(%s) OR LOWER(COALESCE(display_name, '')) = LOWER(%s))
+        WHERE (regexp_replace(LOWER(name), '[[:space:]_]', '', 'g') = ANY(%s)
+            OR LOWER(COALESCE(display_name, '')) = LOWER(%s))
           AND (agency IS NULL OR LOWER(agency) = LOWER(%s))
         ORDER BY id
         """,
-        (item["name"], item["display_name"], item["agency"]),
+        ([name_key(alias) for alias in artist_name_aliases(item['name'])], item["display_name"], item["agency"]),
     ).fetchall())
 
 
 def upsert_profile(conn: Any, item: dict[str, Any], apply: bool) -> str:
+    item = {**item, 'display_name': display_artist_name(item['name'], item['display_name'], item['agency'])}
     matches = find_matching_artists(conn, item)
     if len(matches) > 1:
         ids = ", ".join(str(row["id"]) for row in matches)

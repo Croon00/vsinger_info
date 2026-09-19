@@ -37,7 +37,8 @@ const form = reactive({
 })
 
 const artistMap = computed(() => new Map(
-  (artistsQuery.data.value ?? []).map((artist) => [artist.id, artist.display_name || artist.name]),
+  (artistsQuery.data.value ?? []).flatMap((artist) =>
+    (artist.related_artist_ids ?? [artist.id]).map((id) => [id, artist.display_name || artist.name] as const)),
 ))
 const artistFilterOptions = computed(() => [
   { label: '전체 아티스트', value: '' },
@@ -315,4 +316,16 @@ const formatLabels: Record<EventFormat, string> = {
 .schedule-controls{flex-wrap:wrap}.format-filter{flex-basis:100%;order:2}.event-format{display:inline-block!important;padding:5px 7px;border-radius:5px;color:var(--green);background:rgba(77,230,168,.08)}.event-format--hybrid{color:#b9a8ff;background:rgba(154,124,255,.1)}.event-format--online{color:#ff91a5;background:rgba(255,116,140,.09)}.event-format--unknown{color:#8995a7;background:rgba(137,149,167,.09)}
 .duplicate-count{display:block;margin-top:3px;color:var(--amber);font:700 7px ui-monospace,monospace}
 .calendar-day{min-height:175px;cursor:pointer;transition:background .18s,box-shadow .18s}.calendar-day:hover{background:linear-gradient(145deg,rgba(50,214,255,.13),rgba(154,124,255,.06));box-shadow:inset 0 0 0 1px rgba(50,214,255,.38)}.calendar-day:hover>time{color:#061017;background:var(--cyan)}.calendar-day:focus-visible{outline:2px solid var(--cyan);outline-offset:-2px}.calendar-weekdays span{font-size:10px}.calendar-day>time{width:30px;height:30px;font-size:11px;transition:color .18s,background .18s}.calendar-event{padding:9px}.calendar-event b{font-size:10px}.calendar-event strong{font-size:12px;line-height:1.35}.calendar-event span{font-size:10px}.duplicate-count{font-size:9px}.day-schedule-list{display:grid;gap:10px}.day-schedule-item{display:flex;align-items:start;justify-content:space-between;gap:18px;padding:15px;border:1px solid var(--line);border-left:3px solid var(--cyan);border-radius:8px;background:rgba(50,214,255,.05)}.day-schedule-item time{color:var(--cyan);font:700 11px ui-monospace,monospace}.day-schedule-item h3{margin:7px 0 5px;font-size:16px}.day-schedule-item p{margin:0;color:#8d9bb0;font-size:12px}.day-schedule-item .text-link{flex:none;padding-top:3px}@media(max-width:820px){.calendar-day{min-height:115px}.calendar-event strong{font-size:10px}.calendar-event span,.calendar-event b{display:block}.day-schedule-item{display:grid;gap:10px}.day-schedule-item h3{font-size:14px}}
+</style>
+
+<style scoped>
+@media (max-width: 600px) {
+  .calendar-header { padding: 12px; }
+  .calendar-day { min-height: 96px; padding: 3px; }
+  .calendar-day > time { width: 24px; height: 24px; }
+  .calendar-event { padding: 4px 2px; }
+  .calendar-event strong { font-size: 10px; }
+  .calendar-event b, .calendar-event span { display: none; }
+  .view-switch button { min-height: 44px; }
+}
 </style>

@@ -78,7 +78,8 @@ export const api = {
       request<SongLyricsSummary>(`/songs/${songId}/credits`, { method: 'PATCH', body: JSON.stringify(payload) }),
   },
   artists: {
-    list: () => request<Artist[]>('/artists'),
+    list: () => request<Artist[]>('/artists?grouped=true'),
+    registrations: () => request<Artist[]>('/artists'),
     create: (payload: ArtistCreate) =>
       request<Artist>('/artists', { method: 'POST', body: JSON.stringify(payload) }),
     update: (id: number, payload: Partial<ArtistCreate>) =>
@@ -122,7 +123,16 @@ export const api = {
       method: 'POST', body: JSON.stringify({ youtube_url: youtubeUrl, artist_name: artistName }),
     }),
   },
+  youtubeCovers: {
+    list: (artistId?: number, collaboratorId?: number, limit = 500) => {
+      const params = new URLSearchParams({ limit: String(limit) })
+      if (artistId) params.set('artist_id', String(artistId))
+      if (collaboratorId) params.set('collaborator_id', String(collaboratorId))
+      return request<import('./types').YouTubeCoverVideo[]>(`/youtube-covers?${params.toString()}`)
+    },
+  },
   youtubePerformances: {
+    stats: (groupBy: 'song' | 'original_artist') => request<Array<{ label: string; korean_label: string | null; count: number }>>(`/youtube-performance-stats?group_by=${groupBy}`),
     filters: () => request<YouTubePerformanceFilters>('/youtube-performance-filters'),
     search: (filters: { artists: string[]; songs: string[]; originalArtists: string[] }) => {
       const params = new URLSearchParams({ limit: '500' })

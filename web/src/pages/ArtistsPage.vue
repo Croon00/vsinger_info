@@ -8,7 +8,7 @@ import PageHeader from '@/components/PageHeader.vue'
 import StatusPill from '@/components/StatusPill.vue'
 
 const queryClient = useQueryClient()
-const artistsQuery = useQuery({ queryKey: ['artists'], queryFn: api.artists.list })
+const artistsQuery = useQuery({ queryKey: ['artists', 'registrations'], queryFn: api.artists.registrations })
 const artistModal = ref(false)
 const sourceArtist = ref<Artist | null>(null)
 const feedback = ref('')

@@ -72,6 +72,8 @@ export interface Source {
 }
 
 export interface Artist {
+  related_artist_ids?: number[]
+  name_aliases?: string[]
   id: number
   name: string
   display_name: string | null
@@ -137,6 +139,7 @@ export interface EventCandidate {
 export type EventCandidateCreate = Omit<EventCandidate, 'id' | 'created_at' | 'updated_at'>
 
 export interface SpotifyArtist {
+  related_artist_ids?: number[]
   local_artist_id: number
   local_name: string
   artist_kind: ArtistKind
@@ -223,4 +226,16 @@ export interface YouTubeLiveArchive {
   status: 'pending' | 'ready'; published_at: string | null; broadcast_at: string | null
   setlist: Array<{ timestamp: string; title: string }>; performances?: YouTubePerformance[]
   last_checked_at: string | null
+}
+
+export interface YouTubeCoverVideo {
+  id: number
+  artist_id: number
+  artist_name: string
+  youtube_video_id: string
+  youtube_url: string
+  video_title: string
+  video_description: string | null
+  published_at: string | null
+  collaborators: Array<{ id: number; name: string }>
 }

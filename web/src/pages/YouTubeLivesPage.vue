@@ -53,10 +53,14 @@ const songFilterInput = ref('')
 const originalArtistFilterInput = ref('')
 const editingPerformanceId = ref<number | null>(null)
 const performanceDraft = ref({ song_title: '', song_title_ko: '', original_artist: '', original_artist_ko: '' })
+const globalStatsOpen = ref(false)
+const globalStatsMode = ref<'song' | 'original_artist'>('song')
+const searchAgency = ref('RK Music')
 
 const artistsQuery = useQuery({ queryKey: ['artists'], queryFn: api.artists.list })
 const agenciesQuery = useQuery({ queryKey: ['artist-agencies'], queryFn: api.artistAgencies.list })
 const performanceFilters = useQuery({ queryKey: ['youtube-performance-filters'], queryFn: api.youtubePerformances.filters })
+const globalStats = useQuery({ queryKey: computed(() => ['youtube-performance-stats', globalStatsMode.value]), queryFn: () => api.youtubePerformances.stats(globalStatsMode.value), enabled: computed(() => globalStatsOpen.value) })
 const vtubers = computed(() => (artistsQuery.data.value ?? []).filter((artist) =>
   artist.artist_kind === 'vtuber' && artist.show_in_youtube_lives,
 ))
@@ -72,7 +76,8 @@ const agencyNames = computed(() => {
   ]
 })
 const artists = computed(() => vtubers.value.filter((artist) => agencyFilter.value === 'all' || artist.agency === agencyFilter.value))
-const selectedArtist = computed(() => artists.value.find((artist) => artist.id === selectedArtistId.value) ?? null)
+const searchArtists = computed(() => vtubers.value.filter((artist) => artist.agency === searchAgency.value))
+const selectedArtist = computed(() => artists.value.find((artist) => artist.id === selectedArtistId.value || artist.related_artist_ids?.includes(selectedArtistId.value ?? -1)) ?? null)
 const archives = useQuery({
   queryKey: computed(() => ['youtube-lives', selectedArtist.value?.name ?? '']),
   queryFn: () => api.youtubeLives.list(selectedArtist.value?.name),
@@ -128,7 +133,7 @@ const updatePerformance = useMutation({
 })
 
 function artistNameMatches(artist: Artist, name: string): boolean {
-  return [artist.name, artist.display_name].filter(Boolean).some((value) => value?.toLowerCase() === name.toLowerCase())
+  return [artist.name, artist.display_name, ...(artist.name_aliases ?? [])].filter(Boolean).some((value) => value?.toLowerCase() === name.toLowerCase())
 }
 function selectArtist(artist: Artist): void {
   router.push(`/youtube-lives/artists/${artist.id}`)
@@ -149,6 +154,17 @@ function openArchive(archive: YouTubeLiveArchive): void {
   playerNonce.value += 1
   detailOpen.value = true
 }
+function openSearchResult(row: YouTubePerformanceSearchResult): void {
+  queryClient.removeQueries({ queryKey: ['youtube-live', row.archive_id] })
+  selectedId.value = row.archive_id
+  playerStartSeconds.value = row.start_seconds
+  playerNonce.value += 1
+  detailOpen.value = true
+}
+function searchThumbnail(row: YouTubePerformanceSearchResult): string | undefined {
+  const id = youtubeVideoId(row.youtube_url)
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : undefined
+}
 function addSearchFilter(target: 'artist' | 'song' | 'originalArtist'): void {
   const fields = {
     artist: [artistFilterInput, selectedSearchArtists],
@@ -168,7 +184,7 @@ function submitSongSearch(): void {
   addSearchFilter('song')
   addSearchFilter('artist')
   addSearchFilter('originalArtist')
-  if (selectedSearchSongs.value.length) searchPerformances.mutate()
+  searchPerformances.mutate()
 }
 function timestampToSeconds(value: string): number {
   const parts = value.split(':').map((part) => Number(part.trim()))
@@ -300,17 +316,19 @@ function hideBrokenImage(event: Event): void {
     </section>
 
     <section v-if="!selectedArtist && topTab === 'search'" class="song-search panel">
-      <div class="song-search__header"><p class="eyebrow">SONG SEARCH</p><h2>우타와꾸 노래 검색</h2><p>각 조건에서 여러 항목을 추가해 검색할 수 있습니다.</p></div>
+      <div class="song-search__header"><div><p class="eyebrow">SONG SEARCH</p><h2>우타와꾸 노래 검색</h2><p>각 조건에서 여러 항목을 추가해 검색할 수 있습니다.</p></div><UButton class="button" @click="globalStatsOpen = true">전체 통계</UButton></div>
       <form class="song-search__form" @submit.prevent="submitSongSearch">
-        <label>곡 제목<div class="filter-input"><UInput v-model="songFilterInput" list="song-suggestions" placeholder="원제 또는 한국어 제목 입력" @keydown.enter.prevent="addSearchFilter('song')" /><UButton type="button" @click="addSearchFilter('song')">추가</UButton></div><datalist id="song-suggestions"><option v-for="song in performanceFilters.data.value?.songs || []" :key="song" :value="song" /></datalist><div class="filter-chips"><span v-for="song in selectedSearchSongs" :key="song">{{ song }} <button type="button" @click="removeSearchFilter('song', song)">×</button></span></div></label>
-        <label>부른 아티스트<div class="filter-input"><UInput v-model="artistFilterInput" list="artist-suggestions" placeholder="아티스트 입력" @keydown.enter.prevent="addSearchFilter('artist')" /><UButton type="button" @click="addSearchFilter('artist')">추가</UButton></div><datalist id="artist-suggestions"><option v-for="artist in performanceFilters.data.value?.performers || []" :key="artist" :value="artist" /></datalist><div class="filter-chips"><span v-for="artist in selectedSearchArtists" :key="artist">{{ artist }} <button type="button" @click="removeSearchFilter('artist', artist)">×</button></span></div></label>
-        <label>원곡 가수<div class="filter-input"><UInput v-model="originalArtistFilterInput" list="original-artist-suggestions" placeholder="원문 또는 한국어 이름 입력" @keydown.enter.prevent="addSearchFilter('originalArtist')" /><UButton type="button" @click="addSearchFilter('originalArtist')">추가</UButton></div><datalist id="original-artist-suggestions"><option v-for="artist in performanceFilters.data.value?.original_artists || []" :key="artist" :value="artist" /></datalist><div class="filter-chips"><span v-for="artist in selectedOriginalArtists" :key="artist">{{ artist }} <button type="button" @click="removeSearchFilter('originalArtist', artist)">×</button></span></div></label>
-        <UButton type="submit" class="button button--primary song-search__submit" :disabled="searchPerformances.isPending.value || (!selectedSearchSongs.length && !songFilterInput.trim())">검색</UButton>
+        <label>곡 제목<div class="filter-input"><UInput v-model="songFilterInput" placeholder="원제 또는 한국어 제목 입력" @keydown.enter.prevent="addSearchFilter('song')" /><UButton type="button" @click="addSearchFilter('song')">추가</UButton></div></label>
+        <label>부른 아티스트<div class="agency-filter search-agency"><UButton v-for="agency in ['RK Music','KAMITSUBAKI STUDIO','RIOT MUSIC']" :key="agency" :class="{active:searchAgency===agency}" @click="searchAgency=agency">{{agency}}</UButton></div><div class="search-artist-pills"><UButton v-for="artist in searchArtists" :key="artist.id" @click="selectedSearchArtists.includes(artist.name) ? removeSearchFilter('artist', artist.name) : selectedSearchArtists.push(artist.name)">{{artist.display_name||artist.name}}</UButton></div><div class="filter-input"><UInput v-model="artistFilterInput" placeholder="아티스트 직접 입력" @keydown.enter.prevent="addSearchFilter('artist')" /><UButton type="button" @click="addSearchFilter('artist')">추가</UButton></div><div class="filter-chips"><span v-for="artist in selectedSearchArtists" :key="artist">{{ artist }} <button type="button" @click="removeSearchFilter('artist', artist)">×</button></span></div></label>
+        <label>원곡 가수<div class="filter-input"><UInput v-model="originalArtistFilterInput" placeholder="원문 또는 한국어 이름 입력" @keydown.enter.prevent="addSearchFilter('originalArtist')" /><UButton type="button" @click="addSearchFilter('originalArtist')">추가</UButton></div></label>
+        <UButton type="submit" class="button button--primary song-search__submit" :disabled="searchPerformances.isPending.value">검색</UButton>
       </form>
       <p v-if="searchPerformances.error.value" class="form-error">{{ searchPerformances.error.value?.message }}</p>
-      <div v-if="searchResults.length" class="performance-results"><table class="data-table"><thead><tr><th>날짜</th><th>부른 아티스트</th><th>곡 제목</th><th>원곡 가수</th></tr></thead><tbody><tr v-for="row in searchResults" :key="row.id"><td>{{ row.performed_on }}</td><td>{{ row.artist_name }}</td><td><strong>{{ pairedLabel(row.song_title, row.song_title_ko) }}</strong></td><td>{{ pairedLabel(row.original_artist, row.original_artist_ko) }}</td></tr></tbody></table></div>
+      <div v-if="searchResults.length" class="search-result-list"><UButton v-for="row in searchResults" :key="row.id" class="search-result-card" @click="openSearchResult(row)"><img v-if="searchThumbnail(row)" :src="searchThumbnail(row)" :alt="row.video_title || row.song_title" /><div><small>{{ row.performed_on }} · {{ row.artist_name }}</small><strong>{{ pairedLabel(row.song_title, row.song_title_ko) }}</strong><span>{{ pairedLabel(row.original_artist, row.original_artist_ko) }}</span></div><b>{{ row.timestamp_text }}</b></UButton></div>
       <div v-else-if="searchPerformances.isSuccess.value" class="empty-state compact"><strong>검색 결과가 없습니다.</strong></div>
     </section>
+
+    <AppModal :open="globalStatsOpen" title="전체 우타와꾸 통계" description="모든 VSinger 우타와꾸에서 집계한 누적 횟수입니다." @close="globalStatsOpen = false"><div class="youtube-top-tabs"><UButton :class="{ active: globalStatsMode === 'song' }" @click="globalStatsMode = 'song'">곡 제목</UButton><UButton :class="{ active: globalStatsMode === 'original_artist' }" @click="globalStatsMode = 'original_artist'">원곡 가수</UButton></div><ol class="global-stats"><li v-for="row in globalStats.data.value || []" :key="row.label"><span>{{ row.label }}<template v-if="row.korean_label && row.korean_label !== row.label"> ({{ row.korean_label }})</template></span><b>{{ row.count }}회</b></li></ol></AppModal>
 
     <section v-if="selectedArtist" class="youtube-artist-hero">
       <span class="artist-image"><b>{{ (selectedArtist.display_name || selectedArtist.name).slice(0, 1) }}</b><img v-if="artistImage(selectedArtist)" :src="artistImage(selectedArtist)" :alt="selectedArtist.display_name || selectedArtist.name" @error="hideBrokenImage" /></span>
@@ -374,7 +392,7 @@ function hideBrokenImage(event: Event): void {
       <div v-if="archives.isPending.value" class="empty-state compact"><strong>곡 통계를 준비하고 있습니다.</strong></div>
       <div v-else-if="archives.isError.value" class="alert alert--error">곡 통계를 불러오지 못했습니다.</div>
       <div v-else-if="!songStats.length" class="empty-state compact"><strong>표시할 곡 통계가 없습니다.</strong></div>
-      <ol v-else class="song-stats__list"><li v-for="(song, index) in visibleSongStats" :key="song.title"><span>{{ index + 1 }}</span><button type="button" class="song-stats__title" @click="openSongStats(song)"><strong>{{ pairedLabel(song.title, song.titleKo) }}</strong><small v-if="song.originalArtist">{{ pairedLabel(song.originalArtist, song.originalArtistKo) }}</small></button><b>{{ song.count }}회</b></li></ol>
+      <ol v-else class="song-stats__list"><li v-for="(song, index) in visibleSongStats" :key="song.title"><span>{{ index + 1 }}</span><button type="button" class="song-stats__title" @click="openSongStats(song)"><strong>{{ pairedLabel(song.title, song.titleKo) }}</strong><small v-if="song.originalArtist">{{ pairedLabel(song.originalArtist, song.originalArtistKo) }}</small><small v-if="song.tjNumbers.length">TJ {{ song.tjNumbers.join(' · ') }}</small></button><b>{{ song.count }}회</b></li></ol>
       <ScrollMore v-if="songStats.length" :shown="statsShown" :total="songStats.length" @more="statsShown += 40" />
     </section>
 
@@ -484,6 +502,28 @@ function hideBrokenImage(event: Event): void {
 .youtube-top-tabs{display:flex;gap:8px;margin:0 0 14px}.youtube-top-tabs button{min-height:42px;padding:0 18px;border:1px solid var(--line);color:#8fa0b5;background:rgba(255,255,255,.02)}.youtube-top-tabs button.active{color:#061a10;border-color:#4de6a8;background:#4de6a8}.song-search{margin-top:20px}.song-search__header p:last-child{margin:8px 0 0;color:#7a879a;font-size:13px}.song-search__form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}.song-search label{display:grid;gap:8px;color:#b4c2d3;font-size:13px;font-weight:700}.filter-input{display:flex;gap:7px}.filter-input>*:first-child{flex:1}.filter-input button{min-height:40px;padding:0 12px;color:#a4f3c8;border:1px solid rgba(77,230,168,.35);background:rgba(77,230,168,.07)}.filter-chips{display:flex;flex-wrap:wrap;gap:6px;min-height:27px}.filter-chips span{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;color:#baf5ce;background:rgba(77,230,168,.1);font-size:11px}.filter-chips button{padding:0;border:0;color:#baf5ce;background:transparent;font-size:16px;line-height:1;cursor:pointer}.song-search__submit{grid-column:1/-1;justify-self:end}@media(max-width:900px){.song-search__form{grid-template-columns:1fr}.song-search__submit{width:100%}}
 .collection-toggle{align-self:start;padding:10px 16px;color:#8eeebc;border:1px solid rgba(77,230,168,.4);border-radius:8px;background:rgba(77,230,168,.07);font-size:13px;font-weight:800}.collection-toggle:hover{color:#061a10;border-color:#4de6a8;background:#4de6a8;box-shadow:0 0 0 3px rgba(77,230,168,.14)}.song-stats{margin-top:22px}.song-stats__header{display:flex;align-items:end;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:1px solid var(--line)}.song-stats__header h2{margin:0}.song-stats__header p:last-child{margin:8px 0 0;color:#7a879a;font-size:13px}.song-stats__toolbar{display:flex;gap:10px;margin:18px 0}.song-stats__toolbar>*:first-child{flex:1}.song-sort{min-height:40px;padding:0 15px;color:#baf5ce;border:1px solid rgba(77,230,168,.35);background:rgba(77,230,168,.07);font-size:12px}.song-sort:hover{color:#061a10;border-color:#4de6a8;background:#4de6a8}.song-stats__list{display:grid;gap:4px;padding:0;margin:0;list-style:none}.song-stats__list li{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:14px;padding:14px 10px;border-bottom:1px solid var(--line)}.song-stats__list li>span{color:#66758a;font:700 12px ui-monospace,monospace}.song-stats__list strong{overflow:hidden;color:#dce7f5;font-size:15px;text-overflow:ellipsis;white-space:nowrap}.song-stats__list b{padding:5px 9px;border-radius:999px;color:#9cf1c5;background:rgba(77,230,168,.1);font-size:12px}@media(max-width:700px){.youtube-artist-hero{grid-template-columns:88px minmax(0,1fr)}.collection-toggle{grid-column:1/-1;justify-self:stretch}.song-stats__header{align-items:start;flex-direction:column}.song-stats__toolbar{flex-direction:column}.song-sort{width:100%}}
 .video-player{aspect-ratio:16/9;overflow:hidden;margin-bottom:18px;border-radius:9px;background:#0a1019}.video-player iframe{display:block;width:100%;height:100%;border:0}
+.song-search__header{align-items:flex-start}.song-search__form{grid-template-columns:1fr}.song-search__form label{font-size:15px}.filter-input{max-width:760px}.song-search__submit{justify-self:start;min-width:160px}.global-stats{display:grid;gap:4px;max-height:55vh;overflow:auto;padding:0;margin:14px 0 0;list-style:none}.global-stats li{display:flex;justify-content:space-between;gap:16px;padding:12px 10px;border-bottom:1px solid var(--line)}.global-stats b{color:#9cf1c5;white-space:nowrap}
+.search-agency{margin:0 0 10px}.search-artist-pills{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 10px}.search-artist-pills button{padding:7px 10px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:#b4c2d3}
+.search-result-list{display:grid;gap:10px;margin-top:22px}.search-result-card{display:grid;grid-template-columns:180px minmax(0,1fr) auto;align-items:center;gap:16px;width:100%;padding:0;overflow:hidden;border:1px solid var(--line);border-radius:10px;color:inherit;background:var(--panel);text-align:left}.search-result-card:hover{border-color:rgba(77,230,168,.45);background:rgba(77,230,168,.06)}.search-result-card img{width:180px;height:101px;object-fit:cover}.search-result-card div{display:grid;gap:7px;padding:14px 0}.search-result-card small,.search-result-card span{color:#8493a8;font-size:12px}.search-result-card strong{font-size:16px}.search-result-card>b{padding-right:18px;color:#9cf1c5;font:700 12px ui-monospace,monospace}@media(max-width:700px){.search-result-card{grid-template-columns:110px minmax(0,1fr)}.search-result-card img{width:110px;height:62px}.search-result-card>b{display:none}.search-result-card strong{font-size:13px}}
 .live-detail .video-player{height:min(48vh,560px);min-height:320px;margin:0;aspect-ratio:auto}.live-detail .setlist-list{max-height:none;overflow:visible;padding:0 12px;border:0;border-radius:0;background:transparent}.setlist-scroll{max-height:26vh;overflow-y:auto;border:1px solid rgba(50,214,255,.2);border-radius:9px;background:linear-gradient(90deg,rgba(50,214,255,.035),rgba(255,255,255,.015));scrollbar-color:#30c7e8 rgba(50,214,255,.05);scrollbar-width:thin}.setlist-scroll::-webkit-scrollbar{width:10px}.setlist-scroll::-webkit-scrollbar-track{margin:7px 2px;border-radius:999px;background:rgba(50,214,255,.05)}.setlist-scroll::-webkit-scrollbar-thumb{border:2px solid #111927;border-radius:999px;background:linear-gradient(#6be6ff,#2baed4)}.setlist-scroll::-webkit-scrollbar-thumb:hover{background:linear-gradient(#a2f1ff,#40c8eb)}:global(.modal.modal--youtube-detail){overflow:hidden}@media(max-width:700px){.live-detail .video-player{height:auto;min-height:0;aspect-ratio:16/9}.setlist-scroll{max-height:30vh}.live-detail .setlist-list{padding:0 8px}}
 .song-stats__title{display:grid;gap:4px;min-width:0;padding:0;border:0;color:inherit;background:transparent;text-align:left;cursor:pointer}.song-stats__title:hover strong{color:var(--cyan)}.song-stats__title small,.song-history__artist{color:#718096;font-size:11px}.song-history{display:grid;gap:14px}.song-history__artist{margin:0}.song-history__list{display:grid;gap:7px;padding:0;margin:0;list-style:none}.song-history__list li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.song-history__list span{display:grid;gap:4px;min-width:0}.song-history__list small{overflow:hidden;color:#718096;text-overflow:ellipsis;white-space:nowrap}.song-history__list .button{flex:0 0 auto}
+</style>
+
+<style scoped>
+.artist-select-card { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 8px; }
+.artist-select-card > .artist-image { flex: none; margin: 0 auto 4px; }
+.artist-select-card strong { max-width: 100%; white-space: normal; overflow-wrap: anywhere; line-height: 1.4; }
+.artist-select-card small { white-space: nowrap; margin-top: 0; }
+.archive-card { display: block; }
+@media (max-width: 600px) {
+  .section-heading, .archive-heading, .archive-actions { flex-wrap: wrap; gap: 12px; }
+  .artist-selector--grid .artist-select-card { min-width: 0; min-height: 175px; padding: 12px; }
+  .artist-selector--grid .artist-select-card > .artist-image { width: min(80px, 100%); height: auto; aspect-ratio: 1; }
+  .youtube-artist-hero { padding: 14px; gap: 12px; }
+  .youtube-artist-hero h1 { font-size: 24px; }
+  .archive-row { grid-template-columns: 90px minmax(0, 1fr); }
+  .archive-meta { min-width: 0; padding: 10px; }
+  .setlist-list li { grid-template-columns: 3rem minmax(0, 1fr); gap: 10px; }
+  .floating-register { bottom: max(18px, env(safe-area-inset-bottom)); }
+}
 </style>

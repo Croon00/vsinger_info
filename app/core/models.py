@@ -180,6 +180,8 @@ class ArtistWithSources(Artist):
     """아티스트 기본 정보와 연결된 출처 목록을 포함한 응답 모델입니다."""
 
     sources: list[Source]
+    related_artist_ids: list[int] = Field(default_factory=list)
+    name_aliases: list[str] = Field(default_factory=list)
 
 
 class EventCandidateCreate(BaseModel):
