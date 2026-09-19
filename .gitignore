@@ -28,7 +28,6 @@ api-dev.stderr.log
 .tmp/
 pytest-cache-files-*/
 
-db-migration/
 
 # Generated artifacts of the archived frontend
 web.bak/node_modules/
