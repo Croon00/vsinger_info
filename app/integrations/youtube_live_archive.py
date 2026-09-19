@@ -29,6 +29,23 @@ SETLIST_TITLE_PREFIX_RE = re.compile(
     r"^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+",
     re.IGNORECASE,
 )
+SETLIST_TIMESTAMP_PREFIX_RE = re.compile(
+    r"^(?:(?:\d{1,2}:){1,2}\d{1,2})(?:\s+|[-–—|｜:：.]\s*)"
+)
+TIMESTAMP_ONLY_TITLE_RE = re.compile(
+    r"^(?:(?:\d{1,2}:){1,2}\d{1,2})(?:\s+(?:(?:\d{1,2}:){1,2}\d{1,2}))*$"
+)
+LEADING_SETLIST_DECORATION_RE = re.compile(r"^[\s、，,・•●▶▷►♪♫☆★◇◆□■【】<>＜＞「」『』|｜:：\-–—]+")
+LEADING_TIMESTAMP_NOISE_RE = re.compile(
+    r"^[\s\W_]+(?=(?:\d{1,2}:){1,2}\d{1,2}(?:\s|[-–—|｜:：.]|$))",
+    re.UNICODE,
+)
+NUMBERED_HASH_PREFIX_RE = re.compile(r"^[#＃]\s*\d{1,3}\s*(?:[.．、:：\-–—)]\s*)*")
+DOUBLE_SETLIST_INDEX_PREFIX_RE = re.compile(
+    r"^\d{1,3}\s+[#＃]\s*\d{1,3}\s*(?:[.．、:：\-–—)]\s*)*"
+)
+TRAILING_TIMESTAMP_RE = re.compile(r"\s+(?:(?:\d{1,2}:){1,2}\d{1,2})$")
+NON_SONG_ATTENDEE_LABEL_RE = re.compile(r"^@\s*\d+\s*人\s*$")
 
 
 def register_youtube_live(
@@ -278,7 +295,7 @@ def parse_setlist_comment(text: str) -> list[dict[str, str]]:
         match = TIMESTAMP_LINE_RE.search(line)
         if not match:
             continue
-        title = SETLIST_TITLE_PREFIX_RE.sub("", match.group("title").strip()).strip()
+        title = clean_setlist_title(match.group("title"))
         if not title or re.match(r"^start(?:\b|[：:\-])", title, re.IGNORECASE):
             continue
         entries.append(
@@ -288,6 +305,31 @@ def parse_setlist_comment(text: str) -> list[dict[str, str]]:
             }
         )
     return entries
+
+
+def clean_setlist_title(value: str) -> str:
+    """Remove setlist numbering, timestamps, and non-song labels."""
+    title = LEADING_SETLIST_DECORATION_RE.sub("", value).strip()
+    if NON_SONG_ATTENDEE_LABEL_RE.fullmatch(title):
+        return ""
+    title = DOUBLE_SETLIST_INDEX_PREFIX_RE.sub("", title).strip()
+    title = NUMBERED_HASH_PREFIX_RE.sub("", title).strip()
+    while True:
+        title = LEADING_SETLIST_DECORATION_RE.sub("", title).strip()
+        title = LEADING_TIMESTAMP_NOISE_RE.sub("", title).strip()
+        if TIMESTAMP_ONLY_TITLE_RE.fullmatch(title):
+            return ""
+        match = SETLIST_TIMESTAMP_PREFIX_RE.match(title)
+        if not match:
+            break
+        title = title[match.end():].strip()
+    if TIMESTAMP_ONLY_TITLE_RE.fullmatch(title):
+        return ""
+    had_trailing_timestamp = bool(TRAILING_TIMESTAMP_RE.search(title))
+    title = TRAILING_TIMESTAMP_RE.sub("", title).strip()
+    if had_trailing_timestamp and re.fullmatch(r"\d{1,2}", title):
+        return ""
+    return SETLIST_TITLE_PREFIX_RE.sub("", title).strip()
 
 
 async def refresh_pending_youtube_lives(limit: int = 10) -> int:
