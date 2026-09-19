@@ -1,0 +1,2 @@
+# Preserve applied SQL bytes used by the migration checksum.
+migrations/catalog/*.sql -text

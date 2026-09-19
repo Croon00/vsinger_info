@@ -36,3 +36,18 @@ web.bak/test-results/
 web.bak/playwright-report/
 web.bak/auto-imports.d.ts
 web.bak/components.d.ts
+
+# Local catalog connection (never commit)
+.env.catalog
+
+# Local admin application and private review inputs
+admin-web/node_modules/
+admin-web/dist/
+admin-web/test-results/
+admin-web/playwright-report/
+db-migration/input/
+db-migration/workspace/
+db-migration/reports/
+db-migration/archive/
+
+db-migration/DB_KEY.txt
