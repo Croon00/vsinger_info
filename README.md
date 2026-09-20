@@ -1,6 +1,8 @@
 # schedule_music
 
-아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 기존 관리 웹(`web.bak/`), 새 조회 프론트(`web/`), Discord 봇과 수집 worker로 구성된다.
+아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 조회 프론트(`web/`), 새 카탈로그 관리자(`admin-web/`), 기존 관리 웹(`web.bak/`), Discord 봇과 수집 worker로 구성된다.
+
+전체 디렉터리 역할과 코드·자료 보관 기준은 [파일 구조 안내](docs/repository-structure.md), 운영 도구 목록은 [scripts 안내](scripts/README.md)를 따른다.
 
 ## 시작하기
 
@@ -61,6 +63,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
 | [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 원격 스키마와 사용자 v2 연결 완료, 데이터 검수·운영 기능 이전은 별도 |
 | [새 DB 마이그레이션](migrations/catalog/README.md) | 실제 적용 DDL, 전용 접속 설정, 실행·검증 범위 |
+| [카탈로그 테이블·필드](docs/catalog-schema.md) | 새 DB 도메인별 상세 필드와 로컬 검수 저장소 설계 |
 | [로컬 카탈로그 관리자](docs/admin-web-plan.md) | 실행·JSON 검수·승인 후 반영·수동 관리·백업 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
 | [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
