@@ -5,10 +5,41 @@ from fastapi.responses import FileResponse, JSONResponse
 from starlette.background import BackgroundTask
 from ..schemas.contracts import *
 from ..schemas.catalog import RESOURCES
+from ..services.platforms import PlatformService
 
 
 def router_for(review, remote):
     router = APIRouter(prefix="/api/admin")
+
+    platforms = PlatformService(review)
+
+    @router.get("/review-items", response_model=Page)
+    def review_items(batch_id: UUID, q: str = Query("", max_length=200),
+                     status: str = "", page: int = Query(1, ge=1),
+                     page_size: int = Query(30, ge=1, le=100)):
+        return platforms.review_page(str(batch_id), q, status, page, page_size)
+
+    @router.get("/review-items/{key}/next-pending", response_model=Result)
+    def next_review_item(key: UUID, q: str = Query("", max_length=200),
+                         status: Literal["all", "pending"] = "all",
+                         page_size: int = Query(30, ge=1, le=100)):
+        return {"data": platforms.next_review(str(key), q, status, page_size)}
+
+    @router.post("/platform-registrations/{key}/review", response_model=Result)
+    def platform_review(key: UUID, body: PlatformReview):
+        return {"data": platforms.review_group(str(key), body)}
+
+    @router.post("/platform-registrations/from-catalog", response_model=Result)
+    def platform_from_catalog(body: PlatformFromCatalog):
+        return {"data": platforms.from_catalog(str(body.batch_id), body.account_id)}
+
+    @router.get("/platform-registrations/{key}", response_model=Result)
+    def platform_detail(key: UUID):
+        return {"data": platforms.detail(str(key))}
+
+    @router.post("/platform-registrations", response_model=Result)
+    def platform_save(body: PlatformRegistration):
+        return {"data": platforms.save(body)}
 
     @router.get("/metadata", response_model=MetadataView)
     def metadata():
@@ -20,7 +51,10 @@ def router_for(review, remote):
 
     @router.get("/batches", response_model=Result)
     def batches():
-        return {"data": {"items": review.batches()}}
+        items = review.batches()
+        for batch in items:
+            batch["review_counts"] = platforms.review_counts(batch["id"])
+        return {"data": {"items": items}}
 
     @router.post("/batches", response_model=Result)
     def create_batch(body: BatchCreate):

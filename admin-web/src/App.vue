@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import PlatformRegistration from './components/PlatformRegistration.vue'
 import { computed, onMounted, ref, watch, nextTick } from 'vue'
 import {
   Inbox,
@@ -85,6 +86,7 @@ function measureWorkspace() {
     workspaceTop.value =
       workspaceEl.value.getBoundingClientRect().top + window.scrollY
 }
+const platformEditor = ref<InstanceType<typeof PlatformRegistration> | null>(null)
 const active = ref('review'),
   resources = ref<Resource[]>([]),
   connection = ref<Data>({ connected: false, initialized: false })
@@ -152,7 +154,7 @@ const addResource = computed(() =>
 const availableResources = computed(() =>
   resources.value.filter((r) => family.value?.types.includes(r.name)),
 )
-const counts = computed(() => batch.value?.counts || {})
+const counts = computed(() => batch.value?.review_counts || batch.value?.counts || {})
 const allCount = computed(() =>
   Object.values(counts.value).reduce(
     (sum: number, n: any) => sum + Number(n),
@@ -184,7 +186,7 @@ const canPreview = computed(
     !completed.value &&
     allCount.value > 0 &&
     allCount.value === resolvedCount.value &&
-    !dirty.value,
+    !dirty.value && !platformEditor.value?.dirty && !platformEditor.value?.busy,
 )
 const resourceTitle = (name: string) =>
   resources.value.find((r) => r.name === name)?.title || name
@@ -227,7 +229,8 @@ async function task(fn: () => Promise<void>) {
   }
 }
 function guarded(fn: () => void) {
-  if (dirty.value) {
+  if (platformEditor.value?.busy) return
+  if (dirty.value || platformEditor.value?.dirty) {
     afterDiscard = fn
     discardOpen.value = true
   } else fn()
@@ -268,7 +271,7 @@ async function loadRows() {
       page_size: '30',
     })
     const route = reviewMode.value
-      ? '/drafts?' +
+      ? '/review-items?' +
         new URLSearchParams({
           ...Object.fromEntries(params),
           batch_id: batchId.value,
@@ -309,8 +312,8 @@ function selectRow(row: Data) {
           ? '/drafts/' + row.id
           : '/catalog/' + kind.value + '/' + row.id,
       )
-      selected.value = result.data
-      form.value = clone(originalForm(result.data))
+      selected.value = row.review_group ? { ...result.data, review_group: row.review_group, status: row.status } : result.data
+      form.value = clone(originalForm(selected.value!))
       editorTab.value = 'fields'
     })
   })
@@ -453,7 +456,7 @@ async function review(action: string) {
     }
     if (!approved || selected.value?.id !== current.id || batchId.value !== contextBatch || !reviewMode.value) return
     const nextFilter = filter.value === 'all' ? 'all' : 'pending'
-    const result = await api('/drafts/' + current.id + '/next-pending?' + new URLSearchParams({
+    const result = await api('/review-items/' + current.id + '/next-pending?' + new URLSearchParams({
       q: q.value, status: nextFilter, page_size: '30',
     }))
     if (selected.value?.id !== current.id || batchId.value !== contextBatch || !reviewMode.value) return
@@ -468,6 +471,41 @@ async function review(action: string) {
       notice.value = '승인하고 다음 검수 대기 항목으로 이동했습니다.'
     }
   })
+}
+async function platformChanged(item?: Data) {
+  if (item && selected.value && selected.value.id === item.id) {
+    selected.value.status = item.status
+    if (item.current_payload) {
+      selected.value.current_payload = clone(item.current_payload)
+      form.value = clone(originalForm(selected.value))
+    }
+  }
+  await refreshBatches()
+  await loadRows()
+}
+async function platformCreated(item?: Data) {
+  if (!item?.id) return
+  selected.value = { ...(await api('/drafts/' + item.id)).data, review_group: 'platform', status: item.status }
+  form.value = clone(originalForm(selected.value!))
+  addOpen.value = false
+  await platformChanged(item)
+}
+async function advancePlatform(id: string) {
+  const contextBatch = batchId.value
+  const nextFilter = filter.value === 'all' ? 'all' : 'pending'
+  try {
+    const result = await api('/review-items/' + id + '/next-pending?' + new URLSearchParams({ q: q.value, status: nextFilter, page_size: '30' }))
+    if (selected.value?.id !== id || batchId.value !== contextBatch || !reviewMode.value) return
+    if (result.data.item) {
+      selected.value = result.data.item
+      form.value = clone(originalForm(selected.value!))
+      editorTab.value = 'fields'
+      filter.value = nextFilter
+      await nextTick()
+      page.value = result.data.page
+      await loadRows()
+    }
+  } catch (e) { error.value = (e as Error).message }
 }
 function requestReason(action: string) {
   reasonAction.value = action
@@ -868,7 +906,7 @@ window.addEventListener('beforeunload', (event) => {
                   v-for="r in availableResources"
                   :key="r.name"
                   :value="r.name"
-                  >{{ r.title }}</SelectItem
+                  >{{ reviewMode && r.name === 'external_accounts' ? '외부 플랫폼 등록' : r.title }}</SelectItem
                 ></SelectGroup
               ></SelectContent
             ></Select
@@ -965,7 +1003,7 @@ window.addEventListener('beforeunload', (event) => {
                   <p class="mt-1.5 truncate text-xs text-muted-foreground">
                     {{
                       reviewMode
-                        ? resourceTitle(row.entity_type)
+                        ? row.review_group === 'platform' ? '외부 플랫폼 등록' : resourceTitle(row.entity_type)
                         : row.name_ko || row.title_ko || resourceTitle(kind)
                     }}<span v-if="reviewMode" class="ml-2">{{
                       row.operation === 'update' ? '수정' : '신규'
@@ -1038,7 +1076,7 @@ window.addEventListener('beforeunload', (event) => {
                     ><ArrowLeft data-icon="inline-start" />목록</Button
                   >
                   <p class="mb-1.5 text-xs text-muted-foreground">
-                    {{ resourceTitle(selected.entity_type || kind) }}
+                    {{ selected.review_group === 'platform' ? '외부 플랫폼 등록' : resourceTitle(selected.entity_type || kind) }}
                   </p>
                   <h2 class="break-words text-lg font-semibold">
                     {{ titleOf(selected) }}
@@ -1052,7 +1090,10 @@ window.addEventListener('beforeunload', (event) => {
                       : '등록됨'
                 }}</Badge>
               </div>
-              <Tabs v-model="editorTab" class="min-h-0 min-w-0 flex-1 gap-0">
+              <div v-if="reviewMode && selected.review_group === 'platform'" class="editor-scroll px-5 py-6 lg:px-7">
+                <PlatformRegistration :key="selected.id" ref="platformEditor" :resources="resources" :batches="batches" :initial-batch="batchId" :account-id="selected.id" inspector @changed="platformChanged" @approved="advancePlatform" />
+              </div>
+              <Tabs v-else v-model="editorTab" class="min-h-0 min-w-0 flex-1 gap-0">
                 <div class="border-b px-5 py-3 lg:px-7">
                   <TabsList
                     ><TabsTrigger value="fields">정보</TabsTrigger
@@ -1156,6 +1197,7 @@ window.addEventListener('beforeunload', (event) => {
                 >
               </Tabs>
               <div
+                v-if="!(reviewMode && selected.review_group === 'platform')"
                 class="flex flex-wrap items-center justify-between gap-3 border-t bg-background p-4 lg:px-7"
               >
                 <span class="text-xs text-muted-foreground">{{
@@ -1447,17 +1489,18 @@ window.addEventListener('beforeunload', (event) => {
             ><SelectContent
               ><SelectGroup
                 ><SelectItem
-                  v-for="r in resources"
+                  v-for="r in resources.filter(r => !reviewMode || r.name !== 'artist_external_accounts')"
                   :key="r.name"
                   :value="r.name"
-                  >{{ r.title }}</SelectItem
+                  >{{ reviewMode && r.name === 'external_accounts' ? '외부 플랫폼 등록' : r.title }}</SelectItem
                 ></SelectGroup
               ></SelectContent
             ></Select
           ></Field
         ></FieldGroup
-      ><ResourceForm
-        v-if="addResource"
+      ><PlatformRegistration v-if="reviewMode && addKind === 'external_accounts'" :key="batchId" :resources="resources" :batches="batches" :initial-batch="batchId" account-id="new" inspector @changed="platformCreated" />
+      <ResourceForm
+        v-else-if="addResource"
         v-model="addData"
         :key="addKind"
         :resource="addResource"
@@ -1467,7 +1510,7 @@ window.addEventListener('beforeunload', (event) => {
       <p v-if="error" role="alert" class="text-sm text-destructive">
         {{ error }}
       </p>
-      <DialogFooter
+      <DialogFooter v-if="!(reviewMode && addKind === 'external_accounts')"
         ><Button :disabled="working || Boolean(pending)" @click="add"
           ><LoaderCircle
             v-if="working"

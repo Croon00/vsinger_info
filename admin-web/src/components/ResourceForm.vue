@@ -20,6 +20,8 @@ import {
   SelectItem,
 } from '@/components/ui/select'
 import RelationPicker from './RelationPicker.vue'
+import ArtistColorPreview from './ArtistColorPreview.vue'
+import ArtistImagePreview from './ArtistImagePreview.vue'
 const props = defineProps<{
   resource: Resource
   modelValue: Data
@@ -28,6 +30,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ 'update:modelValue': [data: Data] }>()
 const uid = useId()
+const validColor = computed(() => /^#[0-9a-f]{6}$/i.test(props.modelValue.theme_color || ''))
 const groups = computed(() => [
   {
     label: '기본 정보',
@@ -190,6 +193,10 @@ function help(f: FieldSpec) {
             :rows="f.type === 'JSONB' ? 4 : 6"
             @update:model-value="set(f, $event)"
           />
+          <div v-else-if="resource.name === 'artists' && f.name === 'theme_color'" class="flex items-center gap-2">
+            <Input :id="uid + f.name" :model-value="displayed(f)" :disabled="disabled" placeholder="#808080" autocomplete="off" :aria-invalid="!!modelValue.theme_color && !validColor" @update:model-value="set(f, $event)" />
+            <span class="size-5 shrink-0 rounded-sm border bg-muted" :style="validColor ? { backgroundColor: modelValue.theme_color } : undefined" :aria-label="validColor ? '상징색 ' + modelValue.theme_color : '상징색 미설정'" role="img" />
+          </div>
           <Input
             v-else
             :id="uid + f.name"
@@ -208,6 +215,11 @@ function help(f: FieldSpec) {
             autocomplete="off"
             @update:model-value="set(f, $event)"
           />
+          <template v-if="resource.name === 'artists' && f.name === 'theme_color'">
+            <FieldDescription>{{ modelValue.theme_color && !validColor ? '#과 6자리 HEX 코드를 입력하세요. 예: #6B8BC8' : '상징색을 적용한 일정 미리보기입니다.' }}</FieldDescription>
+            <ArtistColorPreview :color="modelValue.theme_color" :name="modelValue.name_native" />
+          </template>
+          <ArtistImagePreview v-if="resource.name === 'artists' && f.name === 'avatar_url'" :url="modelValue.avatar_url" :name="modelValue.name_native" />
           <FieldDescription v-if="help(f)">{{ help(f) }}</FieldDescription>
         </Field>
       </FieldGroup>

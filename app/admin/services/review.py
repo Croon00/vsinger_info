@@ -332,113 +332,120 @@ class ReviewService:
 
     def edit(self, key, revision, data):
         with self.local.connect(write=True) as c:
-            d = self.draft(c, key)
-            if d["revision"] != revision:
-                raise DomainError(
-                    "다른 창에서 수정된 항목입니다. 다시 불러오세요.", 409
-                )
-            self.ensure_editable(c, d["batch_id"])
-            self._invalidate(c, d["batch_id"], key)
-            self.local.update(
-                c,
-                "draft_entities",
-                key,
-                current_payload=pack(data),
-                revision=revision + 1,
-                status="editing",
-                approved_revision=None,
-                approved_hash=None,
-                approved_at=None,
-            )
-            c.execute(
-                "UPDATE validation_issues SET status='superseded',updated_at=? WHERE draft_id=?",
-                (now(), key),
-            )
-            self._relations(c, self.draft(c, key))
-            self._log(
-                c,
-                key,
-                "edit",
-                revision + 1,
-                change={"before": d["current_payload"], "after": data},
-            )
+            self._edit(c, key, revision, data)
         return self.detail(key)
 
+    def _edit(self, c, key, revision, data):
+        d = self.draft(c, key)
+        if d["revision"] != revision:
+            raise DomainError(
+                "다른 창에서 수정된 항목입니다. 다시 불러오세요.", 409
+            )
+        self.ensure_editable(c, d["batch_id"])
+        self._invalidate(c, d["batch_id"], key)
+        self.local.update(
+            c,
+            "draft_entities",
+            key,
+            current_payload=pack(data),
+            revision=revision + 1,
+            status="editing",
+            approved_revision=None,
+            approved_hash=None,
+            approved_at=None,
+        )
+        c.execute(
+            "UPDATE validation_issues SET status='superseded',updated_at=? WHERE draft_id=?",
+            (now(), key),
+        )
+        self._relations(c, self.draft(c, key))
+        self._log(
+            c,
+            key,
+            "edit",
+            revision + 1,
+            change={"before": d["current_payload"], "after": data},
+        )
+
     def review(self, key, revision, action, note=None):
-        error = None
         with self.local.connect(write=True) as c:
-            d = self.draft(c, key)
-            if d["revision"] != revision:
-                raise DomainError("검수 항목이 변경되었습니다.", 409)
-            self.ensure_editable(c, d["batch_id"])
-            if action in {"hold", "exclude"} and not (note or "").strip():
-                raise DomainError("보류·제외 사유를 입력하세요.")
-            state = {
-                "approve": "approved",
-                "hold": "held",
-                "exclude": "excluded",
-                "reopen": "pending",
-            }[action]
-            if action == "approve":
-                try:
-                    validate(
-                        d["entity_type"],
-                        d["current_payload"],
-                        partial=d["operation"] == "update",
-                    )
-                    for f in RESOURCES[d["entity_type"]]["fields"]:
-                        val = d["current_payload"].get(f["name"])
-                        if isinstance(val, dict) and "$ref" in val:
-                            target = c.execute(
-                                "SELECT entity_type,status FROM draft_entities WHERE batch_id=? AND client_ref=?",
-                                (d["batch_id"], val["$ref"]),
-                            ).fetchone()
-                            if (
-                                not target
-                                or target["entity_type"] != f.get("reference")
-                                or target["status"] == "excluded"
-                            ):
-                                raise DomainError(
-                                    f["name"] + ": 연결할 초안이 없거나 제외되었습니다."
-                                )
-                except DomainError as exc:
-                    error = exc
-                    state = "blocked"
-                    self.local.insert(
-                        c,
-                        "validation_issues",
-                        batch_id=d["batch_id"],
-                        draft_id=key,
-                        checked_revision=revision,
-                        severity="error",
-                        code="VALIDATION",
-                        message=str(exc),
-                        status="open",
-                    )
-            if action != "approve":
-                self._invalidate(c, d["batch_id"], key)
-            hash_value = digest(d["current_payload"]) if state == "approved" else None
-            self.local.update(
-                c,
-                "draft_entities",
-                key,
-                status=state,
-                review_note=note,
-                approved_revision=revision if hash_value else None,
-                approved_hash=hash_value,
-                approved_at=now() if hash_value else None,
-            )
-            if hash_value:
-                c.execute(
-                    "UPDATE validation_issues SET status='resolved',resolved_at=?,updated_at=? WHERE draft_id=?",
-                    (now(), now(), key),
-                )
-            self._log(
-                c, key, action if not error else "hold", revision, note, hash_value
-            )
+            error = self._review(c, key, revision, action, note)
         if error:
             raise error
         return self.detail(key)
+
+    def _review(self, c, key, revision, action, note=None):
+        error = None
+        d = self.draft(c, key)
+        if d["revision"] != revision:
+            raise DomainError("검수 항목이 변경되었습니다.", 409)
+        self.ensure_editable(c, d["batch_id"])
+        if action in {"hold", "exclude"} and not (note or "").strip():
+            raise DomainError("보류·제외 사유를 입력하세요.")
+        state = {
+            "approve": "approved",
+            "hold": "held",
+            "exclude": "excluded",
+            "reopen": "pending",
+        }[action]
+        if action == "approve":
+            try:
+                validate(
+                    d["entity_type"],
+                    d["current_payload"],
+                    partial=d["operation"] == "update",
+                )
+                for f in RESOURCES[d["entity_type"]]["fields"]:
+                    val = d["current_payload"].get(f["name"])
+                    if isinstance(val, dict) and "$ref" in val:
+                        target = c.execute(
+                            "SELECT entity_type,status FROM draft_entities WHERE batch_id=? AND client_ref=?",
+                            (d["batch_id"], val["$ref"]),
+                        ).fetchone()
+                        if (
+                            not target
+                            or target["entity_type"] != f.get("reference")
+                            or target["status"] == "excluded"
+                        ):
+                            raise DomainError(
+                                f["name"] + ": 연결할 초안이 없거나 제외되었습니다."
+                            )
+            except DomainError as exc:
+                error = exc
+                state = "blocked"
+                self.local.insert(
+                    c,
+                    "validation_issues",
+                    batch_id=d["batch_id"],
+                    draft_id=key,
+                    checked_revision=revision,
+                    severity="error",
+                    code="VALIDATION",
+                    message=str(exc),
+                    status="open",
+                )
+        if action != "approve":
+            self._invalidate(c, d["batch_id"], key)
+        hash_value = digest(d["current_payload"]) if state == "approved" else None
+        self.local.update(
+            c,
+            "draft_entities",
+            key,
+            status=state,
+            review_note=note,
+            approved_revision=revision if hash_value else None,
+            approved_hash=hash_value,
+            approved_at=now() if hash_value else None,
+        )
+        if hash_value:
+            c.execute(
+                "UPDATE validation_issues SET status='resolved',resolved_at=?,updated_at=? WHERE draft_id=?",
+                (now(), now(), key),
+            )
+        self._log(
+            c, key, action if not error else "hold", revision, note, hash_value
+        )
+        return error
 
     def import_json(self, batch_id, filename, envelope, raw=None):
         if (
