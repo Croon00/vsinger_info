@@ -14,6 +14,7 @@ export interface Artist {
   agency: string
   image: string
   image_source: string
+  image_variants?: Record<string, string>
   image_position?: string
   official_url: string
   links: Link[]

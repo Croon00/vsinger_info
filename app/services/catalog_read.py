@@ -1,5 +1,6 @@
 """Map the normalized catalog to frontend read contracts."""
 from app.repositories.catalog_read import CatalogReadRepository
+from app.services.avatar_assets import avatar_variants, public_base
 
 class CatalogRead:
     def __init__(self, session):
@@ -13,6 +14,9 @@ class CatalogRead:
     def artists(self):
         if self._artists is None:
             self._artists = self.repository.artists()
+            image_base = public_base()
+            for artist in self._artists:
+                artist["avatar_variants"] = avatar_variants(artist.get("spotify_image_url"), image_base)
         return self._artists
     def artist(self, artist_id):
         return next((a for a in self.artists() if a["id"]==artist_id), None)

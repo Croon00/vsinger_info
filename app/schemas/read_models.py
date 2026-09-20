@@ -26,6 +26,7 @@ class ArtistRead(BaseModel):
     agency: str | None = None
     profile_intro: str | None = None
     spotify_image_url: str | None = None
+    avatar_variants: dict[str, str] = Field(default_factory=dict)
     related_artist_ids: list[int] = Field(default_factory=list)
     name_aliases: list[str] = Field(default_factory=list)
     sources: list[SourceRead] = Field(default_factory=list)
