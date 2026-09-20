@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import re
 from typing import Any
@@ -12,6 +13,7 @@ from app.core.db import get_connection
 from app.core.artist_identity import artist_name_aliases, display_artist_name
 from app.integrations.youtube_context import fetch_setlist_comment, fetch_video_metadata
 from app.integrations.karaoke_lookup import lookup_karaoke_numbers, split_song_credit
+from app.integrations.ai_extractor import extract_youtube_setlist
 from app.integrations.spotify_title_translation import (
     translate_japanese_artist_names,
     translate_japanese_titles,
@@ -38,6 +40,23 @@ SETLIST_TITLE_PREFIX_RE = re.compile(
     r"^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+",
     re.IGNORECASE,
 )
+SETLIST_TIMESTAMP_PREFIX_RE = re.compile(
+    r"^(?:(?:\d{1,2}:){1,2}\d{1,2})(?:\s+|[-–—|｜:：.]\s*)"
+)
+TIMESTAMP_ONLY_TITLE_RE = re.compile(
+    r"^(?:(?:\d{1,2}:){1,2}\d{1,2})(?:\s+(?:(?:\d{1,2}:){1,2}\d{1,2}))*$"
+)
+LEADING_SETLIST_DECORATION_RE = re.compile(r"^[\s、，,・•●▶▷►♪♫☆★◇◆□■【】<>＜＞「」『』|｜:：\-–—]+")
+LEADING_TIMESTAMP_NOISE_RE = re.compile(
+    r"^[\s\W_]+(?=(?:\d{1,2}:){1,2}\d{1,2}(?:\s|[-–—|｜:：.]|$))",
+    re.UNICODE,
+)
+NUMBERED_HASH_PREFIX_RE = re.compile(r"^[#＃]\s*\d{1,3}\s*(?:[.．、:：\-–—)]\s*)*")
+DOUBLE_SETLIST_INDEX_PREFIX_RE = re.compile(
+    r"^\d{1,3}\s+[#＃]\s*\d{1,3}\s*(?:[.．、:：\-–—)]\s*)*"
+)
+TRAILING_TIMESTAMP_RE = re.compile(r"\s+(?:(?:\d{1,2}:){1,2}\d{1,2})$")
+NON_SONG_ATTENDEE_LABEL_RE = re.compile(r"^@\s*\d+\s*人\s*$")
 
 
 def register_youtube_live(
@@ -224,7 +243,7 @@ async def add_youtube_live_url(
         logger.info("Comments unavailable for YouTube video %s: %s", video_id, exc.response.status_code)
         context = None
     comment = context.text if context else None
-    setlist = parse_setlist_comment(comment or "")
+    setlist = await _extract_setlist_for_video(comment or "")
 
     with get_connection() as conn:
         existing = conn.execute(
@@ -335,7 +354,7 @@ async def refresh_pending_youtube_lives(limit: int = 10) -> int:
             metadata = await fetch_video_metadata(row["youtube_video_id"])
             context = await fetch_setlist_comment(row["youtube_video_id"])
             comment = context.text if context else None
-            setlist = parse_setlist_comment(comment or "")
+            setlist = await _extract_setlist_for_video(comment or "")
             await _save_check_result(
                 archive_id=row["id"],
                 comment=comment,
@@ -410,7 +429,7 @@ def _timestamp_to_seconds(timestamp: str) -> int:
 
 def _replace_song_performances(
     archive_id: int,
-    setlist: list[dict[str, str]],
+    setlist: list[dict[str, str | None]],
 ) -> None:
     """Store searchable per-song rows using the stream date in Japan time."""
     with get_connection() as conn:
@@ -423,31 +442,136 @@ def _replace_song_performances(
         ).fetchone()["local_at"]
         if performed_on is None:
             return
+        existing = conn.execute(
+            """SELECT start_seconds, song_title_ko, original_artist_ko, tj_number,
+                      ky_number, karaoke_checked_at
+               FROM youtube_song_performances WHERE archive_id = %s""",
+            (archive_id,),
+        ).fetchall()
+        existing_by_second = {int(row["start_seconds"]): row for row in existing}
         conn.execute(
             "DELETE FROM youtube_song_performances WHERE archive_id = %s",
             (archive_id,),
         )
+        values_by_unique_song: list[tuple[Any, ...]] = []
+        seen_performances: set[tuple[int, str]] = set()
+        for entry in setlist:
+            values = _performance_values(archive_id, performed_on.date(), entry, existing_by_second)
+            key = (int(values[2]), str(values[4]).casefold())
+            if key not in seen_performances:
+                seen_performances.add(key)
+                values_by_unique_song.append(values)
         with conn.cursor() as cursor:
             cursor.executemany(
                 """
                 INSERT INTO youtube_song_performances (
-                    archive_id, performed_on, start_seconds, timestamp_text, song_title, original_artist
-                ) VALUES (%s, %s, %s, %s, %s, %s)
+                    archive_id, performed_on, start_seconds, timestamp_text, song_title, original_artist,
+                    song_title_ko, original_artist_ko, tj_number, ky_number, karaoke_checked_at
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                [
-                    (
-                        archive_id,
-                        performed_on.date(),
-                        _timestamp_to_seconds(entry["timestamp"]),
-                        entry["timestamp"],
-                        split_song_credit(entry["title"])[0],
-                        split_song_credit(entry["title"])[1] or None,
-                    )
-                    for entry in setlist
-                ],
+                values_by_unique_song,
             )
         conn.commit()
     _apply_korean_metadata(archive_id)
+
+
+def _performance_values(
+    archive_id: int,
+    performed_on: Any,
+    entry: dict[str, str | None],
+    existing_by_second: dict[int, Any],
+) -> tuple[Any, ...]:
+    """교체 과정에서도 같은 시각의 수동 보정과 번호를 보존합니다."""
+    timestamp = str(entry["timestamp"])
+    start_seconds = _timestamp_to_seconds(timestamp)
+    old = existing_by_second.get(start_seconds)
+    title, parsed_artist = split_song_credit(str(entry["title"]))
+    artist = entry.get("original_artist") or parsed_artist or None
+    return (
+        archive_id,
+        performed_on,
+        start_seconds,
+        timestamp,
+        title,
+        artist,
+        old["song_title_ko"] if old else None,
+        old["original_artist_ko"] if old else None,
+        old["tj_number"] if old else "등록X",
+        old["ky_number"] if old else "등록X",
+        old["karaoke_checked_at"] if old else None,
+    )
+
+
+async def _extract_setlist_for_video(comment: str) -> list[dict[str, str | None]]:
+    """영상 댓글 하나에 AI를 최대 한 번 호출하고 실패 시 기존 파서로 돌아갑니다."""
+    ai_setlist = await extract_youtube_setlist(comment)
+    if ai_setlist is not None:
+        return ai_setlist
+    return [
+        {"timestamp": entry["timestamp"], "title": entry["title"], "original_artist": None}
+        for entry in parse_setlist_comment(comment)
+    ]
+
+
+async def refine_stored_youtube_setlists(
+    *,
+    limit: int | None = None,
+    concurrency: int = 1,
+) -> dict[str, int]:
+    """저장된 댓글을 영상당 한 번의 AI 호출로 다시 정제합니다."""
+    if not settings.openai_api_key:
+        raise RuntimeError("OPENAI_API_KEY is required to refine stored setlists.")
+    with get_connection() as conn:
+        rows = conn.execute(
+            """SELECT id, top_comment FROM youtube_live_archives
+               WHERE top_comment IS NOT NULL AND BTRIM(top_comment) <> ''
+                 AND setlist_ai_refined_at IS NULL
+               ORDER BY COALESCE(broadcast_at, published_at) DESC NULLS LAST, id DESC
+               LIMIT %s""",
+            (limit,),
+        ).fetchall()
+
+    result = {"selected": len(rows), "refined": 0, "no_songs": 0, "failed": 0}
+    semaphore = asyncio.Semaphore(max(1, min(concurrency, 3)))
+
+    async def refine(row: Any) -> None:
+        async with semaphore:
+            try:
+                setlist = await extract_youtube_setlist(row["top_comment"])
+                if setlist is None:
+                    result["failed"] += 1
+                    return
+                if not setlist:
+                    with get_connection() as conn:
+                        conn.execute(
+                            "UPDATE youtube_live_archives SET setlist_ai_refined_at = CURRENT_TIMESTAMP WHERE id = %s",
+                            (row["id"],),
+                        )
+                        conn.commit()
+                    result["no_songs"] += 1
+                    return
+                _replace_song_performances(row["id"], setlist)
+                with get_connection() as conn:
+                    conn.execute(
+                        """UPDATE youtube_live_archives
+                           SET setlist = %s, setlist_ai_refined_at = CURRENT_TIMESTAMP,
+                               updated_at = CURRENT_TIMESTAMP
+                           WHERE id = %s""",
+                        (Jsonb(setlist), row["id"]),
+                    )
+                    conn.commit()
+                result["refined"] += 1
+                if result["refined"] % 25 == 0:
+                    print(
+                        f"setlist refinement: {result['refined']}/{result['selected']} completed",
+                        flush=True,
+                    )
+            except Exception:
+                logger.exception("AI setlist refinement failed for archive #%s.", row["id"])
+                result["failed"] += 1
+
+    await asyncio.gather(*(refine(row) for row in rows))
+    return result
 
 
 async def _enrich_karaoke_numbers(archive_id: int) -> None:
@@ -466,7 +590,13 @@ async def _enrich_karaoke_numbers(archive_id: int) -> None:
         raw_setlist = conn.execute(
             "SELECT setlist FROM youtube_live_archives WHERE id = %s", (archive_id,)
         ).fetchone()["setlist"]
-    songs = [split_song_credit(entry["title"]) for entry in raw_setlist]
+    songs = [
+        (
+            split_song_credit(str(entry["title"]))[0],
+            entry.get("original_artist") or split_song_credit(str(entry["title"]))[1],
+        )
+        for entry in raw_setlist
+    ]
     matches = await lookup_karaoke_numbers(songs)
     with get_connection() as conn:
         with conn.cursor() as cursor:

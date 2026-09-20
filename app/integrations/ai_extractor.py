@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from typing import Any, Literal
 
@@ -8,6 +9,9 @@ from openai import AsyncOpenAI
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.core.config import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 ItemType = Literal["notice", "release", "live_event", "ticket", "merch", "irrelevant"]
@@ -152,6 +156,95 @@ RULE_KEYWORDS: dict[ItemType, tuple[str, ...]] = {
 def openai_configured() -> bool:
     """OpenAI API key가 설정되어 AI 추출을 실행할 수 있는지 확인합니다."""
     return bool(settings.openai_api_key)
+
+
+class YouTubeSetlistEntry(BaseModel):
+    """한 영상 댓글에서 확인한 곡 한 줄입니다."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    timestamp: str = Field(min_length=3, max_length=12)
+    song_title: str = Field(min_length=1, max_length=300)
+    original_artist: str | None = Field(..., max_length=300)
+
+
+class YouTubeSetlistExtraction(BaseModel):
+    """댓글 속 노래 행만 담는 구조화된 셋리스트입니다."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    songs: list[YouTubeSetlistEntry] = Field(..., max_length=200)
+
+
+YOUTUBE_SETLIST_SCHEMA = {
+    "name": "youtube_setlist_extraction",
+    "schema": YouTubeSetlistExtraction.model_json_schema(),
+    "strict": True,
+}
+
+# A long setlist still fits comfortably in this cap while preventing one
+# malformed comment from producing an unexpectedly large response bill.
+YOUTUBE_SETLIST_MAX_OUTPUT_TOKENS = 4000
+
+
+async def extract_youtube_setlist(comment: str) -> list[dict[str, str | None]] | None:
+    """영상 댓글 전체를 한 번의 LLM 호출로 정제합니다.
+
+    AI가 설정되지 않았거나 유효한 응답을 주지 못하면 ``None``을 반환해,
+    호출자가 기존 정규식 파서로 안전하게 되돌아갈 수 있게 합니다.
+    """
+    if not settings.openai_api_key or not comment.strip():
+        return None
+
+    client = AsyncOpenAI(api_key=settings.openai_api_key, timeout=30.0, max_retries=0)
+    try:
+        response = await client.chat.completions.create(
+            model=settings.openai_model,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You clean one YouTube singing-stream setlist comment. "
+                        "Return only songs the streamer actually sang. "
+                        "Ignore START, END, opening/closing, MC, greetings, links, "
+                        "hashtags, viewer counts, scores, timestamps without a song, "
+                        "and explanatory text. Do not invent a song or artist. "
+                        "Keep each song's starting timestamp exactly as written, remove "
+                        "numbering and decoration from the title, and set original_artist "
+                        "only when the comment explicitly states it."
+                    ),
+                },
+                {"role": "user", "content": f"Setlist comment:\n{comment}"},
+            ],
+            response_format={"type": "json_schema", "json_schema": YOUTUBE_SETLIST_SCHEMA},
+            max_tokens=YOUTUBE_SETLIST_MAX_OUTPUT_TOKENS,
+        )
+        content = response.choices[0].message.content
+        if not content:
+            return None
+        result = YouTubeSetlistExtraction.model_validate(json.loads(content))
+    except Exception as exc:
+        logger.warning("YouTube setlist AI extraction failed: %s", exc)
+        return None
+
+    entries: list[dict[str, str | None]] = []
+    seen: set[tuple[str, str]] = set()
+    timestamp_pattern = re.compile(r"^(?:\d{1,2}:)?[0-5]?\d:[0-5]\d$")
+    for entry in result.songs:
+        timestamp = entry.timestamp.strip()
+        title = entry.song_title.strip()
+        if not timestamp_pattern.fullmatch(timestamp) or not title:
+            continue
+        key = (timestamp, title.casefold())
+        if key in seen:
+            continue
+        seen.add(key)
+        entries.append({
+            "timestamp": timestamp,
+            "title": title,
+            "original_artist": entry.original_artist.strip() if entry.original_artist else None,
+        })
+    return entries
 
 
 def classify_source_item_by_rules(raw_text: str, page_context: str | None = None) -> SourceItemClassification:

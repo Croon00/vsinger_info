@@ -65,8 +65,18 @@ function cleanSongTitle(value: string): string | null {
   if (isBroadcastChapter(value)) return null
   const title = normalizeSongTitle(value)
   if (!title) return null
-  const withoutIndex = title.replace(/^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+/u, '').trim()
+  const withoutIndex = stripSetlistIndex(title)
   return withoutIndex && !isBroadcastChapter(withoutIndex) ? withoutIndex : null
+}
+
+function stripSetlistIndex(value: string): string {
+  // Timestamp comments often omit the separator between a setlist number and
+  // its title (`11HOT LIMIT`, `12夏の大三角形`).  Restrict this form to one or
+  // two digits so genuine numeric titles such as `366日` remain intact.
+  return value
+    .replace(/^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+/u, '')
+    .replace(/^(?:#\s*)?(?:제\s*)?\d{1,2}(?=[\p{L}])/u, '')
+    .trim()
 }
 
 function isBroadcastChapter(value: string): boolean {
@@ -81,7 +91,7 @@ function isBroadcastChapter(value: string): boolean {
   // Do not reject real titles just because they contain words like "start".
   const chapter = label.replace(/\s*\([^()]*\)\s*$/u, '')
     .replace(/[\s\p{P}\p{S}]+$/gu, '').trim()
-  return /^(?:(?:配信|放送|歌枠|本編)?\s*(?:開始|終了)|スタート|お知らせ|告知|宣伝|雑談|休憩|待機(?:画面|時間)?|準備中|オープニング|エンディング|[ABC]\s*パート|(?:今週|来週|今月|来月)の(?:予定|スケジュール)|スケジュール|시작|방송\s*(?:시작|종료)|공지(?:사항)?|잡담|휴식|대기(?:화면)?|[ABC씨]\s*파트|(?:이번|다음)\s*(?:주|달)\s*(?:스케줄|일정)|start|stream\s*(?:start|end)|opening|ending|intro|outro|announcements?|schedule|(?:free\s*)?talk|break|waiting)$/iu.test(chapter)
+  return /^(?:(?:配信|放送|歌枠|本編)?\s*(?:開始|終了|開幕|閉幕)|スタート|お知らせ|告知|宣伝|雑談|休憩|待機(?:画面|時間)?|準備中|オープニング|エンディング|[ABC]\s*パート|(?:今週|来週|今月|来月)の(?:予定|スケジュール)|スケジュール|시작|방송\s*(?:시작|종료)|공지(?:사항)?|잡담|휴식|대기(?:화면)?|[ABC씨]\s*파트|(?:이번|다음)\s*(?:주|달)\s*(?:스케줄|일정)|start|stream\s*(?:start|end)|opening|ending|intro|outro|announcements?|schedule|(?:free\s*)?talk|break|waiting)$/iu.test(chapter)
 }
 function addSongStatArtistCandidate(song: SongStat, originalArtist: string | null, originalArtistKo: string | null): void {
   if (!originalArtist) return
