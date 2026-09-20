@@ -9,6 +9,7 @@ export interface BackendArtist {
   agency?: string | null
   profile_intro?: string | null
   spotify_image_url?: string | null
+  avatar_variants?: Record<string, string>
   related_artist_ids?: number[]
   name_aliases?: string[]
   sources?: { source_type: string; value: string; label?: string | null; is_active: boolean }[]

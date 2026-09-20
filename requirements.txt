@@ -11,3 +11,6 @@ twscrape[curl]==0.20.1
 pytest==8.3.4
 youtube-transcript-api==1.2.4
 yt-dlp>=2024.12.23
+
+boto3==1.43.98
+Pillow==12.3.0

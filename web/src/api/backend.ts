@@ -78,6 +78,11 @@ export function mapArtist(row: BackendArtist): Artist {
     ],
     related_artist_ids: [...new Set([row.id, ...(row.related_artist_ids ?? [])])],
     image: safeUrl(row.spotify_image_url),
+    image_variants: Object.fromEntries(
+      Object.entries(row.avatar_variants ?? {})
+        .map(([size, url]) => [size, safeUrl(url)])
+        .filter(([, url]) => url),
+    ),
     image_source: '',
     official_url: links.find((l) => l.label === '공식 사이트')?.url ?? '',
     links,
