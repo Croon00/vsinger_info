@@ -2,14 +2,15 @@ import { test, expect } from '@playwright/test'
 
 // Fixtures follow existing backend DTOs. These verify real-mode HTTP paths;
 // they deliberately do not use the design mock worker or any running database.
-test('real mode connects existing contracts, isolates Spotify errors and omits unsupported birthdays', async ({
+test('real mode uses new catalog contracts, isolates errors and displays stored birthdays', async ({
   page,
 }) => {
   const calls: string[] = []
   const artist = {
     id: 42,
     name: 'HACHI',
-    display_name: 'HACHI',
+    display_name: '하치',
+    birthday: '09-20',
     agency: 'RK Music',
     related_artist_ids: [42],
     name_aliases: ['HACHI'],
@@ -41,12 +42,12 @@ test('real mode connects existing contracts, isolates Spotify errors and omits u
           ],
         },
       ]
-    else if (url.pathname.endsWith('/discography')) {
-      status = spotifyReady ? 200 : 409
+    else if (url.pathname === '/api/v2/artists/42/albums') {
+      status = spotifyReady ? 200 : 503
       data = spotifyReady
         ? [
             {
-              id: 'album-x',
+              id: '15',
               name: 'Real release',
               album_type: 'single',
               release_date: '2020-04',
@@ -54,16 +55,17 @@ test('real mode connects existing contracts, isolates Spotify errors and omits u
             },
           ]
         : { detail: 'Needs Spotify match' }
-    } else if (url.pathname === '/api/v2/spotify/albums/album-x')
+    } else if (url.pathname === '/api/v2/albums/15')
       data = {
-        id: 'album-x',
+        id: '15',
         name: 'Real release',
         album_type: 'single',
         release_date: '2020-04',
         total_tracks: 1,
         tracks: [
           {
-            id: 'track-x',
+            id: '21',
+            recording_id: 37, song_id: 987, has_lyrics: true,
             name: 'Real song',
             disc_number: 1,
             track_number: 1,
@@ -71,10 +73,9 @@ test('real mode connects existing contracts, isolates Spotify errors and omits u
           },
         ],
       }
-    else if (url.pathname === '/api/songs/lyrics/by-spotify-tracks')
-      data = [{ spotify_track_id: 'track-x', song_id: 987, has_lyrics: true }]
-    else if (url.pathname === '/api/songs/987/lyrics')
+    else if (url.pathname === '/api/v2/recordings/37/lyrics')
       data = {
+        recording_id: 37,
         song_id: 987,
         original_title: 'Real song',
         artist_name: 'HACHI',
@@ -143,7 +144,7 @@ test('real mode connects existing contracts, isolates Spotify errors and omits u
   expect(calls.filter(p => p.includes('/lives?'))).toHaveLength(1)
   expect(calls.some(p => p.includes('all_records'))).toBe(false)
   await page.getByRole('tab', { name: '오리곡' }).click()
-  await expect(page.getByText('아직 Spotify 아티스트가 연결되지 않았습니다.')).toBeVisible()
+  await expect(page.getByText('콘텐츠 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.')).toBeVisible()
   await expect(page.locator('h1')).toHaveText('HACHI')
   spotifyReady = true
   await page.getByRole('button', { name: '다시 시도' }).click()
@@ -151,14 +152,14 @@ test('real mode connects existing contracts, isolates Spotify errors and omits u
   await expect(page.locator('.track-section')).toContainText('2020년 4월')
   await page.getByRole('button', { name: '가사', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('Contract fixture text')
-  expect(calls).toContain('/api/songs/987/lyrics')
+  expect(calls).toContain('/api/v2/recordings/37/lyrics')
   await page.goto('/search?q=Band')
   await expect(page.locator('.performance-result')).toHaveCount(1)
   await expect(page.locator('.performance-result')).toHaveAttribute('href', '/lives/700?t=75')
   await page.goto('/calendar?month=2026-09-01')
-  await expect(page.getByRole('button', { name: '생일', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '생일', exact: true })).toBeVisible()
   await expect(
-    page.getByRole('button', { name: '2026년 9월 20일, 1개 일정', exact: true }),
+    page.getByRole('button', { name: '2026년 9월 20일, 2개 일정', exact: true }),
   ).toBeVisible()
-  expect(calls.some((p) => p.startsWith('/api/draft/'))).toBe(false)
+  expect(calls.some((p) => p.startsWith('/api/draft/') || p.startsWith('/api/songs/'))).toBe(false)
 })

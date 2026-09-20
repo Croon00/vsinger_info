@@ -3,6 +3,9 @@ export interface BackendArtist {
   id: number
   name: string
   display_name?: string | null
+  name_latin?: string | null
+  birthday?: string | null
+  theme_color?: string | null
   agency?: string | null
   profile_intro?: string | null
   spotify_image_url?: string | null
@@ -34,6 +37,8 @@ export interface BackendSearchPerformance extends BackendPerformance {
   artist_id?: number | null
   archive_id: number
   performed_on?: string | null
+  broadcast_at?: string | null
+  artist_name_ko?: string | null
   youtube_url: string
   video_title?: string | null
   artist_name: string
@@ -49,6 +54,9 @@ export interface BackendAlbum {
   spotify_url?: string | null
   tracks?: {
     id: string
+    recording_id: number
+    song_id?: number | null
+    has_lyrics: boolean
     name: string
     name_ko?: string | null
     duration_ms?: number | null
@@ -62,7 +70,8 @@ export interface BackendLyricsSummary {
   has_lyrics: boolean
 }
 export interface BackendLyrics {
-  song_id: number
+  recording_id: number
+  song_id: number | null
   original_title: string
   artist_name: string
   original_lyrics: string
@@ -77,6 +86,8 @@ export interface BackendEvent {
   artist_id?: number | null
   title: string
   starts_at?: string | null
+  city?: string | null
+  artist_ids?: number[]
   venue?: string | null
   price_text?: string | null
   source_url?: string | null

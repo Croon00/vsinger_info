@@ -140,7 +140,7 @@ const allEvents = computed(() => {
     .filter(
       (e) =>
         kinds.value.includes(e.kind) &&
-        (calendarScope.value === 'all' || favoriteIds.value.includes(e.artist_id)),
+        (calendarScope.value === 'all' || (e.concert?.artist_ids ?? [e.artist_id]).some(id => favoriteIds.value.includes(id))),
     )
     .sort((a, b) => a.date.localeCompare(b.date))
 })

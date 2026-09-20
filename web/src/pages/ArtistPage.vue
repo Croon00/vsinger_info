@@ -150,12 +150,12 @@ const {
 )
 const upcoming = computed(() =>
   (data.value?.concerts ?? [])
-    .filter((c) => c.starts_at.slice(0, 10) >= todayKey())
+    .filter((c) => !c.starts_at || c.starts_at.slice(0, 10) >= todayKey())
     .sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
 )
 const past = computed(() =>
   (data.value?.concerts ?? [])
-    .filter((c) => c.starts_at.slice(0, 10) < todayKey())
+    .filter((c) => !!c.starts_at && c.starts_at.slice(0, 10) < todayKey())
     .sort((a, b) => b.starts_at.localeCompare(a.starts_at)),
 )
 function changeTab(value: string | number) {
@@ -324,7 +324,7 @@ function changeTab(value: string | number) {
                       <p>
                         {{ a.release_date.slice(0, 4) }}
                         <span>·</span>
-                        {{ a.album_type === 'album' ? 'Album' : 'Single' }}
+                        {{ ({ album: 'Album', single: 'Single', ep: 'EP', compilation: 'Compilation', other: 'Release' })[a.album_type] }}
                       </p>
                     </div>
                   </ToggleGroupItem>
@@ -355,7 +355,7 @@ function changeTab(value: string | number) {
                         size="sm"
                         :disabled="!track.has_lyrics"
                         @click="
-                          openOverlay(router, route, 'lyrics', track.song_id ?? Number(track.id))
+                          openOverlay(router, route, 'lyrics', track.lyrics_id ?? track.song_id ?? Number(track.id))
                         "
                       >
                         <FileText data-icon="inline-start" />

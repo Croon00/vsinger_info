@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 
 import { isMock } from '@/api/config'
 const prefix = isMock ? 'schedule-music-draft:' : 'schedule-music-api:'
+const favoriteKey = isMock ? 'favorites' : 'catalog-v1-favorites'
 function read<T>(key: string, fallback: T, validate: (v: unknown) => boolean): T {
   try {
     const value = JSON.parse(localStorage.getItem(prefix + key) ?? 'null')
@@ -12,7 +13,7 @@ function read<T>(key: string, fallback: T, validate: (v: unknown) => boolean): T
 }
 export const favoriteIds = ref(
   read<number[]>(
-    'favorites',
+    favoriteKey,
     isMock ? [1, 2, 3, 4, 5, 6] : [],
     (v) => Array.isArray(v) && v.every(Number.isInteger),
   ),
@@ -51,7 +52,7 @@ function save(key: string, value: unknown) {
     announce('저장 공간을 사용할 수 없어 이번 방문 동안만 유지해요.')
   }
 }
-watch(favoriteIds, (v) => save('favorites', v), { deep: true })
+watch(favoriteIds, (v) => save(favoriteKey, v), { deep: true })
 watch(calendarScope, (v) => save('calendar-scope', v))
 const media = window.matchMedia('(prefers-color-scheme: dark)')
 function applyTheme() {

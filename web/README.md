@@ -1,6 +1,6 @@
 # schedule_music · 새 프론트
 
-Vue + TypeScript + Vite, shadcn-vue Luma 기반 프론트입니다. 기본 실행은 기존 백엔드에 추가한 조회 전용 `/api/v2`를 사용합니다. 디자인 목업은 별도 모드로 유지합니다.
+Vue + TypeScript + Vite, shadcn-vue Luma 기반 프론트입니다. 기본 실행은 새 Neon 카탈로그에 연결된 조회 전용 `/api/v2`를 사용합니다. 디자인 목업은 별도 모드로 유지합니다.
 
 2026-09-19 디자인 초안 디렉터리에서 기본 `web` 디렉터리로 이동했습니다. 기존 관리 웹은 `../web.bak`에 보관합니다. 개발 서버 포트와 실제/mock 데이터 모드는 유지합니다.
 
@@ -20,7 +20,7 @@ npm run dev
 
 `.env.local`의 `BACKEND_URL`을 실행 중인 FastAPI 주소로 설정합니다. 기본값은 `http://127.0.0.1:8000`입니다. Vite가 `/api/*`를 이 주소로 전달하므로 로컬 프론트의 CORS 설정 변경은 필요하지 않습니다. 백엔드 `API_KEY` 인증을 사용한다면 같은 값을 프론트의 **서버 전용** `BACKEND_API_KEY`로 설정합니다. `VITE_` 접두사로 키를 넣지 마세요. 프록시는 GET/HEAD만 전달합니다.
 
-상위 프로젝트 `D:\06_Dev\schedule_music\.env`는 백엔드 설정입니다. 프론트에서 자동으로 읽거나 복사하지 않습니다. DB 주소는 HTTP API 주소로 사용할 수 없습니다.
+상위 프로젝트의 `.env.catalog`에 있는 `NEW_CATALOG_DATABASE_URL`이 사용자 조회 API의 DB 설정입니다. 기존 `.env`의 `DATABASE_URL`은 수집기·봇·기존 API용으로 유지합니다. 프론트에서 자동으로 읽거나 복사하지 않습니다. DB 주소는 HTTP API 주소로 사용할 수 없습니다.
 
 백엔드가 실행되지 않았거나 인증에 실패하면 오류를 표시합니다. 목업으로 자동 대체하지 않습니다. 백엔드 서버·DB를 이 프론트 명령이 실행하지는 않습니다. 실제 데이터 검증 전 서버 실행 상태를 확인해야 합니다.
 
@@ -30,7 +30,7 @@ npm run dev
 npm run dev:mock
 ```
 
-목업: http://localhost:5175. MSW가 `/api/draft/*` 및 예시 가사에 응답합니다. 실제 모드의 저장 키는 `schedule-music-api:`, 목업은 `schedule-music-draft:`로 분리됩니다. 실제 모드의 즐겨찾기는 빈 목록에서 시작합니다. 기존 목업 Service Worker가 남은 동일 출처에서 실제 모드로 바꾸면 해당 worker만 해제하고 한 번 새로고침합니다.
+목업: http://localhost:5175. MSW가 `/api/draft/*` 및 예시 가사에 응답합니다. 실제 모드의 저장 키는 `schedule-music-api:`, 목업은 `schedule-music-draft:`로 분리됩니다. 새 DB의 즐겨찾기는 `schedule-music-api:catalog-v1-favorites`를 사용하여 이전 DB의 ID와 분리합니다. 기존 테마·캘린더 설정은 유지합니다. 기존 목업 Service Worker가 남은 동일 출처에서 실제 모드로 바꾸면 해당 worker만 해제하고 한 번 새로고침합니다.
 
 목업의 아티스트 이미지 출처는 [콘텐츠 출처](docs/content-sources.md)에 기록했습니다. 목업 공연·가격·가사는 예시 데이터이며 실제 모드에는 섞이지 않습니다. 실제 YouTube 영상은 두 모드 모두 외부 임베드로 재생합니다.
 
@@ -43,7 +43,7 @@ npm run dev:mock
 - 앨범 목록, 선택한 앨범 수록곡, 저장된 가사의 조회·출처·검토 상태
 - 검토 완료된 오프라인/복합 공연의 캘린더와 상세
 
-프로필·라이브·앨범·공연은 오류와 로딩을 분리했습니다. 생일과 한국어 아티스트 전용 이름 등 지원하지 않는 데이터는 생성하지 않습니다. 상세 제한과 미구현 작업은 [백엔드 연결 TO-DO](../docs/backend-roadmap.md)에 정리했습니다.
+프로필·라이브·앨범·공연은 오류와 로딩을 분리했습니다. 새 DB에 저장된 한국어 이름과 생일을 표시합니다. 미등록 값을 임의 생성하지 않으며 앨범·가사도 외부 API 대신 새 DB에서 읽습니다. 상세 제한과 미구현 작업은 [백엔드 연결 TO-DO](../docs/backend-roadmap.md)에 정리했습니다.
 
 ## 검증
 
