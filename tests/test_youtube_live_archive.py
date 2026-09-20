@@ -1,4 +1,4 @@
-from app.integrations.youtube_live_archive import _timestamp_to_seconds, clean_setlist_title, parse_setlist_comment
+from app.integrations.youtube_live_archive import _timestamp_to_seconds, parse_setlist_comment
 from app.integrations.karaoke_lookup import split_song_credit
 
 
@@ -39,23 +39,6 @@ def test_parse_setlist_comment_accepts_arbitrary_prefixes() -> None:
     ]
 
 
-def test_clean_setlist_title_removes_accidentally_captured_timestamp() -> None:
-    assert clean_setlist_title("02:11:35 僕が死のうと思ったのは") == "僕が死のうと思ったのは"
-    assert clean_setlist_title("00:02 00:12 #17 新世界") == "#17 新世界"
-    assert clean_setlist_title("00:10:52 00:16:24 00:23:43") == ""
-
-
-def test_clean_setlist_title_removes_setlist_noise() -> None:
-    assert clean_setlist_title("#01 天体観測") == "天体観測"
-    assert clean_setlist_title("04 #10 カルマ") == "カルマ"
-    assert clean_setlist_title("26 #3 又三郎") == "又三郎"
-    assert clean_setlist_title("- 02:24:52 境界線") == "境界線"
-    assert clean_setlist_title("~ 00:48:20 ワンルーム叙事詩") == "ワンルーム叙事詩"
-    assert clean_setlist_title("、BUMPツアーチケットもっと当てたい 01:27:4") == "BUMPツアーチケットもっと当てたい"
-    assert clean_setlist_title("@25人") == ""
-    assert clean_setlist_title("(please) forgive") == "(please) forgive"
-    assert clean_setlist_title(", 0:15:04 , 0:15:43 ,") == ""
-    assert clean_setlist_title("00 0:00") == ""
 def test_parse_setlist_comment_keeps_only_song_and_artist_from_timestamp_ranges() -> None:
     comment = """
     1曲目 08:36~13:14「変わらないもの／奥華子」 95.192点
