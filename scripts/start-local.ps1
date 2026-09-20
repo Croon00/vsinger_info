@@ -2,6 +2,7 @@
 # 이미 포트를 사용 중인 서비스는 건너뛰므로 반복 실행해도 안전합니다.
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
+$pythonExecutable = Join-Path $projectRoot ".venv\Scripts\python.exe"
 
 function Test-ListeningPort {
     param([int]$Port)
@@ -10,7 +11,10 @@ function Test-ListeningPort {
 }
 
 if (-not (Test-ListeningPort -Port 8000)) {
-    Start-Process -FilePath "python" `
+    if (-not (Test-Path -LiteralPath $pythonExecutable)) {
+        throw "Prepare the project .venv first; see README.md."
+    }
+    Start-Process -FilePath $pythonExecutable `
         -ArgumentList "-m uvicorn app.api.main:app --reload" `
         -WorkingDirectory $projectRoot `
         -WindowStyle Hidden `
@@ -18,7 +22,7 @@ if (-not (Test-ListeningPort -Port 8000)) {
         -RedirectStandardError (Join-Path $projectRoot "api-local.stderr.log")
 }
 
-if (-not (Test-ListeningPort -Port 5173)) {
+if (-not (Test-ListeningPort -Port 5174)) {
     Start-Process -FilePath "npm.cmd" `
         -ArgumentList "run dev" `
         -WorkingDirectory (Join-Path $projectRoot "web") `

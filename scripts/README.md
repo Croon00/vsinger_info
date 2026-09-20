@@ -1,0 +1,27 @@
+# 운영 도구
+
+프로젝트 루트에서 실행한다. 먼저 소스의 인자 처리와 기본 동작을 확인한다. `argparse`를 사용하는 도구는 `--help`로 인자를 확인할 수 있지만, `run_admin.py`처럼 바로 실행하는 파일도 있다. 아래 도구는 서버 시작이나 테스트에 자동 연결되지 않는다. 조회 API에서 호출하지 않는다.
+
+| 도구 | 역할·실행 영향 |
+| --- | --- |
+| `run_admin.py` | 빌드된 `admin-web/`과 로컬 관리자 API 실행 |
+| `start-local.ps1` | 프로젝트 가상환경의 API 8000, 조회 웹 5174를 숨김 실행. 사용 중인 포트는 건너뜀 |
+| `register-local-startup.ps1` | Windows 로그인 시 `start-local.ps1`을 실행하는 예약 작업 등록 |
+| `migrate_catalog.py` | 새 DB 상태/계약 검사. `--apply`는 명시적 스키마 생성 |
+| `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
+| `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
+| `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |
+| `import_vsinger_profiles.py` | `data/seeds/` 프로필 반영 |
+| `register_missing_youtube_channels.py` | 시드의 누락 채널 등록 |
+| `register_riot_music_youtube_monitors.py` | RIOT MUSIC 채널 모니터 등록 |
+| `backfill_youtube_channel.py` | 지정 채널 과거 영상 수집·저장 |
+| `backfill_riot_music_youtube.py` | RIOT MUSIC 채널 과거 자료 수집·저장 |
+| `backfill_youtube_covers.py` | 공식 커버 영상 수집·저장 |
+| `retry_pending_youtube_setlists.py` | 미처리 세트리스트 재시도 |
+| `translate_recent_youtube_setlists.py` | 최근 세트리스트 번역·저장 |
+| `refresh_jpop_playlist_tj.py` | TJ 노래방 대조 자료 갱신 |
+| `cache_x_profile_images.py` | X 프로필 이미지 수집·캐시 |
+
+실행 전 각 도구의 dry-run/apply 기본값과 사용할 DB를 확인한다. 수집·번역 도구는 네트워크와 DB 변경을 동반할 수 있다. 새 카탈로그 연결과 기존 서비스 연결은 별개다. [백엔드 구조](../docs/backend-architecture.md)와 [관리자 안내](../docs/admin-web-plan.md)를 따른다.
+
+프론트 화면 점검·성능 측정 스크립트는 `web/scripts/`에서 유지한다. 일회성 데이터 조사 스크립트와 출력은 `.tmp/`에, 보존할 원본은 `db-migration/archive/`에 둔다.

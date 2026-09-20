@@ -6,7 +6,7 @@
 
 2026-09-19 간소화 결정: 곡의 title_latin·language_code·노래방 번호는 유지한다. 이미지 출처 별도 필드, 별도 표시 링크 표, 음악 크레딧, 곡 slug, 원곡자/공연의 세부 역할, 기존 ID 대응은 제거한다. 아티스트 slug와 실제 가창자 관계는 유지한다.
 
-- 새 DB는 DB_KEY.txt에 지정된 Neon PostgreSQL을 사용한다. 원격 DB는 이미 준비되어 있으며 신규 서버를 추가 생성할 필요는 없다.
+- 새 DB는 Git 제외 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 연결한다. 원격 DB는 이미 준비되어 있으며 신규 서버를 추가 생성할 필요는 없다.
 - **아티스트 통합 명부로 확정.** 원곡자·가창자·발매 참여자를 각각 중복 등록하지 않고 같은 음악 활동 주체 ID를 관계에서 참조한다.
 - **음악 카탈로그 우선 이전으로 확정.** Discord·Google 계정, 알림/동기화 이력, 수집 재시도 상태는 별도 단계다.
 - 초기 입력 대상은 모두 사용자 검수 후 반영한다. 원본 덤프를 새 DB에 통째로 복원하지 않는다. 기존 ready/reviewed 플래그나 AI 확신도를 새 승인으로 인정하지 않는다.
@@ -219,19 +219,16 @@ top_comment 한 칸 대신 근거 문서를 연결한다. timestamp_text는 시�
 
 배포/스키마 마이그레이션은 직접 연결, 실행 중 조회·관리 요청은 풀 연결을 분리할 수 있다. 현재 SQLAlchemy 공유 풀을 유지하고 Neon pooler와의 동작을 검증한다. [Neon 연결 풀 안내](https://neon.com/docs/connect/connection-pooling)
 
-## 9. 기존 코드와 로컬 DB 전환
+## 9. 기존 코드와 새 카탈로그의 실행 경계
 
-**.env의 DATABASE_URL만 바꾸면 완료되는 작업이 아니다.** 현재 read_catalog.py는 youtube_live_archives/youtube_song_performances/event_candidates와 기존 artist 필드에 직접 의존한다. 초기화와 구형 관리 API도 새 구조와 호환되지 않는다.
+**.env의 DATABASE_URL을 새 DB 주소로 교체하지 않는다.** 기존 `read_catalog.py`와 구형 관리 API·초기화는 기존 스키마에 의존한다. 2026-09-20 사용자 `/api/v2`는 별도 `catalog_read.py` 서비스·repository와 READ ONLY Session으로 새 DB에 연결했다. 현재 HTTP 계약은 [조회 API v2](read-api-v2.md)를 따른다.
 
-1. 기존 앱은 기존 DB에 유지한다. 새 스키마 도구는 Git 제외 .env.catalog의 NEW_CATALOG_DATABASE_URL만 사용한다. 관리자 앱은 이 전용 설정으로 연결했다. 새 사용자 조회 서비스 전환은 후속 작업이다.
-2. 신규 모델·migration·관리 도구를 구현한다. 새 DB에 구형 init_db()/시드를 실행하지 않는 독립 진입점을 사용한다.
-3. 초기 데이터를 로컬에서 전량 검수하고 고정 manifest로 새 DB에 반영한다.
-4. 새 repository와 조회 DTO를 연결한다. /api/v2 경로를 유지할 수 있는 필드는 adapter로 호환시키되 복수 가창자·공연 출연진·앨범/녹음 ID는 단일 artist_id로 억지 축소하지 않는다. performers[]/artists[] 등 새 계약을 명시하고 web도 함께 수정한다.
-5. 저장된 가사 GET과 Spotify 매핑도 새 recordings 구조로 바꾼다. 앨범 목록은 검수해 저장된 DB를 읽고 GET에서 Spotify 재수집으로 보완하지 않는다.
-6. 구형 API/수집기/초기화를 새 DB에서 실행하지 못하도록 catalog 실행 모드를 명시한다. 로컬에서 기존 관리 웹을 계속 써야 하면 별도 legacy 프로세스+구 DB 설정으로 분리한다.
-7. 단위·API·실화면 및 무쓰기 GET 검증 후 로컬 기본 DATABASE_URL을 새 DB로 전환한다. AGENT_ENABLED=false, DATABASE_AUTO_INIT=false와 카탈로그 진입점을 함께 적용한다.
-8. catalog_instance UUID로 캐시·즐겨찾기 저장 namespace를 갱신한다. 같은 숫자 ID가 다른 아티스트를 가리키지 않게 한다. 이전 즐겨찾기는 자동 승계하지 않고 새 카탈로그에서 다시 지정한다.
-9. 전환 전 설정을 보존하고 읽기 전용 검증에 실패하면 기존 앱/DB로 돌아갈 수 있게 한다. 전환 후 새 DB에 수정이 쌓이면 단순 URL 되돌리기로 데이터가 합쳐지지 않으므로 변경 내보내기/대조 후 판단한다.
+1. 기존 API·수집기·Discord 봇은 `.env`의 `DATABASE_URL`을 유지한다. 새 관리자·마이그레이션·v2 조회는 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`을 사용한다.
+2. 새 migration과 관리자 진입점은 구형 `init_db()`와 시드를 실행하지 않는다. API의 `DATABASE_AUTO_INIT` 기본값은 false다.
+3. 초기 데이터는 로컬에서 검수한 뒤 고정 manifest로 명시적으로 반영한다. 데이터 정제·검수와 운영 수집기 이전은 남은 작업이다.
+4. 새 repository와 DTO는 복수 가창자·공연 출연진을 관계로 조회한다. 앨범·가사는 저장된 새 카탈로그만 읽고 GET에서 재수집하지 않는다.
+5. 새 카탈로그용 즐겨찾기 저장 키를 분리했다. 이전 즐겨찾기를 자동 승계하지 않는다. `catalog_instance` UUID를 이용한 더 세밀한 전환 정책은 현재 구현과 구분해 검토한다.
+6. 검증·후속 확장 범위는 [QA](../web/docs/qa.md)와 [백엔드 후속 작업](backend-roadmap.md)에 유지한다. 두 DB의 변경은 URL 교체만으로 합쳐지지 않는다.
 
 기존 dump의 계정 토큰·Discord 소유권·알림 route·last_seen·재시도 카운터는 이 단계에서 새 음악 카탈로그로 옮기지 않는다. 앞으로 수집기를 연결할 때도 후보는 관리자 검수 큐로 보내며 기존 초기 검수 요구를 우회하지 않는다.
 
@@ -245,4 +242,4 @@ top_comment 한 칸 대신 근거 문서를 연결한다. timestamp_text는 시�
 - 날짜 미정 가창의 월별 추이 제외 정책과 UI 안내.
 - 1차 커버 메들리 처리: 보류 또는 cover_songs 다중 관계 확장.
 
-새 DB의 빈 스키마 준비와 로컬 관리자 API/웹 1차 구현을 완료했다. 사용자 검수 후 실제 초기 데이터 반영과 사용자 조회 프론트 전환은 아직 수행하지 않았다.
+새 DB 스키마 준비, 로컬 관리자 API/웹, 사용자 조회 프론트 연결을 완료했다. 실제 초기 데이터 검수·반영과 운영 기능 이전은 별도 작업이다.
