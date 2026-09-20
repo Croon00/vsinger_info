@@ -49,6 +49,7 @@ class LiveRead(BaseModel):
     broadcast_at: datetime | None = None
     published_at: datetime | None = None
     duration_seconds: int | None = None
+    performance_count: int | None = None
     performances: list[PerformanceRead] = Field(default_factory=list)
 
 class SearchRead(PerformanceRead):

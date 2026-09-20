@@ -29,4 +29,10 @@
 
 2026-09-21 사용자 요청에 따라 모든 세트리스트 곡 73,841건에 방송 대표 진행자를 `performance_artists(role='lead')`로 임시 연결했다. 이 연결은 곡별 실제 가창자 검수 결과가 아니며, 게스트 가창이나 합창은 나중에 수정해야 한다. 37개 배치의 영수증과 곡별 `catalog_changes`에 `review_status=provisional`을 남겼다. 반영 뒤 가창자 연결 누락·대표 진행자와 연결 불일치는 각각 0건이고, KMNZ TINA의 통계 대상 곡은 556건으로 확인했다. 이관 테스트 4건과 새 카탈로그 조회 테스트 3건이 통과했다.
 
-재현/감사 도구는 `scripts/import_legacy_setlists.py`, `scripts/correct_legacy_group_live_hosts.py`, `scripts/apply_reviewed_legacy_setlists.py`, `scripts/backfill_performance_hosts.py`, `scripts/verify_legacy_setlist_import.py`다. 쓰기 도구는 기본적으로 dry-run이고 `--apply`에서만 새 DB에 쓴다. `catalog_imports`의 고정 operation ID와 manifest 해시, `catalog_changes`의 행별 감사 기록으로 재실행을 확인한다. 세부 로컬 점검 결과는 Git에서 제외된 `db-migration/reports/`에 있다.
+### 추가 반영: 영상 길이
+
+같은 날 원본부터 `duration_seconds`가 없던 2,566개를 YouTube `videos.list(part=contentDetails)`로 50개씩 조회했다. API가 2,562개를 반환했고 4개(`K0DFQPPj2Js`, `TSDbqEEFZ00`, `kx3YNnBFUDc`, `z65138fhtm8`)는 반환하지 않았다. 저장된 곡 시작 시각과 충돌하지 않는 **2,561개**를 먼저 새 DB에 반영했다. 52개 영수증과 2,561개 행 변경 기록을 남겼다.
+
+`-uwH9YZk3_4`는 API 길이 11,522초(3:12:02)보다 마지막 곡 시작 14,357초(3:59:17)가 늦었다. 사용자가 29번 곡 시각을 **2:59:17**(10,757초)로 정정해, 곡 시각과 영상 길이를 한 트랜잭션에서 반영했다. 수정 전후 값과 사용자 결정은 별도 영수증·행 변경 기록에 남겼다. 최종적으로 길이 있음 **5,779개**, 없음 **4개**, 길이 밖 곡 시각 **0개**다. API 조회 원본과 누락 목록은 Git에서 제외한 `db-migration/reports/catalog-video-duration-youtube.json`에 보존했다.
+
+재현/감사 도구는 `scripts/import_legacy_setlists.py`, `scripts/correct_legacy_group_live_hosts.py`, `scripts/apply_reviewed_legacy_setlists.py`, `scripts/backfill_performance_hosts.py`, `scripts/backfill_catalog_video_durations.py`, `scripts/apply_reviewed_duration_conflict.py`, `scripts/verify_legacy_setlist_import.py`다. 쓰기 도구는 기본적으로 dry-run이고 `--apply`에서만 새 DB에 쓴다. `catalog_imports`의 고정 operation ID와 manifest 해시, `catalog_changes`의 행별 감사 기록으로 재실행을 확인한다. 세부 로컬 점검 결과는 Git에서 제외된 `db-migration/reports/`에 있다.

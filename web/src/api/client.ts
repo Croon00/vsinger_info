@@ -37,7 +37,9 @@ export const api = isMock
       },
       livePage: async (artistId: number, offset = 0, limit = 6, signal?: AbortSignal) => {
         const all = await mockApi.lives(artistId, signal)
-        return { items: all.slice(offset, offset + limit), total: all.length, offset, limit }
+        return { items: all.slice(offset, offset + limit).map((live) => ({
+          ...live, performance_count: live.performances.length,
+        })), total: all.length, offset, limit }
       },
       statistics: async (artistId: number, signal?: AbortSignal) => {
         const lives = await mockApi.lives(artistId, signal)

@@ -75,7 +75,9 @@ class CatalogReadRepository:
         WHERE a.archived_at IS NULL AND a.show_in_catalog ORDER BY lower(a.name_native),a.id""")
 
     def lives(self, artist_id, offset, limit):
-        return self.page(f"SELECT {LIVE_COLUMNS} {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}",
+        return self.page(f"""SELECT {LIVE_COLUMNS},
+          (SELECT count(*) FROM performances p WHERE p.archive_id=l.id AND p.archived_at IS NULL) performance_count
+          {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}""",
                          {"artist":artist_id},offset,limit,"COALESCE(q.broadcast_at,q.published_at) DESC NULLS LAST,q.id DESC")
 
     def live(self, key):

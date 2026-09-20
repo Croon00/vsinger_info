@@ -12,6 +12,8 @@
 | `correct_legacy_group_live_hosts.py` | 그룹 채널 영상의 명시적 멤버 진행자 203건 검사·수정 (`--apply`) |
 | `apply_reviewed_legacy_setlists.py` | 사용자 결정 파일에 따른 예외 영상 검사·반영 (`--apply`) |
 | `backfill_performance_hosts.py` | 세트리스트 곡을 방송 대표 진행자의 임시 가창으로 연결 (`--apply`, 감사 기록) |
+| `backfill_catalog_video_durations.py` | 새 카탈로그의 누락 영상 길이를 YouTube API로 조회 (`--fetch`)하고 검증된 값만 반영 (`--apply`) |
+| `apply_reviewed_duration_conflict.py` | 사용자 검수로 바로잡은 곡 시각과 API 영상 길이를 함께 반영 (`--apply`) |
 | `verify_legacy_setlist_import.py` | 새 카탈로그의 이관 건수·참조·예외 영상 읽기 전용 검증 |
 | `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
