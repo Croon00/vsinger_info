@@ -38,6 +38,7 @@ export interface Live {
   video_id: string
   broadcast_at: string
   duration_seconds: number
+  performance_count?: number | null
   performances: Performance[]
   source_url: string
   metadata_note?: string

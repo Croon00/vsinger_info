@@ -58,8 +58,8 @@ function checkThumbnail(event: Event) {
       {{
         !live.video_id
           ? '영상 미등록'
-          : live.performances.length
-            ? `${live.performances.length}곡의 세트리스트`
+          : live.performance_count && live.performance_count > 0
+            ? `${live.performance_count}곡의 세트리스트`
             : '세트리스트 준비 중'
       }}
     </p>

@@ -80,7 +80,10 @@ def test_normalized_catalog_reads_and_attribution(store):
         assert service.artist(a)["birthday"]=="09-20"
         assert service.artist(a)["sources"][0]["value"]=="https://youtube.com/@singer"
         assert service.artist(original) is None
-        assert service.lives(guest,0,12)["items"][0]["artist_id"]==guest
+        summary=service.lives(guest,0,12)["items"][0]
+        assert summary["artist_id"]==guest
+        assert summary["performance_count"]==2
+        assert "performances" not in summary
         assert len(service.live(archive)["performances"])==2
         for query in ["제목","Nickname","Romanized"]:
             result=service.search(query,0,1)

@@ -112,7 +112,7 @@ describe('real API requests', () => {
       vi.fn(async (path: string) => {
         expect(path).toBe('/api/v2/artists/42/lives?offset=6&limit=6')
         return json({
-          items: [{ id: 7, artist_id: 42, artist_name: 'HACHI', youtube_url: '' }],
+          items: [{ id: 7, artist_id: 42, artist_name: 'HACHI', youtube_url: '', performance_count: 12 }],
           total: 200,
           offset: 6,
           limit: 6,
@@ -123,7 +123,9 @@ describe('real API requests', () => {
     const page = await backendApi.livePage(42, 6, 6)
     expect(page.total).toBe(200)
     expect(page.items[0].artist_id).toBe(42)
+    expect(page.items[0].performance_count).toBe(12)
     expect(page.items[0].performances).toEqual([])
+    expect(mapLive({ id: 8, artist_name: 'HACHI', youtube_url: '' }).performance_count).toBeNull()
   })
   it('shares concurrent reads, isolates subscriber abort and retries failed requests', async () => {
     let complete!: (r: Response) => void

@@ -32,6 +32,7 @@ export interface BackendLive {
   broadcast_at?: string | null
   published_at?: string | null
   duration_seconds?: number | null
+  performance_count?: number | null
   performances?: BackendPerformance[]
 }
 export interface BackendSearchPerformance extends BackendPerformance {

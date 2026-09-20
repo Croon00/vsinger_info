@@ -119,6 +119,7 @@ export function mapLive(row: BackendLive, artist?: Artist): Live {
       (/^[\w-]{11}$/.test(row.youtube_video_id ?? '') ? row.youtube_video_id! : ''),
     broadcast_at: row.broadcast_at || row.published_at || '',
     duration_seconds: row.duration_seconds ?? 0,
+    performance_count: row.performance_count ?? null,
     performances: (row.performances ?? [])
       .map(mapPerformance)
       .sort((a, b) => a.start_seconds - b.start_seconds),
