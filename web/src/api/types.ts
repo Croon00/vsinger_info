@@ -3,6 +3,7 @@ export interface Link {
   url: string
 }
 export interface Artist {
+  theme_color?: string
   id: number
   name: string
   display_name: string
@@ -62,6 +63,7 @@ export interface Statistics extends ReturnType<
   activity: { month: string; count: number }[]
 }
 export interface Track {
+  lyrics_id?: number
   id: number | string
   song_id?: number
   title: string
@@ -73,7 +75,7 @@ export interface Album {
   id: string
   artist_id: number
   name: string
-  album_type: 'album' | 'single'
+  album_type: 'album' | 'single' | 'ep' | 'compilation' | 'other'
   release_date: string
   image_url: string
   total_tracks?: number
@@ -83,10 +85,11 @@ export interface Album {
   is_sample: boolean
 }
 export interface Lyrics {
+  recording_id?: number
   needs_review?: boolean
   lyrics_source_url?: string | null
   lyrics_source_type?: string
-  song_id: number
+  song_id: number | null
   original_title: string
   artist_name: string
   original_lyrics: string
@@ -95,6 +98,7 @@ export interface Lyrics {
   is_sample: boolean
 }
 export interface Concert {
+  artist_ids?: number[]
   ticket_url?: string
   id: number
   artist_id: number

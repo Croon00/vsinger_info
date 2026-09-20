@@ -32,6 +32,8 @@ npm run dev
 
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
+사용자 조회 `/api/v2`는 루트 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 새 DB를 읽습니다. 기존 `DATABASE_URL`은 수집기·Discord 봇·기존 API용으로 유지하며 교체하지 않습니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다.
+
 ## 새 DB 관리자
 
 `admin-web`에서 `npm ci`, `npm run build` 후 프로젝트 루트에서 `.\.venv\Scripts\python.exe scripts/run_admin.py`를 실행하고 http://127.0.0.1:8010 을 연다. 새 DB 설정은 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`만 사용한다. [사용 안내](docs/admin-web-plan.md)를 따른다.
@@ -56,7 +58,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집 흐름, Discord 명령, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
-| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 빈 원격 스키마 적용 완료, 검수·앱 전환은 후속 작업 |
+| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 원격 스키마와 사용자 v2 연결 완료, 데이터 검수·운영 기능 이전은 별도 |
 | [새 DB 마이그레이션](migrations/catalog/README.md) | 실제 적용 DDL, 전용 접속 설정, 실행·검증 범위 |
 | [로컬 카탈로그 관리자](docs/admin-web-plan.md) | 실행·JSON 검수·승인 후 반영·수동 관리·백업 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |

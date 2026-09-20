@@ -15,7 +15,6 @@ import type {
   BackendPerformance,
   BackendSearchPerformance,
   BackendAlbum,
-  BackendLyricsSummary,
   BackendLyrics,
   BackendEvent,
 } from './backend-types'
@@ -57,31 +56,32 @@ export function mapArtist(row: BackendArtist): Artist {
           : s.value,
       )
       if (!url) return []
-      const label =
+      const label = s.label || (
         s.source_type === 'official_site'
           ? '공식 사이트'
           : new URL(url).hostname.includes('youtube.com')
             ? 'YouTube'
             : s.source_type === 'x'
               ? 'X'
-              : s.label || '관련 사이트'
+              : s.source_type === 'spotify' ? 'Spotify' : s.source_type === 'fanclub' ? '팬클럽' : '관련 사이트')
       return [{ label, url }]
     })
   return {
     id: row.id,
     name: row.name,
-    display_name: '',
-    roman: '',
+    display_name: row.display_name ?? '',
+    roman: row.name_latin ?? '',
+    theme_color: row.theme_color ?? undefined,
     agency: row.agency ?? '',
     aliases: [
-      ...new Set([row.name, row.display_name ?? '', ...(row.name_aliases ?? [])].filter(Boolean)),
+      ...new Set([row.name, row.display_name ?? '', row.name_latin ?? '', ...(row.name_aliases ?? [])].filter(Boolean)),
     ],
     related_artist_ids: [...new Set([row.id, ...(row.related_artist_ids ?? [])])],
     image: safeUrl(row.spotify_image_url),
     image_source: '',
     official_url: links.find((l) => l.label === '공식 사이트')?.url ?? '',
     links,
-    birthday: null,
+    birthday: row.birthday ?? null,
     intro: row.profile_intro ?? '',
   }
 }
@@ -128,10 +128,9 @@ export function mapEvent(row: BackendEvent, artists: Artist[]): Concert | null {
   const starts = hasOffset ? startsAt : startsAt.slice(0, 10)
   if (
     row.event_type !== 'live_event' ||
-    !['ready', 'synced'].includes(row.status) ||
-    !['onsite', 'hybrid'].includes(row.event_format) ||
-    !/^\d{4}-\d{2}-\d{2}(?:$|[T ])/.test(startsAt) ||
-    !Number.isFinite(Date.parse(starts))
+    !['scheduled', 'completed', 'postponed', 'ready', 'synced'].includes(row.status) ||
+    !['onsite', 'hybrid', 'online'].includes(row.event_format) ||
+    (!!startsAt && (!/^\d{4}-\d{2}-\d{2}(?:$|[T ])/.test(startsAt) || !Number.isFinite(Date.parse(starts))))
   )
     return null
   const artist = artists.find((a) => (a.related_artist_ids ?? [a.id]).includes(row.artist_id ?? -1))
@@ -142,12 +141,13 @@ export function mapEvent(row: BackendEvent, artists: Artist[]): Concert | null {
     title: row.title,
     starts_at: starts,
     venue: row.venue ?? '',
-    city: '',
+    city: row.city ?? '',
+    artist_ids: row.artist_ids ?? [artist.id],
     price_text: row.price_text ?? '',
     source_url: safeUrl(row.source_url),
     ticket_url: safeUrl(row.ticket_url),
     is_sample: false,
-    event_format: row.event_format as 'onsite' | 'hybrid',
+    event_format: row.event_format as 'onsite' | 'hybrid' | 'online',
   }
 }
 function mapAlbum(row: BackendAlbum, artistId: number): Album {
@@ -155,7 +155,7 @@ function mapAlbum(row: BackendAlbum, artistId: number): Album {
     id: row.id,
     artist_id: artistId,
     name: row.name,
-    album_type: row.album_type === 'single' ? 'single' : 'album',
+    album_type: row.album_type as Album['album_type'],
     release_date: row.release_date ?? '',
     image_url: safeUrl(row.image_url),
     source_url: safeUrl(row.spotify_url),
@@ -199,56 +199,40 @@ export const backendApi = {
     }
   },
   async live(id: string, signal?: AbortSignal) {
-    const [row, all] = await Promise.all([
-      cachedRead<BackendLive>(`/api/v2/lives/${encodeURIComponent(id)}`, signal),
-      artists(signal),
-    ])
-    return mapLive(row, matchArtist(row.artist_name, all))
+    return mapLive(await cachedRead<BackendLive>(`/api/v2/lives/${encodeURIComponent(id)}`, signal))
   },
   async albums(artistId: number, signal?: AbortSignal) {
     return (
-      await cachedRead<BackendAlbum[]>(`/api/v2/spotify/artists/${artistId}/discography`, signal)
+      await cachedRead<BackendAlbum[]>(`/api/v2/artists/${artistId}/albums`, signal)
     ).map((row) => mapAlbum(row, artistId))
   },
   async album(id: string, artistId: number, signal?: AbortSignal): Promise<Album> {
     const row = await cachedRead<BackendAlbum>(
-      `/api/v2/spotify/albums/${encodeURIComponent(id)}`,
+      `/api/v2/albums/${encodeURIComponent(id)}`,
       signal,
     )
     const tracks = [...(row.tracks ?? [])].sort(
       (a, b) => a.disc_number - b.disc_number || a.track_number - b.track_number,
     )
-    const summaries: BackendLyricsSummary[] = []
-    // Bound URL size; these are reads of stored lyrics, never generation requests.
-    for (let offset = 0; offset < tracks.length; offset += 50) {
-      const query = new URLSearchParams()
-      tracks.slice(offset, offset + 50).forEach((t) => query.append('ids', t.id))
-      summaries.push(
-        ...(await cachedRead<BackendLyricsSummary[]>(
-          `/api/songs/lyrics/by-spotify-tracks?${query}`,
-          signal,
-        )),
-      )
-    }
     return {
       ...mapAlbum(row, artistId),
       tracks_loaded: true,
       tracks: tracks.map((t) => {
-        const lyrics = summaries.find((l) => l.spotify_track_id === t.id)
         return {
           id: t.id,
-          song_id: lyrics?.song_id,
+          song_id: t.song_id ?? undefined,
+          lyrics_id: t.recording_id,
           title: t.name,
           title_ko: t.name_ko ?? '',
           duration: t.duration_ms ? formatTime(t.duration_ms / 1000) : '',
-          has_lyrics: !!lyrics?.has_lyrics,
+          has_lyrics: t.has_lyrics,
         }
       }),
     }
   },
   async lyrics(id: string, signal?: AbortSignal): Promise<Lyrics> {
     const row = await cachedRead<BackendLyrics>(
-      `/api/songs/${encodeURIComponent(id)}/lyrics`,
+      `/api/v2/recordings/${encodeURIComponent(id)}/lyrics`,
       signal,
     )
     return { ...row, is_sample: false }
@@ -299,12 +283,11 @@ export const backendApi = {
       total: result.total,
       performances: result.items.map((row) => {
         const owner =
-          all.find((a) => (a.related_artist_ids ?? [a.id]).includes(row.artist_id ?? -1)) ??
-          matchArtist(row.artist_name, all)
+          all.find((a) => (a.related_artist_ids ?? [a.id]).includes(row.artist_id ?? -1))
         return {
           ...mapPerformance(row),
-          artist: owner ?? { id: null, name: row.artist_name, display_name: '' },
-          live: mapLive({ ...row, id: row.archive_id, broadcast_at: row.performed_on }, owner),
+          artist: owner ?? { id: null, name: row.artist_name, display_name: row.artist_name_ko ?? '' },
+          live: mapLive({ ...row, id: row.archive_id, broadcast_at: row.broadcast_at || row.performed_on }, owner),
         }
       }),
     }

@@ -2,22 +2,20 @@
 from datetime import date
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from starlette.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 from app.core.security import require_api_key
-from app.db.session import get_session
-from app.services.read_catalog import ReadCatalog
-from app.services import read_spotify
+from app.db.catalog_session import get_catalog_session
+from app.services.catalog_read import CatalogRead
 from app.schemas.read_models import ArtistRead, LiveRead, SearchRead, Page, StatisticsRead, ConcertRead
-from app.integrations.spotify import SpotifyAlbumSummary, SpotifyAlbumDetail, spotify_configured
+from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead
 
 router = APIRouter(prefix='/v2',tags=['frontend-read'],dependencies=[Depends(require_api_key)])
-def catalog(response: Response, session: Annotated[Session, Depends(get_session)]):
-    service = ReadCatalog(session)
+def catalog(response: Response, session: Annotated[Session, Depends(get_catalog_session)]):
+    service = CatalogRead(session)
     yield service
     # Headers assigned before return in finish(); yield teardown is too late.
 
-Catalog = Annotated[ReadCatalog, Depends(catalog)]
+Catalog = Annotated[CatalogRead, Depends(catalog)]
 Offset = Annotated[int, Query(ge=0,le=100000)]
 Limit = Annotated[int, Query(ge=1,le=100)]
 
@@ -68,38 +66,24 @@ def concerts(service:Catalog,response:Response,offset:Offset=0,limit:Limit=100,a
         require_artist(service,artist_id)
     return finish(response,service,service.concerts(offset,limit,artist_id,start,end))
 
-@router.get('/spotify/artists/{artist_id}/discography',response_model=list[SpotifyAlbumSummary])
-async def discography(artist_id:int,service:Catalog,response:Response):
-    def resolve():
-        require_artist(service,artist_id)
-        ids=service.artist(artist_id)['related_artist_ids']
-        return service.rows('SELECT spotify_artist_id FROM artists WHERE id=ANY(:ids) AND spotify_artist_id IS NOT NULL ORDER BY id LIMIT 1',{'ids':ids})
-    rows=await run_in_threadpool(resolve)
-    if not rows:
-        raise HTTPException(409,'Spotify artist not linked')
-    if not spotify_configured():
-        raise HTTPException(503,'Spotify unavailable')
-    # Release the database connection before waiting for an external service.
-    await run_in_threadpool(service.session.rollback)
-    try:
-        value=await read_spotify.discography(rows[0]['spotify_artist_id'])
-    except Exception as exc:
-        raise HTTPException(502,'Spotify read failed') from exc
+@router.get('/artists/{artist_id}/albums',response_model=list[CatalogAlbumRead])
+def discography(artist_id:int,service:Catalog,response:Response):
+    require_artist(service,artist_id)
+    return finish(response,service,service.albums(artist_id))
+
+@router.get('/albums/{album_id}',response_model=CatalogAlbumRead)
+def album(album_id:int,service:Catalog,response:Response):
+    value=service.album(album_id)
+    if value is None:
+        raise HTTPException(404,'Album not found')
     return finish(response,service,value)
 
-@router.get('/spotify/albums/{album_id}',response_model=SpotifyAlbumDetail)
-async def album(album_id:str,service:Catalog,response:Response):
-    if not spotify_configured():
-        raise HTTPException(503,'Spotify unavailable')
-    try:
-        value=await read_spotify.album(album_id)
-    except Exception as exc:
-        raise HTTPException(502,'Spotify read failed') from exc
-    # Apply only already-stored translations; no LLM or INSERT/UPDATE in GET.
-    ids=[t.id for t in value.tracks]
-    rows=await run_in_threadpool(service.rows,'SELECT spotify_track_id,title_ko FROM spotify_track_title_translations WHERE spotify_track_id=ANY(:ids)',{'ids':ids}) if ids else []
-    translations={r['spotify_track_id']:r['title_ko'] for r in rows}
-    return finish(response,service,value.model_copy(update={'tracks':[t.model_copy(update={'name_ko':translations.get(t.id)}) for t in value.tracks]}))
+@router.get('/recordings/{recording_id}/lyrics',response_model=CatalogLyricsRead)
+def lyrics(recording_id:int,service:Catalog,response:Response):
+    value=service.lyrics(recording_id)
+    if value is None:
+        raise HTTPException(404,'Lyrics not found')
+    return finish(response,service,value)
 
 @router.get('/concerts/{event_id}',response_model=ConcertRead)
 def concert(event_id:int,service:Catalog,response:Response):

@@ -1,11 +1,11 @@
 # 백엔드 구조와 운영
 
-기준: 2026-09-18, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
+기준: 2026-09-20, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
 
 ## 구성과 데이터 경로
 
 ```text
-새 프론트 → /api/v2 → ReadCatalog / ReadSpotify → PostgreSQL / Spotify
+새 프론트 → /api/v2 → CatalogRead → CatalogReadRepository → 새 Neon 카탈로그 (읽기 전용)
 기존 웹·관리 API → router → service → repository → PostgreSQL / 외부 연동
 runtime → API + Discord bot + 선택적 scheduler
 ```
@@ -14,8 +14,9 @@ runtime → API + Discord bot + 선택적 scheduler
 | --- | --- |
 | `app/api/main.py`, `app/api/routers/` | 앱 수명주기, 라우터 등록, HTTP 상태·입출력 |
 | `app/schemas/` | Pydantic 요청·응답 모델 |
-| `app/services/` | 조회·업무 처리. v2의 명시적 SQL도 `read_catalog.py`에 있음 |
-| `app/repositories/` | 기존 도메인의 DB 조회·저장 |
+| `app/services/` | 조회·업무 처리. v2는 `catalog_read.py`, 이전 `read_catalog.py`는 레거시 구현 |
+| `app/repositories/` | 기존 도메인의 DB 조회·저장과 새 v2의 catalog_read.py 조회 SQL |
+| `app/db/catalog_session.py` | 새 카탈로그 전용 공유 풀·요청별 READ ONLY Session |
 | `app/db/session.py` | URL별 공유 SQLAlchemy Engine/연결 풀, 요청별 Session |
 | `app/core/db.py` | 기존 psycopg 연결, 증분 스키마·시드 초기화 |
 | `app/integrations/` | YouTube, Spotify, X, OpenAI, Google 등 |
@@ -25,7 +26,7 @@ runtime → API + Discord bot + 선택적 scheduler
 
 모든 경로가 ORM이나 하나의 연결 풀로 통일된 상태는 아니다. 레거시 psycopg 직접 연결도 남아 있다. 스키마 초기화를 `Base.metadata.create_all`로 대체하지 않는다. 현재 증분 변경과 시드 동작을 먼저 마이그레이션으로 옮겨야 한다.
 
-아티스트·소스·원문·공연 후보·알림 route/전송 이력·Google 연결/동기화·YouTube 아카이브/가창 기록·곡/가사·Spotify 연동 데이터를 PostgreSQL에 저장한다. 엔티티 매핑은 `app/db/models.py`, 실제 초기화 SQL은 `app/core/db.py`를 함께 확인한다. 신규 스키마는 이번 조회 성능 개선에서 추가하지 않았다.
+아티스트·소스·원문·공연 후보·알림 route/전송 이력·Google 연결/동기화·YouTube 아카이브/가창 기록·곡/가사·Spotify 연동 데이터를 PostgreSQL에 저장한다. 엔티티 매핑은 `app/db/models.py`, 실제 초기화 SQL은 `app/core/db.py`를 함께 확인한다. 이 문단은 기존 서비스 구조다. 새 사용자 조회는 migrations/catalog의 정규화된 별도 스키마를 사용하며 [조회 API v2](read-api-v2.md)에 연결 기준을 정리했다.
 
 ## 현재 수집 흐름
 
@@ -69,7 +70,8 @@ Google 연결은 Discord 사용자별 OAuth다. 서버 공용 연결이나 웹 �
 
 | 설정 | 용도 / 코드 기본값 |
 | --- | --- |
-| `DATABASE_URL` | PostgreSQL. 조회에 필요 |
+| `DATABASE_URL` | 기존 API·수집기·봇용 PostgreSQL |
+| `NEW_CATALOG_DATABASE_URL` | 사용자 v2·관리자용 새 카탈로그. 루트 .env.catalog 또는 환경변수 |
 | `DATABASE_AUTO_INIT` | 시작 시 초기화, 기본 false |
 | `API_KEY` | 일부 기존 라우터와 v2의 선택적 X-API-Key 인증 |
 | `AGENT_ENABLED` / `AGENT_RUN_ON_START` | runtime 수집 / 시작 직후 실행, 코드 기본 false / false |
@@ -88,7 +90,7 @@ Google 연결은 Discord 사용자별 OAuth다. 서버 공용 연결이나 웹 �
 
 표준 namespace는 `/api`, 새 프론트는 `/api/v2`다. 기존 접두사 없는 경로도 호환용으로 남아 있다. `_deprecated_router` 자체는 미마운트지만 일부 함수는 Spotify/Google 라우터가 별도 등록하므로 이름만 보고 제거하지 않는다.
 
-v2 GET은 저장된 정보 조회와 필요한 Spotify 읽기만 수행한다. 일부 기존 GET에는 번역·보완 쓰기가 남아 있다. 기존 서비스 사용 여부를 확인하기 전 일괄 삭제하거나 동작을 바꾸지 않는다.
+v2 GET은 새 DB에 저장된 정보만 조회한다. Spotify 등 외부 서비스 호출은 하지 않는다. 일부 기존 GET에는 번역·보완 쓰기가 남아 있다. 기존 서비스 사용 여부를 확인하기 전 일괄 삭제하거나 동작을 바꾸지 않는다.
 
 현재 선택적 API 키는 완성된 사용자/관리자 권한 체계가 아니다. 새 프론트 개발 프록시는 서버 전용 키를 넣으며 GET/HEAD만 전달한다. 공개 배포에는 별도 API 라우팅과 읽기·쓰기 권한 검토가 필요하다. 토큰·DB URL은 로그나 프론트 번들에 넣지 않는다.
 

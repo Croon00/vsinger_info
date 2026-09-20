@@ -6,7 +6,8 @@ import { clampTime } from '@/lib/youtube'
 const rawArtist = {
   id: 42,
   name: 'HACHI',
-  display_name: 'HACHI (Hachi)',
+  display_name: '하치',
+  birthday: '09-20',
   name_aliases: ['ハチ'],
   related_artist_ids: [42, 99],
   sources: [],
@@ -27,10 +28,10 @@ const json = (data: unknown, status = 200) =>
 afterEach(() => vi.unstubAllGlobals())
 
 describe('backend boundary mapping', () => {
-  it('never presents display names as Korean or supplies mock birthdays', () => {
-    expect(artist.display_name).toBe('')
+  it('uses reviewed Korean names and birthdays from the catalog', () => {
+    expect(artist.display_name).toBe('하치')
     expect(artist.aliases).toContain('ハチ')
-    expect(calendarEvents([{ ...artist, id: 5 }], [], 2026)).toEqual([])
+    expect(calendarEvents([{ ...artist, id: 5 }], [], 2026)[0].date).toBe('2026-09-20')
     expect(matchArtist('ハチ', [artist])?.id).toBe(42)
     expect(matchArtist('HACHI', [artist, { ...artist, id: 43 }])).toBeUndefined()
   })
@@ -72,7 +73,6 @@ describe('backend boundary mapping', () => {
     for (const patch of [
       { status: 'needs_review' },
       { event_format: 'unknown' },
-      { event_format: 'online' },
       { starts_at: 'invalid' },
       { artist_id: null },
       { event_type: 'ticket' },
@@ -150,37 +150,19 @@ describe('real API requests', () => {
     await expect(cachedRead('/failure')).rejects.toMatchObject({ status: 503 })
     expect(fetcher).toHaveBeenCalledTimes(3)
   })
-  it('maps Spotify string IDs to numeric lyrics IDs, not interchangeable IDs', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (path: string) =>
-        path.includes('/spotify/albums/')
-          ? json({
-              id: 'album-x',
-              name: 'Release',
-              album_type: 'single',
-              total_tracks: 1,
-              tracks: [
-                {
-                  id: 'spotify-track-x',
-                  name: 'Song',
-                  disc_number: 1,
-                  track_number: 1,
-                  duration_ms: 123000,
-                },
-              ],
-            })
-          : json([{ spotify_track_id: 'spotify-track-x', song_id: 987, has_lyrics: true }]),
-      ),
-    )
-    const { backendApi } = await import('@/api/backend')
-    const album = await backendApi.album('album-x', 42)
-    expect(album.tracks[0]).toMatchObject({
-      id: 'spotify-track-x',
-      song_id: 987,
-      has_lyrics: true,
-      duration: '02:03',
+  it('uses catalog album and recording IDs for lyrics without legacy lookups', async () => {
+    const fetcher = vi.fn(async (path: string) => {
+      expect(path).toBe('/api/v2/albums/15')
+      return json({ id: '15', name: 'Release', album_type: 'ep', total_tracks: 1,
+        tracks: [{ id: '21', recording_id: 37, song_id: 987, has_lyrics: true,
+          name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000 }] })
     })
+    vi.stubGlobal('fetch', fetcher)
+    const { backendApi } = await import('@/api/backend')
+    const album = await backendApi.album('15', 42)
+    expect(album.album_type).toBe('ep')
+    expect(album.tracks[0]).toMatchObject({ id: '21', song_id: 987, lyrics_id: 37, has_lyrics: true, duration: '02:03' })
+    expect(fetcher).toHaveBeenCalledTimes(1)
   })
   it('distinguishes missing Spotify linkage, authentication and HTML fallback', async () => {
     const { request } = await import('@/api/http')
