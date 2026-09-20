@@ -490,6 +490,7 @@ def init_db() -> None:
         conn.execute("ALTER TABLE youtube_live_archives ADD COLUMN IF NOT EXISTS published_at TIMESTAMPTZ")
         conn.execute("ALTER TABLE youtube_live_archives ADD COLUMN IF NOT EXISTS broadcast_at TIMESTAMPTZ")
         conn.execute("ALTER TABLE youtube_live_archives ADD COLUMN IF NOT EXISTS duration_seconds INTEGER")
+        conn.execute("ALTER TABLE youtube_live_archives ADD COLUMN IF NOT EXISTS setlist_ai_refined_at TIMESTAMPTZ")
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS youtube_song_performances (
