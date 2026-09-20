@@ -489,3 +489,41 @@ def test_snapshot_rejects_remote_change(review, remote):
     with pytest.raises(DomainError):
         review.publish(plan["manifest_id"], plan["manifest_hash"], plan["operation_id"])
     assert remote.detail("artists", key)["name_native"] == "Other"
+
+def test_platform_group_publication_and_catalog_reload(review, remote):
+    from app.admin.services.platforms import PlatformService
+    from app.admin.schemas.contracts import PlatformRegistration
+    initial(review)
+    with remote.session() as s:
+        artist_id = s.execute(text("SELECT id FROM artists")).scalar_one()
+    batch = review.create_batch("Platform")
+    service = PlatformService(review)
+    group = service.save(PlatformRegistration.model_validate({
+        "batch_id": batch["id"],
+        "account": {"client_ref":"account", "data":{"platform":"youtube","url":"https://youtube.com/@test","collection_enabled":False}},
+        "artists": [{"client_ref":"link","data":{"artist_id":artist_id,"relationship":"owner","is_primary":True,"position":0}}],
+    }))
+    for row in [group["account"], *group["artists"]]:
+        review.review(row["id"], row["revision"], "approve")
+    plan = review.preview(batch["id"])
+    review.publish(plan["manifest_id"], plan["manifest_hash"], plan["operation_id"])
+    assert count(remote, "external_accounts") == 1
+    assert count(remote, "artist_external_accounts") == 1
+    with remote.session() as s:
+        account_id = s.execute(text("SELECT id FROM external_accounts")).scalar_one()
+    second = review.create_batch("Edit platform")
+    group = service.from_catalog(second["id"], account_id)
+    assert len(group["artists"]) == 1
+    def adapt(row):
+        return { "id":row["id"], "revision":row["revision"], "client_ref":row["client_ref"], "data":row["current_payload"] }
+    body = PlatformRegistration.model_validate({"batch_id": second["id"], "account":adapt(group["account"]), "artists":[adapt(x) for x in group["artists"]]})
+    body.account.data["handle"] = "@updated"
+    body.artists[0].data["label"] = "Official"
+    group = service.save(body)
+    for row in [group["account"], *group["artists"]]:
+        review.review(row["id"], row["revision"], "approve")
+    plan = review.preview(second["id"])
+    review.publish(plan["manifest_id"], plan["manifest_hash"], plan["operation_id"])
+    snapshot = remote.platform_registration(account_id)
+    assert snapshot["account"]["handle"] == "@updated"
+    assert snapshot["artists"][0]["label"] == "Official"

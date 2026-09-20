@@ -245,6 +245,19 @@ class RemoteCatalog:
             row["_version"] = self.version(s, name, row)
             return plain(row)
 
+    def platform_registration(self, key):
+        with self.session() as s:
+            account = self.get(s, "external_accounts", key)
+            if account.get("archived_at"):
+                raise DomainError("보관된 계정은 먼저 복원하세요.")
+            account["_version"] = self.version(s, "external_accounts", account)
+            links = [dict(row) for row in s.execute(text(
+                "SELECT * FROM artist_external_accounts WHERE account_id=:key ORDER BY position,id"
+            ), {"key": key}).mappings()]
+            for row in links:
+                row["_version"] = self.version(s, "artist_external_accounts", row)
+            return plain({"account": account, "artists": links})
+
     def _resolve(self, s, entry, data, known, refs, signatures):
         name = entry["entity_type"]
         for field in RESOURCES[name]["fields"]:

@@ -101,3 +101,27 @@ class ArchiveRequest(Contract):
     catalog_id: UUID
     expected_version: int = Field(gt=0)
     archived: bool
+
+class PlatformDraft(Contract):
+    id: UUID | None = None
+    revision: int | None = Field(default=None, gt=0)
+    client_ref: str = Field(min_length=1, max_length=200)
+    data: dict[str, Any]
+
+class PlatformRegistration(Contract):
+    batch_id: UUID
+    account: PlatformDraft
+    artists: list[PlatformDraft] = Field(default_factory=list, max_length=100)
+
+class PlatformFromCatalog(Contract):
+    batch_id: UUID
+    account_id: int = Field(gt=0)
+
+class PlatformReviewItem(Contract):
+    id: UUID
+    revision: int = Field(gt=0)
+
+class PlatformReview(Contract):
+    items: list[PlatformReviewItem] = Field(min_length=1, max_length=1000)
+    action: Literal["approve", "hold", "exclude", "reopen"]
+    note: str | None = Field(default=None, max_length=4000)
