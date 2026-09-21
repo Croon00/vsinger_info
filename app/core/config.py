@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     """Railway와 로컬 .env에서 읽어오는 앱 전체 설정입니다."""
 
     app_name: str = "schedule-music"
-    # DATABASE_URL remains the legacy runtime connection until the cutover phase.
-    # New code must use new_database_url explicitly and pass the identity guard.
+    # DATABASE_URL is retained for isolated legacy and read-only migration tools.
+    # Normal API/runtime code uses new_database_url and the identity guard.
     database_url: str | None = None
     new_database_url: str | None = None
     new_catalog_instance_id: str | None = None
@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     agent_interval_seconds: int = 86400
     agent_enabled: bool = False
     agent_run_on_start: bool = False
+    runtime_cutover_enabled: bool = False
     database_auto_init: bool = False
     public_base_url: str | None = None
     cors_allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"

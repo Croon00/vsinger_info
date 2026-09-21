@@ -1,6 +1,6 @@
-# 새 카탈로그 조회 API v2
+# 새 카탈로그 통합 조회 API
 
-2026-09-20 기준. 새 사용자 프론트 `web/`의 실제 모드는 **새 Neon 카탈로그**를 조회한다. 수집기·Discord 봇·기존 API의 `DATABASE_URL`과 저장 구조는 변경하지 않았다.
+2026-09-22 기준. 새 사용자 프론트 `web/`의 실제 모드는 **신규 통합 DB**를 `/api`로 조회한다. X/Discord runtime도 같은 DB 전용 코드이며 기존 DB router는 정상 app에서 마운트하지 않는다.
 
 ## 연결과 실행
 
@@ -22,7 +22,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 
 목록 페이지는 `{items,total,offset,limit}`, offset 0~100000, limit 1~100이다. 없는 상세는 404, 잘못된 범위는 422, DB 연결 실패는 503이다. 빈 DB/관계는 정상적인 빈 목록·0 통계를 반환한다. `Server-Timing`은 SQL 처리 시간과 쿼리 수를 제공한다.
 
-| 경로 (/api/v2 아래) | 응답과 기준 |
+| 경로 (`/api` 아래) | 응답과 기준 |
 | --- | --- |
 | GET /artists | 보관되지 않았고 show_in_catalog=true인 통합 명부. 원어 이름 오름차순+ID. 전체 목록 |
 | GET /artists/{id} | 동일 노출 조건의 아티스트. 기존 DB ID/이름 기반 병합 없음 |
@@ -36,7 +36,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /albums/{id} | 앨범과 디스크/트랙 순 수록 녹음, 가사 존재 여부 |
 | GET /recordings/{id}/lyrics | 해당 녹음의 저장된 가사·번역·독음과 출처 URL |
 
-기존 v2의 /spotify/artists/.../discography 및 /spotify/albums/...를 새 앨범 경로로 교체했다. 사용자 웹은 기존 /api/songs 가사 조회를 호출하지 않는다. 기존 서비스의 /api/spotify·/api/songs 자체는 유지한다.
+기존 `/spotify/artists/.../discography` 및 `/spotify/albums/...` 소비는 새 앨범 경로로 교체했다. 사용자 웹은 기존 songs 가사 조회를 호출하지 않는다. 구 Spotify·songs router는 정상 app에서 마운트하지 않는다.
 
 ## 필드와 식별자
 

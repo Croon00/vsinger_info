@@ -11,7 +11,7 @@ from app.core.config import settings
 import httpx
 
 mode = sys.argv[1] if len(sys.argv) > 1 else 'before'
-prefix = '/api/v2' if mode == 'after' else '/api'
+prefix = '/api'
 results = []
 with httpx.Client(base_url=os.environ.get('BENCHMARK_API_URL','http://127.0.0.1:8000'), timeout=120,
                   headers={'X-API-Key': settings.api_key} if settings.api_key else {}) as client:

@@ -7,7 +7,7 @@
 ```text
 schedule_music/
 ├─ app/                     Python 애플리케이션
-├─ web/                     사용자 조회 Vue 앱 → /api/v2
+├─ web/                     사용자 조회 Vue 앱 → 통합 /api
 ├─ admin-web/               새 카탈로그 검수 Vue 앱 → /api/admin
 ├─ web.bak/                 기존 관리 Vue 앱 → 기존 API
 ├─ scripts/                 명시적으로 실행하는 운영 도구
@@ -38,7 +38,7 @@ schedule_music/
 | `app/db/` | 기존/새 카탈로그의 독립 연결 풀·Session과 기존 ORM 모델 |
 | `app/core/` | 설정·보안·아티스트 식별·기존 증분 초기화 |
 | `app/integrations/` | 외부 provider adapter |
-| `app/agents/`, `app/bots/`, `app/runtime.py` | scheduler·LangGraph helper·Discord·통합 런타임 |
+| `app/agents/`, `app/bots/`, `app/runtime.py` | 신규 DB X scheduler·명령 없는 Discord URL sender·통합 런타임 |
 | `app/lyrics_pipeline/` | 가사 수집·변환·저장 |
 | `app/admin/` | 별도 관리자 앱·검수 SQLite·승인·새 카탈로그 반영 |
 | `app/data/` | 아티스트 식별 로직에서 사용하는 내장 별칭 자료 |

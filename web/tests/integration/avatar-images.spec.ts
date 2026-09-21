@@ -18,7 +18,7 @@ test('avatar variants load at rendered size, defer offscreen images and survive 
       ),
       sources: [],
     }))
-  await page.route('**/api/v2/artists', (route) => route.fulfill({ json: artists() }))
+  await page.route('**/api/artists', (route) => route.fulfill({ json: artists() }))
   await page.route('https://images.example.test/**', (route) => {
     requests.push(route.request().url())
     return route.fulfill({

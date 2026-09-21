@@ -18,14 +18,14 @@ in the [official KAMITSUBAKI pamphlet](https://kamitsubaki.jp/wp-content/uploads
 
 `GET /api/artists?grouped=true` presents one catalogue entry per confirmed identity.
 The legacy grouped response retains related registration IDs, aliases and source metadata.
-The new frontend uses `GET /api/v2/artists`, a smaller read model with
+The new frontend uses `GET /api/artists`, a smaller read model with
 `related_artist_ids`, `name_aliases` and active public source fields. It does not
 expose source ownership or fetch a representative video for every artist.
 Registration management uses the ungrouped endpoint: editing or deleting a
 registration must not silently modify another owner's registration.
 
 No artist, source, broadcast, event or notification record is deleted or moved.
-Related IDs remain available for profile and event lookups. The v2 live scope
+Related IDs remain available for profile and event lookups. The catalog live scope
 uses source-linked artist IDs first and unique exact registered aliases only for
 source-less archives. Spotify lookup selects a linked registration within the group.
 Legacy `display_name` may be `Native (Latin)`; it is not a Korean-name field.

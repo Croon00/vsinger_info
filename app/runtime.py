@@ -21,16 +21,21 @@ async def _serve_api() -> None:
 
 
 async def main() -> None:
-    """API 서버, Discord 봇, agent loop를 하나의 Railway 프로세스에서 함께 실행합니다."""
+    """API를 실행하고 전환 승인 뒤에만 Discord/수집 runtime을 시작합니다."""
     logging.basicConfig(level=logging.INFO)
-    tasks = [
-        _serve_api(),
-        start_discord_bot(),
-    ]
-    if settings.agent_enabled:
-        tasks.append(agent_loop())
+    tasks = [_serve_api()]
+
+    if settings.runtime_cutover_enabled:
+        tasks.append(start_discord_bot())
+        if settings.agent_enabled:
+            tasks.append(agent_loop())
+        else:
+            logging.info("Agent loop is disabled by AGENT_ENABLED=false.")
     else:
-        logging.info("Agent loop is disabled by AGENT_ENABLED=false.")
+        logging.info(
+            "Discord and collection runtime are locked by "
+            "RUNTIME_CUTOVER_ENABLED=false."
+        )
 
     await asyncio.gather(*tasks)
 

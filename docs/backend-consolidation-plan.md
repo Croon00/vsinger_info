@@ -1,6 +1,6 @@
 # 백엔드 통합 최종 계획 — 신규 DB 일원화
 
-확정 기준: 2026-09-21. 1단계 조사, 2단계 운영 스키마·연결 기반, 3단계 선택 이전 도구·검증을 완료했다. 현재 실행 코드는 아직 신규 DB runtime으로 전환하지 않았으며 Discord 명령·X 분류·YouTube 자동 등록 제거도 4단계 대상이다. 현재 상태는 [1단계 문서](backend-phase-1-baseline.md), [2단계 결과](backend-phase-2-runtime-schema.md), [3단계 결과](backend-phase-3-runtime-migration.md), [백엔드 구조](backend-architecture.md)를 따른다.
+확정 기준: 2026-09-22. 1단계 조사, 2단계 운영 스키마·연결 기반, 3단계 선택 이전 도구·검증, 4단계 X 수집·최소 Discord sender 구현을 완료했다. 실제 상태 이전과 운영 연결 전환은 5단계다. 현재 상태는 [1단계 문서](backend-phase-1-baseline.md), [2단계 결과](backend-phase-2-runtime-schema.md), [3단계 결과](backend-phase-3-runtime-migration.md), [4단계 결과](backend-phase-4-runtime.md), [백엔드 구조](backend-architecture.md)를 따른다.
 
 ## 1. 목표와 범위
 
@@ -158,15 +158,19 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 ### 4단계 — 수집기·최소 Discord 봇 전환
 
-external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령·X 분류·X→YouTube 연결을 제거하고 독립 YouTube·Spotify·노래방·가사 경로를 신규 DB와 호환되게 전환한다.
+external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령·X 분류·X→YouTube 연결을 제거한다. Discord 명령이 제공하던 YouTube·Spotify·노래방·가사 관리 진입점도 제거하고, 독립 음악 모듈은 X runtime과 분리해 보존한다. 신규 DB 작업 계약과 admin-web 연결은 각 독립 경로에서 후속 구현한다.
 
 완료 조건: fixture에서 신규 글·중복·무 route·offline·재시도·pagination을 검증하고 X가 다른 수집이나 Google을 호출하지 않는다. admin-web 개편은 요구하지 않는다.
+
+**완료:** 2026-09-22 external_accounts 기반 X poller와 durable URL sender를 구현하고 Discord 관리 명령, X 분류, X→YouTube 자동 등록을 제거했다. 독립 음악 모듈은 X/Discord runtime에서 분리해 보존했다. 구현·상태 전이·검증 범위는 [4단계 결과](backend-phase-4-runtime.md)에 기록한다. 실제 상태 이전과 운영 연결 전환은 수행하지 않았다.
 
 ### 5단계 — API 통합·실제 이전·runtime 전환
 
 구 쓰기 프로세스를 배포/실행 설정에서 정지한 뒤 최종 읽기 스냅샷과 명세를 재검증한다. 구 DB의 활성 플래그를 변경해 정지하지 않는다. Google callback·refresh·sync와 구 DB를 사용하는 API/script의 실행 연결도 이 시점까지 차단한다. 신규 DB에 선택 이전을 반영·검증하고 API/worker/bot의 연결과 신규 프론트를 전환한다.
 
 완료 조건: 정상 runtime은 신규 DB만 사용하고 구 DB 쓰기 경로는 실행되지 않는다. 기존 성공 알림 재전송과 과거 글 대량 알림 없이 계정별 수집을 재개한다. 연결 변경만으로 구 SQL이 신규 DB에서 실행되지 않는다.
+
+**코드 준비 완료:** 2026-09-22 정식 조회 경로를 `/api`로 통합하고 legacy 쓰기/provider router를 운영 앱에서 분리했다. 배포 대기 중 Discord와 수집기가 먼저 실행되지 않도록 `RUNTIME_CUTOVER_ENABLED=false` 잠금을 추가했다. 실제 최종 snapshot, migration apply, Railway runtime 활성화는 기존 writer를 중지하는 전환 시간에 [5단계 운영 전환](backend-phase-5-cutover.md) 순서로 수행한다.
 
 ### 6단계 — 레거시·환경설정·배포 정리
 

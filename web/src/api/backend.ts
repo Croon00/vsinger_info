@@ -173,13 +173,13 @@ function mapAlbum(row: BackendAlbum, artistId: number): Album {
 }
 
 async function artists(signal?: AbortSignal) {
-  return (await cachedRead<BackendArtist[]>('/api/v2/artists', signal)).map(mapArtist)
+  return (await cachedRead<BackendArtist[]>('/api/artists', signal)).map(mapArtist)
 }
 async function artist(id: string, signal?: AbortSignal) {
   const all = await artists(signal)
   return (
     all.find((a) => (a.related_artist_ids ?? [a.id]).includes(Number(id))) ??
-    mapArtist(await cachedRead<BackendArtist>(`/api/v2/artists/${encodeURIComponent(id)}`, signal))
+    mapArtist(await cachedRead<BackendArtist>(`/api/artists/${encodeURIComponent(id)}`, signal))
   )
 }
 export const backendApi = {
@@ -192,29 +192,29 @@ export const backendApi = {
     signal?: AbortSignal,
   ): Promise<Page<Live>> {
     const result = await cachedRead<Page<BackendLive>>(
-      `/api/v2/artists/${artistId}/lives?offset=${offset}&limit=${limit}`,
+      `/api/artists/${artistId}/lives?offset=${offset}&limit=${limit}`,
       signal,
     )
     return { ...result, items: result.items.map((row) => mapLive(row)) }
   },
   async statistics(artistId: number, signal?: AbortSignal): Promise<Statistics> {
-    const result = await cachedRead<Statistics>(`/api/v2/artists/${artistId}/statistics`, signal)
+    const result = await cachedRead<Statistics>(`/api/artists/${artistId}/statistics`, signal)
     return {
       ...result,
       songs: result.songs.map((song) => ({ ...song, searchText: normalize(song.searchText) })),
     }
   },
   async live(id: string, signal?: AbortSignal) {
-    return mapLive(await cachedRead<BackendLive>(`/api/v2/lives/${encodeURIComponent(id)}`, signal))
+    return mapLive(await cachedRead<BackendLive>(`/api/lives/${encodeURIComponent(id)}`, signal))
   },
   async albums(artistId: number, signal?: AbortSignal) {
     return (
-      await cachedRead<BackendAlbum[]>(`/api/v2/artists/${artistId}/albums`, signal)
+      await cachedRead<BackendAlbum[]>(`/api/artists/${artistId}/albums`, signal)
     ).map((row) => mapAlbum(row, artistId))
   },
   async album(id: string, artistId: number, signal?: AbortSignal): Promise<Album> {
     const row = await cachedRead<BackendAlbum>(
-      `/api/v2/albums/${encodeURIComponent(id)}`,
+      `/api/albums/${encodeURIComponent(id)}`,
       signal,
     )
     const tracks = [...(row.tracks ?? [])].sort(
@@ -238,7 +238,7 @@ export const backendApi = {
   },
   async lyrics(id: string, signal?: AbortSignal): Promise<Lyrics> {
     const row = await cachedRead<BackendLyrics>(
-      `/api/v2/recordings/${encodeURIComponent(id)}/lyrics`,
+      `/api/recordings/${encodeURIComponent(id)}/lyrics`,
       signal,
     )
     return { ...row, is_sample: false }
@@ -254,7 +254,7 @@ export const backendApi = {
       if (options.artistId) query.set('artist_id', String(options.artistId))
       if (options.start) query.set('start', options.start)
       if (options.end) query.set('end', options.end)
-      const page = await cachedRead<Page<BackendEvent>>(`/api/v2/concerts?${query}`, signal)
+      const page = await cachedRead<Page<BackendEvent>>(`/api/concerts?${query}`, signal)
       rows.push(...page.items)
       if (!page.items.length || offset + page.items.length >= page.total) break
     }
@@ -265,7 +265,7 @@ export const backendApi = {
   },
   async concert(id: string, signal?: AbortSignal): Promise<Concert> {
     const [row, all] = await Promise.all([
-      cachedRead<BackendEvent>(`/api/v2/concerts/${encodeURIComponent(id)}`, signal),
+      cachedRead<BackendEvent>(`/api/concerts/${encodeURIComponent(id)}`, signal),
       artists(signal),
     ])
     const result = mapEvent(row, all)
@@ -278,7 +278,7 @@ export const backendApi = {
     const [all, result] = await Promise.all([
       artists(signal),
       cachedRead<Page<BackendSearchPerformance>>(
-        `/api/v2/search?${new URLSearchParams({ q: query, offset: String(offset), limit: '50' })}`,
+        `/api/search?${new URLSearchParams({ q: query, offset: String(offset), limit: '50' })}`,
         signal,
       ),
     ])
