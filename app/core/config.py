@@ -8,7 +8,12 @@ class Settings(BaseSettings):
     """Railway와 로컬 .env에서 읽어오는 앱 전체 설정입니다."""
 
     app_name: str = "schedule-music"
+    # DATABASE_URL remains the legacy runtime connection until the cutover phase.
+    # New code must use new_database_url explicitly and pass the identity guard.
     database_url: str | None = None
+    new_database_url: str | None = None
+    new_catalog_instance_id: str | None = None
+    catalog_schema_version: str = "catalog-v2"
     api_key: str | None = None
     discord_bot_token: str | None = None
     discord_guild_id: int | None = None
@@ -46,12 +51,17 @@ class Settings(BaseSettings):
     google_calendar_id: str = "primary"
     spotify_client_id: str | None = None
     spotify_client_secret: str | None = None
+    aws_endpoint_url_s3: str | None = None
+    aws_access_key_id: str | None = None
+    aws_secret_access_key: str | None = None
+    aws_region: str | None = None
+    avatar_bucket: str = "artists-avator"
 
     # Some integrations (for example twscrape's TWS_HTTP_BACKEND) read their
     # own environment variables directly. They must not prevent app settings
     # from loading when present in a local dotenv file.
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", ".env.catalog"),
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -59,6 +69,8 @@ class Settings(BaseSettings):
     @field_validator(
         "discord_bot_token",
         "database_url",
+        "new_database_url",
+        "new_catalog_instance_id",
         "api_key",
         "discord_guild_id",
         "public_base_url",
@@ -78,6 +90,10 @@ class Settings(BaseSettings):
         "google_redirect_uri",
         "spotify_client_id",
         "spotify_client_secret",
+        "aws_endpoint_url_s3",
+        "aws_access_key_id",
+        "aws_secret_access_key",
+        "aws_region",
         mode="before",
     )
     @classmethod

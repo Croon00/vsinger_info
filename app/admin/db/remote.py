@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from datetime import date, datetime
 from pathlib import Path
 import json
+from uuid import UUID
 
 from sqlalchemy import create_engine, text, bindparam
 from sqlalchemy.dialects.postgresql import JSONB
@@ -98,8 +99,9 @@ def label_expression(name, alias="t", depth=3):
 
 
 class RemoteCatalog:
-    def __init__(self, url):
+    def __init__(self, url, expected_instance_id=None):
         self.engine = None
+        self.expected_instance_id = expected_instance_id
         if url:
             url = url.replace("postgresql://", "postgresql+psycopg://", 1).replace(
                 "postgres://", "postgresql+psycopg://", 1
@@ -142,6 +144,11 @@ class RemoteCatalog:
             ) from None
 
     def identity(self, s, lock=False):
+        revisions = tuple(s.execute(text(
+            "SELECT version FROM catalog_schema_migrations ORDER BY version"
+        )).scalars())
+        if revisions != ("001", "002"):
+            raise DomainError("지원하지 않는 DB migration revision입니다.", 409)
         r = (
             s.execute(
                 text("SELECT * FROM catalog_instance" + (" FOR UPDATE" if lock else ""))
@@ -149,8 +156,15 @@ class RemoteCatalog:
             .mappings()
             .one()
         )
-        if r["schema_version"] != "catalog-v1":
+        if r["schema_version"] != "catalog-v2":
             raise DomainError("지원하지 않는 DB 구조 버전입니다.", 409)
+        if self.expected_instance_id:
+            try:
+                matches = UUID(str(r["id"])) == UUID(self.expected_instance_id)
+            except ValueError:
+                matches = False
+            if not matches:
+                raise DomainError("설정한 DB instance identity와 일치하지 않습니다.", 409)
         return dict(r)
 
     def connection(self):

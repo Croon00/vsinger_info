@@ -505,7 +505,7 @@ def main() -> int:
     parser.add_argument("--report-dir", type=Path, default=DEFAULT_REPORT_DIR)
     args = parser.parse_args()
     legacy_url = load_url("DATABASE_URL", ".env")
-    catalog_url = load_url("NEW_CATALOG_DATABASE_URL", ".env.catalog")
+    catalog_url = load_url("NEW_DATABASE_URL", ".env.catalog")
     if legacy_url == catalog_url:
         raise RuntimeError("Legacy and catalog URLs resolve to the same configured value")
     args.report_dir.mkdir(parents=True, exist_ok=True)

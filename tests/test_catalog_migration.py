@@ -10,6 +10,8 @@ import uuid
 
 import psycopg
 import pytest
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("migrate_catalog", ROOT / "scripts/migrate_catalog.py")
@@ -98,20 +100,149 @@ def reject(conn, code, callback):
 def test_schema_contract_and_empty_initial_state(database):
     report = apply(database)
     assert report["applied"] and report["non_identity_row_count"] == 0
+    assert report["applied_versions"] == ["001", "002"]
+    assert report["schema_version"] == "catalog-v2"
     assert not report["initial_data_imported"]
-    assert len(migration.table_names(database)) == 32
+    assert len(migration.table_names(database)) == 42
     second = migration.migrate(database)
     assert not second["applied"]
     assert second["catalog_instance_id"] == report["catalog_instance_id"]
     expected = migration.expected_columns()
-    assert len(expected) == 31
+    assert len(expected) == 41
     assert {"title_latin", "language_code"} <= {f["name"] for f in expected["songs"]}
     assert "karaoke_numbers" in expected
     assert not {"artist_links", "song_credits", "recording_credits", "legacy_entity_map"} & expected.keys()
     # Opt-in snapshot is generated ONLY from a tested local instance, never from Neon.
     if os.environ.get("CATALOG_EXPORT_LOCAL_SCHEMA") == "1":
         (migration.MIGRATIONS / "expected-schema.json").write_text(
-            json.dumps(migration.schema_shape(database), indent=2) + "\n", encoding="utf-8")
+            json.dumps(migration.base_schema_shape(migration.schema_shape(database)), indent=2) + "\n",
+            encoding="utf-8")
+
+
+def test_upgrade_from_001_preserves_catalog_rows(database):
+    migration.configure_transaction(database, read_only=False)
+    database.execute("""
+        CREATE TABLE public.catalog_schema_migrations (
+          version text PRIMARY KEY,
+          checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),
+          applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
+        )
+    """)
+    database.execute((migration.MIGRATIONS / "001_initial.sql").read_text(encoding="utf-8"),
+                     prepare=False)
+    database.execute(
+        "INSERT INTO catalog_schema_migrations(version,checksum) VALUES ('001',%s)",
+        (migration.migration_checksums()["001"],),
+    )
+    account = row(database, "external_accounts", platform="x", platform_id="123",
+                  handle="fixture", url="https://x.com/fixture", collection_enabled=True)
+    database.commit()
+
+    report = apply(database)
+    assert report["applied_versions"] == ["002"]
+    assert database.execute(
+        "SELECT platform_id,collection_enabled FROM external_accounts WHERE id=%s", (account,)
+    ).fetchone() == ("123", True)
+    assert database.execute("SELECT schema_version FROM catalog_instance").fetchone()[0] == "catalog-v2"
+
+
+def test_runtime_fk_dedup_delivery_and_job_contracts(database):
+    apply(database)
+    account = row(database, "external_accounts", platform="x", platform_id="42",
+                  handle="fixture", url="https://x.com/fixture", collection_enabled=True)
+    database.execute("INSERT INTO discord_users(discord_user_id) VALUES ('100')")
+    database.execute("""
+        INSERT INTO discord_guilds(guild_id,owner_discord_user_id) VALUES ('200','100');
+        INSERT INTO discord_channels(channel_id,guild_id) VALUES ('300','200')
+    """, prepare=False)
+    database.execute("INSERT INTO collection_states(external_account_id,cursor_value) VALUES (%s,'41')",
+                     (account,))
+    item = row(database, "source_items", external_account_id=account, external_id="post-1",
+               source_url="https://x.com/fixture/status/1", raw_text="fixture",
+               published_at="2026-09-21T00:00:00Z")
+    reject(database, "23505", lambda: row(database, "source_items",
+        external_account_id=account, external_id="post-1",
+        source_url="https://x.com/fixture/status/1", raw_text="duplicate",
+        published_at="2026-09-21T00:00:00Z"))
+    route = row(database, "notification_routes", external_account_id=account,
+                guild_id="200", channel_id="300", owner_discord_user_id="100")
+    delivery = row(database, "notification_deliveries", route_id=route,
+                   source_item_id=item, status="pending")
+    reject(database, "23505", lambda: row(database, "notification_deliveries",
+        route_id=route, source_item_id=item, status="pending"))
+    reject(database, "23514", lambda: database.execute(
+        "UPDATE notification_deliveries SET status='sent' WHERE id=%s", (delivery,)))
+    database.execute("""
+        UPDATE notification_deliveries
+        SET status='sent', delivered_at=clock_timestamp(), discord_message_id='400'
+        WHERE id=%s
+    """, (delivery,))
+    job = row(database, "worker_jobs", job_type="x_poll", idempotency_key="x:42:1",
+              external_account_id=account)
+    reject(database, "23505", lambda: row(database, "worker_jobs",
+        job_type="x_poll", idempotency_key="x:42:1", external_account_id=account))
+    assert job and database.execute(
+        "SELECT version FROM notification_deliveries WHERE id=%s", (delivery,)
+    ).fetchone()[0] == 2
+
+
+def test_runtime_guild_ownership_and_receipts(database):
+    apply(database)
+    account = row(database, "external_accounts", platform="x", platform_id="99",
+                  handle="other", url="https://x.com/other")
+    database.execute("INSERT INTO discord_guilds(guild_id) VALUES ('500'),('501')")
+    database.execute("INSERT INTO discord_channels(channel_id,guild_id) VALUES ('600','500')")
+    reject(database, "23503", lambda: row(database, "notification_routes",
+        external_account_id=account, guild_id="501", channel_id="600"))
+    identity = database.execute("SELECT id FROM catalog_instance").fetchone()[0]
+    receipt = row(database, "runtime_migration_receipts", operation_id=uuid.uuid4(),
+                  catalog_instance_id=identity, source_fingerprint="a" * 64,
+                  manifest_hash="b" * 64)
+    mapping = row(database, "runtime_legacy_id_map", receipt_id=receipt,
+                  source_table="artist_sources", legacy_id="10",
+                  target_table="collection_states", target_id=str(account),
+                  selection_reason="matched platform_id")
+    reject(database, "23514", lambda: database.execute(
+        "UPDATE runtime_legacy_id_map SET selection_reason='changed' WHERE id=%s", (mapping,)))
+
+
+def test_unified_connection_guard(database, monkeypatch):
+    apply(database)
+    from app.core.config import settings
+    from app.db.catalog_session import CatalogIdentityError, verify_catalog_identity
+
+    info = database.info
+    engine = create_engine(
+        f"postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}"
+    )
+    monkeypatch.setattr(settings, "catalog_schema_version", "catalog-v2")
+    monkeypatch.setattr(settings, "new_catalog_instance_id", None)
+    try:
+        with Session(engine) as session:
+            session.execute(text("SET TRANSACTION READ ONLY"))
+            instance_id = verify_catalog_identity(session)
+        monkeypatch.setattr(settings, "new_catalog_instance_id", str(uuid.uuid4()))
+        with Session(engine) as session, pytest.raises(CatalogIdentityError, match="instance identity"):
+            session.execute(text("SET TRANSACTION READ ONLY"))
+            verify_catalog_identity(session)
+        assert instance_id
+    finally:
+        engine.dispose()
+
+
+def test_legacy_init_is_blocked_on_unified_database(database, monkeypatch):
+    apply(database)
+    from app.core.config import settings
+    from app.core.db import init_db
+
+    info = database.info
+    monkeypatch.setattr(
+        settings,
+        "database_url",
+        f"postgresql://catalog_test@127.0.0.1:{info.port}/{info.dbname}",
+    )
+    with pytest.raises(RuntimeError, match="Legacy init_db is blocked"):
+        init_db()
 
 
 def test_reject_existing_unmanaged_database(database):

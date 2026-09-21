@@ -1,6 +1,6 @@
 """Explicit, resumable import of legacy YouTube setlists into catalog-v1.
 
-Reads only the archived pg_dump and NEW_CATALOG_DATABASE_URL. The default is
+Reads only the archived pg_dump and NEW_DATABASE_URL. The default is
 an audit; --apply is required for writes. Never imports app.runtime or .env.
 """
 from __future__ import annotations

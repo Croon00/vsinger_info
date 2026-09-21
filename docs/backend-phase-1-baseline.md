@@ -227,6 +227,6 @@ CommandTree·interaction·명령 전용 SQL/import·attachment·backfill task·�
 - [x] 공식 정보로 조사한 YouTube 서브 채널 5개를 확인받아 등록하고 X position을 2로 이동했다.
 - [x] 결정을 반영해 선택 명세와 2단계 schema 요구를 확정했으며 미해결 매핑 충돌은 0개다.
 
-실제 콘텐츠 이전과 runtime 전환은 아직 시작하지 않았다. 1단계 명세는 완료됐으며 다음 작업은 2단계 신규 운영 schema·공통 설정 기반이다.
+실제 콘텐츠 이전과 runtime 전환은 아직 시작하지 않았다. 1단계 명세를 바탕으로 [2단계 운영 schema](backend-phase-2-runtime-schema.md)와 [3단계 선택 이전 도구](backend-phase-3-runtime-migration.md)까지 완료했다.
 
 검증: 2026-09-21 조사 스크립트 문법 검사, 두 DB identity/revision 및 매핑의 읽기 전용 재조회, 활성 상태 반영 후 재조회, 보고서 재생성을 수행했다. 실제 Discord·provider·Google·LLM은 호출하지 않았다.

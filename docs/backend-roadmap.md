@@ -1,16 +1,16 @@
 # 백엔드 후속 작업
 
-갱신: 2026-09-21. 현재 계약은 [조회 API v2](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 완료 검증은 [QA](../web/docs/qa.md)에 있다. 이 문서는 남은 작업과 아직 새 프론트에서 사용하지 않는 기능을 관리한다. 향후 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이며 아직 구현한 상태가 아니다.
+갱신: 2026-09-21. 현재 계약은 [조회 API v2](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 완료 검증은 [QA](../web/docs/qa.md)에 있다. 이 문서는 남은 작업과 아직 새 프론트에서 사용하지 않는 기능을 관리한다. 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이며 1~3단계까지 완료했다.
 
 사용자 v2는 새 Neon의 아티스트·라이브·검색·통계·공연·앨범·가사를 조회한다. 기존 수집기와 Discord 봇의 연결은 변경하지 않았다. 미지원 데이터는 실제 화면에서 목업으로 보충하지 않는다.
 
 ## 백엔드 통합 구현 순서
 
-세부 범위·완료 조건·검증·복구는 [최종 계획](backend-consolidation-plan.md)에 모은다. 아래 항목은 모두 미구현 작업이다.
+세부 범위·완료 조건·검증·복구는 [최종 계획](backend-consolidation-plan.md)에 모은다. 완료 항목과 남은 구현 순서를 함께 관리한다.
 
 - [x] 1. [선택 이전 조사](backend-phase-1-baseline.md): X 매핑·활성 상태·잘못된 source 제외, `Hao_RKM` 병합 범위, YouTube 서브 채널 등록, 최소 행·필드 및 writer 후보 목록 확정. 미해결 매핑 충돌 0개.
-- [ ] 2. 신규 DB의 계정별 상태·원문·route·delivery·작업 schema와 후속 migration, 공통 Settings·연결 가드 마련. 기존 DB 변경 금지.
-- [ ] 3. 선택 이전 도구의 dry-run·참조·제외 집합·재실행 검증. 실제 이전은 전환 시 수행.
+- [x] 2. [운영 스키마·연결 기반](backend-phase-2-runtime-schema.md): 신규 DB에 `002` 계정 상태·원문·route·delivery·작업·이전 영수증 schema 적용, 공통 Settings·identity/revision guard와 legacy init 차단. 기존 DB 변경 없음.
+- [x] 3. [선택 이전 도구·검증](backend-phase-3-runtime-migration.md): 실데이터 읽기 전용 dry-run, snapshot/manifest, 참조·제외 집합, 로컬 원자 적용·영수증·재실행 중복 0 검증. 실제 이전은 전환 시 수행.
 - [ ] 4. external_accounts 기반 X 수집·내구성 있는 URL 전송 구현. Discord 명령·X 분류·X→YouTube 자동 등록 제거. 독립 음악 수집을 신규 DB에 연결.
 - [ ] 5. 기존 DB 쓰기 프로세스 정지 후 명세 재검증·선택 이전·신규 DB runtime 전환. `/api` 계약과 신규 프론트 통합.
 - [ ] 6. `/api/v2`·임시 호환 경로·중복 설정 제거, Google 및 구 API/UI legacy 격리, 원격 봇 명령 정리·운영 검증.

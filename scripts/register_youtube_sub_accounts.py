@@ -35,9 +35,9 @@ PROPOSALS = (
 
 
 def catalog_url() -> str:
-    value = (dotenv_values(ROOT / ".env.catalog").get("NEW_CATALOG_DATABASE_URL") or "").strip()
+    value = (dotenv_values(ROOT / ".env.catalog").get("NEW_DATABASE_URL") or "").strip()
     if not value:
-        raise RuntimeError("NEW_CATALOG_DATABASE_URL is not configured")
+        raise RuntimeError("NEW_DATABASE_URL is not configured")
     return value
 
 

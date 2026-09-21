@@ -36,7 +36,7 @@ def configured(name: str, filename: str) -> str:
 
 def main() -> int:
     api_key = configured("YOUTUBE_API_KEY", ".env")
-    catalog_url = configured("NEW_CATALOG_DATABASE_URL", ".env.catalog")
+    catalog_url = configured("NEW_DATABASE_URL", ".env.catalog")
     response = httpx.get(
         "https://www.googleapis.com/youtube/v3/channels",
         params={

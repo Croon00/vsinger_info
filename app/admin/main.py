@@ -19,7 +19,7 @@ from .schemas.contracts import SessionView
 
 def create_app(settings=None, remote=None):
     settings = settings or AdminSettings.load()
-    remote = remote or RemoteCatalog(settings.database_url)
+    remote = remote or RemoteCatalog(settings.database_url, settings.catalog_instance_id)
     review = ReviewService(LocalStore(settings.workspace), remote, settings.input_dir)
     sessions = {}
 

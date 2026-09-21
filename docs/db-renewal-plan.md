@@ -8,7 +8,7 @@
 
 2026-09-19 간소화 결정: 곡의 title_latin·language_code·노래방 번호는 유지한다. 이미지 출처 별도 필드, 별도 표시 링크 표, 음악 크레딧, 곡 slug, 원곡자/공연의 세부 역할, 기존 ID 대응은 제거한다. 아티스트 slug와 실제 가창자 관계는 유지한다.
 
-- 새 DB는 Git 제외 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 연결한다. 원격 DB는 이미 준비되어 있으며 신규 서버를 추가 생성할 필요는 없다.
+- 새 DB는 Git 제외 `.env.catalog`의 `NEW_DATABASE_URL`로 연결한다. 원격 DB는 이미 준비되어 있으며 신규 서버를 추가 생성할 필요는 없다.
 - **아티스트 통합 명부로 확정.** 원곡자·가창자·발매 참여자를 각각 중복 등록하지 않고 같은 음악 활동 주체 ID를 관계에서 참조한다.
 - **음악 카탈로그 우선 이전으로 확정.** Discord·Google 계정, 알림/동기화 이력, 수집 재시도 상태는 별도 단계다.
 - 초기 입력 대상은 모두 사용자 검수 후 반영한다. 원본 덤프를 새 DB에 통째로 복원하지 않는다. 기존 ready/reviewed 플래그나 AI 확신도를 새 승인으로 인정하지 않는다.
@@ -225,7 +225,7 @@ top_comment 한 칸 대신 근거 문서를 연결한다. timestamp_text는 시�
 
 **.env의 DATABASE_URL을 새 DB 주소로 교체하지 않는다.** 기존 `read_catalog.py`와 구형 관리 API·초기화는 기존 스키마에 의존한다. 2026-09-20 사용자 `/api/v2`는 별도 `catalog_read.py` 서비스·repository와 READ ONLY Session으로 새 DB에 연결했다. 현재 HTTP 계약은 [조회 API v2](read-api-v2.md)를 따른다.
 
-1. 기존 API·수집기·Discord 봇은 `.env`의 `DATABASE_URL`을 유지한다. 새 관리자·마이그레이션·v2 조회는 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`을 사용한다.
+1. 기존 API·수집기·Discord 봇은 `.env`의 `DATABASE_URL`을 유지한다. 새 관리자·마이그레이션·v2 조회는 `.env.catalog`의 `NEW_DATABASE_URL`을 사용한다.
 2. 새 migration과 관리자 진입점은 구형 `init_db()`와 시드를 실행하지 않는다. API의 `DATABASE_AUTO_INIT` 기본값은 false다.
 3. 초기 데이터는 로컬에서 검수한 뒤 고정 manifest로 명시적으로 반영한다. 데이터 정제·검수와 운영 수집기 이전은 남은 작업이다.
 4. 새 repository와 DTO는 복수 가창자·공연 출연진을 관계로 조회한다. 앨범·가사는 저장된 새 카탈로그만 읽고 GET에서 재수집하지 않는다.

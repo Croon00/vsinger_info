@@ -243,6 +243,18 @@ def _seed_artist_x_sources(
 def init_db() -> None:
     """앱 실행에 필요한 PostgreSQL 테이블과 기존 DB의 누락 컬럼을 준비합니다."""
     with get_connection() as conn:
+        managed = conn.execute(
+            """
+            SELECT to_regclass('public.catalog_instance') IS NOT NULL
+               AND to_regclass('public.catalog_schema_migrations') IS NOT NULL
+               AS managed
+            """
+        ).fetchone()["managed"]
+        if managed:
+            raise RuntimeError(
+                "Legacy init_db is blocked for the managed unified database. "
+                "Use scripts/migrate_catalog.py explicitly."
+            )
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS artists (

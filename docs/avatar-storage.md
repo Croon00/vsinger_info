@@ -6,7 +6,7 @@
 
 루트의 Git 제외 파일 `.env.catalog` 또는 서버 환경변수에 다음 값을 설정한다. 비밀값은 프론트 환경변수에 넣지 않는다.
 
-- `NEW_CATALOG_DATABASE_URL`: 새 카탈로그 DB
+- `NEW_DATABASE_URL`: 새 카탈로그 DB
 - `AWS_ENDPOINT_URL_S3`: 해당 Neon 브랜치의 S3 endpoint
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: 저장소 자격 증명
 - `AWS_REGION`: 저장소 리전

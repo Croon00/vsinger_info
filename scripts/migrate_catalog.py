@@ -1,10 +1,11 @@
-"""Explicit catalog-only schema migration. Never imports app/runtime or reads DATABASE_URL."""
+"""Explicit unified-DB schema migration. Never imports app/runtime or reads DATABASE_URL."""
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
@@ -13,12 +14,13 @@ from psycopg import sql
 
 ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "migrations" / "catalog"
-VERSION = "001"
 REVISION_TABLE = "catalog_schema_migrations"
 LOCK_ID = 731064921
-TYPE_NAMES = {"INTEGER": "integer", "SMALLINT": "smallint", "TEXT": "text",
-              "UUID": "uuid", "BOOLEAN": "boolean", "DATE": "date",
-              "TIMESTAMPTZ": "timestamp with time zone", "JSONB": "jsonb"}
+TYPE_NAMES = {
+    "BIGINT": "bigint", "INTEGER": "integer", "SMALLINT": "smallint",
+    "TEXT": "text", "UUID": "uuid", "BOOLEAN": "boolean", "DATE": "date",
+    "TIMESTAMPTZ": "timestamp with time zone", "JSONB": "jsonb",
+}
 
 
 class MigrationError(Exception):
@@ -26,16 +28,16 @@ class MigrationError(Exception):
 
 
 def load_connection() -> str:
-    value = os.environ.get("NEW_CATALOG_DATABASE_URL")
+    value = os.environ.get("NEW_DATABASE_URL")
     if not value:
         path = ROOT / ".env.catalog"
         if path.exists():
             for line in path.read_text(encoding="utf-8-sig").splitlines():
                 key, sep, candidate = line.partition("=")
-                if sep and key.strip() == "NEW_CATALOG_DATABASE_URL":
+                if sep and key.strip() == "NEW_DATABASE_URL":
                     value = candidate.strip()
     if not value:
-        raise MigrationError("NEW_CATALOG_DATABASE_URL is not configured")
+        raise MigrationError("NEW_DATABASE_URL is not configured")
     parts = urlsplit(value)
     if parts.scheme not in {"postgres", "postgresql"} or not parts.hostname or not parts.password:
         raise MigrationError("Invalid catalog connection format")
@@ -46,12 +48,34 @@ def load_connection() -> str:
     return value
 
 
+def migration_files() -> list[tuple[str, Path]]:
+    files = []
+    for path in MIGRATIONS.glob("[0-9][0-9][0-9]_*.sql"):
+        version = path.name.partition("_")[0]
+        if re.fullmatch(r"[0-9]{3}", version):
+            files.append((version, path))
+    files.sort()
+    if not files or [v for v, _ in files] != [f"{n:03d}" for n in range(1, len(files) + 1)]:
+        raise MigrationError("Migration revisions must be contiguous from 001")
+    return files
+
+
+def migration_checksums() -> dict[str, str]:
+    return {version: hashlib.sha256(path.read_bytes()).hexdigest()
+            for version, path in migration_files()}
+
+
 def migration_checksum() -> str:
-    return hashlib.sha256((MIGRATIONS / "001_initial.sql").read_bytes()).hexdigest()
+    """Compatibility helper returning the latest revision checksum."""
+    return list(migration_checksums().values())[-1]
 
 
-def expected_columns() -> dict:
-    return json.loads((MIGRATIONS / "columns.json").read_text(encoding="utf-8"))
+def expected_columns(*, include_runtime: bool = True) -> dict:
+    result = json.loads((MIGRATIONS / "columns.json").read_text(encoding="utf-8"))
+    runtime = MIGRATIONS / "runtime-columns.json"
+    if include_runtime and runtime.exists():
+        result.update(json.loads(runtime.read_text(encoding="utf-8")))
+    return result
 
 
 def application_tables(conn) -> set[tuple[str, str]]:
@@ -64,13 +88,12 @@ def application_tables(conn) -> set[tuple[str, str]]:
 
 
 def table_names(conn) -> set[str]:
-    return {r[0] for r in conn.execute("""
-        SELECT tablename FROM pg_tables WHERE schemaname='public'
-    """)}
+    return {r[0] for r in conn.execute(
+        "SELECT tablename FROM pg_tables WHERE schemaname='public'")}
 
 
 def schema_shape(conn) -> dict:
-    """Comparable catalog definitions; no data, credentials, host or object OIDs."""
+    """Comparable definitions with no data, credentials, host, or object OIDs."""
     result = {}
     queries = {
         "columns": """
@@ -99,15 +122,23 @@ def schema_shape(conn) -> dict:
             SELECT p.proname,pg_get_functiondef(p.oid)
             FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
             WHERE n.nspname='public' ORDER BY p.proname,pg_get_function_identity_arguments(p.oid)
-        """
+        """,
     }
     for name, query in queries.items():
         result[name] = [list(r) for r in conn.execute(query)]
     return result
 
 
-def verify_columns(conn) -> None:
-    expected = expected_columns()
+def base_schema_shape(shape: dict) -> dict:
+    base_tables = set(expected_columns(include_runtime=False)) | {REVISION_TABLE}
+    return {
+        name: rows if name == "functions" else [row for row in rows if row[0] in base_tables]
+        for name, rows in shape.items()
+    }
+
+
+def verify_columns(conn, *, include_runtime: bool = True) -> None:
+    expected = expected_columns(include_runtime=include_runtime)
     if table_names(conn) != set(expected) | {REVISION_TABLE}:
         raise MigrationError("Catalog table set differs from migration")
     for table, columns in expected.items():
@@ -121,20 +152,43 @@ def verify_columns(conn) -> None:
             raise MigrationError("Column contract differs: " + table)
 
 
-def verify(conn, *, require_empty: bool = False) -> dict:
-    verify_columns(conn)
-    revisions = conn.execute(
+def verify_base_schema(conn) -> None:
+    snapshot = MIGRATIONS / "expected-schema.json"
+    if snapshot.exists():
+        expected = base_schema_shape(json.loads(snapshot.read_text(encoding="utf-8")))
+        if base_schema_shape(schema_shape(conn)) != expected:
+            raise MigrationError("Base schema definitions differ from revision 001")
+
+
+def applied_revisions(conn) -> list[tuple[str, str]]:
+    return conn.execute(
         "SELECT version,checksum FROM public.catalog_schema_migrations ORDER BY version"
     ).fetchall()
-    if revisions != [(VERSION, migration_checksum())]:
+
+
+def verify_revision_prefix(conn) -> list[tuple[str, str]]:
+    applied = applied_revisions(conn)
+    expected = list(migration_checksums().items())
+    if applied != expected[:len(applied)]:
         raise MigrationError("Migration revision/checksum mismatch")
-    snapshot = MIGRATIONS / "expected-schema.json"
-    if snapshot.exists() and schema_shape(conn) != json.loads(snapshot.read_text(encoding="utf-8")):
-        raise MigrationError("Schema definitions differ from the locally verified migration")
-    identity = conn.execute("""
-        SELECT id,schema_version,initial_import_id,initialized_at FROM public.catalog_instance
-    """).fetchall()
-    if len(identity) != 1 or identity[0][1] != "catalog-v1":
+    return applied
+
+
+def expected_schema_version() -> str:
+    return "catalog-v2" if migration_files()[-1][0] >= "002" else "catalog-v1"
+
+
+def verify(conn, *, require_empty: bool = False) -> dict:
+    revisions = verify_revision_prefix(conn)
+    expected_revisions = list(migration_checksums().items())
+    if revisions != expected_revisions:
+        raise MigrationError("Pending catalog migrations")
+    verify_columns(conn)
+    verify_base_schema(conn)
+    identity = conn.execute(
+        "SELECT id,schema_version,initial_import_id,initialized_at FROM public.catalog_instance"
+    ).fetchall()
+    if len(identity) != 1 or identity[0][1] != expected_schema_version():
         raise MigrationError("Invalid catalog identity/version")
     counts = {}
     for table in expected_columns():
@@ -144,53 +198,74 @@ def verify(conn, *, require_empty: bool = False) -> dict:
             sql.SQL("SELECT count(*) FROM public.{}").format(sql.Identifier(table))
         ).fetchone()[0]
     if require_empty and (any(counts.values()) or identity[0][2] is not None or identity[0][3] is not None):
-        raise MigrationError("Expected catalog with no initial music import")
-    return {"catalog_tables": 31, "migration_tables": 1,
-            "catalog_instance_id": str(identity[0][0]), "schema_version": identity[0][1],
-            "initial_data_imported": identity[0][2] is not None,
-            "non_identity_row_count": sum(counts.values()),
-            "migration_checksum": migration_checksum(), "verified": True}
+        raise MigrationError("Expected catalog with no initial data")
+    runtime_count = len(expected_columns()) - len(expected_columns(include_runtime=False))
+    return {
+        "catalog_tables": len(expected_columns(include_runtime=False)),
+        "runtime_tables": runtime_count,
+        "migration_tables": 1,
+        "catalog_instance_id": str(identity[0][0]),
+        "schema_version": identity[0][1],
+        "initial_data_imported": identity[0][2] is not None,
+        "non_identity_row_count": sum(counts.values()),
+        "migration_checksums": dict(expected_revisions),
+        "verified": True,
+    }
 
 
 def migrate(conn) -> dict:
-    # Caller owns a transaction; the entire DDL + metadata is committed together.
+    """Apply every missing revision in one caller-owned transaction."""
     conn.execute("SELECT pg_advisory_xact_lock(%s)", (LOCK_ID,))
     existing = application_tables(conn)
+    created = False
     if existing:
         if ("public", REVISION_TABLE) not in existing:
             raise MigrationError("Refusing to alter a non-empty, unmanaged database")
-        result = verify(conn)
-        result["applied"] = False
-        return result
-    # Functions/types may exist even when there are no tables.
-    objects = conn.execute("""
-        SELECT EXISTS(SELECT FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
-                      WHERE n.nspname='public')
-          OR EXISTS(SELECT FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace
-                    WHERE n.nspname='public')
-    """).fetchone()[0]
-    if objects:
-        raise MigrationError("Refusing to initialize a database with existing public objects")
-    conn.execute("""
-        CREATE TABLE public.catalog_schema_migrations (
-            version text PRIMARY KEY,
-            checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),
-            applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
+        applied = verify_revision_prefix(conn)
+        verify_columns(conn, include_runtime=len(applied) >= 2)
+        if applied:
+            verify_base_schema(conn)
+    else:
+        objects = conn.execute("""
+            SELECT EXISTS(SELECT FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
+                          WHERE n.nspname='public')
+              OR EXISTS(SELECT FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace
+                        WHERE n.nspname='public')
+        """).fetchone()[0]
+        if objects:
+            raise MigrationError("Refusing to initialize a database with existing public objects")
+        conn.execute("""
+            CREATE TABLE public.catalog_schema_migrations (
+                version text PRIMARY KEY,
+                checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),
+                applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
+            )
+        """)
+        applied = []
+        created = True
+
+    already = {version for version, _ in applied}
+    applied_now = []
+    for version, path in migration_files():
+        if version in already:
+            continue
+        conn.execute(path.read_text(encoding="utf-8"), prepare=False)
+        checksum = hashlib.sha256(path.read_bytes()).hexdigest()
+        conn.execute(
+            "INSERT INTO public.catalog_schema_migrations(version,checksum) VALUES (%s,%s)",
+            (version, checksum),
         )
-    """)
-    conn.execute((MIGRATIONS / "001_initial.sql").read_text(encoding="utf-8"), prepare=False)
-    conn.execute(
-        "INSERT INTO public.catalog_schema_migrations(version,checksum) VALUES (%s,%s)",
-        (VERSION, migration_checksum()))
-    result = verify(conn, require_empty=True)
-    result["applied"] = True
+        applied_now.append(version)
+
+    result = verify(conn, require_empty=created)
+    result["applied"] = bool(applied_now)
+    result["applied_versions"] = applied_now
     return result
 
 
 def configure_transaction(conn, *, read_only: bool) -> None:
     if read_only:
         conn.execute("SET TRANSACTION READ ONLY")
-    # SET after connection is compatible with the Neon pooled endpoint.
     conn.execute("SET LOCAL search_path=public,pg_catalog")
     conn.execute("SET LOCAL statement_timeout='120s'")
     conn.execute("SET LOCAL lock_timeout='10s'")
@@ -199,14 +274,13 @@ def configure_transaction(conn, *, read_only: bool) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group()
-    modes.add_argument("--apply", action="store_true", help="Apply to an empty catalog DB")
+    modes.add_argument("--apply", action="store_true", help="Apply pending unified-DB revisions")
     modes.add_argument("--verify", action="store_true", help="Read-only structure/data counts")
     parser.add_argument("--require-empty", action="store_true",
                         help="Verification also requires no initial data")
     args = parser.parse_args()
     try:
         uri = load_connection()
-        # Dedicated short-lived migration connection; never touches the runtime engine.
         with psycopg.connect(uri, connect_timeout=20) as conn:
             configure_transaction(conn, read_only=not args.apply)
             if args.apply:
@@ -216,13 +290,11 @@ def main() -> int:
             else:
                 result = {"connected": True, "existing_object_count": len(application_tables(conn)),
                           "managed_catalog": REVISION_TABLE in table_names(conn)}
-        # Printed only after successful COMMIT/transaction completion.
         print(json.dumps(result))
         return 0
     except MigrationError as exc:
         print(json.dumps({"ok": False, "error": str(exc)}))
     except psycopg.Error as exc:
-        # Database errors can include credentials, hostnames or entire failing rows.
         print(json.dumps({"ok": False, "error_type": type(exc).__name__,
                           "sqlstate": exc.sqlstate,
                           "next_step": "Run --verify before retrying an uncertain --apply"}))

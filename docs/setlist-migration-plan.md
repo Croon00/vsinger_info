@@ -18,7 +18,7 @@
 - 가창 행이 있지만 `setlist` JSON이 빈 아카이브 135개에 1,253행이 있다. 반대로 JSON만 있고 가창 행이 없는 아카이브는 0개다. `pending` 상태에도 가창 행 2,392개가 있으므로 상태값만으로 제외하지 않는다.
 - `top_comment`가 있는 아카이브 6,178개, `video_title`이 없는 아카이브 71개다. 가창 행이 있는 아카이브에는 빈 `video_title`이 없었다. 7,124개 영상 ID 모두 새 스키마의 YouTube ID 형식에 맞는다.
 
-위 원본 수치는 덤프를 `pg_restore --data-only`로 **로컬에서 읽어 집계한 값**이다. 2026-09-21 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 새 카탈로그를 읽기 전용 확인했다. `catalog-v1`, 초기 반영 완료이며 `artists` 81건, `external_accounts` 155건, `artist_external_accounts` 155건, `videos`·`live_archives`·`performances`는 각각 0건이다. 실행 직전에는 이 상태와 충돌 여부를 다시 확인한다.
+위 원본 수치는 덤프를 `pg_restore --data-only`로 **로컬에서 읽어 집계한 값**이다. 2026-09-21 `.env.catalog`의 `NEW_DATABASE_URL`로 새 카탈로그를 읽기 전용 확인했다. `catalog-v1`, 초기 반영 완료이며 `artists` 81건, `external_accounts` 155건, `artist_external_accounts` 155건, `videos`·`live_archives`·`performances`는 각각 0건이다. 실행 직전에는 이 상태와 충돌 여부를 다시 확인한다.
 
 ## 필드와 신뢰 수준
 

@@ -1,14 +1,13 @@
 # 새 카탈로그 DB 마이그레이션
 
-적용일: 2026-09-19. 현재 revision은 `001`, 계약 버전은 `catalog-v1`이다.
-사용자 지정 Neon PostgreSQL 18.6에 실제 적용하고 별도 연결에서 읽기 전용 검증했다.
+최초 적용일: 2026-09-19. 운영 schema 적용일: 2026-09-21. 현재 revision은 `002`, 계약 버전은 `catalog-v2`다. 사용자 지정 Neon PostgreSQL 18.6에 실제 적용하고 별도 연결에서 읽기 전용 검증했다.
 
 ## 적용 결과
 
-- 음악 카탈로그와 근거/반영 기록용 **31개 테이블, 276개 컬럼**.
-- 기술용 `catalog_schema_migrations` 1개를 더해 사용자 테이블은 총 32개.
-- `catalog_instance` 식별 행 1개와 마이그레이션 영수증 1개만 존재.
-- 음악 자료 및 원문·반영·변경 기록은 **0건**. 초기 데이터 반영 완료 상태는 false.
+- 음악 카탈로그와 근거/반영 기록용 **31개 테이블, 276개 컬럼**을 유지한다.
+- 수집·Discord 알림·worker·이전 감사용 운영 테이블 10개를 `002_runtime.sql`로 추가했다.
+- 기술용 `catalog_schema_migrations` 1개를 더해 public 사용자 테이블은 총 42개다.
+- `catalog_instance`는 `catalog-v2`, migration 이력은 `001`, `002`다. 기존 음악 데이터와 검수 이력은 보존했다.
 - 제거하기로 한 이미지 출처 필드, 별도 프로필 링크 표, 음악 크레딧, 곡 slug, 원곡자/공연 세부 역할, 기존 ID 대응표는 생성하지 않았다.
 - `title_latin`, `language_code`, 노래방 번호는 유지했다.
 - 로컬 검수 SQLite 9개 표와 관리자 API/웹은 2026-09-20 별도로 구현했다. [관리자 안내](../../docs/admin-web-plan.md)를 따른다.
@@ -21,11 +20,13 @@
 | 파일 | 역할 |
 | --- | --- |
 | 001_initial.sql | 버전 고정 DDL. 음악 seed/덤프 복원 없음 |
+| 002_runtime.sql | 계정별 수집 상태, X 원문, Discord route/delivery, worker 작업, 이전 영수증 |
 | columns.json | 31개 표의 필드·타입·NULL 계약 |
+| runtime-columns.json | 10개 운영 표의 필드·타입·NULL 계약 |
 | expected-schema.json | 로컬 PostgreSQL에서 검증한 컬럼·제약·인덱스·트리거·함수 정의 |
 | ../../scripts/migrate_catalog.py | 명시적 실행, 빈 DB 검사, 트랜잭션/체크섬 검증 |
 
-새 접속 정보는 루트의 Git 제외 파일 `.env.catalog`에 `NEW_CATALOG_DATABASE_URL`로 저장한다.
+새 접속 정보는 루트의 Git 제외 파일 `.env.catalog`에 `NEW_DATABASE_URL`로 저장한다.
 환경변수에 같은 키가 있으면 환경변수가 우선한다. 기존 `.env`의 `DATABASE_URL`은 읽거나 변경하지 않는다.
 프론트 VITE 변수·문서·로그에 DB URL을 넣지 않는다.
 
@@ -38,7 +39,7 @@
 .\.venv\Scripts\python.exe scripts/migrate_catalog.py --verify --require-empty
 ```
 
-빈 새 DB에 구조를 처음 준비할 때만 명시적으로 실행한다.
+빈 새 DB에 전체 구조를 준비하거나 관리 중인 DB에 미적용 후속 revision을 적용할 때만 명시적으로 실행한다.
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/migrate_catalog.py --apply
@@ -47,7 +48,7 @@
 - 전체 DDL과 기술 메타데이터는 하나의 트랜잭션이다. 중간 실패 시 그 트랜잭션은 rollback한다.
 - 트랜잭션 advisory lock으로 동시 실행을 직렬화한다.
 - 기존 서비스 표나 관리되지 않는 public 객체가 있으면 중단한다. DROP/초기화로 덮어쓰지 않는다.
-- 같은 revision/체크섬/구조로 다시 실행하면 검증만 하고 다시 생성하지 않는다.
+- 같은 revision/체크섬/구조로 다시 실행하면 검증만 하고 다시 생성하지 않는다. 기존 001 DB에는 002만 적용한다.
 - 예상치 않은 구조·체크섬 변경은 중단한다. 적용된 001 SQL을 수정해서 재실행하지 않는다. .gitattributes로 SQL의 줄바꿈 바이트를 보존하여 checkout 시 체크섬이 달라지지 않게 한다. 이후 변경은 별도 revision과 runner 확장으로 관리한다.
 - 응답 유실은 실패로 단정하지 않는다. 먼저 `--verify`로 실제 반영 여부를 확인한다.
 - Neon pooled endpoint에서는 연결 후 SET LOCAL로 timeout/search_path를 설정한다. 연결 초기 options에 의존하지 않는다.
@@ -81,17 +82,17 @@ DB 소유자의 직접 SQL은 관리자 검수 정책을 우회할 수 있다.
 
 ## 검증
 
-2026-09-19 로컬 PostgreSQL 18.6의 임시 클러스터/임시 DB에서 합성 자료로 9개 테스트 통과.
+2026-09-21 로컬 PostgreSQL 18의 임시 클러스터/임시 DB에서 합성 자료로 14개 테스트 통과.
 로컬 테스트는 기존 .env와 Neon 접속 정보를 읽지 않으며, 원격으로 대체 실행하지 않는다.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_catalog_migration.py -q -p no:cacheprovider
 ```
 
-검증 범위: 전체 구조·초기 빈 상태·재실행, 기존 DB 거부, 실패 시 DDL rollback, 동명곡/공동 원곡자,
-노래방 중복, 날짜 정밀도, 미매칭 가창, 버전 갱신, 음원 재수록·가사 중복,
-영수증 불변/중복 방지, 구조 drift 검출.
+검증 범위: 전체 구조·초기 빈 상태·재실행, 001→002 데이터 보존 업그레이드, 기존 DB 거부,
+실패 시 DDL rollback, 음악 카탈로그 제약, 운영 FK·guild/channel 소속·원문/delivery/job 중복 방지,
+상태·lease 계약, 영수증 불변성, identity/revision guard, legacy init 차단, checksum·구조 drift 검출.
 
 Windows 로컬 PostgreSQL 18의 initdb/pg_ctl이 필요하다. 다른 설치 경로는 POSTGRES_BIN으로 지정한다.
 테스트 서버는 127.0.0.1 임시 포트에만 열고 종료 시 중단한다. 진단 로그는 Git 제외 .tmp 아래에 남는다.
-Neon에는 합성 테스트 행을 넣지 않았다. 실제 검증은 생성된 스키마와 0건 상태의 읽기 전용 확인이다.
+Neon에는 합성 테스트 행을 넣지 않았다. 실제 검증은 적용된 스키마와 기존 데이터 보존 상태의 읽기 전용 확인이다. 운영 표의 선택 이전 데이터는 3단계 도구 검증 후 5단계 전환 시 반영한다.

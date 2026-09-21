@@ -1,6 +1,6 @@
 # 백엔드 통합 최종 계획 — 신규 DB 일원화
 
-확정 기준: 2026-09-21. **구현 전 계획서**다. 현재 실행 코드·DB·설정·Discord 등록 명령을 변경했다는 의미가 아니다. 현재 구현은 [백엔드 구조](backend-architecture.md), 실행 준비와 조사 항목은 [1단계 문서](backend-phase-1-baseline.md)를 따른다.
+확정 기준: 2026-09-21. 1단계 조사, 2단계 운영 스키마·연결 기반, 3단계 선택 이전 도구·검증을 완료했다. 현재 실행 코드는 아직 신규 DB runtime으로 전환하지 않았으며 Discord 명령·X 분류·YouTube 자동 등록 제거도 4단계 대상이다. 현재 상태는 [1단계 문서](backend-phase-1-baseline.md), [2단계 결과](backend-phase-2-runtime-schema.md), [3단계 결과](backend-phase-3-runtime-migration.md), [백엔드 구조](backend-architecture.md)를 따른다.
 
 ## 1. 목표와 범위
 
@@ -114,7 +114,7 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 **현재 DATABASE_URL 값부터 바꾸지 않는다.** 구 SQL과 `init_db()` 경로를 격리하고 대상 identity·revision 검사와 신규 repository 전환을 완료한 뒤 연결을 전환한다. 이전 전용 읽기 소스는 `LEGACY_DATABASE_URL` 같은 명시적 별도 입력으로 받고 정상 runtime에서는 로딩하지 않는다. 실제 URL·토큰은 문서·보고서·로그에 남기지 않는다.
 
-`.env.catalog`와 `NEW_CATALOG_DATABASE_URL`은 소비자를 모두 전환한 뒤 제거한다. 과도기 별칭이 있으면 충돌 시 오류를 내고 암묵적으로 DB를 선택하지 않는다. 기존 DB의 baseline migration이나 revision 표를 만들지 않는다. 신규 DB의 적용된 `001`은 변경하지 않고 후속 revision만 추가한다.
+`.env.catalog`와 `NEW_DATABASE_URL`은 소비자를 모두 전환한 뒤 제거한다. 과도기 별칭이 있으면 충돌 시 오류를 내고 암묵적으로 DB를 선택하지 않는다. 기존 DB의 baseline migration이나 revision 표를 만들지 않는다. 신규 DB의 적용된 `001`은 변경하지 않고 후속 revision만 추가한다.
 
 | 현재 위치 | 처리 |
 | --- | --- |
@@ -146,11 +146,15 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 완료 조건: 격리된 테스트 DB에서 migration·FK·고유 제약·연결 가드가 검증되고, 시작 시 DDL/시드가 실행되지 않는다. 실제 기존 DB에는 아무 변경도 하지 않는다.
 
+**완료:** 2026-09-21 `002_runtime.sql`을 신규 DB에 적용하고 별도 연결에서 재검증했다. 세부 스키마·테스트·적용 범위는 [2단계 결과](backend-phase-2-runtime-schema.md)에 기록한다.
+
 ### 3단계 — 선택 이전 도구와 검증
 
 기존 DB SELECT → 명세 검증 → 신규 DB 반영 도구를 작성한다. 계정 대응→상태/route→필요 원문/이력→미완료 작업 순서를 검증하고 dry-run·재실행·중단 복구를 테스트한다.
 
 완료 조건: 선택 집합 일치, 제외 항목 유입 0, 참조 오류 0, 성공 알림의 pending 변환 0, 재실행 중복 0. 실제 이전 실행은 검증된 명세와 전환 시점에 맞춰 5단계에서 수행한다.
+
+**완료:** 2026-09-21 읽기 전용 실데이터 dry-run과 로컬 PostgreSQL 적용·재실행 검증을 완료했다. 결과와 전환 시 재검증 조건은 [3단계 결과](backend-phase-3-runtime-migration.md)에 기록한다. 실제 이전은 수행하지 않았다.
 
 ### 4단계 — 수집기·최소 Discord 봇 전환
 

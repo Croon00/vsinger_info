@@ -598,7 +598,7 @@ class ReviewService:
                 batch_id=batch_id,
                 operation_id=operation,
                 target_catalog_id=state["catalog_id"],
-                expected_schema_version="catalog-v1",
+                expected_schema_version=state["schema_version"],
                 manifest_payload=pack(manifest),
                 manifest_hash=hash_value,
                 status="ready",
