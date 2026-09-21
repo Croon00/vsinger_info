@@ -3,6 +3,8 @@
 이 문서는 `app/bots/` 아래에서 작업할 때 루트 `AGENTS.md`에 추가로 적용된다.
 이 디렉터리는 Discord 연결, slash command, interaction 응답과 채널 전송을 담당한다.
 
+2026-09-21 목표 변경: [최종 통합 계획](../../docs/backend-consolidation-plan.md)에 따라 모든 사용자 명령·interaction을 제거하고 X 원문 URL 전송만 남긴다. 아래 명령 관련 지침은 아직 남아 있는 코드의 전환 안전 기준이며 새 봇 관리 기능을 구현하라는 요구가 아니다. 실제 제거와 Discord 원격 명령 해제는 후속 구현·배포 작업이다.
+
 ## 책임
 
 - Discord bot lifecycle과 command 등록

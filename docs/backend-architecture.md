@@ -2,6 +2,8 @@
 
 기준: 2026-09-20, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
 
+> 2026-09-21 확정한 변경 방향은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)에 있다. 아래는 아직 변경하지 않은 실행 코드 설명이다. 최종 목표에서는 Discord 명령·X 분류·X 글의 YouTube 자동 등록을 제거하고 X 원문 저장·URL 알림만 유지한다.
+
 ## 구성과 데이터 경로
 
 ```text
@@ -42,7 +44,7 @@ runtime → API + Discord bot + 선택적 scheduler
 
 `music_graph.py`에는 분류 → live_event/ticket 추출 workflow와 LangGraph 미설치 시 순차 fallback이 구현되어 있다. **현재 scheduler는 이 함수를 호출하지 않는다.** 따라서 X 글이 자동 분류되어 공연 후보·Google 일정으로 이어진다고 안내하지 않는다. Google OAuth·일정 생성 helper와 관련 테이블은 존재하지만, 현재 X loop의 자동 Calendar 생성 경로는 연결되어 있지 않다.
 
-향후 분류·일정 처리를 다시 연결할 때 원문 중복 제거 → 규칙 필터 → 필요한 LLM 분류/추출 → 저장 → 캘린더/알림 순서를 사용한다. 허용 타입은 notice, release, live_event, ticket, merch, irrelevant의 여섯 가지다. 모든 게시글을 LLM에 보내지 않고 원문 링크·외부 ID와 처리 이력을 보존한다.
+기존 분류·일정 처리 재연결 계획은 2026-09-21 폐기했다. 현재 코드의 여섯 타입과 관련 helper는 구현 정리 대상이며 향후 X 계약이 아니다. 제거 범위와 독립 음악 수집의 보존 기준은 최종 통합 계획을 따른다.
 
 ## Discord 사용
 

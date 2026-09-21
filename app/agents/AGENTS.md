@@ -3,6 +3,8 @@
 이 문서는 `app/agents/` 아래에서 작업할 때 루트 `AGENTS.md`에 추가로 적용된다.
 이 디렉터리는 수집된 게시글을 처리하는 자동화 workflow와 주기 실행 orchestration을 담당한다.
 
+2026-09-21 목표 변경: [최종 통합 계획](../../docs/backend-consolidation-plan.md)에 따라 X 분류·추출·Calendar 및 X 글의 YouTube 자동 등록을 제거한다. X는 원문 저장·Discord URL 전송 예약만 수행하며 아래 분류 확장 순서는 X에 적용하지 않는다. 독립 음악 수집은 유지한다. 이 목표를 현재 구현 상태로 간주하지 않는다.
+
 ## 책임
 
 - 활성 수집 소스를 순회하는 scheduler와 worker 실행
@@ -69,4 +71,3 @@ collect
 - X, OpenAI, Calendar, Discord 호출은 mock 처리한다.
 - 중복 글, route 없음, LLM 오류, 부분 API 실패를 테스트한다.
 - 결과 집계의 `seen`, `classified`, `created`, `sent`, `skipped`, `failed` 수가 실제 처리와 일치하는지 확인한다.
-
