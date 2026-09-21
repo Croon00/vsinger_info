@@ -31,5 +31,5 @@ onBeforeUnmount(() => observer?.disconnect())
 </template>
 
 <style scoped>
-.scroll-more { display:flex; justify-content:center; align-items:center; gap:16px; padding:24px; color:var(--muted); font-size: 15px; }
+.scroll-more { display:flex; justify-content:center; align-items:center; gap:16px; padding:24px; color:var(--muted); font-size:12px; }
 </style>
