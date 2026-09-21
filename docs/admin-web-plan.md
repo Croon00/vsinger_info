@@ -4,7 +4,7 @@
 
 ## 실행
 
-프로젝트 루트의 Python 가상환경과 `requirements.txt`를 사용한다. 새 접속 정보는 Git 제외 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`에 두며 브라우저에 전달하지 않는다.
+프로젝트 루트의 Python 가상환경과 `requirements.txt`를 사용한다. 새 접속 정보는 Git 제외 `.env.catalog`의 `NEW_DATABASE_URL`에 두며 브라우저에 전달하지 않는다.
 
 최초 실행 또는 화면 수정 후:
 

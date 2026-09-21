@@ -234,7 +234,7 @@ def main() -> int:
     parser.add_argument("--operation-id", type=uuid.UUID, default=DEFAULT_OPERATION_ID)
     args = parser.parse_args()
     legacy_url = load_url("DATABASE_URL", ".env")
-    catalog_url = load_url("NEW_CATALOG_DATABASE_URL", ".env.catalog")
+    catalog_url = load_url("NEW_DATABASE_URL", ".env.catalog")
     if legacy_url == catalog_url:
         raise RuntimeError("Legacy and catalog URLs resolve to the same configured value")
     with psycopg.connect(legacy_url, connect_timeout=20) as old_conn:

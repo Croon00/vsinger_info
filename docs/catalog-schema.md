@@ -2,7 +2,7 @@
 
 작성일: 2026-09-19 · 문서 버전: 초안 2 — 사용자 간소화 결정 반영
 
-**2026-09-19 원격 PostgreSQL의 31개 업무 테이블·276개 컬럼 생성 완료. 기술용 마이그레이션 표를 포함하면 32개입니다. 당시 음악 데이터는 0건이었습니다. 2026-09-20 로컬 검수 9개 표와 관리자 API/웹, 사용자 조회 API의 새 DB 연결을 구현했습니다. 기존 API·수집기·봇은 기존 DB를 유지합니다.**
+**2026-09-19 원격 PostgreSQL에 음악 카탈로그 31표·276컬럼을 생성했다. 2026-09-21 운영 10표를 후속 revision 002로 추가해 기술용 migration 표를 포함한 public 표는 42개다. 이 문서는 카탈로그 31표와 로컬 검수 구조를 설명하며 운영 표는 [2단계 결과](backend-phase-2-runtime-schema.md)를 따른다. 기존 수집기·봇은 아직 기존 DB를 사용한다.**
 
 실행 DDL과 DB가 강제하는 규칙/향후 API 검증의 구분은 [마이그레이션 안내](../migrations/catalog/README.md), 당시 확인 값은 [적용 보고서](../migrations/catalog/schema-application-report.json)를 참고하세요.
 
@@ -34,10 +34,10 @@
 
 | 위치 | 표 수 | 역할 |
 | --- | ---: | --- |
-| 새 Neon PostgreSQL | 31 | 검수 후 확정된 음악 데이터, 근거, 반영/변경 이력 |
+| 새 Neon PostgreSQL | 41 | 음악 카탈로그 31표와 수집·Discord·worker·이전 감사 운영 10표 |
 | 내 PC의 관리자 SQLite | 9 | 원본 파일 목록, 편집 초안, 승인·보류, 반영 준비와 복구 |
 
-음악 카탈로그의 31개 중 다수는 아티스트·곡 등을 연결하는 작은 표입니다. 관리자는 40개의 표를 직접 편집하지 않고 아티스트·곡·라이브·공연·앨범 폼으로 작업합니다. Discord/Google 계정·알림 전송·수집 cursor 테이블은 이번 범위가 아닙니다.
+음악 카탈로그의 31개 중 다수는 아티스트·곡 등을 연결하는 작은 표입니다. 관리자는 카탈로그 표를 직접 편집하지 않고 아티스트·곡·라이브·공연·앨범 폼으로 작업합니다. Discord·알림·수집 cursor 운영 표는 admin-web 개편 전까지 직접 관리 화면에 노출하지 않으며 Google 표는 추가하지 않았다.
 
 SQLite의 UUID·시각·JSON은 TEXT로 저장하는 제안입니다. JSON은 파싱 검증하고 BOOLEAN은 INTEGER 0/1로 제한합니다. SQLite 내부 FK 검사를 활성화합니다. 원격 ID는 두 DB 사이에 실제 FK를 걸 수 없으므로 서버가 대상 카탈로그와 존재 여부를 확인합니다.
 
@@ -830,7 +830,7 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 | --- | --- | --- | --- | --- |
 | `id` | UUID PK | 필수·최초 생성 | 이 카탈로그의 고정 UUID. 서버 재시작마다 바꾸지 않음 | 카탈로그 UUID |
 | `singleton_key` | SMALLINT | 필수·기본 1·고유 | 한 DB에 한 행만 두기 위한 값. CHECK = 1 | 1 |
-| `schema_version` | TEXT | 필수·마이그레이션 관리 | 앱이 기대하는 스키마 계약 버전. 실제 migration revision과 시작 시 대조 | catalog-v1 |
+| `schema_version` | TEXT | 필수·마이그레이션 관리 | 앱이 기대하는 스키마 계약 버전. 실제 migration revision과 시작 시 대조 | catalog-v2 |
 | `initial_import_id` | INTEGER FK | 선택·NULL | 최초 반영이 완료되면 catalog_imports.id. 초기 반영 전에는 NULL | NULL |
 | `initialized_at` | TIMESTAMPTZ | 선택·NULL | 최초 데이터 반영 완료 시각. 초기 반영 영수증과 같은 트랜잭션으로 기록 | NULL |
 | `created_at` | TIMESTAMPTZ | 필수·자동 | 빈 스키마를 준비하며 카탈로그 식별 행을 만든 시각 | 서버 현재 시각 |
@@ -1086,7 +1086,7 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 | `batch_id` | TEXT UUID FK | 필수 | import_batches.id | 배치 UUID |
 | `operation_id` | TEXT UUID | 필수·고유 | 이 반영 작업의 재시도 공통 ID | 작업 UUID |
 | `target_catalog_id` | TEXT UUID | 필수 | 원격 catalog_instance.id | 카탈로그 UUID |
-| `expected_schema_version` | TEXT | 필수 | 검토한 원격 스키마 계약 버전 | catalog-v1 |
+| `expected_schema_version` | TEXT | 필수 | 검토한 원격 스키마 계약 버전 | catalog-v2 |
 | `manifest_payload` | TEXT JSON | 필수 | 정렬된 포함/제외 목록·revision·hash·원격 version·의존성·승인 데이터 | 고정된 반영 내용 |
 | `manifest_hash` | TEXT | 필수 | manifest 정규화 SHA-256 | 64자리 해시 |
 | `status` | TEXT | 필수·기본 ready | ready, publishing, committed, invalidated, cancelled | ready |
@@ -1239,9 +1239,10 @@ recording_lyrics 변경은 자신의 version과 녹음의 version도 올리는 �
 | 티켓 판매의 날짜만 아는 정보·별도 시간대 | 정확한 시각만 입력, 원문 보존. 정밀도 확장 여부 검토 |
 | 곡 약칭 별도 표 song_aliases | 1차 제외. 원어/한국어/영문 필드 검색 |
 | 동기화 가사·여러 번역본·다중 공식 MV | 현재 단순 필드 범위 밖 |
-| 사용자 계정·즐겨찾기 동기화·Discord/Google·수집 운영 이력 | 별도 단계 |
-| 기술용 migration 버전 표 | catalog_schema_migrations(version, checksum, applied_at) 생성 완료. 31개 업무 표와 별도 |
-| 원격 DDL·인덱스·트리거 | migration 001 적용·검증 완료. 실제 구현 범위는 마이그레이션 안내 참조 |
+| 사용자 계정·즐겨찾기 동기화·Google | 별도 단계. Google 데이터는 기존 DB에 보존 |
+| Discord·수집 운영 이력 | migration 002에 추가. 상세 계약은 2단계 결과 참조 |
+| 기술용 migration 버전 표 | catalog_schema_migrations(version, checksum, applied_at)에 001·002 적용 완료 |
+| 원격 DDL·인덱스·트리거 | migration 001·002 적용·검증 완료. 실제 구현 범위는 마이그레이션 안내 참조 |
 | 로컬 검수 DB·관리자 API/웹 | 2026-09-20 1차 구현. 사용자 조회 API 전환은 후속 |
 
 이 문서는 원격 업무 구조와 로컬 검수 계획을 함께 설명합니다. 원격 DDL은 적용했고 초기 음악 데이터는 입력하지 않았습니다. 승인/manifest 검사, 그룹·대표 계정·영상 길이·출연진/근거의 교차 데이터 검증은 관리자 API에서 수행합니다. 실제 운영 범위와 후속 개선은 [관리자 안내](../docs/admin-web-plan.md)를 참고하세요.

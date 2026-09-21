@@ -20,7 +20,7 @@ npm run dev
 
 `.env.local`의 `BACKEND_URL`을 실행 중인 FastAPI 주소로 설정합니다. 기본값은 `http://127.0.0.1:8000`입니다. Vite가 `/api/*`를 이 주소로 전달하므로 로컬 프론트의 CORS 설정 변경은 필요하지 않습니다. 백엔드 `API_KEY` 인증을 사용한다면 같은 값을 프론트의 **서버 전용** `BACKEND_API_KEY`로 설정합니다. `VITE_` 접두사로 키를 넣지 마세요. 프록시는 GET/HEAD만 전달합니다.
 
-상위 프로젝트의 `.env.catalog`에 있는 `NEW_CATALOG_DATABASE_URL`이 사용자 조회 API의 DB 설정입니다. 기존 `.env`의 `DATABASE_URL`은 수집기·봇·기존 API용으로 유지합니다. 프론트에서 자동으로 읽거나 복사하지 않습니다. DB 주소는 HTTP API 주소로 사용할 수 없습니다.
+상위 프로젝트의 `.env.catalog`에 있는 `NEW_DATABASE_URL`이 사용자 조회 API의 DB 설정입니다. 기존 `.env`의 `DATABASE_URL`은 수집기·봇·기존 API용으로 유지합니다. 프론트에서 자동으로 읽거나 복사하지 않습니다. DB 주소는 HTTP API 주소로 사용할 수 없습니다.
 
 백엔드가 실행되지 않았거나 인증에 실패하면 오류를 표시합니다. 목업으로 자동 대체하지 않습니다. 백엔드 서버·DB를 이 프론트 명령이 실행하지는 않습니다. 실제 데이터 검증 전 서버 실행 상태를 확인해야 합니다.
 

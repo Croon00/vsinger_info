@@ -1,0 +1,116 @@
+{
+  "discord_users": [
+    {"name": "discord_user_id", "type": "TEXT", "nullable": false},
+    {"name": "display_name", "type": "TEXT", "nullable": true},
+    {"name": "is_active", "type": "BOOLEAN", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "discord_guilds": [
+    {"name": "guild_id", "type": "TEXT", "nullable": false},
+    {"name": "owner_discord_user_id", "type": "TEXT", "nullable": true},
+    {"name": "name", "type": "TEXT", "nullable": true},
+    {"name": "is_active", "type": "BOOLEAN", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "discord_channels": [
+    {"name": "channel_id", "type": "TEXT", "nullable": false},
+    {"name": "guild_id", "type": "TEXT", "nullable": false},
+    {"name": "name", "type": "TEXT", "nullable": true},
+    {"name": "is_active", "type": "BOOLEAN", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "collection_states": [
+    {"name": "external_account_id", "type": "INTEGER", "nullable": false},
+    {"name": "cursor_value", "type": "TEXT", "nullable": true},
+    {"name": "last_seen_external_id", "type": "TEXT", "nullable": true},
+    {"name": "status", "type": "TEXT", "nullable": false},
+    {"name": "consecutive_failures", "type": "INTEGER", "nullable": false},
+    {"name": "next_poll_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "lease_owner", "type": "TEXT", "nullable": true},
+    {"name": "lease_expires_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "last_polled_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "last_error", "type": "TEXT", "nullable": true},
+    {"name": "provider_state", "type": "JSONB", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "version", "type": "INTEGER", "nullable": false}
+  ],
+  "source_items": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "external_account_id", "type": "INTEGER", "nullable": false},
+    {"name": "external_id", "type": "TEXT", "nullable": false},
+    {"name": "source_url", "type": "TEXT", "nullable": false},
+    {"name": "raw_text", "type": "TEXT", "nullable": false},
+    {"name": "published_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "collected_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "notification_routes": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "external_account_id", "type": "INTEGER", "nullable": false},
+    {"name": "guild_id", "type": "TEXT", "nullable": false},
+    {"name": "channel_id", "type": "TEXT", "nullable": false},
+    {"name": "owner_discord_user_id", "type": "TEXT", "nullable": true},
+    {"name": "is_active", "type": "BOOLEAN", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "version", "type": "INTEGER", "nullable": false}
+  ],
+  "notification_deliveries": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "route_id", "type": "BIGINT", "nullable": false},
+    {"name": "source_item_id", "type": "BIGINT", "nullable": false},
+    {"name": "status", "type": "TEXT", "nullable": false},
+    {"name": "attempt_count", "type": "INTEGER", "nullable": false},
+    {"name": "next_attempt_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "lease_owner", "type": "TEXT", "nullable": true},
+    {"name": "lease_expires_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "discord_message_id", "type": "TEXT", "nullable": true},
+    {"name": "last_error", "type": "TEXT", "nullable": true},
+    {"name": "delivered_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "version", "type": "INTEGER", "nullable": false}
+  ],
+  "worker_jobs": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "job_type", "type": "TEXT", "nullable": false},
+    {"name": "idempotency_key", "type": "TEXT", "nullable": false},
+    {"name": "external_account_id", "type": "INTEGER", "nullable": true},
+    {"name": "video_id", "type": "INTEGER", "nullable": true},
+    {"name": "payload", "type": "JSONB", "nullable": false},
+    {"name": "status", "type": "TEXT", "nullable": false},
+    {"name": "attempt_count", "type": "INTEGER", "nullable": false},
+    {"name": "max_attempts", "type": "INTEGER", "nullable": false},
+    {"name": "next_attempt_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "lease_owner", "type": "TEXT", "nullable": true},
+    {"name": "lease_expires_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "last_error", "type": "TEXT", "nullable": true},
+    {"name": "finished_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "version", "type": "INTEGER", "nullable": false}
+  ],
+  "runtime_migration_receipts": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "operation_id", "type": "UUID", "nullable": false},
+    {"name": "catalog_instance_id", "type": "UUID", "nullable": false},
+    {"name": "source_fingerprint", "type": "TEXT", "nullable": false},
+    {"name": "manifest_hash", "type": "TEXT", "nullable": false},
+    {"name": "summary", "type": "JSONB", "nullable": false},
+    {"name": "committed_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "runtime_legacy_id_map": [
+    {"name": "id", "type": "BIGINT", "nullable": false},
+    {"name": "receipt_id", "type": "BIGINT", "nullable": false},
+    {"name": "source_table", "type": "TEXT", "nullable": false},
+    {"name": "legacy_id", "type": "TEXT", "nullable": false},
+    {"name": "target_table", "type": "TEXT", "nullable": false},
+    {"name": "target_id", "type": "TEXT", "nullable": false},
+    {"name": "selection_reason", "type": "TEXT", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ]
+}

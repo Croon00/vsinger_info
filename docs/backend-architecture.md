@@ -1,8 +1,8 @@
 # 백엔드 구조와 운영
 
-기준: 2026-09-20, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
+기준: 2026-09-21, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
 
-> 2026-09-21 확정한 변경 방향은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)에 있다. 아래는 아직 변경하지 않은 실행 코드 설명이다. 목표는 신규 DB 단일 운영이며 기존 DB는 변경하지 않고 수집·알림 필수 항목만 선별 이전한다. X는 external_accounts 기반 원문 저장·Discord URL 알림만 남기고 명령·분류·YouTube 자동 등록을 제거한다. Google Calendar는 데이터 보존 후 legacy로 격리하며 admin-web 개편은 후속 작업이다.
+> 2026-09-21 [2단계 운영 스키마·연결 기반](backend-phase-2-runtime-schema.md)과 [3단계 선택 이전 도구·검증](backend-phase-3-runtime-migration.md)을 완료했다. 신규 DB에는 운영 표가 준비됐고 이전 dry-run도 검증했지만 아래 scheduler·Discord 실행 코드는 아직 기존 DB를 사용한다. X 실행 경로 축소와 실제 runtime 전환은 4·5단계다.
 
 ## 구성과 데이터 경로
 
@@ -18,13 +18,13 @@ runtime → API + Discord bot + 선택적 scheduler
 | `app/schemas/` | Pydantic 요청·응답 모델 |
 | `app/services/` | 조회·업무 처리. v2는 `catalog_read.py`, 이전 `read_catalog.py`는 레거시 구현 |
 | `app/repositories/` | 기존 도메인의 DB 조회·저장과 새 v2의 catalog_read.py 조회 SQL |
-| `app/db/catalog_session.py` | 새 카탈로그 전용 공유 풀·요청별 READ ONLY Session |
+| `app/db/catalog_session.py` | 신규 통합 DB 전용 공유 풀·요청별 READ ONLY Session, `001/002`·`catalog-v2`·선택적 instance ID guard |
 | `app/db/session.py` | URL별 공유 SQLAlchemy Engine/연결 풀, 요청별 Session |
-| `app/core/db.py` | 기존 psycopg 연결, 증분 스키마·시드 초기화 |
+| `app/core/db.py` | 기존 psycopg 연결, 증분 스키마·시드 초기화. 관리 중인 신규 통합 DB에서는 init 거부 |
 | `app/integrations/` | YouTube, Spotify, X, OpenAI, Google 등 |
 | `app/agents/scheduler.py` | 주기 수집과 소스별 실패 격리 |
 | `app/bots/discord_bot.py` | Discord slash 명령과 전송 |
-| `app/core/config.py` | 환경변수·루트 `.env` 설정 |
+| `app/core/config.py` | 환경변수·루트 `.env`와 과도기 `.env.catalog` 공통 설정 |
 
 모든 경로가 ORM이나 하나의 연결 풀로 통일된 상태는 아니다. 레거시 psycopg 직접 연결도 남아 있다. 스키마 초기화를 `Base.metadata.create_all`로 대체하지 않는다. 현재 증분 변경과 시드 동작을 먼저 마이그레이션으로 옮겨야 한다.
 
@@ -73,7 +73,7 @@ Google 연결은 Discord 사용자별 OAuth다. 서버 공용 연결이나 웹 �
 | 설정 | 용도 / 코드 기본값 |
 | --- | --- |
 | `DATABASE_URL` | 기존 API·수집기·봇용 PostgreSQL |
-| `NEW_CATALOG_DATABASE_URL` | 사용자 v2·관리자용 새 카탈로그. 루트 .env.catalog 또는 환경변수 |
+| `NEW_DATABASE_URL` | 사용자 v2·관리자용 새 카탈로그. 루트 .env.catalog 또는 환경변수 |
 | `DATABASE_AUTO_INIT` | 시작 시 초기화, 기본 false |
 | `API_KEY` | 일부 기존 라우터와 v2의 선택적 X-API-Key 인증 |
 | `AGENT_ENABLED` / `AGENT_RUN_ON_START` | runtime 수집 / 시작 직후 실행, 코드 기본 false / false |

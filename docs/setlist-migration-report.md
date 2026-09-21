@@ -1,6 +1,6 @@
 # 기존 세트리스트 이관 결과
 
-실행일: 2026-09-21. 대상은 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`이 가리키는 `catalog-v1`이다. 비밀 연결 문자열은 기록하지 않았다. 원본은 Git에서 제외한 `db-migration/archive/legacy-neon/neonDB-2026-09-21.dump`이며 SHA-256은 `0A059E007616E99CFE02D1980AB70AEB8B755084E92DC020B448483EF0C56B27`이다.
+실행일: 2026-09-21. 대상은 `.env.catalog`의 `NEW_DATABASE_URL`이 가리키는 `catalog-v1`이다. 비밀 연결 문자열은 기록하지 않았다. 원본은 Git에서 제외한 `db-migration/archive/legacy-neon/neonDB-2026-09-21.dump`이며 SHA-256은 `0A059E007616E99CFE02D1980AB70AEB8B755084E92DC020B448483EF0C56B27`이다.
 
 ## 반영 결과
 
