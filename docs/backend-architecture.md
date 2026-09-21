@@ -2,7 +2,7 @@
 
 기준: 2026-09-20, 저장소 코드. 실제 계정 연결·프로세스 가동 여부는 실행 환경에 따라 다르다. 설치는 [루트 README](../README.md), 새 조회 계약은 [API v2](read-api-v2.md), 미완료 사항은 [후속 작업](backend-roadmap.md)을 따른다.
 
-> 2026-09-21 확정한 변경 방향은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)에 있다. 아래는 아직 변경하지 않은 실행 코드 설명이다. 최종 목표에서는 Discord 명령·X 분류·X 글의 YouTube 자동 등록을 제거하고 X 원문 저장·URL 알림만 유지한다.
+> 2026-09-21 확정한 변경 방향은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)에 있다. 아래는 아직 변경하지 않은 실행 코드 설명이다. 목표는 신규 DB 단일 운영이며 기존 DB는 변경하지 않고 수집·알림 필수 항목만 선별 이전한다. X는 external_accounts 기반 원문 저장·Discord URL 알림만 남기고 명령·분류·YouTube 자동 등록을 제거한다. Google Calendar는 데이터 보존 후 legacy로 격리하며 admin-web 개편은 후속 작업이다.
 
 ## 구성과 데이터 경로
 

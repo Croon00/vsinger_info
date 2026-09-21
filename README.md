@@ -34,7 +34,7 @@ npm run dev
 
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
-사용자 조회 `/api/v2`는 루트 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 새 DB를 읽습니다. 기존 `DATABASE_URL`은 수집기·Discord 봇·기존 API용으로 유지하며 교체하지 않습니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다.
+현재 사용자 조회 `/api/v2`는 루트 `.env.catalog`의 `NEW_CATALOG_DATABASE_URL`로 새 DB를 읽습니다. 기존 `DATABASE_URL`은 아직 수집기·Discord 봇·기존 API에 연결되어 있으므로 값만 교체하지 않습니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다. 목표는 [신규 DB 단일 운영](docs/backend-consolidation-plan.md)이며, 기존 DB를 변경하지 않고 필요한 수집·알림 상태만 선별 이전할 예정입니다.
 
 ## 새 DB 관리자
 
@@ -57,7 +57,8 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 | 문서 | 다루는 내용 |
 | --- | --- |
-| [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md) | 구현 전 확정 방향: Operational/Catalog 장기 분리, API·설정 통합, X 저장·Discord 링크 알림만 유지 |
+| [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md) | 신규 DB 일원화, 수집·알림 필수 항목만 이전, external_accounts 기반 X 수집, API·설정 통합 |
+| [백엔드 통합 1단계 준비](docs/backend-phase-1-baseline.md) | 읽기 전용 계정 매핑·선택 이전 조사 절차, 참고 기준선, 실행 전 확인 목록 |
 | [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집 흐름, Discord 명령, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [프로필 이미지 저장](docs/avatar-storage.md) | Neon 이미지 이전, 크기 최적화, 캐시·교체와 복구 |

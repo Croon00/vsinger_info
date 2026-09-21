@@ -1,250 +1,185 @@
-# 백엔드 통합 최종 계획 — Operational DB + Catalog DB
+# 백엔드 통합 최종 계획 — 신규 DB 일원화
 
-작성·확정 방향 반영: 2026-09-21. **구현 전 계획서**다. 이 문서 작성으로 실행 코드, DB, Discord 등록 명령 또는 운영 설정을 변경하지 않았다. 현재 실행 구조는 [백엔드 구조](backend-architecture.md), 기존 조회 계약은 [조회 API v2](read-api-v2.md)를 따른다.
+확정 기준: 2026-09-21. **구현 전 계획서**다. 현재 실행 코드·DB·설정·Discord 등록 명령을 변경했다는 의미가 아니다. 현재 구현은 [백엔드 구조](backend-architecture.md), 실행 준비와 조사 항목은 [1단계 문서](backend-phase-1-baseline.md)를 따른다.
 
-이 문서는 두 DB의 장기 역할, API 통합, 환경설정 정리, Discord 기능 축소에 대한 최종 구현 기준이다. 기존 [DB 이전 계획](db-renewal-plan.md)의 카탈로그 모델은 계승하되, 별도 환경설정·구 ID 대응 제외·운영 기능 이전 방향은 아래 계획으로 대체한다. X 분류·일정 추출을 향후 다시 연결한다는 기존 계획은 폐기한다.
+## 1. 목표와 범위
 
-## 1. 확정 목표와 범위
+1. **신규 PostgreSQL 하나를 API·수집기·Discord 봇의 운영 DB로 사용한다.** 이미 반영된 음악 데이터와 검수 이력은 유지한다.
+2. 기존 DB에서는 수집 재개와 Discord 알림에 필요한 행·필드만 선별하여 신규 DB로 이전한다. 나머지 데이터는 기존 DB에 그대로 보존하고 이전하지 않는다.
+3. 기존 DB에는 DDL·DML·시드·보정·migration·권한 변경을 수행하지 않는다. 이전 도구는 읽기 전용으로 접근하며 전환 후 정상 runtime은 기존 DB에 연결하지 않는다.
+4. X 수집 대상의 기준은 신규 DB의 `external_accounts`다. 별도의 독립 X 계정 명부를 만들지 않는다.
+5. X 기능은 **게시글 원문 저장 + Discord에 원문 URL 전송**만 남긴다. 봇 명령·interaction·X 타입 분류·X 글의 YouTube live archive 자동 등록을 제거한다.
+6. 관리는 모두 `admin-web`에 모은다. **admin-web 개편은 별도 후속 작업**이며 이번 전환의 선행 조건으로 두지 않는다.
+7. Google Calendar는 데이터를 기존 DB에 그대로 보존하고 코드·설정·API를 레거시로 격리한다. 신규 DB로 Google 데이터를 옮기거나 정상 runtime에서 기능을 실행하지 않는다.
+8. API는 최종적으로 `/api` 계약으로 통합한다. 백엔드 설정은 루트 `.env`와 공통 Settings로 정리한다.
+9. 독립 YouTube·Spotify·노래방·가사 기능은 신규 모델과 호환되게 전환한다. 기능 보존이 기존 음악 데이터 전체 이전을 뜻하지 않는다.
 
-1. 기존 PostgreSQL을 **Operational DB**, 새 PostgreSQL을 **Catalog DB**로 장기 사용한다. 새 음악 정보의 기준은 Catalog 한 곳이다.
-2. 사용자·관리 API는 최종적으로 `/api` 아래의 리소스 계약으로 통합한다. `/api/v2`는 전환 후 제거한다.
-3. 백엔드 설정은 루트 `.env`와 공통 설정 로더로 통일하고 `.env.catalog`의 별도 로딩을 없앤다.
-4. Discord 봇은 **X 새 게시글의 원문 링크 전송만** 담당한다. 게시글 수집·저장은 X worker가 담당한다. 둘을 합친 기능 범위는 “X 게시글 저장 + Discord 링크 알림”이다.
-5. Discord의 관리·조회·검색·가사·Google 연결·수동 수집·테스트·재전송 명령과 interaction 기능을 모두 제거한다. 새 봇 명령을 대체 구현하지 않는다.
-6. X 게시글 타입 분류를 전부 제거한다. 규칙 분류, LLM 분류, `notice` 고정값 기록, 타입별 필터·메시지·통계도 제거 대상이다.
-7. **X 게시글 안의 YouTube 링크를 찾아 live archive 수집 대상으로 자동 등록하는 로직을 제거한다.** X 글 처리에서 YouTube 수집을 시작하지 않는다.
-8. 독립적인 YouTube 채널 모니터·명시적 등록·백필, Spotify·가사 등 카탈로그 기능은 유지하고 새 모델과 호환되게 전환한다. 봇 명령 삭제를 해당 백엔드 기능 전체 삭제로 확대하지 않는다.
-9. 원문, 외부 ID, 기존 소유권, cursor, 전송 이력, 이미 승인·반영한 카탈로그 자료를 보존한다.
+이번 범위에는 신규 관리 화면, 신규 공연 자동화, Calendar 재구현, 과거 음악 데이터 추가 이관을 포함하지 않는다.
 
-이번 작업은 신규 공연 자동화, 자동 Calendar 생성, 가사 자동 승인, 사용자 즐겨찾기 동기화, 새 음악 화면을 추가하는 사업이 아니다. 기존 Google 토큰·동기화 기록은 Operational에 보존하고 봇/X 의존성을 제거한다. 독립 Google API는 소비자 조사 후 유지 또는 레거시 격리하며 무조건 폐기하지 않는다.
+## 2. 신규 DB의 책임
 
-## 2. 봇 축소에 따라 단순화하는 부분
-
-| 이전 계획의 부담 | 최종 선택 |
-| --- | --- |
-| 봇의 아티스트·곡·가사 명령을 새 모델로 재작성 | 명령 전체 제거. 카탈로그 조회·편집은 웹/API에 집중 |
-| X 알림에도 구 아티스트→Catalog ID 대응 필요 | X는 Operational 소스 ID와 X 고정 계정 ID로 독립 동작. Catalog 연결은 선택적 표시 관계 |
-| 모든 X 글을 분류·추출·검수·카탈로그 반영 흐름에 연결 | X는 저장·전송으로 종료. 카탈로그 반영은 독립 음악 수집 경로에만 필요 |
-| X→YouTube→공연→Calendar의 연결 관리 | X에서 다른 수집·생성 흐름을 시작하는 연결 제거 |
-| X에 두 DB 간 반영 영수증·트랜잭션 조정 필요 | X 저장·cursor·전송 대기 기록은 Operational의 로컬 트랜잭션만 사용 |
-| 범용 워크플로 엔진·큐·새 메시지 브로커 선도입 | X는 일반 함수와 DB 전송 대기 기록으로 구성. LangGraph는 이 경로에서 제거 |
-| 로컬 검수 SQLite를 반드시 Operational로 이전 | 기존 로컬 검수 도구 유지. 중앙 검수·다중 관리자 요구가 생길 때 별도 판단 |
-| API·봇·worker를 즉시 여러 배포 서비스로 분리 | 코드 책임부터 분리. 초기에는 기존 통합 runtime도 유지 가능 |
-| 모든 구형 봇 기능을 관리 웹에 일대일 복제 | 소스·route·전송 상태 등 운영에 필요한 최소 기능만 우선 이전 |
-
-두 DB의 분리는 유지하지만 X 알림 서비스는 Catalog 장애와 무관하게 동작할 수 있다. 반대로 Catalog 조회도 Operational 장애에 불필요하게 종속시키지 않는다. 두 DB를 함께 사용하는 기능만 해당 연결을 요구한다.
-
-## 3. 데이터 책임
-
-| 데이터 | 최종 책임 | 이전·보존 원칙 |
+| 영역 | 저장할 내용 | 원칙 |
 | --- | --- | --- |
-| Discord 사용자 식별·소유권, Guild/channel 설정 | Operational | 기존 권한·소유권 보존. 봇 축소만을 이유로 사용자 플랫폼을 새로 만들지 않음 |
-| X source, provider 고정 계정 ID, 활성 상태, polling cursor | Operational | 구 `artists` JOIN 없이 수집 가능하도록 소유자·표시 정보 분리 |
-| `source_items` 원문·게시글 ID·URL·게시/수집 시각 | Operational | 분류 없이 저장. 원문과 provider 데이터의 필요한 맥락 보존 |
-| notification route, 전송 대기·delivery·재시도 | Operational | source·guild·channel 기준. item type에 의존하지 않음 |
-| YouTube 감시·수집 작업·재시도·worker 상태 | Operational | 영상 콘텐츠와 실행 상태 분리 |
-| Google OAuth token·기존 Calendar 동기화 이력 | Operational | X/봇에서 분리하고 기존 소비자 종료 전 보존 |
-| 외부 수집 후보·임시 매칭·캐시 | Operational | 승인된 음악 마스터의 대체 저장소로 사용하지 않음 |
-| 아티스트·별칭·소속사·그룹·공식 계정 | Catalog | 공용 음악 정보의 단일 기준 |
-| 곡·녹음·앨범·가사·노래방 번호·커버 | Catalog | 곡 작품과 실제 녹음 버전 구분 |
-| 영상·라이브·가창·공연·티켓 안내 | Catalog | 현재 자료·출처·검수 상태 보존 |
-| `source_documents`, `catalog_imports`, `catalog_changes` | Catalog | 콘텐츠 변경과 같은 트랜잭션에서 근거·영수증·감사 이력 기록 |
-| 로컬 가져오기 초안·승인 장부 | 기존 관리자 SQLite | 로컬 검수 도구의 명시적 저장소. 원격 서비스 운영 상태와 구분 |
+| 음악 정보 | 기존 아티스트·곡·녹음·앨범·가사·영상·라이브·가창·출처·검수 이력 | 신규 DB의 현재 모델과 이미 반영된 데이터를 기준으로 유지 |
+| 외부 계정 | `external_accounts`, `artist_external_accounts` | 계정 정체성·수집 활성 여부의 단일 기준 |
+| 수집 상태 | 계정별 cursor, 마지막 확인 외부 ID, 다음 실행·재시도·worker 상태 | 외부 계정 FK로 연결. 콘텐츠와 실행 상태 분리 |
+| X 원문 | 외부 게시글 ID, 계정, 본문, 원문 URL, 게시·수집 시각 | 분류 필드 없이 중복 차단 |
+| Discord 알림 | route, 필요한 guild/channel·소유권, 전송 대기·결과·재시도 | 계정별 설정 및 route별 중복 방지 |
+| 독립 음악 수집 작업 | 필요한 감시 설정·미완료 작업·재시도 상태와 영상 참조 | 완료 콘텐츠를 운영 상태 이전 명목으로 복제하지 않음 |
+| 이전 감사 | 원본 식별자→신규 ID 대응, 선택 사유, 실행 영수증·검증 결과 | 신규 DB에만 기록. 재실행해도 중복 생성·전송하지 않음 |
 
-### 3.1 공식 계정과 수집 설정
+같은 DB 안의 참조는 FK와 로컬 트랜잭션으로 보장한다. 계정·음악 도메인과 작업 상태는 코드 책임으로 구분하며 별도 운영 DB를 만들지 않는다.
 
-Catalog의 `external_accounts`는 공식 계정의 정체성과 아티스트 관계를 소유한다. 수집 활성 여부·주기·cursor는 Operational이 소유한다. 현재 `external_accounts.collection_enabled`는 소비자를 조사하고 Operational 설정으로 이전한 뒤 제거한다. 기존 false 값을 무시해 수집을 자동 활성화하지 않는다.
+로컬 관리자 SQLite 검수 장부와 twscrape의 계정 저장소는 해당 도구의 내부 저장소다. 이번 서비스 DB 통합을 이유로 이 도구들까지 재작성하지 않는다.
 
-X source는 Catalog에 없는 계정도 등록·저장·알림할 수 있다. Catalog와의 선택적 연결 실패가 X 수집을 막지 않는다. 반면 YouTube의 영상 출처 계정·진행자 등 카탈로그 반영에 필요한 관계는 검증된 고정 ID로 연결한다.
+### 2.1 external_accounts 기반 수집
 
-### 3.2 ID와 레거시 데이터
+- 수집 대상은 `platform='x'`, `collection_enabled=true`, `archived_at IS NULL`인 계정이다. 정상 수집은 이 조건을 반드시 확인한다.
+- `collection_enabled`를 활성 여부의 단일 기준으로 유지한다. 주기·cursor·재시도·lease는 계정별 수집 상태에 둔다.
+- `platform_id`는 provider의 고정 계정 ID로 사용하며 일치하면 우선 연결한다. 고정 ID가 없거나 기존 값이 달라도 같은 플랫폼에서 정규화한 handle이 신규 계정 하나와 유일하게 일치하면 연결한다. 이름·아티스트 표시명만으로 병합하지 않는다.
+- handle 연결은 근거를 이전 보고서에 남기고 신규 계정의 `platform_id`를 구 값으로 덮어쓰지 않는다. 같은 handle 후보가 여러 개거나 계정이 보관 상태면 보류한다. 이후 provider가 고정 ID를 확인하면 별도 검증된 변경으로 보완한다.
+- 신규 계정이 없으면 미매핑 목록에 남긴다. 자동 생성·자동 활성화하거나 계정 명부 밖에서 수집하지 않는다.
+- 연결된 X 계정의 `collection_enabled`는 기존 source의 `is_active`를 승계한다. 여러 source가 한 계정에 연결되면서 활성값이 다르면 자동 적용하지 않는다. 보관 상태는 기존 활성값으로 해제하지 않는다.
+- 여러 구 source가 같은 신규 계정에 대응하면 수집은 계정 단위로 합치되 route·소유권·성공 전송 기록은 유지한다. 서로 다른 cursor를 무조건 최댓값으로 합치지 않는다.
+- `artist_external_accounts`의 복수 아티스트 관계는 표시·음악 연결에 사용한다. 아티스트 수만큼 같은 계정을 반복 수집하지 않는다.
 
-- 구 DB와 Catalog의 같은 숫자 ID를 같은 엔티티로 해석하지 않는다. 필요한 참조에는 Catalog 인스턴스 식별값과 엔티티 ID를 함께 기록한다.
-- 이전 ID 대응은 필요한 기능에 한해 근거와 함께 보존한다. X 작동을 위해 전체 아티스트 매핑부터 완료할 필요는 없다.
-- 별도 DB 사이에 일반 FK나 단일 트랜잭션이 있다고 가정하지 않는다. 실제 참조를 사용하는 서비스가 존재·보관 상태를 검사한다.
-- 기존 source·route·delivery ID와 원문 중복 키를 우선 유지한다. 사용자별 동일 X 계정을 이름만 보고 합치거나 전송 이력을 버리지 않는다.
-- 구 음악 테이블은 전환 완료까지 보존한다. 최종적으로 쓰기를 중단하고 레거시로 격리한다. Operational의 정상 운영 표는 폐기 대상이 아니다.
-- [2026-09-21 이관 기록](setlist-migration-report.md)에 이미 카탈로그 데이터 반영이 기록되어 있다. 빈 DB 초기화·전체 덤프 재주입을 전환 방법으로 사용하지 않는다. 과거 기록의 건수는 이번에 실DB로 재검증한 수치가 아니다.
+## 3. 선택 이전 기준
 
-## 4. X 저장·Discord 링크 알림의 최종 계약
+이전 단위는 테이블 전체가 아니라 **선택한 계정·route·작업과 그 참조를 성립시키는 최소 행·필드**다. 최종 허용 목록은 1단계에서 근거와 함께 만든다.
+
+| 기존 데이터 | 이전 범위 |
+| --- | --- |
+| `artist_sources` | 매핑된 수집 계정의 필요한 cursor·고정 ID 대응·실행 상태. 구 아티스트 프로필은 복제하지 않음 |
+| `artists`, `artist_agencies` | 음악 마스터 이전 제외. 선택 route·작업의 권한에 필요한 소유자 식별 정보만 별도 추출 |
+| `notification_routes` | 선택 계정에 연결된 guild/channel·활성 상태·필요한 소유권. 타입 조건 제외 |
+| `notification_deliveries` | 선택 route의 중복 전송 방지에 필요한 성공 이력·message ID. 성공 건은 sent로 승계 |
+| `source_items` | 선택 delivery의 참조 원문 및 확인된 미완료 처리·cursor 경계에 필요한 원문만 이전. 분류·confidence·추출 결과 제외 |
+| `youtube_channel_monitors` | 신규 YouTube 계정과 매핑된 감시 설정·수집 재개 상태 |
+| `youtube_channel_videos`, `youtube_live_archives` | 수집 재개·중복 작업 방지·확인된 미완료/재시도에 필요한 외부 영상 ID와 상태만 선별. 존재하는 신규 영상은 참조 |
+| 구 가창·커버·곡·가사·공연 후보 | 이전 제외. 신규 DB의 이미 반영된 음악 자료 유지 |
+| 노래방 매칭·번역 cache | 기본 제외. 특정 수집 작업 재개에 꼭 필요한 항목만 별도 사유를 기록해 검토 |
+| Google token·Calendar sync·기타 Google 관련 자료 | 이전 제외. 기존 DB에 변경 없이 보존 |
+| 나무위키 템플릿·그 밖의 비필수 항목 | 이전 제외. 기존 DB에 변경 없이 보존 |
+
+선택한 행의 원문·외부 ID·URL·소유권은 보존한다. 과거 X 원문 전체를 이관하지 않더라도 제외된 원문은 원 DB에 남는다. 전체 행 수를 신규 DB에서 맞추는 것을 성공 기준으로 삼지 않는다.
+
+구 숫자 ID를 신규 ID로 그대로 해석하지 않는다. 원본 DB 식별값·테이블·행 ID를 포함하는 대응표와 고유 키를 사용한다. 소유권 충돌, 누락 참조, cursor 충돌은 자동 추정으로 해결하지 않는다.
+
+## 4. X 저장·Discord URL 알림 계약
 
 ```text
-X provider polling
-  → 신규 게시글 확인
-  → Operational 트랜잭션: 원문 중복 차단·저장 + route별 전송 대기 기록 + 안전한 cursor 갱신
-  → Discord sender가 대기 건 처리
-  → X 원문 URL 전송
-  → 전송 결과·message ID 기록 / 제한된 재시도
+external_accounts의 수집 가능 X 계정
+  → provider polling
+  → 신규 DB 트랜잭션: 원문 중복 차단·저장 + route별 전송 대기 + cursor 갱신
+  → sender가 대기 건 선점
+  → Discord에 X 원문 URL 하나 전송
+  → 결과·message ID 기록 또는 제한된 재시도
 ```
 
-### 입력과 저장
+- 게시글 타입을 판단하거나 기록하지 않는다. `notice` 고정 기록도 제거한다.
+- 원문에 YouTube 링크가 있어도 저장할 본문의 일부일 뿐이다. URL 추출·페이지 수집·archive 등록·공연 추출·Calendar 생성·번역을 호출하지 않는다.
+- provider polling 주기와 원본 글 범위는 별도 변경 요청 없이 유지한다. 현재 답글·재게시 제외 동작을 먼저 확인하고 계약으로 기록한다.
+- 기존 cursor는 검증 후 승계한다. 신규 계정의 첫 조회는 과거 글 일괄 알림 없이 기준선을 잡고 이후 새 글부터 알린다.
+- pagination을 끝내기 전에 미수집 구간을 건너뛰는 cursor를 저장하지 않는다. 장애 후 이어받을 수 있는 진행 상태를 둔다.
+- route가 없어도 원문은 저장한다. 새 route 생성 시 과거 게시글을 자동 전송하지 않는다.
+- 전송 대기는 DB에 내구성 있게 남긴다. `(route_id, source_item_id)` 고유성, 상태·시도 횟수·다음 시도·lease·message ID를 관리한다.
+- 기존 성공 건을 재전송하지 않는다. 기존 DB의 미전송 원문 전체를 pending으로 바꾸지 않고 실제 재개 대상임을 확인한 작업만 승계한다.
+- sender는 route 비활성·소유권·채널 접근을 다시 확인한다. 일시 장애·429는 제한적으로 재시도하고 결과 불명 건은 격리한다. 외부 전송의 exactly-once를 보장한다고 표현하지 않는다.
+- 조회·신규 저장·중복·예약·전송·생략·재시도·실패를 기록한다. X 분류·추출 통계는 제거한다.
 
-- “게시글 업로드 시”는 현재 provider의 polling으로 새 글을 발견하면 처리한다는 뜻이다. 실시간 webhook 지원이나 즉시 전송을 새로 보장하지 않는다. 조회 주기는 제공자 제한과 게시량을 보고 정하며 이번 문서에서 운영 주기를 변경하지 않는다.
-- 게시글 ID·계정 ID는 문자열로 보존한다. 원문, 원문 URL, 게시 시각, 수집 시각을 저장한다. 타입·confidence·reason은 새 처리 계약에서 제외한다.
-- 게시글의 주제에 따라 제외하지 않는다. 답글·재게시 등의 조회 범위는 기존 provider 계약을 먼저 기록하고 유지한다. 이를 분류 제거에 묶어 조용히 변경하지 않는다.
-- 기존 cursor는 승계한다. 신규 소스의 첫 조회는 과거 글 일괄 알림을 기본으로 하지 않는다. 권장 기본값은 초기 조회 범위를 저장·기준선으로 설정하고 이후 발견한 새 글부터 알림하는 것이다. 과거 수집은 명시적 별도 작업으로 구분한다.
-- pagination을 완료하지 못했을 때 미저장 구간을 건너뛰도록 cursor를 올리지 않는다. 저장과 후속 전송 예약이 내구성 있게 기록된 범위까지만 처리 완료로 본다.
+Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·테스트·재전송 명령을 모두 제거한다. lifecycle과 URL 전송 adapter만 남긴다. 원격 slash command 정리는 배포 때 해당 애플리케이션의 global/guild 등록 범위를 확인하여 수행한다.
 
-### 전송과 재시도
+## 5. 관리와 API
 
-- 애플리케이션이 보내는 메시지 본문은 **X 원문 URL 하나**다. 요약·분류 라벨·본문 복사·YouTube 링크 메시지를 만들지 않는다. Discord 자체 링크 미리보기는 애플리케이션의 분류·추출 기능과 구분한다.
-- route가 없어도 원문은 저장하고 알림만 생략한다. 뒤늦게 route를 만들었다고 과거 게시글 전체를 자동 전송하지 않는다.
-- 전송 대기는 별도 범용 큐를 도입하기보다 기존 `notification_deliveries`를 확장하는 방안을 우선 검토한다. `(route_id, source_item_id)` 고유성, 상태, 시도 횟수, 다음 시도 시각, lease, 결과 message ID를 둔다. 기존 성공 기록은 sent로 승계한다.
-- 원문 저장 성공 후 봇이 오프라인이 되어도 대기 건이 남아 재개할 수 있어야 한다. 중복 게시글 재수집을 건너뛰는 것과 미전송 건 재시도는 별개로 처리한다.
-- 여러 sender가 같은 건을 동시에 전송하지 않도록 DB에서 작업을 선점한다. route 삭제·비활성·권한 변경은 전송 시 다시 확인하고 이력은 보존한다.
-- timeout·429·일시 장애는 제한적으로 재시도하고 영구 권한 오류는 자동 폭주시키지 않는다. 전송 성공 후 DB 기록 실패처럼 결과가 불확실한 경우는 별도 상태로 격리하고 가능한 범위에서 확인한다. 외부 전송의 exactly-once를 보장한다고 표현하지 않는다.
-- 최소 집계는 조회 글 수, 신규 저장, 중복, 예약, 전송 성공, 생략, 재시도, 실패/결과 불명이다. 분류·추출·Calendar 건수는 X 실행 결과에서 제거한다.
+관리 위치는 `admin-web`으로 확정한다. 이번에는 신규 DB 전환에 필요한 저장 계약·권한 경계만 정의하고 기존 관리자 기능을 유지한다. 운영 설정·상태 화면을 추가하는 개편은 후속 작업으로 둔다. 봇 명령 삭제를 admin-web 개편 완료에 종속시키지 않는다.
 
-### 제거할 부작용
+초기 계정 대응·route·상태 이전은 검증된 이전 명세로 수행한다. 이는 일회성 이전 절차이며 상시 설정 파일 관리자나 새 봇 관리 명령으로 확장하지 않는다. 관리 화면이 없는 설정의 수동 변경을 정상 운영 절차로 문서화하지 않는다.
 
-X 경로는 Catalog 쓰기, YouTube URL 추출·live archive 등록, 링크 페이지 본문 수집, 규칙/LLM 분류, 공연 추출, Google Calendar 생성, 가사 생성·번역을 호출하지 않는다. X 글에 YouTube 링크가 여러 개 있어도 저장할 원문의 일부일 뿐이다.
-
-## 5. 관리 기능과 API 통합
-
-### 관리 위치
-
-X 계정·소스 활성 상태, route와 대상 채널, 전송·worker 상태는 기존 `admin-web`과 관리 API에 모은다. 정상 알림을 운영하는 데 필요한 최소 관리 화면을 준비한 뒤 봇 명령을 제거한다. 기존 설정을 먼저 승계하며 새 설정 체계를 만들기 위해 소스·route를 재등록하지 않는다.
-
-로컬 관리자의 loopback·세션·CSRF 보호를 유지한다. 서버 공용 설정 변경은 인증된 주체의 해당 guild 접근과 `manage_guild`, 대상 channel의 guild 소속을 검증한다. 필요한 인증 경계를 갖추기 전에 기존 로컬 관리 앱을 공개 API에 그대로 마운트하지 않는다. 사용자 조회 API와 관리 API의 권한을 분리한다.
-
-### 최종 HTTP 계약
-
-| 리소스 | 경로 예시 | 책임 |
-| --- | --- | --- |
-| 아티스트·라이브·앨범·공연·검색 | `/api/artists`, `/api/lives`, `/api/albums`, `/api/concerts`, `/api/search` | Catalog 조회 |
-| 작품·녹음별 가사 | `/api/songs`, `/api/recordings/{id}/lyrics` | Catalog 작품/녹음 기준. 곡 상세 화면 확장과는 별도 |
-| 수집 소스 | `/api/admin/collection-sources` | Operational 설정 |
-| 서버 알림 route | `/api/admin/guilds/{guild_id}/notification-routes` | 길드별 접근 제어 |
-| 전송·수집 상태 | `/api/admin/notification-deliveries`, `/api/admin/jobs` | 저장된 운영 상태 조회 |
-| 카탈로그 검수·반영 | 기존 `/api/admin/...` 계약 정리 | 검수와 명시적 Catalog 쓰기 |
-| 독립 계정 연동 | `/api/auth/...` | 실제 유지하는 소비자에 한해 보존 |
-
-API 통합은 리소스·스키마·서비스의 통합이다. 공개 조회와 로컬 관리자의 배포 프로세스까지 강제로 합치지 않는다. 모든 GET은 저장 자료만 조회하고 수집·생성은 명시적 작업 요청으로 분리한다. 요청·응답은 Pydantic으로 정의하고 페이지·필터·정렬·ID 의미를 문서화한다.
-
-현재 `/api/artists`와 `/api/v2/artists`의 응답 및 ID 체계는 다르므로 단순 prefix 삭제는 금지한다. 기존 소비자를 먼저 임시 `/api/legacy` 또는 별도 호환 앱으로 옮기고 전환을 확인한 뒤 `/api`를 Catalog 계약으로 교체한다. `/api/v2`는 필요한 기간 동안 같은 신규 서비스의 별칭으로만 유지한다. 소비자가 남아 있으면 해당 충돌 경로 전환을 보류하고 나머지 작업을 진행한다.
-
-## 6. 코드·설정 정리
-
-### 설정과 DB 연결
-
-```dotenv
-OPERATIONAL_DATABASE_URL=...
-CATALOG_DATABASE_URL=...
-```
-
-루트 `.env` 한 곳에 백엔드 설정을 두고 공통 Settings에서 읽는다. 환경변수가 파일보다 우선하며, 경로는 작업 디렉터리와 무관하게 해석한다. 구 키 `DATABASE_URL`, `NEW_CATALOG_DATABASE_URL`과 `.env.catalog`는 짧은 전환 기간에만 지원한다. 구·신 설정이 충돌하면 값은 노출하지 않고 오류로 처리한다.
-
-DB뿐 아니라 `.env.catalog`를 읽는 이미지 저장소 설정, 관리자, migration/import 스크립트도 함께 전환한다. URL 치환만으로 대상 DB를 바꾸지 않는다. DB별 공유 SQLAlchemy pool·요청/작업별 session과 명시적 읽기·쓰기 경계를 사용하고, 대상 DB의 역할·인스턴스·revision을 확인한다. 자동 초기화는 끄고 별도 migration으로 관리한다.
-
-프론트의 공개 환경설정과 백엔드 비밀정보는 구분한다. 프론트 전용 예시 파일이나 로컬 검수 작업 파일까지 개수만 줄이기 위해 합치지 않는다. 배포에서는 같은 설정 키를 프로세스별 필요한 범위에 주입한다.
-
-### 역할 충돌 해소
-
-| 현재 위치 | 최종 처리 |
+| 계약 | 최종 방향 |
 | --- | --- |
-| `api/routers/artists.py`, `services/artist_service.py`, `repositories/artists.py` | 공용 프로필은 Catalog로 통합. 사용자 소유권·수집 설정은 Operational로 분리 |
-| `api/routers/songs.py`, `services/song_service.py`, `repositories/songs.py` | 작품·녹음·가사·생성 작업으로 책임 분리. 구 song ID를 새 recording ID로 간주하지 않음 |
-| `services/catalog_read.py`, `repositories/catalog_read.py` | 신규 Catalog 조회 구현을 계승 |
-| `services/read_catalog.py`, `read_spotify.py` | 실제 참조 확인 후 레거시 격리 또는 제거 |
-| `bots/discord_bot.py` | 사용자 명령·직접 음악 SQL·생성 helper 제거. Discord 연결과 전송 adapter만 유지 |
-| `agents/scheduler.py` | X polling과 독립 음악 수집 스케줄을 분리. X에서 YouTube 등록·분류·일정 helper 호출 제거 |
-| `agents/music_graph.py` | X 분류/추출 workflow 제거 |
-| `integrations/ai_extractor.py` | X 분류 schema·규칙·prompt·함수 제거. 나머지 함수는 실제 소비자를 조사해 미사용이면 제거 |
-| `repositories/notification_routes.py` 및 호환 import | `item_type`·분류 기록 책임 제거. 소스/길드 권한·전송 상태 책임만 유지 |
-| `core/db.py` | 연결·증분 migration·시드·레거시 데이터 보정 분리. 시작 시 DDL·시드 재실행 제거 |
-| `integrations/youtube_*`, Spotify·가사 파이프라인 | provider 통신과 저장을 분리하고 Catalog/Operational repository를 명시적으로 사용 |
+| `/api/artists`, `/api/lives`, `/api/albums`, 검색·통계 등 | 현재 신규 조회 서비스와 DTO를 기반으로 통합 |
+| 곡·녹음·가사 | 신규 작품/녹음 ID 기준으로 책임 분리 |
+| `/api/admin/...` | admin-web의 관리 계약. 운영 화면 확장은 후속 작업 |
+| `/api/v2` | 필요 기간 같은 신규 서비스의 임시 별칭, 소비자 전환 후 제거 |
+| 구 API·prefix 없는 alias | 소비자와 ID 의미를 확인해 전환 또는 종료. 기존 DB 쓰기로 fallback하지 않음 |
+| Google auth·Calendar | 정상 API mount에서 제거하고 legacy로 격리 |
 
-`langgraph`는 다른 실행 소비자가 없음을 확인하고 의존성에서 제거한다. X 분류 제거를 이유로 카탈로그 수집에서 사용 중인 OpenAI·번역·가사 의존성까지 일괄 제거하지 않는다. X 분류 컬럼·enum·타입별 route 제약은 읽기/쓰기 소비자 제거 후 migration으로 정리하고 과거 감사 자료는 보존한다.
+`/api/artists` 등 충돌 경로는 prefix만 지우지 않는다. 소비자별 새 ID·응답 계약을 확인하고 신규 DB만 사용하는 한시적 adapter 또는 명시적 종료로 처리한다. GET에서 수집·생성·전송을 시작하지 않는다. Pydantic 계약과 페이지·필터·정렬 기준을 명시한다.
 
-폴더는 기존 계층을 유지하면서 `services/catalog`, `services/operational`, `repositories/catalog`, `repositories/operational`, `workers`, `legacy` 정도로 정리한다. 파일 이동과 동작 변경을 가능한 별도 변경 단위로 나누고 신규 코드가 `legacy`를 import하지 않도록 검사한다. `web.bak`은 필요한 관리 기능 이전 후 `legacy/web`로 격리한다.
+로컬 관리자의 loopback·세션·CSRF 보호를 유지한다. Discord 서버 공용 설정은 해당 guild 접근·manage_guild·channel 소속 검증을 요구한다. 사용자 조회와 관리 권한을 구분하며 인증 설계를 완료하지 않은 기능을 공개하지 않는다.
 
-## 7. 구현 순서와 단계별 완료 조건
+## 6. 설정·코드·레거시
 
-### 단계 1 — 기준선·소비자·제거 대상 확정
+최종 backend 설정은 루트 `.env`의 `DATABASE_URL` 하나로 신규 DB를 가리킨다. 공통 Settings, 공유 SQLAlchemy pool, 요청/작업별 session을 사용한다. 관리자·migration/import·이미지 저장 설정도 같은 로더를 사용한다. 프론트 공개 설정과 로컬 도구의 작업 파일은 용도에 맞게 분리한다.
 
-- 테이블/필드의 소유 DB, API/스크립트/봇의 읽기·쓰기 소비자, 설정 로더를 목록화한다.
-- 현재 migration revision과 이미 적용된 데이터 이관 영수증을 확인한다. 실DB 점검은 코드/fixture 조사와 구분한다.
-- X→YouTube 연결, 분류 helper, 봇 명령의 제거 목록과 독립 수집 기능의 보존 목록을 고정한다.
-- 기존 global/guild Discord 명령의 등록 범위와 앱 소유권을 확인할 배포 절차를 준비한다.
+**현재 DATABASE_URL 값부터 바꾸지 않는다.** 구 SQL과 `init_db()` 경로를 격리하고 대상 identity·revision 검사와 신규 repository 전환을 완료한 뒤 연결을 전환한다. 이전 전용 읽기 소스는 `LEGACY_DATABASE_URL` 같은 명시적 별도 입력으로 받고 정상 runtime에서는 로딩하지 않는다. 실제 URL·토큰은 문서·보고서·로그에 남기지 않는다.
 
-완료 조건: 무엇을 제거·유지·이전하는지와 기존 소비자의 전환 경로가 명확하다. 이 단계에서 DB 재수집·삭제·전송을 실행하지 않는다.
+`.env.catalog`와 `NEW_CATALOG_DATABASE_URL`은 소비자를 모두 전환한 뒤 제거한다. 과도기 별칭이 있으면 충돌 시 오류를 내고 암묵적으로 DB를 선택하지 않는다. 기존 DB의 baseline migration이나 revision 표를 만들지 않는다. 신규 DB의 적용된 `001`은 변경하지 않고 후속 revision만 추가한다.
 
-### 단계 2 — 공통 설정·DB migration 기반
-
-- 공통 설정 로더와 두 DB 연결 경계를 도입하고 기존 설정 별칭을 임시 지원한다.
-- 기존 Operational 스키마의 기준선을 기록하고 `migrations/operational`, `migrations/catalog`를 독립 관리한다. 이미 적용된 Catalog migration 파일을 수정하지 않는다.
-- 구 `init_db()`의 DDL·시드·데이터 보정은 동작을 조사해 명시적 명령으로 옮긴다.
-- 잘못된 DB·누락 설정을 감지하고 필요한 서비스만 영향을 받도록 한다.
-
-완료 조건: API·관리자·스크립트·runtime이 같은 규칙으로 설정을 읽고, 조회 시작이 DB를 초기화하지 않는다.
-
-### 단계 3 — X 운영 저장·최소 관리 화면
-
-- X source의 소유권·고정 계정 ID·표시명·cursor를 Operational 안에서 자립시킨다. Catalog 참조는 선택적으로 둔다.
-- 기존 source/route/delivery를 승계하고 전송 대기·재시도 상태를 추가한다. 기존 성공 delivery는 재전송하지 않는다.
-- 소스·route·채널·전송/실행 상태의 최소 관리 화면과 권한 검사를 준비한다. 임의 알림이나 수동 재전송을 UI 진입만으로 시작하지 않는다.
-- 기존 분류별 route 중복이 있다면 전송 이력과 권한 범위를 검증한 전환안을 만든다. 일반 시드 실행에서 중복을 삭제하지 않는다.
-
-완료 조건: Discord 명령 없이 운영 설정을 관리할 수 있고 X 처리가 구 음악 마스터·Catalog에 의존하지 않는다.
-
-### 단계 4 — X 경로·Discord 봇 축소
-
-- 저장·전송 예약·cursor 갱신을 안전한 단위로 묶고 sender가 재시도 가능한 전송 대기 건을 처리하게 한다.
-- X 분류, 고정 notice 기록, 타입별 메시지, 링크 페이지 처리, **YouTube live archive 자동 등록**, 공연·Calendar helper 연결을 제거한다.
-- 봇의 모든 사용자 명령·interaction을 삭제하고 URL 전송만 남긴다. 사용하지 않는 helper/import도 정리한다.
-- 배포 시 해당 Discord 애플리케이션에 이미 등록된 global/guild 명령도 명시적인 일회성 정리로 해제한다. 로컬 decorator 삭제만으로 원격 명령이 사라졌다고 간주하지 않는다. 매 시작마다 전체 guild 명령을 무차별 삭제하지 않는다.
-- 테스트의 이전 분류 기대값과 UI·문서의 봇 명령 안내를 새 계약으로 교체한다.
-
-완료 조건: X 글은 저장되고 URL만 전송된다. X에 YouTube 링크가 있어도 수집 등록·분류·추출·Calendar 호출이 0회이며 봇 명령이 남아 있지 않다.
-
-### 단계 5 — 독립 음악 수집과 Catalog 호환
-
-- 독립 YouTube 모니터/등록/백필부터 전환하고 Spotify·노래방·가사 순으로 진행한다. 진행 상태는 Operational, 콘텐츠는 Catalog로 분리한다.
-- 필요한 계정·아티스트·영상·곡/녹음 연결만 외부 고정 ID와 검수 근거로 매핑한다. 미확정 항목은 후보 상태로 남긴다.
-- 기존 관리자의 검수·manifest·`catalog_imports` 영수증을 재사용한다. 원격 수집 후보는 고정 후보 ID와 hash로 로컬 검수에 가져오고, 승인 상태의 기준은 검수 장부 한 곳으로 유지한다.
-- Catalog 반영 성공 후 Operational 결과 기록이 실패하면 같은 operation ID의 영수증으로 복구한다. X 전송에는 이 두 DB 간 반영 경로를 도입하지 않는다.
-- 기존 로컬 SQLite와 원본 파일 보관 구조는 유지하며 불필요한 중앙 검수 플랫폼을 새로 만들지 않는다.
-
-완료 조건: 새 음악 수집 자료가 기존 검수 절차를 거쳐 신규 프론트에서 조회되며 X 알림과 실행·장애 경계가 분리된다.
-
-### 단계 6 — API 계약 통합·소비자 전환
-
-- Catalog/Operational의 Pydantic 계약과 권한을 정리하고 구·신 artist/song ID 충돌을 제거한다.
-- 기존 관리 소비자를 호환 경로로 먼저 이동한 뒤 `/api`를 신규 계약으로 전환한다. `web`의 호출·캐시·mock·테스트·프록시 설정도 함께 변경한다.
-- 기존 v2 DTO를 가능한 재사용해 경로 변경과 불필요한 응답 재설계를 분리한다. 새 곡 상세 등 미구현 화면은 이번 통합 완료 조건에 포함하지 않는다.
-- 관리자의 로컬 보안 경계와 독립 배포 가능성을 유지한다. 문서상 하나의 API 계약이라고 공개 접근을 허용하지 않는다.
-
-완료 조건: 신규 소비자는 `/api`를 사용하고 동일 리소스의 ID·응답 의미가 일관된다. GET은 외부 수집·생성·전송을 시작하지 않는다.
-
-### 단계 7 — 레거시 격리·호환 제거·운영 전환
-
-- 사용 종료를 확인한 구 API·prefix 없는 별칭·`/api/v2`·임시 호환 경로를 제거한다.
-- 구 음악 테이블의 신규 쓰기를 중단하고 코드/도구/웹을 레거시로 격리한다. 보관 데이터 삭제는 별도 판단하며 이번 구조 정리에 묶지 않는다.
-- `.env.catalog`, 구 설정 키, 개별 설정 파서, 미사용 분류 의존성을 제거한다. 백엔드 `.env.example`과 실행 도구를 갱신한다.
-- 대표 소스로 전환을 검증하고 소스별 활성 worker/sender를 하나로 제한한다. 구·신 경로를 비교할 때 새 경로의 외부 전송은 끈다.
-- README·현재 구조·API 계약·roadmap·영역별 AGENTS를 실제 구현 상태로 갱신한다.
-
-완료 조건: 레거시 코드를 실행하지 않아도 조회·관리·독립 음악 수집·X 링크 알림이 동작한다. Operational과 Catalog는 각각 장기 운영 가능한 역할을 갖는다.
-
-## 8. 검증·전환·복구 기준
-
-| 범위 | 반드시 확인할 항목 |
+| 현재 위치 | 처리 |
 | --- | --- |
-| X 원문·cursor | 중복 수집, 여러 페이지, 저장 실패, 재시작, 초기 수집, 미저장 구간 건너뛰기 방지 |
-| 전송 | route 없음, 비활성, 봇 오프라인, 중복 worker, 재시도, channel 누락/권한 오류, 성공 후 기록 실패 |
-| 기능 제거 | 메시지는 URL 하나, X 분류/LLM 호출 없음, YouTube 링크 등록 없음, 이벤트/Calendar 쓰기 없음 |
-| 격리 | Catalog 연결 없이 X 동작, Operational 연결 없이 Catalog 조회 가능, X 제거가 독립 YouTube 수집을 막지 않음 |
-| 권한 | 다른 guild/source/route 접근 거부, manage_guild, channel 소속 검증, 서버 비밀정보 미노출 |
-| 카탈로그 | 기존 반영 데이터·원문 보존, 작품/녹음 ID 분리, 승인·영수증 재시도·참조 무결성 |
-| 계약 | 경로 충돌 없음, OpenAPI/DTO/페이지 기준, 구 소비자 전환 확인, GET 부작용 없음 |
-| 설정·레거시 | 설정 충돌/누락, 잘못된 DB 대상, 신규 코드의 legacy import, 자동 초기화·시드 미실행 |
+| `artists.py`와 artist service/repository | 신규 아티스트 마스터 사용. 수집 상태·권한을 프로필 CRUD에서 분리 |
+| `songs.py`와 song service/repository | 신규 작품·녹음·가사 계약으로 전환. 기존 곡/가사 추가 이전은 제외 |
+| `catalog_read.py` | 신규 조회 구현 재사용 |
+| `read_catalog.py`, `read_spotify.py` | 사용 여부를 확인해 legacy 격리 또는 제거 |
+| `bots/discord_bot.py` | command/interaction·음악 SQL·생성 helper 제거. 연결과 URL 전송만 유지 |
+| `agents/scheduler.py` | X poller/sender와 독립 음악 worker 실행 단위 분리 |
+| `agents/music_graph.py` | X 분류/공연 추출 workflow 제거 |
+| `integrations/ai_extractor.py` | X 분류·추출 제거. 독립 YouTube setlist 추출은 보존 |
+| `core/db.py` | 구 DDL·시드·보정 경로를 정상 시작 및 이전 도구에서 차단 |
+| Google OAuth·Calendar 코드와 설정 | legacy 격리. refresh·sync·callback 등 정상 실행 연결 제거 |
+| `web.bak`와 구 관리 router | 기존 DB 쓰기 경로 종료 후 legacy 격리. admin-web 개편은 별도 |
 
-테스트는 로컬 fixture/임시 DB와 mock provider를 사용한다. 실제 Discord·Calendar·LLM은 호출하지 않는다. 실DB 읽기 검증·소수 소스 운영 전환·Discord 원격 명령 해제는 배포 작업으로 구분하고 날짜·대상·결과를 기록한다. 테스트 통과를 실계정 전송 확인으로 표기하지 않는다.
+기존 계층을 살려 collection/notification/catalog 책임과 legacy 경계를 구분한다. 신규 코드가 legacy를 import하지 않도록 검사한다. X 분류 제거 후 다른 소비자가 없으면 LangGraph를 제거하되, 독립 setlist·가사·번역에서 쓰는 OpenAI 의존성은 유지한다. **구 DB의 분류 컬럼이나 테이블은 삭제·수정하지 않는다.**
 
-스키마는 추가 → 이관 → 검증 → 소비자 전환 → 정리 순서로 적용한다. 되돌리기는 신규 worker/sender를 멈추고 cursor·대기·완료 기록을 대조한 뒤 호환 가능한 처리 경로를 재개한다. 완료 delivery나 Catalog 영수증을 삭제해 재실행하지 않는다. 구 버전이 읽지 못하는 대기 상태는 먼저 변환·복구하며 무조건 바이너리만 되돌리지 않는다. 폐기한 X 분류·YouTube 연결·봇 명령은 자동 재활성화하지 않는다.
+## 7. 단계별 실행과 완료 조건
 
-## 9. 문서화 시점의 검증 범위
+### 1단계 — 읽기 전용 조사와 선택 이전 명세
 
-2026-09-21: 저장소 코드와 기존 이관 문서를 정적으로 확인해 작성했다. 실제 DB 내용·계정·실행 중인 프로세스·Discord 원격 명령을 이번에 조회하지 않았다. 구현 테스트·실제 수집·전송·DB migration은 실행하지 않았다. 본문의 단계와 검증표는 앞으로 수행할 작업이며 완료 기록이 아니다.
+[1단계 문서](backend-phase-1-baseline.md)의 절차로 계정 대응, 최소 행·필드, 중복 방지 이력, cursor·소유권 충돌, 기존 DB 쓰기 소비자를 조사한다. 과거 집계는 참고 자료이며 현재 매핑 결과로 대신하지 않는다.
 
-같은 날 변경 문서·작업 지침 8개의 로컬 Markdown 링크 57개가 존재함을 확인했고 `git diff --check`를 통과했다. 이 검증은 문서 연결·공백 오류 범위이며 실행 기능의 검증이 아니다.
+완료 조건: 선택/제외 사유와 참조가 명확한 이전 명세, 충돌 목록, 소비자 전환 목록이 있다. 필요한 사용자 결정이 해결되거나 해당 항목을 명시적으로 보류한다. DB 쓰기·재수집·전송은 하지 않는다.
+
+### 2단계 — 신규 DB 스키마·공통 설정 기반
+
+신규 DB에 추가할 계정별 상태·X 원문·route·delivery·작업·이전 영수증 schema와 후속 migration을 작성한다. 구 초기화 경로를 차단하고 신규 DB identity/revision guard와 공통 Settings를 준비한다.
+
+완료 조건: 격리된 테스트 DB에서 migration·FK·고유 제약·연결 가드가 검증되고, 시작 시 DDL/시드가 실행되지 않는다. 실제 기존 DB에는 아무 변경도 하지 않는다.
+
+### 3단계 — 선택 이전 도구와 검증
+
+기존 DB SELECT → 명세 검증 → 신규 DB 반영 도구를 작성한다. 계정 대응→상태/route→필요 원문/이력→미완료 작업 순서를 검증하고 dry-run·재실행·중단 복구를 테스트한다.
+
+완료 조건: 선택 집합 일치, 제외 항목 유입 0, 참조 오류 0, 성공 알림의 pending 변환 0, 재실행 중복 0. 실제 이전 실행은 검증된 명세와 전환 시점에 맞춰 5단계에서 수행한다.
+
+### 4단계 — 수집기·최소 Discord 봇 전환
+
+external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령·X 분류·X→YouTube 연결을 제거하고 독립 YouTube·Spotify·노래방·가사 경로를 신규 DB와 호환되게 전환한다.
+
+완료 조건: fixture에서 신규 글·중복·무 route·offline·재시도·pagination을 검증하고 X가 다른 수집이나 Google을 호출하지 않는다. admin-web 개편은 요구하지 않는다.
+
+### 5단계 — API 통합·실제 이전·runtime 전환
+
+구 쓰기 프로세스를 배포/실행 설정에서 정지한 뒤 최종 읽기 스냅샷과 명세를 재검증한다. 구 DB의 활성 플래그를 변경해 정지하지 않는다. Google callback·refresh·sync와 구 DB를 사용하는 API/script의 실행 연결도 이 시점까지 차단한다. 신규 DB에 선택 이전을 반영·검증하고 API/worker/bot의 연결과 신규 프론트를 전환한다.
+
+완료 조건: 정상 runtime은 신규 DB만 사용하고 구 DB 쓰기 경로는 실행되지 않는다. 기존 성공 알림 재전송과 과거 글 대량 알림 없이 계정별 수집을 재개한다. 연결 변경만으로 구 SQL이 신규 DB에서 실행되지 않는다.
+
+### 6단계 — 레거시·환경설정·배포 정리
+
+Google과 구 API/UI를 격리하고 임시 v2/호환 alias·중복 env 로딩을 종료한다. 해당 bot의 원격 slash command 제거를 검증하고 운영·복구 문서를 갱신한다.
+
+완료 조건: 신규 실행 경로에 legacy import·Google 호출·기존 DB 접속·X 분류·YouTube 자동 등록이 없다. 기존 DB와 제외 데이터는 변경 없이 보존된다.
+
+### 별도 후속 — admin-web 개편
+
+외부 계정 수집 설정, route, 작업/전송 상태와 재시도 관리 화면을 추가한다. 봇 명령의 일대일 복제는 하지 않으며 이미 정의한 서비스·권한 계약을 사용한다.
+
+## 8. 전환 검증과 복구
+
+- 이전 시점의 source snapshot과 신규 DB revision·대응 계정 version을 확인한다. 조사 후 변경된 계정·cursor·route는 재검토한다.
+- 기존 DB에는 SELECT만 실행한다. 읽기 전용 트랜잭션을 사용하고 권한 변경이나 초기화 함수를 호출하지 않는다.
+- fixture와 실제 DB 검증 결과를 구분한다. 실제 Discord·Calendar·LLM 호출을 테스트에 사용하지 않는다.
+- 선택된 원문·소유권·참조 보존, 계정 매핑, route별 전송 중복 방지와 제외 데이터 비이전을 확인한다.
+- 이미 승인된 신규 음악 자료·출처·검수 이력을 덮어쓰지 않는다. 전체 덤프 재주입이나 DB 초기화를 하지 않는다.
+- 전환 실패 시 신규 worker/sender를 정지하고 신규 DB의 이전 영수증·작업 상태를 기준으로 복구한다. 기존 DB에 다시 쓰는 구 runtime 재가동을 자동 복구로 삼지 않는다.
+- 전송 결과가 불명확한 건은 무조건 다시 보내지 않는다. 신규 DB 반영의 되돌리기도 다른 변경과 의존성이 없는 이번 이전 범위에 한해 검토한다.

@@ -6,7 +6,8 @@ FastAPI + PostgreSQL 백엔드, 기존 관리 웹 `web.bak/`, 새 조회 프론�
 
 - 새 프론트는 조회 전용 `/api/v2`를 사용한다. 기존 API와 관리 기능은 사용 종료가 확인되기 전 제거하지 않는다.
 - scheduler의 현재 X 경로는 새 글 알림이다. LangGraph 분류와 Google 일정 생성 helper가 존재한다고 자동 연결된 것으로 간주하지 않는다.
-- 2026-09-21 확정한 변경은 [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md)을 따른다. X는 원문 저장·Discord URL 전송만 남기며 봇 명령, X 분류, X 글의 YouTube 자동 등록은 제거 대상이다. 아래 분류 확장 지침을 X에 적용하지 않는다. 현재 구현 완료로 해석하지 않는다.
+- 2026-09-21 확정한 변경은 [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md)을 따른다. 신규 DB로 일원화하며 수집·알림 필수 항목만 선별 이전한다. 기존 DB는 읽기 전용으로 조사하고 schema·데이터·권한을 변경하지 않는다. X 수집 기준은 신규 `external_accounts`다.
+- X는 원문 저장·Discord URL 전송만 남기며 봇 명령, X 분류, X 글의 YouTube 자동 등록은 제거 대상이다. 관리는 admin-web으로 모으되 개편은 후속 작업이다. Google Calendar는 기존 DB의 데이터를 보존하고 legacy로 격리한다. 아래 분류 확장 지침을 X에 적용하지 않으며 목표를 현재 구현 완료로 해석하지 않는다.
 - 세부 영역의 `AGENTS.md`도 따른다. 미구현 보안·데이터 계약은 구현된 것처럼 문서화하지 않는다.
 
 ## 구현 원칙
