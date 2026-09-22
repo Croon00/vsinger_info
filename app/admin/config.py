@@ -28,5 +28,5 @@ class AdminSettings:
             workspace=Path(os.environ.get("ADMIN_WORKSPACE", str(cls.workspace))),
             input_dir=Path(os.environ.get("ADMIN_INPUT_DIR", str(cls.input_dir))),
             database_url=common.new_database_url or "",
-            catalog_instance_id=common.new_catalog_instance_id,
+            catalog_instance_id=common.new_database_instance_id,
         )

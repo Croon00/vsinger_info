@@ -98,13 +98,13 @@ def client(monkeypatch):
         yield client
 
 def test_read_contract_auth_validation_and_missing_resources(client):
-    assert client.get('/api/v2/artists').status_code==401
+    assert client.get('/api/artists').status_code==401
     headers={'X-API-Key':'test-key'}
-    result=client.get('/api/v2/artists',headers=headers)
+    result=client.get('/api/artists',headers=headers)
     assert result.json()==[] and 'queries' in result.headers['server-timing']
-    assert client.get('/api/v2/artists/1',headers=headers).status_code==404
-    assert client.get('/api/v2/lives/1',headers=headers).status_code==404
-    assert client.get('/api/v2/search?q=test&limit=101',headers=headers).status_code==422
-    assert client.get('/api/v2/search?q=test&offset=-1',headers=headers).status_code==422
-    assert client.get('/api/v2/concerts?start=2026-10-01&end=2026-09-01',headers=headers).status_code==422
-    assert client.post('/api/v2/artists',headers=headers).status_code==405
+    assert client.get('/api/artists/1',headers=headers).status_code==404
+    assert client.get('/api/lives/1',headers=headers).status_code==404
+    assert client.get('/api/search?q=test&limit=101',headers=headers).status_code==422
+    assert client.get('/api/search?q=test&offset=-1',headers=headers).status_code==422
+    assert client.get('/api/concerts?start=2026-10-01&end=2026-09-01',headers=headers).status_code==422
+    assert client.post('/api/artists',headers=headers).status_code==405

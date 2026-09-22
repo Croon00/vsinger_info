@@ -22,14 +22,14 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
     calls.push(url.pathname + url.search)
     let data: unknown = []
     let status = 200
-    if (url.pathname === '/api/v2/artists') data = [artist]
+    if (url.pathname === '/api/artists') data = [artist]
     else if (url.pathname.endsWith('/statistics')) data = {
       archives: 200, archivesWithSetlist: 180, performances: 900, uniqueSongs: 1, uniqueArtists: 1,
       songs: [{ key: 'song', title: 'Aggregated song', artist: 'Band', searchText: 'Aggregated song Band', count: 900, lastPerformedAt: '2026-09-01T00:00:00Z', rank: 1 }],
       artists: [{ key: 'band', name: 'Band', count: 900, percentage: 100 }],
       activity: [{ month: '2026-08', count: 200 }],
     }
-    else if (url.pathname === '/api/v2/artists/42/lives')
+    else if (url.pathname === '/api/artists/42/lives')
       data = [
         {
           id: 700,
@@ -42,7 +42,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
           ],
         },
       ]
-    else if (url.pathname === '/api/v2/artists/42/albums') {
+    else if (url.pathname === '/api/artists/42/albums') {
       status = spotifyReady ? 200 : 503
       data = spotifyReady
         ? [
@@ -55,7 +55,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
             },
           ]
         : { detail: 'Needs Spotify match' }
-    } else if (url.pathname === '/api/v2/albums/15')
+    } else if (url.pathname === '/api/albums/15')
       data = {
         id: '15',
         name: 'Real release',
@@ -73,7 +73,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
           },
         ],
       }
-    else if (url.pathname === '/api/v2/recordings/37/lyrics')
+    else if (url.pathname === '/api/recordings/37/lyrics')
       data = {
         recording_id: 37,
         song_id: 987,
@@ -85,7 +85,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         needs_review: true,
         lyrics_source_type: 'caption',
       }
-    else if (url.pathname === '/api/v2/search')
+    else if (url.pathname === '/api/search')
       data = [
         {
           id: 701,
@@ -99,7 +99,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
           youtube_url: 'https://youtu.be/abcdefghijk',
         },
       ]
-    else if (url.pathname === '/api/v2/concerts')
+    else if (url.pathname === '/api/concerts')
       data = [
         {
           id: 80,
@@ -121,7 +121,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         },
       ]
     else throw new Error(`Unexpected API: ${url.pathname}`)
-    if (['/api/v2/artists/42/lives', '/api/v2/search', '/api/v2/concerts'].includes(url.pathname)) {
+    if (['/api/artists/42/lives', '/api/search', '/api/concerts'].includes(url.pathname)) {
       const items = data as unknown[]
       data = {
         items,
@@ -136,7 +136,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   await expect(page.locator('h1')).toHaveText('HACHI')
   await expect(page.locator('.live-card')).toContainText('Real contract live')
   expect(calls.some((p) => p.includes('/spotify/'))).toBe(false)
-  expect(calls.filter((p) => p === '/api/v2/artists')).toHaveLength(1)
+  expect(calls.filter((p) => p === '/api/artists')).toHaveLength(1)
   expect(await page.evaluate(() => navigator.serviceWorker.controller)).toBeNull()
   await page.getByRole('tab', { name: '통계', exact: true }).click()
   await expect(page.locator('.statistics-song-row')).toContainText('Aggregated song')
@@ -152,7 +152,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   await expect(page.locator('.track-section')).toContainText('2020년 4월')
   await page.getByRole('button', { name: '가사', exact: true }).click()
   await expect(page.getByRole('dialog')).toContainText('Contract fixture text')
-  expect(calls).toContain('/api/v2/recordings/37/lyrics')
+  expect(calls).toContain('/api/recordings/37/lyrics')
   await page.goto('/search?q=Band')
   await expect(page.locator('.performance-result')).toHaveCount(1)
   await expect(page.locator('.performance-result')).toHaveAttribute('href', '/lives/700?t=75')

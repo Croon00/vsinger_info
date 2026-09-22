@@ -33,7 +33,7 @@ Google OAuth·Calendar 표, X 게시글 타입·confidence·추출 결과, X 글
 
 ## 설정과 연결 보호
 
-`app/core/config.py`가 루트 `.env`와 과도기 `.env.catalog`를 함께 읽는다. 신규 DB 소비자는 `NEW_DATABASE_URL`을 명시적으로 사용하며 기존 `DATABASE_URL`로 fallback하지 않는다. `NEW_CATALOG_INSTANCE_ID`를 설정하면 고정 `catalog_instance.id`도 확인한다.
+`app/core/config.py`가 루트 `.env`와 과도기 `.env.catalog`를 함께 읽는다. 신규 DB 소비자는 `NEW_DATABASE_URL`을 명시적으로 사용하며 기존 `DATABASE_URL`로 fallback하지 않는다. 선택적 `NEW_DATABASE_INSTANCE_ID`를 설정하면 고정 `catalog_instance.id`도 확인한다.
 
 `app/db/catalog_session.py`는 session을 내주기 전에 revision `001`, `002`, `catalog-v2`, 선택적 instance ID를 검사한다. 불일치하면 503으로 중단한다. 기존 `app/core/db.py:init_db()`는 `catalog_instance`와 migration 표가 있는 관리 DB를 감지하면 DDL·시드 전에 거부한다. 정상 runtime의 DB URL 전환과 `.env.catalog` 제거는 5·6단계 작업이다.
 

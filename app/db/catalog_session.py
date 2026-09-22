@@ -1,4 +1,5 @@
-"""Guarded pool for the unified DB; never falls back to the legacy DATABASE_URL."""
+"""Guarded sessions for the unified DB; never fall back to the legacy DB."""
+from contextlib import contextmanager
 from functools import lru_cache
 from uuid import UUID
 
@@ -51,7 +52,7 @@ def verify_catalog_identity(session: Session) -> str:
         raise CatalogIdentityError("Unified DB migration revision mismatch")
     if identity.schema_version != settings.catalog_schema_version:
         raise CatalogIdentityError("Unified DB schema version mismatch")
-    expected_id = settings.new_catalog_instance_id
+    expected_id = settings.new_database_instance_id
     if expected_id:
         try:
             if UUID(identity.id) != UUID(expected_id):
@@ -76,3 +77,20 @@ def get_catalog_session():
                 session.rollback()
     except (SQLAlchemyError, CatalogIdentityError):
         raise HTTPException(503, "신규 통합 DB의 연결 또는 schema identity를 확인하세요.") from None
+
+
+@contextmanager
+def catalog_runtime_session():
+    """Yield a writable, identity-checked session for workers and delivery jobs."""
+    url = catalog_url()
+    if not url:
+        raise CatalogIdentityError("NEW_DATABASE_URL is not configured")
+    with Session(catalog_engine(url), autoflush=False, expire_on_commit=False) as session:
+        session.execute(text("SET LOCAL statement_timeout='30s'"))
+        verify_catalog_identity(session)
+        try:
+            yield session
+            session.commit()
+        except Exception:
+            session.rollback()
+            raise

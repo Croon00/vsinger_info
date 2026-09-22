@@ -216,12 +216,12 @@ def test_unified_connection_guard(database, monkeypatch):
         f"postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}"
     )
     monkeypatch.setattr(settings, "catalog_schema_version", "catalog-v2")
-    monkeypatch.setattr(settings, "new_catalog_instance_id", None)
+    monkeypatch.setattr(settings, "new_database_instance_id", None)
     try:
         with Session(engine) as session:
             session.execute(text("SET TRANSACTION READ ONLY"))
             instance_id = verify_catalog_identity(session)
-        monkeypatch.setattr(settings, "new_catalog_instance_id", str(uuid.uuid4()))
+        monkeypatch.setattr(settings, "new_database_instance_id", str(uuid.uuid4()))
         with Session(engine) as session, pytest.raises(CatalogIdentityError, match="instance identity"):
             session.execute(text("SET TRANSACTION READ ONLY"))
             verify_catalog_identity(session)

@@ -59,15 +59,15 @@ def test_empty_catalog_and_missing_resources(store, monkeypatch):
             yield s
     app.dependency_overrides[get_catalog_session] = session
     with TestClient(app) as client:
-        assert client.get("/api/v2/artists").status_code==401
+        assert client.get("/api/artists").status_code==401
         client.headers["X-API-Key"]="test"
-        assert client.get("/api/v2/artists").json()==[]
+        assert client.get("/api/artists").json()==[]
         for path in ["/search?q=test","/concerts"]:
-            res=client.get("/api/v2"+path)
+            res=client.get("/api"+path)
             assert res.status_code==200, res.text
             assert res.json()["total"]==0
         for path in ["/artists/1","/lives/1","/albums/1","/recordings/1/lyrics"]:
-            assert client.get("/api/v2"+path).status_code==404
+            assert client.get("/api"+path).status_code==404
 
 def test_normalized_catalog_reads_and_attribution(store):
     db,engine = store

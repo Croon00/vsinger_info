@@ -1,4 +1,4 @@
-"""Frontend read API. Existing /api endpoints remain compatible."""
+"""Canonical unified-DB read API mounted at ``/api``."""
 from datetime import date
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -9,7 +9,7 @@ from app.services.catalog_read import CatalogRead
 from app.schemas.read_models import ArtistRead, LiveRead, SearchRead, Page, StatisticsRead, ConcertRead
 from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead
 
-router = APIRouter(prefix='/v2',tags=['frontend-read'],dependencies=[Depends(require_api_key)])
+router = APIRouter(tags=['frontend-read'],dependencies=[Depends(require_api_key)])
 def catalog(response: Response, session: Annotated[Session, Depends(get_catalog_session)]):
     service = CatalogRead(session)
     yield service

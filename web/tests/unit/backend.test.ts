@@ -89,7 +89,7 @@ describe('real API requests', () => {
       'fetch',
       vi.fn(async (path: string) => {
         calls.push(path)
-        if (path === '/api/v2/artists') return json([rawArtist])
+        if (path === '/api/artists') return json([rawArtist])
         expect(new URL(path, 'http://localhost').searchParams.get('q')).toBe('Band')
         return json({
           items: [rawPerformance, { ...rawPerformance, id: 2, artist_name: 'Guest' }],
@@ -110,7 +110,7 @@ describe('real API requests', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async (path: string) => {
-        expect(path).toBe('/api/v2/artists/42/lives?offset=6&limit=6')
+        expect(path).toBe('/api/artists/42/lives?offset=6&limit=6')
         return json({
           items: [{ id: 7, artist_id: 42, artist_name: 'HACHI', youtube_url: '', performance_count: 12 }],
           total: 200,
@@ -138,14 +138,14 @@ describe('real API requests', () => {
     vi.stubGlobal('fetch', fetcher)
     const { cachedRead } = await import('@/api/read-cache')
     const controller = new AbortController()
-    const cancelled = cachedRead('/api/v2/artists', controller.signal).catch((e) => e.name)
-    const survivor = cachedRead('/api/v2/artists')
+    const cancelled = cachedRead('/api/artists', controller.signal).catch((e) => e.name)
+    const survivor = cachedRead('/api/artists')
     controller.abort()
     complete(json([rawArtist]))
     expect(await cancelled).toBe('AbortError')
     expect(await survivor).toHaveLength(1)
     expect(fetcher).toHaveBeenCalledTimes(1)
-    await cachedRead('/api/v2/artists')
+    await cachedRead('/api/artists')
     expect(fetcher).toHaveBeenCalledTimes(1)
     fetcher.mockImplementation(async () => json({}, 503))
     await expect(cachedRead('/failure')).rejects.toMatchObject({ status: 503 })
@@ -154,7 +154,7 @@ describe('real API requests', () => {
   })
   it('uses catalog album and recording IDs for lyrics without legacy lookups', async () => {
     const fetcher = vi.fn(async (path: string) => {
-      expect(path).toBe('/api/v2/albums/15')
+      expect(path).toBe('/api/albums/15')
       return json({ id: '15', name: 'Release', album_type: 'ep', total_tracks: 1,
         tracks: [{ id: '21', recording_id: 37, song_id: 987, has_lyrics: true,
           name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000 }] })

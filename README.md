@@ -16,13 +16,13 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 uvicorn app.main:app --reload
 ```
 
-`.env`의 `DATABASE_URL`에 PostgreSQL 접속 정보를 설정한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며, 로컬 API를 실행해도 DB가 로컬로 복사되지는 않는다. 주 서비스 DB는 SQLite가 아니다. `data/twscrape_accounts.db`는 X 수집 도구의 별도 계정 저장소다.
+과도기에는 루트 `.env.catalog` 또는 환경변수의 `NEW_DATABASE_URL`에 신규 PostgreSQL 접속 정보를 설정한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며, 로컬 API를 실행해도 DB가 로컬로 복사되지는 않는다. 기존 `.env`의 `DATABASE_URL`은 전환 migration의 읽기 원본으로만 보존한다. `data/twscrape_accounts.db`는 X 수집 도구의 별도 계정 저장소다.
 
 - API: http://127.0.0.1:8000
 - API 문서: http://127.0.0.1:8000/docs
 - 프로세스 상태: http://127.0.0.1:8000/health — DB 연결까지 검사하는 주소는 아니다.
 - `app.main:app`과 `app.api.main:app`은 같은 API다.
-- `DATABASE_AUTO_INIT=false`가 코드 기본값이다. 기존 스키마가 준비된 DB를 사용한다. `true`는 시작 시 `app/core/db.py`의 스키마·시드 초기화를 수행하므로 단순 조회 검증 때 켜지 않는다.
+- 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않는다. `DATABASE_AUTO_INIT`는 격리된 legacy 설정이며 켜지 않는다.
 
 다른 터미널에서 새 프론트를 실행한다.
 
@@ -34,7 +34,7 @@ npm run dev
 
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
-현재 사용자 조회 `/api/v2`는 루트 `.env.catalog`의 `NEW_DATABASE_URL`로 새 DB를 읽습니다. 기존 `DATABASE_URL`은 아직 수집기·Discord 봇·기존 API에 연결되어 있으므로 값만 교체하지 않습니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다. 목표는 [신규 DB 단일 운영](docs/backend-consolidation-plan.md)이며, 기존 DB를 변경하지 않고 필요한 수집·알림 상태만 선별 이전할 예정입니다.
+현재 사용자 조회 `/api`와 X poller·Discord URL sender는 루트 `.env.catalog`의 `NEW_DATABASE_URL`을 명시적으로 사용합니다. 기존 `DATABASE_URL`은 배포 전환 시점까지 이전 원본으로만 보존하며 정상 API/runtime에서는 사용하지 않습니다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행합니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다.
 
 ## 새 DB 관리자
 
@@ -45,8 +45,8 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | 명령/디렉터리 | 역할 |
 | --- | --- |
 | `uvicorn app.main:app --reload` | API만 실행. Discord 로그인과 주기 수집 loop는 시작하지 않음 |
-| `python -m app.runtime` | API + Discord 봇, `AGENT_ENABLED=true`이면 수집 loop도 실행 |
-| `web/` | 새 사용자 조회 화면. 기본 `/api/v2`, 별도 mock 모드 |
+| `python -m app.runtime` | API 실행. `RUNTIME_CUTOVER_ENABLED=true`에서 Discord 봇을, 여기에 `AGENT_ENABLED=true`이면 수집 loop도 실행 |
+| `web/` | 새 사용자 조회 화면. 기본 통합 `/api`, 별도 mock 모드 |
 | `admin-web/` / `python scripts/run_admin.py` | 새 카탈로그 로컬 관리자. 빌드 후 127.0.0.1:8010, 초기 데이터는 명시적 검수·반영 |
 | `web.bak/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |
 | `scripts/` | 정규화, 수집, 등록 등 운영 도구. 실행 전 조회/변경 여부 확인 |
@@ -61,7 +61,9 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 통합 1단계 준비](docs/backend-phase-1-baseline.md) | 읽기 전용 계정 매핑·선택 이전 조사 절차, 참고 기준선, 실행 전 확인 목록 |
 | [백엔드 통합 2단계 결과](docs/backend-phase-2-runtime-schema.md) | 신규 DB 운영 스키마, 연결 guard, 적용·검증 결과 |
 | [백엔드 통합 3단계 결과](docs/backend-phase-3-runtime-migration.md) | 선택 이전 dry-run, snapshot manifest, 적용·재실행 검증 |
-| [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집 흐름, Discord 명령, 설정, 보안 |
+| [백엔드 통합 4단계 결과](docs/backend-phase-4-runtime.md) | external_accounts 기반 X 수집, durable Discord URL sender, 명령·분류·자동 등록 제거 |
+| [백엔드 통합 5단계 전환](docs/backend-phase-5-cutover.md) | `/api` 통합, 배포 잠금, 최종 이전·Railway 활성화 순서와 롤백 |
+| [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집·Discord URL 전송 흐름, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [프로필 이미지 저장](docs/avatar-storage.md) | Neon 이미지 이전, 크기 최적화, 캐시·교체와 복구 |
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
