@@ -52,16 +52,16 @@ function checkThumbnail(event: Event) {
         {{ formatTime(live.duration_seconds) }}
       </Badge>
     </div>
-    <p class="eyebrow">{{ formatDate(live.broadcast_at, { month: '2-digit', day: '2-digit' }) }}</p>
+    <div class="live-meta">
+      <p class="eyebrow">{{ formatDate(live.broadcast_at, { month: '2-digit', day: '2-digit' }) }}</p>
+      <span aria-hidden="true">・</span>
+      <span class="live-song-count">
+        <template v-if="live.performance_count && live.performance_count > 0">
+          {{ live.performance_count }}곡
+        </template>
+        <template v-else>준비중</template>
+      </span>
+    </div>
     <h3>{{ live.title_ko || live.title }}</h3>
-    <p class="text-sm text-muted-foreground">
-      {{
-        !live.video_id
-          ? '영상 미등록'
-          : live.performance_count && live.performance_count > 0
-            ? `${live.performance_count}곡의 세트리스트`
-            : '세트리스트 준비 중'
-      }}
-    </p>
   </component>
 </template>

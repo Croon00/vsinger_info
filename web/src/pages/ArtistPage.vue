@@ -206,9 +206,6 @@ function changeTab(value: string | number) {
             <TabsTrigger value="lives">
               <Play />
               라이브
-              <span v-if="liveData || stats" class="tab-count">
-                {{ liveData?.total ?? stats?.archives }}
-              </span>
             </TabsTrigger>
             <TabsTrigger value="statistics">
               <ChartNoAxesColumnIncreasing />
@@ -226,7 +223,7 @@ function changeTab(value: string | number) {
           <TabsContent value="lives" class="pt-4 min-[769px]:pt-6">
             <div class="section-heading">
               <div>
-                <h2>라이브 아카이브</h2>
+                <h2 class="live-archive-title">라이브 아카이브 <span v-if="liveData">{{ liveData.total }}개</span></h2>
               </div>
               <span class="text-xs text-muted-foreground">최신순</span>
             </div>
@@ -270,7 +267,7 @@ function changeTab(value: string | number) {
                 :disabled="moreLoading"
                 @click="loadMore"
               >
-                라이브 더 보기
+                더보기
                 <ChevronDown data-icon="inline-end" />
               </Button>
               <p v-if="moreError" role="alert" class="text-sm text-destructive mt-3">

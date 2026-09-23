@@ -243,6 +243,10 @@ a:focus-visible {
   font-weight: 400;
   margin-left: 8px;
 }
+.live-archive-title {
+  display: flex;
+  align-items: center;
+}
 .section-heading .eyebrow {
   margin-bottom: 9px;
   font-size: 9px;
@@ -446,10 +450,6 @@ a:focus-visible {
 .artist-tabs > [data-slot='tabs-list'] {
   align-self: flex-start;
 }
-.tab-count {
-  opacity: 0.6;
-  font-size: 11px;
-}
 .artist-statistics {
   display: flex;
   flex-direction: column;
@@ -606,8 +606,7 @@ a:focus-visible {
   .artist-tabs > [data-slot='tabs-list'] [data-slot='tabs-trigger'] {
     padding-inline: 8px;
   }
-  .artist-tabs > [data-slot='tabs-list'] svg,
-  .artist-tabs .tab-count {
+  .artist-tabs > [data-slot='tabs-list'] svg {
     display: none;
   }
   .artist-statistics {
@@ -646,12 +645,11 @@ a:focus-visible {
 .live-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
+  gap: 10px 17px;
 }
 .live-card {
   display: flex;
   flex-direction: column;
-  gap: 9px;
   min-width: 0;
 }
 .live-thumb {
@@ -693,14 +691,26 @@ a:focus-visible {
     transform: scale(1.035);
   }
 }
-.live-card .eyebrow {
-  margin-top: 4px;
+.live-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+.live-meta .eyebrow {
   font-size: 11px;
   letter-spacing: 0.4px;
+  line-height: inherit;
+}
+.live-song-count {
+  font-size: 11px;
+  white-space: nowrap;
 }
 .live-card h3 {
+  margin-top: 2px;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.5;
   font-weight: 500;
 }
 .album-grid {
@@ -1454,7 +1464,7 @@ a:focus-visible {
   }
   .live-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    gap: 10px;
   }
 
   .track-row {
