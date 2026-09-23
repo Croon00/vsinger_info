@@ -1,0 +1,13 @@
+{
+  "catalog_tables": 31,
+  "migration_tables": 1,
+  "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+  "schema_version": "catalog-v1",
+  "initial_data_imported": false,
+  "non_identity_row_count": 0,
+  "migration_checksum": "e086e34bbe5a1c43635bc381fbd3926635e453dcb4ab53a7beb8445b6a4a864d",
+  "verified": true,
+  "applied_on": "2026-09-19",
+  "validation": "Independent post-commit read-only Neon connection; 9 local PostgreSQL tests passed",
+  "postgresql_version": "18.6"
+}

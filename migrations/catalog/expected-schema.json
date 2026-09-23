@@ -1,0 +1,5971 @@
+{
+  "columns": [
+    [
+      "agencies",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "agencies",
+      "name_native",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "name_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "website_url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "agencies",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "album_artists",
+      "album_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "album_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "album_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "album_tracks",
+      "album_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "recording_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "disc_number",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "track_number",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "album_tracks",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "albums",
+      "title_native",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "title_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "album_type",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "release_year",
+      "smallint",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "release_month",
+      "smallint",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "release_day",
+      "smallint",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "cover_image_url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "spotify_album_id",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "albums",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "archive_artists",
+      "archive_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "role",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "archive_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "archive_sources",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "archive_sources",
+      "archive_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_sources",
+      "document_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_sources",
+      "role",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "archive_sources",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "archive_sources",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_aliases",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "artist_aliases",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_aliases",
+      "alias",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_aliases",
+      "normalized_alias",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_aliases",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_aliases",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "account_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "relationship",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "is_primary",
+      "boolean",
+      "NO",
+      "false",
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "label",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_external_accounts",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "artist_group_members",
+      "group_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "member_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "joined_on",
+      "date",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "left_on",
+      "date",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artist_group_members",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "artists",
+      "slug",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "name_native",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "name_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "name_latin",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "entity_kind",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "is_virtual",
+      "boolean",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "agency_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "birthday_month",
+      "smallint",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "birthday_day",
+      "smallint",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "debut_date",
+      "date",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "bio",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "theme_color",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "avatar_url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "show_in_catalog",
+      "boolean",
+      "NO",
+      "false",
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "artists",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "catalog_changes",
+      "import_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "entity_type",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "entity_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "action",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "before_data",
+      "jsonb",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "after_data",
+      "jsonb",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "provenance",
+      "jsonb",
+      "NO",
+      "'{}'::jsonb",
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "applied_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_changes",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "catalog_imports",
+      "operation_id",
+      "uuid",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "catalog_instance_id",
+      "uuid",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "manifest_hash",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "source_kind",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "committed_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "result_mapping",
+      "jsonb",
+      "NO",
+      "'[]'::jsonb",
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "result_summary",
+      "jsonb",
+      "NO",
+      "'{}'::jsonb",
+      "NO",
+      null
+    ],
+    [
+      "catalog_imports",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "id",
+      "uuid",
+      "NO",
+      "gen_random_uuid()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "singleton_key",
+      "smallint",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "schema_version",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "initial_import_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "initialized_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_instance",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "catalog_schema_migrations",
+      "version",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_schema_migrations",
+      "checksum",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "catalog_schema_migrations",
+      "applied_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concert_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "concert_artists",
+      "concert_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "concert_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concert_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "label",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "opens_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "closes_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "price_text",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concert_ticket_windows",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "concerts",
+      "title",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "event_format",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "event_date",
+      "date",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "starts_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "ends_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "timezone_name",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "time_precision",
+      "text",
+      "NO",
+      "'unknown'::text",
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "city",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "venue",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "status",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "source_document_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "concerts",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "cover_artists",
+      "cover_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "role",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "cover_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "covers",
+      "video_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "song_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "covers",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "external_accounts",
+      "platform",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "platform_id",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "handle",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "url",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "collection_enabled",
+      "boolean",
+      "NO",
+      "false",
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "external_accounts",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "karaoke_numbers",
+      "song_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "provider",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "number",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "source_url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "karaoke_numbers",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "live_archives",
+      "video_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "primary_artist_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "broadcast_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "setlist_state",
+      "text",
+      "NO",
+      "'unprocessed'::text",
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "live_archives",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "performance_artists",
+      "performance_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "role",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "performance_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "performances",
+      "archive_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "ordinal",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "song_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "start_seconds",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "end_seconds",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "raw_title",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "raw_artist",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "raw_timestamp",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "source_document_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "performances",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "recording_artists",
+      "recording_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "role",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_external_ids",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "recording_external_ids",
+      "recording_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_external_ids",
+      "platform",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_external_ids",
+      "external_id",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_external_ids",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_external_ids",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "recording_lyrics",
+      "recording_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "original_lyrics",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "translation_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "pronunciation_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "source_document_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "recording_lyrics",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "recordings",
+      "song_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "title_native",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "title_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "version_label",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "duration_ms",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "official_video_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "recordings",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "song_artists",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "song_artists",
+      "song_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "song_artists",
+      "artist_id",
+      "integer",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "song_artists",
+      "position",
+      "integer",
+      "NO",
+      "0",
+      "NO",
+      null
+    ],
+    [
+      "song_artists",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "song_artists",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "songs",
+      "title_native",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "title_ko",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "title_latin",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "language_code",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "songs",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "source_documents",
+      "source_kind",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "source_url",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "external_id",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "captured_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "content_text",
+      "text",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "content_hash",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "source_metadata",
+      "jsonb",
+      "NO",
+      "'{}'::jsonb",
+      "NO",
+      null
+    ],
+    [
+      "source_documents",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "id",
+      "integer",
+      "NO",
+      null,
+      "YES",
+      "ALWAYS"
+    ],
+    [
+      "videos",
+      "platform",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "platform_video_id",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "source_account_id",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "title",
+      "text",
+      "NO",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "published_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "duration_seconds",
+      "integer",
+      "YES",
+      null,
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "availability",
+      "text",
+      "NO",
+      "'unknown'::text",
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "created_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "updated_at",
+      "timestamp with time zone",
+      "NO",
+      "clock_timestamp()",
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "version",
+      "integer",
+      "NO",
+      "1",
+      "NO",
+      null
+    ],
+    [
+      "videos",
+      "archived_at",
+      "timestamp with time zone",
+      "YES",
+      null,
+      "NO",
+      null
+    ]
+  ],
+  "constraints": [
+    [
+      "agencies",
+      "agencies_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "agencies",
+      "agencies_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "agencies",
+      "agencies_name_ko_check",
+      "c",
+      "CHECK (name_ko IS NULL OR length(btrim(name_ko)) > 0)"
+    ],
+    [
+      "agencies",
+      "agencies_name_native_check",
+      "c",
+      "CHECK (name_native IS NULL OR length(btrim(name_native)) > 0)"
+    ],
+    [
+      "agencies",
+      "agencies_name_native_not_null",
+      "n",
+      "NOT NULL name_native"
+    ],
+    [
+      "agencies",
+      "agencies_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "agencies",
+      "agencies_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "agencies",
+      "agencies_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "agencies",
+      "agencies_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "agencies",
+      "agencies_website_url_check",
+      "c",
+      "CHECK (website_url IS NULL OR length(btrim(website_url)) > 0)"
+    ],
+    [
+      "agencies",
+      "agencies_website_url_check1",
+      "c",
+      "CHECK (website_url IS NULL OR website_url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "album_artists",
+      "album_artists_album_id_artist_id_key",
+      "u",
+      "UNIQUE (album_id, artist_id)"
+    ],
+    [
+      "album_artists",
+      "album_artists_album_id_fk",
+      "f",
+      "FOREIGN KEY (album_id) REFERENCES albums(id) ON DELETE CASCADE"
+    ],
+    [
+      "album_artists",
+      "album_artists_album_id_not_null",
+      "n",
+      "NOT NULL album_id"
+    ],
+    [
+      "album_artists",
+      "album_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "album_artists",
+      "album_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "album_artists",
+      "album_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "album_artists",
+      "album_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "album_artists",
+      "album_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "album_artists",
+      "album_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "album_artists",
+      "album_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "album_artists",
+      "album_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_album_id_disc_number_track_number_key",
+      "u",
+      "UNIQUE (album_id, disc_number, track_number) DEFERRABLE"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_album_id_fk",
+      "f",
+      "FOREIGN KEY (album_id) REFERENCES albums(id) ON DELETE CASCADE"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_album_id_not_null",
+      "n",
+      "NOT NULL album_id"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_disc_number_check",
+      "c",
+      "CHECK (disc_number >= 1)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_disc_number_not_null",
+      "n",
+      "NOT NULL disc_number"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_recording_id_fk",
+      "f",
+      "FOREIGN KEY (recording_id) REFERENCES recordings(id) ON DELETE RESTRICT"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_recording_id_not_null",
+      "n",
+      "NOT NULL recording_id"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_track_number_check",
+      "c",
+      "CHECK (track_number >= 1)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_track_number_not_null",
+      "n",
+      "NOT NULL track_number"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "albums",
+      "albums_album_type_check",
+      "c",
+      "CHECK (album_type IS NULL OR length(btrim(album_type)) > 0)"
+    ],
+    [
+      "albums",
+      "albums_album_type_check1",
+      "c",
+      "CHECK (album_type = ANY (ARRAY['single'::text, 'ep'::text, 'album'::text, 'compilation'::text, 'other'::text]))"
+    ],
+    [
+      "albums",
+      "albums_album_type_not_null",
+      "n",
+      "NOT NULL album_type"
+    ],
+    [
+      "albums",
+      "albums_check",
+      "c",
+      "CHECK (release_month IS NULL OR release_year IS NOT NULL AND release_month >= 1 AND release_month <= 12)"
+    ],
+    [
+      "albums",
+      "albums_check1",
+      "c",
+      "CHECK (release_day IS NULL OR release_year IS NOT NULL AND release_month IS NOT NULL AND catalog_valid_date(release_year::integer, release_month::integer, release_day::integer))"
+    ],
+    [
+      "albums",
+      "albums_cover_image_url_check",
+      "c",
+      "CHECK (cover_image_url IS NULL OR length(btrim(cover_image_url)) > 0)"
+    ],
+    [
+      "albums",
+      "albums_cover_image_url_check1",
+      "c",
+      "CHECK (cover_image_url IS NULL OR cover_image_url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "albums",
+      "albums_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "albums",
+      "albums_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "albums",
+      "albums_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "albums",
+      "albums_release_year_check",
+      "c",
+      "CHECK (release_year IS NULL OR release_year >= 1 AND release_year <= 9999)"
+    ],
+    [
+      "albums",
+      "albums_spotify_album_id_check",
+      "c",
+      "CHECK (spotify_album_id IS NULL OR length(btrim(spotify_album_id)) > 0)"
+    ],
+    [
+      "albums",
+      "albums_spotify_album_id_key",
+      "u",
+      "UNIQUE (spotify_album_id)"
+    ],
+    [
+      "albums",
+      "albums_title_ko_check",
+      "c",
+      "CHECK (title_ko IS NULL OR length(btrim(title_ko)) > 0)"
+    ],
+    [
+      "albums",
+      "albums_title_native_check",
+      "c",
+      "CHECK (title_native IS NULL OR length(btrim(title_native)) > 0)"
+    ],
+    [
+      "albums",
+      "albums_title_native_not_null",
+      "n",
+      "NOT NULL title_native"
+    ],
+    [
+      "albums",
+      "albums_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "albums",
+      "albums_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "albums",
+      "albums_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_archive_id_artist_id_key",
+      "u",
+      "UNIQUE (archive_id, artist_id)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_archive_id_fk",
+      "f",
+      "FOREIGN KEY (archive_id) REFERENCES live_archives(id) ON DELETE CASCADE"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_archive_id_not_null",
+      "n",
+      "NOT NULL archive_id"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "archive_artists",
+      "archive_artists_role_check",
+      "c",
+      "CHECK (role IS NULL OR length(btrim(role)) > 0)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_role_check1",
+      "c",
+      "CHECK (role = ANY (ARRAY['host'::text, 'guest'::text]))"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_role_not_null",
+      "n",
+      "NOT NULL role"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_archive_id_document_id_role_key",
+      "u",
+      "UNIQUE (archive_id, document_id, role)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_archive_id_fk",
+      "f",
+      "FOREIGN KEY (archive_id) REFERENCES live_archives(id) ON DELETE CASCADE"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_archive_id_not_null",
+      "n",
+      "NOT NULL archive_id"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_document_id_fk",
+      "f",
+      "FOREIGN KEY (document_id) REFERENCES source_documents(id) ON DELETE RESTRICT"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_document_id_not_null",
+      "n",
+      "NOT NULL document_id"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_role_check",
+      "c",
+      "CHECK (role IS NULL OR length(btrim(role)) > 0)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_role_check1",
+      "c",
+      "CHECK (role = ANY (ARRAY['setlist_evidence'::text, 'metadata_evidence'::text]))"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_role_not_null",
+      "n",
+      "NOT NULL role"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_alias_check",
+      "c",
+      "CHECK (alias IS NULL OR length(btrim(alias)) > 0)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_alias_not_null",
+      "n",
+      "NOT NULL alias"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_artist_id_normalized_alias_key",
+      "u",
+      "UNIQUE (artist_id, normalized_alias)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_normalized_alias_check",
+      "c",
+      "CHECK (normalized_alias IS NULL OR length(btrim(normalized_alias)) > 0)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_normalized_alias_not_null",
+      "n",
+      "NOT NULL normalized_alias"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_account_id_fk",
+      "f",
+      "FOREIGN KEY (account_id) REFERENCES external_accounts(id) ON DELETE RESTRICT"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_account_id_not_null",
+      "n",
+      "NOT NULL account_id"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_artist_id_account_id_key",
+      "u",
+      "UNIQUE (artist_id, account_id)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE CASCADE"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_is_primary_not_null",
+      "n",
+      "NOT NULL is_primary"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_label_check",
+      "c",
+      "CHECK (label IS NULL OR length(btrim(label)) > 0)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_relationship_check",
+      "c",
+      "CHECK (relationship IS NULL OR length(btrim(relationship)) > 0)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_relationship_check1",
+      "c",
+      "CHECK (relationship = ANY (ARRAY['owner'::text, 'member'::text]))"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_relationship_not_null",
+      "n",
+      "NOT NULL relationship"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_check",
+      "c",
+      "CHECK (group_id <> member_id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_check1",
+      "c",
+      "CHECK (joined_on IS NULL OR left_on IS NULL OR left_on >= joined_on)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_group_id_fk",
+      "f",
+      "FOREIGN KEY (group_id) REFERENCES artists(id) ON DELETE CASCADE"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_group_id_member_id_key",
+      "u",
+      "UNIQUE (group_id, member_id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_group_id_not_null",
+      "n",
+      "NOT NULL group_id"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_member_id_fk",
+      "f",
+      "FOREIGN KEY (member_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_member_id_not_null",
+      "n",
+      "NOT NULL member_id"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "artists",
+      "artists_agency_id_fk",
+      "f",
+      "FOREIGN KEY (agency_id) REFERENCES agencies(id) ON DELETE RESTRICT"
+    ],
+    [
+      "artists",
+      "artists_avatar_url_check",
+      "c",
+      "CHECK (avatar_url IS NULL OR length(btrim(avatar_url)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_avatar_url_check1",
+      "c",
+      "CHECK (avatar_url IS NULL OR avatar_url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "artists",
+      "artists_bio_check",
+      "c",
+      "CHECK (bio IS NULL OR length(btrim(bio)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_check",
+      "c",
+      "CHECK (birthday_month IS NULL AND birthday_day IS NULL OR birthday_month IS NOT NULL AND birthday_day IS NOT NULL AND catalog_valid_date(2000, birthday_month::integer, birthday_day::integer))"
+    ],
+    [
+      "artists",
+      "artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "artists",
+      "artists_entity_kind_check",
+      "c",
+      "CHECK (entity_kind IS NULL OR length(btrim(entity_kind)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_entity_kind_check1",
+      "c",
+      "CHECK (entity_kind = ANY (ARRAY['solo'::text, 'group'::text]))"
+    ],
+    [
+      "artists",
+      "artists_entity_kind_not_null",
+      "n",
+      "NOT NULL entity_kind"
+    ],
+    [
+      "artists",
+      "artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "artists",
+      "artists_name_ko_check",
+      "c",
+      "CHECK (name_ko IS NULL OR length(btrim(name_ko)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_name_latin_check",
+      "c",
+      "CHECK (name_latin IS NULL OR length(btrim(name_latin)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_name_native_check",
+      "c",
+      "CHECK (name_native IS NULL OR length(btrim(name_native)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_name_native_not_null",
+      "n",
+      "NOT NULL name_native"
+    ],
+    [
+      "artists",
+      "artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "artists",
+      "artists_show_in_catalog_not_null",
+      "n",
+      "NOT NULL show_in_catalog"
+    ],
+    [
+      "artists",
+      "artists_slug_check",
+      "c",
+      "CHECK (slug IS NULL OR length(btrim(slug)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_slug_key",
+      "u",
+      "UNIQUE (slug)"
+    ],
+    [
+      "artists",
+      "artists_slug_not_null",
+      "n",
+      "NOT NULL slug"
+    ],
+    [
+      "artists",
+      "artists_theme_color_check",
+      "c",
+      "CHECK (theme_color IS NULL OR length(btrim(theme_color)) > 0)"
+    ],
+    [
+      "artists",
+      "artists_theme_color_check1",
+      "c",
+      "CHECK (theme_color IS NULL OR theme_color ~ '^#[0-9A-Fa-f]{6}$'::text)"
+    ],
+    [
+      "artists",
+      "artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "artists",
+      "artists_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "artists",
+      "artists_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_action_check",
+      "c",
+      "CHECK (action IS NULL OR length(btrim(action)) > 0)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_action_check1",
+      "c",
+      "CHECK (action = ANY (ARRAY['create'::text, 'update'::text, 'archive'::text, 'restore'::text, 'merge'::text, 'delete'::text]))"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_action_not_null",
+      "n",
+      "NOT NULL action"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_after_data_check",
+      "c",
+      "CHECK (after_data IS NULL OR jsonb_typeof(after_data) = 'object'::text)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_applied_at_not_null",
+      "n",
+      "NOT NULL applied_at"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_before_data_check",
+      "c",
+      "CHECK (before_data IS NULL OR jsonb_typeof(before_data) = 'object'::text)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_check",
+      "c",
+      "CHECK (action = 'create'::text AND before_data IS NULL AND after_data IS NOT NULL OR action = 'delete'::text AND before_data IS NOT NULL AND after_data IS NULL OR (action = ANY (ARRAY['update'::text, 'archive'::text, 'restore'::text, 'merge'::text])) AND before_data IS NOT NULL AND after_data IS NOT NULL)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_entity_id_not_null",
+      "n",
+      "NOT NULL entity_id"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_entity_type_check",
+      "c",
+      "CHECK (entity_type IS NULL OR length(btrim(entity_type)) > 0)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_entity_type_not_null",
+      "n",
+      "NOT NULL entity_type"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_import_id_fk",
+      "f",
+      "FOREIGN KEY (import_id) REFERENCES catalog_imports(id) ON DELETE RESTRICT"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_import_id_not_null",
+      "n",
+      "NOT NULL import_id"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_provenance_check",
+      "c",
+      "CHECK (provenance IS NULL OR jsonb_typeof(provenance) = 'object'::text)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_provenance_not_null",
+      "n",
+      "NOT NULL provenance"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_catalog_instance_id_fk",
+      "f",
+      "FOREIGN KEY (catalog_instance_id) REFERENCES catalog_instance(id) ON DELETE RESTRICT"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_catalog_instance_id_not_null",
+      "n",
+      "NOT NULL catalog_instance_id"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_committed_at_not_null",
+      "n",
+      "NOT NULL committed_at"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_manifest_hash_check",
+      "c",
+      "CHECK (manifest_hash IS NULL OR length(btrim(manifest_hash)) > 0)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_manifest_hash_check1",
+      "c",
+      "CHECK (manifest_hash ~ '^[0-9a-f]{64}$'::text)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_manifest_hash_not_null",
+      "n",
+      "NOT NULL manifest_hash"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_operation_id_key",
+      "u",
+      "UNIQUE (operation_id)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_operation_id_not_null",
+      "n",
+      "NOT NULL operation_id"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_result_mapping_check",
+      "c",
+      "CHECK (result_mapping IS NULL OR jsonb_typeof(result_mapping) = 'array'::text)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_result_mapping_not_null",
+      "n",
+      "NOT NULL result_mapping"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_result_summary_check",
+      "c",
+      "CHECK (result_summary IS NULL OR jsonb_typeof(result_summary) = 'object'::text)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_result_summary_not_null",
+      "n",
+      "NOT NULL result_summary"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_source_kind_check",
+      "c",
+      "CHECK (source_kind IS NULL OR length(btrim(source_kind)) > 0)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_source_kind_check1",
+      "c",
+      "CHECK (source_kind = ANY (ARRAY['initial_import'::text, 'batch_import'::text, 'manual'::text, 'merge'::text, 'correction'::text]))"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_source_kind_not_null",
+      "n",
+      "NOT NULL source_kind"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_check",
+      "c",
+      "CHECK ((initial_import_id IS NULL) = (initialized_at IS NULL))"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_initial_import_id_fk",
+      "f",
+      "FOREIGN KEY (initial_import_id) REFERENCES catalog_imports(id) ON DELETE RESTRICT"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_schema_version_check",
+      "c",
+      "CHECK (schema_version IS NULL OR length(btrim(schema_version)) > 0)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_schema_version_not_null",
+      "n",
+      "NOT NULL schema_version"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_singleton_key_check",
+      "c",
+      "CHECK (singleton_key = 1)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_singleton_key_key",
+      "u",
+      "UNIQUE (singleton_key)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_singleton_key_not_null",
+      "n",
+      "NOT NULL singleton_key"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_applied_at_not_null",
+      "n",
+      "NOT NULL applied_at"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_checksum_check",
+      "c",
+      "CHECK (checksum ~ '^[0-9a-f]{64}$'::text)"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_checksum_not_null",
+      "n",
+      "NOT NULL checksum"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_pkey",
+      "p",
+      "PRIMARY KEY (version)"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_concert_id_artist_id_key",
+      "u",
+      "UNIQUE (concert_id, artist_id)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_concert_id_fk",
+      "f",
+      "FOREIGN KEY (concert_id) REFERENCES concerts(id) ON DELETE CASCADE"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_concert_id_not_null",
+      "n",
+      "NOT NULL concert_id"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "concert_artists",
+      "concert_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_check",
+      "c",
+      "CHECK (opens_at IS NULL OR closes_at IS NULL OR closes_at >= opens_at)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_check1",
+      "c",
+      "CHECK (label IS NOT NULL OR opens_at IS NOT NULL OR closes_at IS NOT NULL OR url IS NOT NULL OR price_text IS NOT NULL)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_concert_id_fk",
+      "f",
+      "FOREIGN KEY (concert_id) REFERENCES concerts(id) ON DELETE CASCADE"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_concert_id_not_null",
+      "n",
+      "NOT NULL concert_id"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_label_check",
+      "c",
+      "CHECK (label IS NULL OR length(btrim(label)) > 0)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_price_text_check",
+      "c",
+      "CHECK (price_text IS NULL OR length(btrim(price_text)) > 0)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_url_check",
+      "c",
+      "CHECK (url IS NULL OR length(btrim(url)) > 0)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_url_check1",
+      "c",
+      "CHECK (url IS NULL OR url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "concerts",
+      "concerts_check",
+      "c",
+      "CHECK (catalog_concert_time_valid(time_precision, event_date, starts_at, ends_at, timezone_name))"
+    ],
+    [
+      "concerts",
+      "concerts_city_check",
+      "c",
+      "CHECK (city IS NULL OR length(btrim(city)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "concerts",
+      "concerts_event_format_check",
+      "c",
+      "CHECK (event_format IS NULL OR length(btrim(event_format)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_event_format_check1",
+      "c",
+      "CHECK (event_format = ANY (ARRAY['onsite'::text, 'online'::text, 'hybrid'::text]))"
+    ],
+    [
+      "concerts",
+      "concerts_event_format_not_null",
+      "n",
+      "NOT NULL event_format"
+    ],
+    [
+      "concerts",
+      "concerts_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "concerts",
+      "concerts_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "concerts",
+      "concerts_source_document_id_fk",
+      "f",
+      "FOREIGN KEY (source_document_id) REFERENCES source_documents(id) ON DELETE RESTRICT"
+    ],
+    [
+      "concerts",
+      "concerts_status_check",
+      "c",
+      "CHECK (status IS NULL OR length(btrim(status)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_status_check1",
+      "c",
+      "CHECK (status = ANY (ARRAY['scheduled'::text, 'postponed'::text, 'cancelled'::text, 'completed'::text]))"
+    ],
+    [
+      "concerts",
+      "concerts_status_not_null",
+      "n",
+      "NOT NULL status"
+    ],
+    [
+      "concerts",
+      "concerts_time_precision_check",
+      "c",
+      "CHECK (time_precision IS NULL OR length(btrim(time_precision)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_time_precision_check1",
+      "c",
+      "CHECK (time_precision = ANY (ARRAY['unknown'::text, 'date'::text, 'datetime'::text]))"
+    ],
+    [
+      "concerts",
+      "concerts_time_precision_not_null",
+      "n",
+      "NOT NULL time_precision"
+    ],
+    [
+      "concerts",
+      "concerts_timezone_name_check",
+      "c",
+      "CHECK (timezone_name IS NULL OR length(btrim(timezone_name)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_title_check",
+      "c",
+      "CHECK (title IS NULL OR length(btrim(title)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_title_not_null",
+      "n",
+      "NOT NULL title"
+    ],
+    [
+      "concerts",
+      "concerts_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "concerts",
+      "concerts_venue_check",
+      "c",
+      "CHECK (venue IS NULL OR length(btrim(venue)) > 0)"
+    ],
+    [
+      "concerts",
+      "concerts_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "concerts",
+      "concerts_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_cover_id_artist_id_key",
+      "u",
+      "UNIQUE (cover_id, artist_id)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_cover_id_fk",
+      "f",
+      "FOREIGN KEY (cover_id) REFERENCES covers(id) ON DELETE CASCADE"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_cover_id_not_null",
+      "n",
+      "NOT NULL cover_id"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "cover_artists",
+      "cover_artists_role_check",
+      "c",
+      "CHECK (role IS NULL OR length(btrim(role)) > 0)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_role_check1",
+      "c",
+      "CHECK (role = ANY (ARRAY['vocal'::text, 'featured'::text]))"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_role_not_null",
+      "n",
+      "NOT NULL role"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "covers",
+      "covers_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "covers",
+      "covers_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "covers",
+      "covers_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "covers",
+      "covers_song_id_fk",
+      "f",
+      "FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE RESTRICT"
+    ],
+    [
+      "covers",
+      "covers_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "covers",
+      "covers_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "covers",
+      "covers_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "covers",
+      "covers_video_id_fk",
+      "f",
+      "FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE RESTRICT"
+    ],
+    [
+      "covers",
+      "covers_video_id_key",
+      "u",
+      "UNIQUE (video_id)"
+    ],
+    [
+      "covers",
+      "covers_video_id_not_null",
+      "n",
+      "NOT NULL video_id"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_check",
+      "c",
+      "CHECK ((platform <> ALL (ARRAY['website'::text, 'fanclub'::text])) OR NOT collection_enabled)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_collection_enabled_not_null",
+      "n",
+      "NOT NULL collection_enabled"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_handle_check",
+      "c",
+      "CHECK (handle IS NULL OR length(btrim(handle)) > 0)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_check",
+      "c",
+      "CHECK (platform IS NULL OR length(btrim(platform)) > 0)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_check1",
+      "c",
+      "CHECK (platform = ANY (ARRAY['youtube'::text, 'spotify'::text, 'x'::text, 'website'::text, 'fanclub'::text]))"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_id_check",
+      "c",
+      "CHECK (platform_id IS NULL OR length(btrim(platform_id)) > 0)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_not_null",
+      "n",
+      "NOT NULL platform"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_platform_id_key",
+      "u",
+      "UNIQUE (platform, platform_id)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_url_check",
+      "c",
+      "CHECK (url IS NULL OR length(btrim(url)) > 0)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_url_check1",
+      "c",
+      "CHECK (url IS NULL OR url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_url_not_null",
+      "n",
+      "NOT NULL url"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_number_check",
+      "c",
+      "CHECK (number IS NULL OR length(btrim(number)) > 0)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_number_not_null",
+      "n",
+      "NOT NULL number"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_provider_check",
+      "c",
+      "CHECK (provider IS NULL OR length(btrim(provider)) > 0)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_provider_check1",
+      "c",
+      "CHECK (provider = ANY (ARRAY['tj'::text, 'ky'::text]))"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_provider_not_null",
+      "n",
+      "NOT NULL provider"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_song_id_fk",
+      "f",
+      "FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_song_id_not_null",
+      "n",
+      "NOT NULL song_id"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_song_id_provider_number_key",
+      "u",
+      "UNIQUE (song_id, provider, number)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_source_url_check",
+      "c",
+      "CHECK (source_url IS NULL OR length(btrim(source_url)) > 0)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_source_url_check1",
+      "c",
+      "CHECK (source_url IS NULL OR source_url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "live_archives",
+      "live_archives_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "live_archives",
+      "live_archives_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "live_archives",
+      "live_archives_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "live_archives",
+      "live_archives_primary_artist_id_fk",
+      "f",
+      "FOREIGN KEY (primary_artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "live_archives",
+      "live_archives_setlist_state_check",
+      "c",
+      "CHECK (setlist_state IS NULL OR length(btrim(setlist_state)) > 0)"
+    ],
+    [
+      "live_archives",
+      "live_archives_setlist_state_check1",
+      "c",
+      "CHECK (setlist_state = ANY (ARRAY['unprocessed'::text, 'partial'::text, 'complete'::text, 'unavailable'::text]))"
+    ],
+    [
+      "live_archives",
+      "live_archives_setlist_state_not_null",
+      "n",
+      "NOT NULL setlist_state"
+    ],
+    [
+      "live_archives",
+      "live_archives_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "live_archives",
+      "live_archives_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "live_archives",
+      "live_archives_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "live_archives",
+      "live_archives_video_id_fk",
+      "f",
+      "FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE RESTRICT"
+    ],
+    [
+      "live_archives",
+      "live_archives_video_id_key",
+      "u",
+      "UNIQUE (video_id)"
+    ],
+    [
+      "live_archives",
+      "live_archives_video_id_not_null",
+      "n",
+      "NOT NULL video_id"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_performance_id_artist_id_key",
+      "u",
+      "UNIQUE (performance_id, artist_id)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_performance_id_fk",
+      "f",
+      "FOREIGN KEY (performance_id) REFERENCES performances(id) ON DELETE CASCADE"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_performance_id_not_null",
+      "n",
+      "NOT NULL performance_id"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "performance_artists",
+      "performance_artists_role_check",
+      "c",
+      "CHECK (role IS NULL OR length(btrim(role)) > 0)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_role_check1",
+      "c",
+      "CHECK (role = ANY (ARRAY['lead'::text, 'guest'::text]))"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_role_not_null",
+      "n",
+      "NOT NULL role"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "performances",
+      "performances_archive_id_fk",
+      "f",
+      "FOREIGN KEY (archive_id) REFERENCES live_archives(id) ON DELETE RESTRICT"
+    ],
+    [
+      "performances",
+      "performances_archive_id_not_null",
+      "n",
+      "NOT NULL archive_id"
+    ],
+    [
+      "performances",
+      "performances_archive_id_ordinal_key",
+      "u",
+      "UNIQUE (archive_id, ordinal) DEFERRABLE"
+    ],
+    [
+      "performances",
+      "performances_check",
+      "c",
+      "CHECK (end_seconds IS NULL OR end_seconds > start_seconds)"
+    ],
+    [
+      "performances",
+      "performances_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "performances",
+      "performances_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "performances",
+      "performances_ordinal_check",
+      "c",
+      "CHECK (ordinal >= 1)"
+    ],
+    [
+      "performances",
+      "performances_ordinal_not_null",
+      "n",
+      "NOT NULL ordinal"
+    ],
+    [
+      "performances",
+      "performances_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "performances",
+      "performances_raw_artist_check",
+      "c",
+      "CHECK (raw_artist IS NULL OR length(btrim(raw_artist)) > 0)"
+    ],
+    [
+      "performances",
+      "performances_raw_timestamp_check",
+      "c",
+      "CHECK (raw_timestamp IS NULL OR length(btrim(raw_timestamp)) > 0)"
+    ],
+    [
+      "performances",
+      "performances_raw_title_check",
+      "c",
+      "CHECK (raw_title IS NULL OR length(btrim(raw_title)) > 0)"
+    ],
+    [
+      "performances",
+      "performances_raw_title_not_null",
+      "n",
+      "NOT NULL raw_title"
+    ],
+    [
+      "performances",
+      "performances_song_id_fk",
+      "f",
+      "FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE RESTRICT"
+    ],
+    [
+      "performances",
+      "performances_source_document_id_fk",
+      "f",
+      "FOREIGN KEY (source_document_id) REFERENCES source_documents(id) ON DELETE RESTRICT"
+    ],
+    [
+      "performances",
+      "performances_start_seconds_check",
+      "c",
+      "CHECK (start_seconds >= 0)"
+    ],
+    [
+      "performances",
+      "performances_start_seconds_not_null",
+      "n",
+      "NOT NULL start_seconds"
+    ],
+    [
+      "performances",
+      "performances_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "performances",
+      "performances_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "performances",
+      "performances_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "recording_artists",
+      "recording_artists_recording_id_artist_id_key",
+      "u",
+      "UNIQUE (recording_id, artist_id)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_recording_id_fk",
+      "f",
+      "FOREIGN KEY (recording_id) REFERENCES recordings(id) ON DELETE CASCADE"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_recording_id_not_null",
+      "n",
+      "NOT NULL recording_id"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_role_check",
+      "c",
+      "CHECK (role IS NULL OR length(btrim(role)) > 0)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_role_check1",
+      "c",
+      "CHECK (role = ANY (ARRAY['primary'::text, 'featured'::text]))"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_role_not_null",
+      "n",
+      "NOT NULL role"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_external_id_check",
+      "c",
+      "CHECK (external_id IS NULL OR length(btrim(external_id)) > 0)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_external_id_not_null",
+      "n",
+      "NOT NULL external_id"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_platform_check",
+      "c",
+      "CHECK (platform IS NULL OR length(btrim(platform)) > 0)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_platform_check1",
+      "c",
+      "CHECK (platform = 'spotify'::text)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_platform_external_id_key",
+      "u",
+      "UNIQUE (platform, external_id)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_platform_not_null",
+      "n",
+      "NOT NULL platform"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_recording_id_fk",
+      "f",
+      "FOREIGN KEY (recording_id) REFERENCES recordings(id) ON DELETE CASCADE"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_recording_id_not_null",
+      "n",
+      "NOT NULL recording_id"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_original_lyrics_check",
+      "c",
+      "CHECK (original_lyrics IS NULL OR length(btrim(original_lyrics)) > 0)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_original_lyrics_not_null",
+      "n",
+      "NOT NULL original_lyrics"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_pronunciation_ko_check",
+      "c",
+      "CHECK (pronunciation_ko IS NULL OR length(btrim(pronunciation_ko)) > 0)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_recording_id_fk",
+      "f",
+      "FOREIGN KEY (recording_id) REFERENCES recordings(id) ON DELETE RESTRICT"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_recording_id_key",
+      "u",
+      "UNIQUE (recording_id)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_recording_id_not_null",
+      "n",
+      "NOT NULL recording_id"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_source_document_id_fk",
+      "f",
+      "FOREIGN KEY (source_document_id) REFERENCES source_documents(id) ON DELETE RESTRICT"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_translation_ko_check",
+      "c",
+      "CHECK (translation_ko IS NULL OR length(btrim(translation_ko)) > 0)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "recordings",
+      "recordings_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "recordings",
+      "recordings_duration_ms_check",
+      "c",
+      "CHECK (duration_ms >= 0)"
+    ],
+    [
+      "recordings",
+      "recordings_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "recordings",
+      "recordings_official_video_id_fk",
+      "f",
+      "FOREIGN KEY (official_video_id) REFERENCES videos(id) ON DELETE RESTRICT"
+    ],
+    [
+      "recordings",
+      "recordings_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "recordings",
+      "recordings_song_id_fk",
+      "f",
+      "FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE RESTRICT"
+    ],
+    [
+      "recordings",
+      "recordings_title_ko_check",
+      "c",
+      "CHECK (title_ko IS NULL OR length(btrim(title_ko)) > 0)"
+    ],
+    [
+      "recordings",
+      "recordings_title_native_check",
+      "c",
+      "CHECK (title_native IS NULL OR length(btrim(title_native)) > 0)"
+    ],
+    [
+      "recordings",
+      "recordings_title_native_not_null",
+      "n",
+      "NOT NULL title_native"
+    ],
+    [
+      "recordings",
+      "recordings_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "recordings",
+      "recordings_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "recordings",
+      "recordings_version_label_check",
+      "c",
+      "CHECK (version_label IS NULL OR length(btrim(version_label)) > 0)"
+    ],
+    [
+      "recordings",
+      "recordings_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "song_artists",
+      "song_artists_artist_id_fk",
+      "f",
+      "FOREIGN KEY (artist_id) REFERENCES artists(id) ON DELETE RESTRICT"
+    ],
+    [
+      "song_artists",
+      "song_artists_artist_id_not_null",
+      "n",
+      "NOT NULL artist_id"
+    ],
+    [
+      "song_artists",
+      "song_artists_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "song_artists",
+      "song_artists_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "song_artists",
+      "song_artists_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "song_artists",
+      "song_artists_position_check",
+      "c",
+      "CHECK (\"position\" >= 0)"
+    ],
+    [
+      "song_artists",
+      "song_artists_position_not_null",
+      "n",
+      "NOT NULL \"position\""
+    ],
+    [
+      "song_artists",
+      "song_artists_song_id_artist_id_key",
+      "u",
+      "UNIQUE (song_id, artist_id)"
+    ],
+    [
+      "song_artists",
+      "song_artists_song_id_fk",
+      "f",
+      "FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE"
+    ],
+    [
+      "song_artists",
+      "song_artists_song_id_not_null",
+      "n",
+      "NOT NULL song_id"
+    ],
+    [
+      "song_artists",
+      "song_artists_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "songs",
+      "songs_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "songs",
+      "songs_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "songs",
+      "songs_language_code_check",
+      "c",
+      "CHECK (language_code IS NULL OR length(btrim(language_code)) > 0)"
+    ],
+    [
+      "songs",
+      "songs_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "songs",
+      "songs_title_ko_check",
+      "c",
+      "CHECK (title_ko IS NULL OR length(btrim(title_ko)) > 0)"
+    ],
+    [
+      "songs",
+      "songs_title_latin_check",
+      "c",
+      "CHECK (title_latin IS NULL OR length(btrim(title_latin)) > 0)"
+    ],
+    [
+      "songs",
+      "songs_title_native_check",
+      "c",
+      "CHECK (title_native IS NULL OR length(btrim(title_native)) > 0)"
+    ],
+    [
+      "songs",
+      "songs_title_native_not_null",
+      "n",
+      "NOT NULL title_native"
+    ],
+    [
+      "songs",
+      "songs_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "songs",
+      "songs_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "songs",
+      "songs_version_not_null",
+      "n",
+      "NOT NULL version"
+    ],
+    [
+      "source_documents",
+      "source_documents_check",
+      "c",
+      "CHECK (content_text IS NOT NULL OR source_metadata <> '{}'::jsonb)"
+    ],
+    [
+      "source_documents",
+      "source_documents_content_hash_check",
+      "c",
+      "CHECK (content_hash IS NULL OR length(btrim(content_hash)) > 0)"
+    ],
+    [
+      "source_documents",
+      "source_documents_content_hash_check1",
+      "c",
+      "CHECK (content_hash ~ '^[0-9a-f]{64}$'::text)"
+    ],
+    [
+      "source_documents",
+      "source_documents_content_hash_not_null",
+      "n",
+      "NOT NULL content_hash"
+    ],
+    [
+      "source_documents",
+      "source_documents_content_text_check",
+      "c",
+      "CHECK (content_text IS NULL OR length(btrim(content_text)) > 0)"
+    ],
+    [
+      "source_documents",
+      "source_documents_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "source_documents",
+      "source_documents_external_id_check",
+      "c",
+      "CHECK (external_id IS NULL OR length(btrim(external_id)) > 0)"
+    ],
+    [
+      "source_documents",
+      "source_documents_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "source_documents",
+      "source_documents_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_kind_check",
+      "c",
+      "CHECK (source_kind IS NULL OR length(btrim(source_kind)) > 0)"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_kind_check1",
+      "c",
+      "CHECK (source_kind = ANY (ARRAY['youtube_comment'::text, 'video_description'::text, 'announcement'::text, 'official_page'::text, 'manual_note'::text]))"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_kind_not_null",
+      "n",
+      "NOT NULL source_kind"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_metadata_check",
+      "c",
+      "CHECK (source_metadata IS NULL OR jsonb_typeof(source_metadata) = 'object'::text)"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_metadata_not_null",
+      "n",
+      "NOT NULL source_metadata"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_url_check",
+      "c",
+      "CHECK (source_url IS NULL OR length(btrim(source_url)) > 0)"
+    ],
+    [
+      "source_documents",
+      "source_documents_source_url_check1",
+      "c",
+      "CHECK (source_url IS NULL OR source_url ~ '^https?://[^[:space:]]+$'::text)"
+    ],
+    [
+      "videos",
+      "videos_availability_check",
+      "c",
+      "CHECK (availability IS NULL OR length(btrim(availability)) > 0)"
+    ],
+    [
+      "videos",
+      "videos_availability_check1",
+      "c",
+      "CHECK (availability = ANY (ARRAY['public'::text, 'unlisted'::text, 'private'::text, 'deleted'::text, 'unknown'::text]))"
+    ],
+    [
+      "videos",
+      "videos_availability_not_null",
+      "n",
+      "NOT NULL availability"
+    ],
+    [
+      "videos",
+      "videos_check",
+      "c",
+      "CHECK (platform <> 'youtube'::text OR platform_video_id ~ '^[A-Za-z0-9_-]{11}$'::text)"
+    ],
+    [
+      "videos",
+      "videos_created_at_not_null",
+      "n",
+      "NOT NULL created_at"
+    ],
+    [
+      "videos",
+      "videos_duration_seconds_check",
+      "c",
+      "CHECK (duration_seconds >= 0)"
+    ],
+    [
+      "videos",
+      "videos_id_not_null",
+      "n",
+      "NOT NULL id"
+    ],
+    [
+      "videos",
+      "videos_pkey",
+      "p",
+      "PRIMARY KEY (id)"
+    ],
+    [
+      "videos",
+      "videos_platform_check",
+      "c",
+      "CHECK (platform IS NULL OR length(btrim(platform)) > 0)"
+    ],
+    [
+      "videos",
+      "videos_platform_check1",
+      "c",
+      "CHECK (platform = 'youtube'::text)"
+    ],
+    [
+      "videos",
+      "videos_platform_not_null",
+      "n",
+      "NOT NULL platform"
+    ],
+    [
+      "videos",
+      "videos_platform_platform_video_id_key",
+      "u",
+      "UNIQUE (platform, platform_video_id)"
+    ],
+    [
+      "videos",
+      "videos_platform_video_id_check",
+      "c",
+      "CHECK (platform_video_id IS NULL OR length(btrim(platform_video_id)) > 0)"
+    ],
+    [
+      "videos",
+      "videos_platform_video_id_not_null",
+      "n",
+      "NOT NULL platform_video_id"
+    ],
+    [
+      "videos",
+      "videos_source_account_id_fk",
+      "f",
+      "FOREIGN KEY (source_account_id) REFERENCES external_accounts(id) ON DELETE RESTRICT"
+    ],
+    [
+      "videos",
+      "videos_title_check",
+      "c",
+      "CHECK (title IS NULL OR length(btrim(title)) > 0)"
+    ],
+    [
+      "videos",
+      "videos_title_not_null",
+      "n",
+      "NOT NULL title"
+    ],
+    [
+      "videos",
+      "videos_updated_at_not_null",
+      "n",
+      "NOT NULL updated_at"
+    ],
+    [
+      "videos",
+      "videos_version_check",
+      "c",
+      "CHECK (version >= 1)"
+    ],
+    [
+      "videos",
+      "videos_version_not_null",
+      "n",
+      "NOT NULL version"
+    ]
+  ],
+  "indexes": [
+    [
+      "agencies",
+      "agencies_pkey",
+      "CREATE UNIQUE INDEX agencies_pkey ON public.agencies USING btree (id)"
+    ],
+    [
+      "album_artists",
+      "album_artists_album_id_artist_id_key",
+      "CREATE UNIQUE INDEX album_artists_album_id_artist_id_key ON public.album_artists USING btree (album_id, artist_id)"
+    ],
+    [
+      "album_artists",
+      "album_artists_artist_id_idx",
+      "CREATE INDEX album_artists_artist_id_idx ON public.album_artists USING btree (artist_id)"
+    ],
+    [
+      "album_artists",
+      "album_artists_pkey",
+      "CREATE UNIQUE INDEX album_artists_pkey ON public.album_artists USING btree (id)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_album_id_disc_number_track_number_key",
+      "CREATE UNIQUE INDEX album_tracks_album_id_disc_number_track_number_key ON public.album_tracks USING btree (album_id, disc_number, track_number)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_pkey",
+      "CREATE UNIQUE INDEX album_tracks_pkey ON public.album_tracks USING btree (id)"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_recording_id_idx",
+      "CREATE INDEX album_tracks_recording_id_idx ON public.album_tracks USING btree (recording_id)"
+    ],
+    [
+      "albums",
+      "albums_pkey",
+      "CREATE UNIQUE INDEX albums_pkey ON public.albums USING btree (id)"
+    ],
+    [
+      "albums",
+      "albums_spotify_album_id_key",
+      "CREATE UNIQUE INDEX albums_spotify_album_id_key ON public.albums USING btree (spotify_album_id)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_archive_id_artist_id_key",
+      "CREATE UNIQUE INDEX archive_artists_archive_id_artist_id_key ON public.archive_artists USING btree (archive_id, artist_id)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_artist_id_archive_id_idx",
+      "CREATE INDEX archive_artists_artist_id_archive_id_idx ON public.archive_artists USING btree (artist_id, archive_id)"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_pkey",
+      "CREATE UNIQUE INDEX archive_artists_pkey ON public.archive_artists USING btree (id)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_archive_id_document_id_role_key",
+      "CREATE UNIQUE INDEX archive_sources_archive_id_document_id_role_key ON public.archive_sources USING btree (archive_id, document_id, role)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_document_id_idx",
+      "CREATE INDEX archive_sources_document_id_idx ON public.archive_sources USING btree (document_id)"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_pkey",
+      "CREATE UNIQUE INDEX archive_sources_pkey ON public.archive_sources USING btree (id)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_artist_id_normalized_alias_key",
+      "CREATE UNIQUE INDEX artist_aliases_artist_id_normalized_alias_key ON public.artist_aliases USING btree (artist_id, normalized_alias)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_normalized_alias_idx",
+      "CREATE INDEX artist_aliases_normalized_alias_idx ON public.artist_aliases USING btree (normalized_alias)"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_pkey",
+      "CREATE UNIQUE INDEX artist_aliases_pkey ON public.artist_aliases USING btree (id)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_account_id_idx",
+      "CREATE INDEX artist_external_accounts_account_id_idx ON public.artist_external_accounts USING btree (account_id)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_artist_id_account_id_key",
+      "CREATE UNIQUE INDEX artist_external_accounts_artist_id_account_id_key ON public.artist_external_accounts USING btree (artist_id, account_id)"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_pkey",
+      "CREATE UNIQUE INDEX artist_external_accounts_pkey ON public.artist_external_accounts USING btree (id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_group_id_member_id_key",
+      "CREATE UNIQUE INDEX artist_group_members_group_id_member_id_key ON public.artist_group_members USING btree (group_id, member_id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_member_id_idx",
+      "CREATE INDEX artist_group_members_member_id_idx ON public.artist_group_members USING btree (member_id)"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_pkey",
+      "CREATE UNIQUE INDEX artist_group_members_pkey ON public.artist_group_members USING btree (id)"
+    ],
+    [
+      "artists",
+      "artists_agency_id_idx",
+      "CREATE INDEX artists_agency_id_idx ON public.artists USING btree (agency_id)"
+    ],
+    [
+      "artists",
+      "artists_pkey",
+      "CREATE UNIQUE INDEX artists_pkey ON public.artists USING btree (id)"
+    ],
+    [
+      "artists",
+      "artists_slug_key",
+      "CREATE UNIQUE INDEX artists_slug_key ON public.artists USING btree (slug)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_entity_type_entity_id_id_idx",
+      "CREATE INDEX catalog_changes_entity_type_entity_id_id_idx ON public.catalog_changes USING btree (entity_type, entity_id, id)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_import_id_idx",
+      "CREATE INDEX catalog_changes_import_id_idx ON public.catalog_changes USING btree (import_id)"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_pkey",
+      "CREATE UNIQUE INDEX catalog_changes_pkey ON public.catalog_changes USING btree (id)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_catalog_instance_id_idx",
+      "CREATE INDEX catalog_imports_catalog_instance_id_idx ON public.catalog_imports USING btree (catalog_instance_id)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_operation_id_key",
+      "CREATE UNIQUE INDEX catalog_imports_operation_id_key ON public.catalog_imports USING btree (operation_id)"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_pkey",
+      "CREATE UNIQUE INDEX catalog_imports_pkey ON public.catalog_imports USING btree (id)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_initial_import_id_idx",
+      "CREATE INDEX catalog_instance_initial_import_id_idx ON public.catalog_instance USING btree (initial_import_id)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_pkey",
+      "CREATE UNIQUE INDEX catalog_instance_pkey ON public.catalog_instance USING btree (id)"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_singleton_key_key",
+      "CREATE UNIQUE INDEX catalog_instance_singleton_key_key ON public.catalog_instance USING btree (singleton_key)"
+    ],
+    [
+      "catalog_schema_migrations",
+      "catalog_schema_migrations_pkey",
+      "CREATE UNIQUE INDEX catalog_schema_migrations_pkey ON public.catalog_schema_migrations USING btree (version)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_artist_id_concert_id_idx",
+      "CREATE INDEX concert_artists_artist_id_concert_id_idx ON public.concert_artists USING btree (artist_id, concert_id)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_concert_id_artist_id_key",
+      "CREATE UNIQUE INDEX concert_artists_concert_id_artist_id_key ON public.concert_artists USING btree (concert_id, artist_id)"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_pkey",
+      "CREATE UNIQUE INDEX concert_artists_pkey ON public.concert_artists USING btree (id)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_concert_id_idx",
+      "CREATE INDEX concert_ticket_windows_concert_id_idx ON public.concert_ticket_windows USING btree (concert_id)"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_pkey",
+      "CREATE UNIQUE INDEX concert_ticket_windows_pkey ON public.concert_ticket_windows USING btree (id)"
+    ],
+    [
+      "concerts",
+      "concerts_event_date_id_idx",
+      "CREATE INDEX concerts_event_date_id_idx ON public.concerts USING btree (event_date, id)"
+    ],
+    [
+      "concerts",
+      "concerts_pkey",
+      "CREATE UNIQUE INDEX concerts_pkey ON public.concerts USING btree (id)"
+    ],
+    [
+      "concerts",
+      "concerts_source_document_id_idx",
+      "CREATE INDEX concerts_source_document_id_idx ON public.concerts USING btree (source_document_id)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_artist_id_idx",
+      "CREATE INDEX cover_artists_artist_id_idx ON public.cover_artists USING btree (artist_id)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_cover_id_artist_id_key",
+      "CREATE UNIQUE INDEX cover_artists_cover_id_artist_id_key ON public.cover_artists USING btree (cover_id, artist_id)"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_pkey",
+      "CREATE UNIQUE INDEX cover_artists_pkey ON public.cover_artists USING btree (id)"
+    ],
+    [
+      "covers",
+      "covers_pkey",
+      "CREATE UNIQUE INDEX covers_pkey ON public.covers USING btree (id)"
+    ],
+    [
+      "covers",
+      "covers_song_id_idx",
+      "CREATE INDEX covers_song_id_idx ON public.covers USING btree (song_id)"
+    ],
+    [
+      "covers",
+      "covers_video_id_key",
+      "CREATE UNIQUE INDEX covers_video_id_key ON public.covers USING btree (video_id)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_pkey",
+      "CREATE UNIQUE INDEX external_accounts_pkey ON public.external_accounts USING btree (id)"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_platform_platform_id_key",
+      "CREATE UNIQUE INDEX external_accounts_platform_platform_id_key ON public.external_accounts USING btree (platform, platform_id)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_pkey",
+      "CREATE UNIQUE INDEX karaoke_numbers_pkey ON public.karaoke_numbers USING btree (id)"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_song_id_provider_number_key",
+      "CREATE UNIQUE INDEX karaoke_numbers_song_id_provider_number_key ON public.karaoke_numbers USING btree (song_id, provider, number)"
+    ],
+    [
+      "live_archives",
+      "live_archives_broadcast_at_id_idx",
+      "CREATE INDEX live_archives_broadcast_at_id_idx ON public.live_archives USING btree (broadcast_at, id)"
+    ],
+    [
+      "live_archives",
+      "live_archives_pkey",
+      "CREATE UNIQUE INDEX live_archives_pkey ON public.live_archives USING btree (id)"
+    ],
+    [
+      "live_archives",
+      "live_archives_primary_artist_id_idx",
+      "CREATE INDEX live_archives_primary_artist_id_idx ON public.live_archives USING btree (primary_artist_id)"
+    ],
+    [
+      "live_archives",
+      "live_archives_video_id_key",
+      "CREATE UNIQUE INDEX live_archives_video_id_key ON public.live_archives USING btree (video_id)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_artist_id_performance_id_idx",
+      "CREATE INDEX performance_artists_artist_id_performance_id_idx ON public.performance_artists USING btree (artist_id, performance_id)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_performance_id_artist_id_key",
+      "CREATE UNIQUE INDEX performance_artists_performance_id_artist_id_key ON public.performance_artists USING btree (performance_id, artist_id)"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_pkey",
+      "CREATE UNIQUE INDEX performance_artists_pkey ON public.performance_artists USING btree (id)"
+    ],
+    [
+      "performances",
+      "performances_archive_id_ordinal_key",
+      "CREATE UNIQUE INDEX performances_archive_id_ordinal_key ON public.performances USING btree (archive_id, ordinal)"
+    ],
+    [
+      "performances",
+      "performances_pkey",
+      "CREATE UNIQUE INDEX performances_pkey ON public.performances USING btree (id)"
+    ],
+    [
+      "performances",
+      "performances_song_id_archive_id_idx",
+      "CREATE INDEX performances_song_id_archive_id_idx ON public.performances USING btree (song_id, archive_id)"
+    ],
+    [
+      "performances",
+      "performances_source_document_id_idx",
+      "CREATE INDEX performances_source_document_id_idx ON public.performances USING btree (source_document_id)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_artist_id_idx",
+      "CREATE INDEX recording_artists_artist_id_idx ON public.recording_artists USING btree (artist_id)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_pkey",
+      "CREATE UNIQUE INDEX recording_artists_pkey ON public.recording_artists USING btree (id)"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_recording_id_artist_id_key",
+      "CREATE UNIQUE INDEX recording_artists_recording_id_artist_id_key ON public.recording_artists USING btree (recording_id, artist_id)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_pkey",
+      "CREATE UNIQUE INDEX recording_external_ids_pkey ON public.recording_external_ids USING btree (id)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_platform_external_id_key",
+      "CREATE UNIQUE INDEX recording_external_ids_platform_external_id_key ON public.recording_external_ids USING btree (platform, external_id)"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_recording_id_idx",
+      "CREATE INDEX recording_external_ids_recording_id_idx ON public.recording_external_ids USING btree (recording_id)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_pkey",
+      "CREATE UNIQUE INDEX recording_lyrics_pkey ON public.recording_lyrics USING btree (id)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_recording_id_key",
+      "CREATE UNIQUE INDEX recording_lyrics_recording_id_key ON public.recording_lyrics USING btree (recording_id)"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_source_document_id_idx",
+      "CREATE INDEX recording_lyrics_source_document_id_idx ON public.recording_lyrics USING btree (source_document_id)"
+    ],
+    [
+      "recordings",
+      "recordings_official_video_id_idx",
+      "CREATE INDEX recordings_official_video_id_idx ON public.recordings USING btree (official_video_id)"
+    ],
+    [
+      "recordings",
+      "recordings_pkey",
+      "CREATE UNIQUE INDEX recordings_pkey ON public.recordings USING btree (id)"
+    ],
+    [
+      "recordings",
+      "recordings_song_id_idx",
+      "CREATE INDEX recordings_song_id_idx ON public.recordings USING btree (song_id)"
+    ],
+    [
+      "song_artists",
+      "song_artists_artist_id_song_id_idx",
+      "CREATE INDEX song_artists_artist_id_song_id_idx ON public.song_artists USING btree (artist_id, song_id)"
+    ],
+    [
+      "song_artists",
+      "song_artists_pkey",
+      "CREATE UNIQUE INDEX song_artists_pkey ON public.song_artists USING btree (id)"
+    ],
+    [
+      "song_artists",
+      "song_artists_song_id_artist_id_key",
+      "CREATE UNIQUE INDEX song_artists_song_id_artist_id_key ON public.song_artists USING btree (song_id, artist_id)"
+    ],
+    [
+      "songs",
+      "songs_pkey",
+      "CREATE UNIQUE INDEX songs_pkey ON public.songs USING btree (id)"
+    ],
+    [
+      "source_documents",
+      "source_documents_pkey",
+      "CREATE UNIQUE INDEX source_documents_pkey ON public.source_documents USING btree (id)"
+    ],
+    [
+      "videos",
+      "videos_pkey",
+      "CREATE UNIQUE INDEX videos_pkey ON public.videos USING btree (id)"
+    ],
+    [
+      "videos",
+      "videos_platform_platform_video_id_key",
+      "CREATE UNIQUE INDEX videos_platform_platform_video_id_key ON public.videos USING btree (platform, platform_video_id)"
+    ],
+    [
+      "videos",
+      "videos_source_account_id_idx",
+      "CREATE INDEX videos_source_account_id_idx ON public.videos USING btree (source_account_id)"
+    ]
+  ],
+  "triggers": [
+    [
+      "agencies",
+      "agencies_touch",
+      "O",
+      "CREATE TRIGGER agencies_touch BEFORE UPDATE ON agencies FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "album_artists",
+      "album_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER album_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON album_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('albums', 'album_id')"
+    ],
+    [
+      "album_artists",
+      "album_artists_touch",
+      "O",
+      "CREATE TRIGGER album_artists_touch BEFORE UPDATE ON album_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_parent_touch",
+      "O",
+      "CREATE TRIGGER album_tracks_parent_touch AFTER INSERT OR DELETE OR UPDATE ON album_tracks FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('albums', 'album_id')"
+    ],
+    [
+      "album_tracks",
+      "album_tracks_touch",
+      "O",
+      "CREATE TRIGGER album_tracks_touch BEFORE UPDATE ON album_tracks FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "albums",
+      "albums_touch",
+      "O",
+      "CREATE TRIGGER albums_touch BEFORE UPDATE ON albums FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER archive_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON archive_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('live_archives', 'archive_id')"
+    ],
+    [
+      "archive_artists",
+      "archive_artists_touch",
+      "O",
+      "CREATE TRIGGER archive_artists_touch BEFORE UPDATE ON archive_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_parent_touch",
+      "O",
+      "CREATE TRIGGER archive_sources_parent_touch AFTER INSERT OR DELETE OR UPDATE ON archive_sources FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('live_archives', 'archive_id')"
+    ],
+    [
+      "archive_sources",
+      "archive_sources_touch",
+      "O",
+      "CREATE TRIGGER archive_sources_touch BEFORE UPDATE ON archive_sources FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_parent_touch",
+      "O",
+      "CREATE TRIGGER artist_aliases_parent_touch AFTER INSERT OR DELETE OR UPDATE ON artist_aliases FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('artists', 'artist_id')"
+    ],
+    [
+      "artist_aliases",
+      "artist_aliases_touch",
+      "O",
+      "CREATE TRIGGER artist_aliases_touch BEFORE UPDATE ON artist_aliases FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_parent_touch",
+      "O",
+      "CREATE TRIGGER artist_external_accounts_parent_touch AFTER INSERT OR DELETE OR UPDATE ON artist_external_accounts FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('artists', 'artist_id')"
+    ],
+    [
+      "artist_external_accounts",
+      "artist_external_accounts_touch",
+      "O",
+      "CREATE TRIGGER artist_external_accounts_touch BEFORE UPDATE ON artist_external_accounts FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_parent_touch",
+      "O",
+      "CREATE TRIGGER artist_group_members_parent_touch AFTER INSERT OR DELETE OR UPDATE ON artist_group_members FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('artists', 'group_id')"
+    ],
+    [
+      "artist_group_members",
+      "artist_group_members_touch",
+      "O",
+      "CREATE TRIGGER artist_group_members_touch BEFORE UPDATE ON artist_group_members FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "artists",
+      "artists_touch",
+      "O",
+      "CREATE TRIGGER artists_touch BEFORE UPDATE ON artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "catalog_changes",
+      "catalog_changes_immutable",
+      "O",
+      "CREATE TRIGGER catalog_changes_immutable BEFORE DELETE OR UPDATE ON catalog_changes FOR EACH ROW EXECUTE FUNCTION catalog_reject_history_mutation()"
+    ],
+    [
+      "catalog_imports",
+      "catalog_imports_immutable",
+      "O",
+      "CREATE TRIGGER catalog_imports_immutable BEFORE DELETE OR UPDATE ON catalog_imports FOR EACH ROW EXECUTE FUNCTION catalog_reject_history_mutation()"
+    ],
+    [
+      "catalog_instance",
+      "catalog_instance_touch",
+      "O",
+      "CREATE TRIGGER catalog_instance_touch BEFORE UPDATE ON catalog_instance FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER concert_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON concert_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('concerts', 'concert_id')"
+    ],
+    [
+      "concert_artists",
+      "concert_artists_touch",
+      "O",
+      "CREATE TRIGGER concert_artists_touch BEFORE UPDATE ON concert_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_parent_touch",
+      "O",
+      "CREATE TRIGGER concert_ticket_windows_parent_touch AFTER INSERT OR DELETE OR UPDATE ON concert_ticket_windows FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('concerts', 'concert_id')"
+    ],
+    [
+      "concert_ticket_windows",
+      "concert_ticket_windows_touch",
+      "O",
+      "CREATE TRIGGER concert_ticket_windows_touch BEFORE UPDATE ON concert_ticket_windows FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "concerts",
+      "concerts_touch",
+      "O",
+      "CREATE TRIGGER concerts_touch BEFORE UPDATE ON concerts FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER cover_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON cover_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('covers', 'cover_id')"
+    ],
+    [
+      "cover_artists",
+      "cover_artists_touch",
+      "O",
+      "CREATE TRIGGER cover_artists_touch BEFORE UPDATE ON cover_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "covers",
+      "covers_touch",
+      "O",
+      "CREATE TRIGGER covers_touch BEFORE UPDATE ON covers FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "external_accounts",
+      "external_accounts_touch",
+      "O",
+      "CREATE TRIGGER external_accounts_touch BEFORE UPDATE ON external_accounts FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_parent_touch",
+      "O",
+      "CREATE TRIGGER karaoke_numbers_parent_touch AFTER INSERT OR DELETE OR UPDATE ON karaoke_numbers FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('songs', 'song_id')"
+    ],
+    [
+      "karaoke_numbers",
+      "karaoke_numbers_touch",
+      "O",
+      "CREATE TRIGGER karaoke_numbers_touch BEFORE UPDATE ON karaoke_numbers FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "live_archives",
+      "live_archives_touch",
+      "O",
+      "CREATE TRIGGER live_archives_touch BEFORE UPDATE ON live_archives FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER performance_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON performance_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('performances', 'performance_id')"
+    ],
+    [
+      "performance_artists",
+      "performance_artists_touch",
+      "O",
+      "CREATE TRIGGER performance_artists_touch BEFORE UPDATE ON performance_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "performances",
+      "performances_parent_touch",
+      "O",
+      "CREATE TRIGGER performances_parent_touch AFTER INSERT OR DELETE OR UPDATE ON performances FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('live_archives', 'archive_id')"
+    ],
+    [
+      "performances",
+      "performances_touch",
+      "O",
+      "CREATE TRIGGER performances_touch BEFORE UPDATE ON performances FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER recording_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON recording_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('recordings', 'recording_id')"
+    ],
+    [
+      "recording_artists",
+      "recording_artists_touch",
+      "O",
+      "CREATE TRIGGER recording_artists_touch BEFORE UPDATE ON recording_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_parent_touch",
+      "O",
+      "CREATE TRIGGER recording_external_ids_parent_touch AFTER INSERT OR DELETE OR UPDATE ON recording_external_ids FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('recordings', 'recording_id')"
+    ],
+    [
+      "recording_external_ids",
+      "recording_external_ids_touch",
+      "O",
+      "CREATE TRIGGER recording_external_ids_touch BEFORE UPDATE ON recording_external_ids FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_parent_touch",
+      "O",
+      "CREATE TRIGGER recording_lyrics_parent_touch AFTER INSERT OR DELETE OR UPDATE ON recording_lyrics FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('recordings', 'recording_id')"
+    ],
+    [
+      "recording_lyrics",
+      "recording_lyrics_touch",
+      "O",
+      "CREATE TRIGGER recording_lyrics_touch BEFORE UPDATE ON recording_lyrics FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "recordings",
+      "recordings_touch",
+      "O",
+      "CREATE TRIGGER recordings_touch BEFORE UPDATE ON recordings FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "song_artists",
+      "song_artists_parent_touch",
+      "O",
+      "CREATE TRIGGER song_artists_parent_touch AFTER INSERT OR DELETE OR UPDATE ON song_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_parent('songs', 'song_id')"
+    ],
+    [
+      "song_artists",
+      "song_artists_touch",
+      "O",
+      "CREATE TRIGGER song_artists_touch BEFORE UPDATE ON song_artists FOR EACH ROW EXECUTE FUNCTION catalog_touch_timestamp()"
+    ],
+    [
+      "songs",
+      "songs_touch",
+      "O",
+      "CREATE TRIGGER songs_touch BEFORE UPDATE ON songs FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ],
+    [
+      "source_documents",
+      "source_documents_immutable",
+      "O",
+      "CREATE TRIGGER source_documents_immutable BEFORE DELETE OR UPDATE ON source_documents FOR EACH ROW EXECUTE FUNCTION catalog_reject_history_mutation()"
+    ],
+    [
+      "videos",
+      "videos_touch",
+      "O",
+      "CREATE TRIGGER videos_touch BEFORE UPDATE ON videos FOR EACH ROW EXECUTE FUNCTION catalog_touch_version()"
+    ]
+  ],
+  "functions": [
+    [
+      "catalog_concert_time_valid",
+      "CREATE OR REPLACE FUNCTION public.catalog_concert_time_valid(precision_value text, event_day date, start_time timestamp with time zone, end_time timestamp with time zone, zone_name text)\n RETURNS boolean\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\nBEGIN\n IF zone_name IS NOT NULL AND NOT EXISTS (SELECT FROM pg_timezone_names WHERE name=zone_name) THEN RETURN false; END IF;\n IF precision_value='unknown' THEN\n  RETURN event_day IS NULL AND start_time IS NULL AND end_time IS NULL;\n ELSIF precision_value='date' THEN\n  RETURN event_day IS NOT NULL AND start_time IS NULL AND end_time IS NULL;\n ELSIF precision_value='datetime' THEN\n  RETURN event_day IS NOT NULL AND start_time IS NOT NULL AND zone_name IS NOT NULL\n    AND event_day=(start_time AT TIME ZONE zone_name)::date\n    AND (end_time IS NULL OR end_time>start_time);\n END IF;\n RETURN false;\nEND $function$\n"
+    ],
+    [
+      "catalog_reject_history_mutation",
+      "CREATE OR REPLACE FUNCTION public.catalog_reject_history_mutation()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog'\nAS $function$\nBEGIN RAISE EXCEPTION 'catalog history is append-only' USING ERRCODE='23514'; END $function$\n"
+    ],
+    [
+      "catalog_touch_parent",
+      "CREATE OR REPLACE FUNCTION public.catalog_touch_parent()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nDECLARE previous_id integer; next_id integer;\nBEGIN\n IF TG_OP <> 'INSERT' THEN previous_id := (to_jsonb(OLD)->>TG_ARGV[1])::integer; END IF;\n IF TG_OP <> 'DELETE' THEN next_id := (to_jsonb(NEW)->>TG_ARGV[1])::integer; END IF;\n EXECUTE format('UPDATE public.%I SET updated_at=clock_timestamp() WHERE id = ANY($1)',TG_ARGV[0])\n USING ARRAY[previous_id,next_id];\n RETURN NULL;\nEND $function$\n"
+    ],
+    [
+      "catalog_touch_timestamp",
+      "CREATE OR REPLACE FUNCTION public.catalog_touch_timestamp()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n NEW.created_at := OLD.created_at;\n NEW.updated_at := clock_timestamp();\n RETURN NEW;\nEND $function$\n"
+    ],
+    [
+      "catalog_touch_version",
+      "CREATE OR REPLACE FUNCTION public.catalog_touch_version()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n NEW.created_at := OLD.created_at;\n NEW.updated_at := clock_timestamp();\n NEW.version := OLD.version + 1;\n RETURN NEW;\nEND $function$\n"
+    ],
+    [
+      "catalog_valid_date",
+      "CREATE OR REPLACE FUNCTION public.catalog_valid_date(y integer, m integer, d integer)\n RETURNS boolean\n LANGUAGE plpgsql\n IMMUTABLE PARALLEL SAFE\n SET search_path TO 'pg_catalog'\nAS $function$\nBEGIN\n IF y IS NULL OR m IS NULL OR d IS NULL THEN RETURN false; END IF;\n PERFORM make_date(y,m,d);\n RETURN true;\nEXCEPTION WHEN datetime_field_overflow THEN RETURN false;\nEND $function$\n"
+    ]
+  ]
+}

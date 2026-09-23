@@ -4,10 +4,13 @@ pydantic-settings==2.7.1
 psycopg[binary]==3.2.13
 SQLAlchemy==2.0.36
 discord.py==2.4.0
+audioop-lts>=0.2.2; python_version >= "3.13"
 openai==1.93.0
-langgraph>=0.2.0
 httpx==0.28.1
 twscrape[curl]==0.20.1
 pytest==8.3.4
 youtube-transcript-api==1.2.4
 yt-dlp>=2024.12.23
+
+boto3==1.43.98
+Pillow==12.3.0

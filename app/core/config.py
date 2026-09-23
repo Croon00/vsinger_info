@@ -1,6 +1,9 @@
+import os
+from pathlib import Path
 from typing import Literal
 
-from pydantic import field_validator
+from dotenv import dotenv_values
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -8,15 +11,16 @@ class Settings(BaseSettings):
     """Railway와 로컬 .env에서 읽어오는 앱 전체 설정입니다."""
 
     app_name: str = "schedule-music"
+    # The only normal runtime DB is the guarded unified catalog.
     database_url: str | None = None
+    new_database_instance_id: str | None = None
+    catalog_schema_version: str = "catalog-v2"
     api_key: str | None = None
     discord_bot_token: str | None = None
-    discord_guild_id: int | None = None
     agent_interval_seconds: int = 86400
     agent_enabled: bool = False
     agent_run_on_start: bool = False
-    database_auto_init: bool = False
-    public_base_url: str | None = None
+    runtime_cutover_enabled: bool = False
     cors_allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     x_provider: Literal["auto", "twscrape", "x_api"] = "auto"
     x_bearer_token: str | None = None
@@ -40,12 +44,13 @@ class Settings(BaseSettings):
     youtube_auto_link_max_tracks: int = 50
     youtube_auto_link_concurrency: int = 4
     lyrics_context_extract_max_chars: int = 15000
-    google_client_id: str | None = None
-    google_client_secret: str | None = None
-    google_redirect_uri: str | None = None
-    google_calendar_id: str = "primary"
     spotify_client_id: str | None = None
     spotify_client_secret: str | None = None
+    aws_endpoint_url_s3: str | None = None
+    aws_access_key_id: str | None = None
+    aws_secret_access_key: str | None = None
+    aws_region: str | None = None
+    avatar_bucket: str = "artists-avator"
 
     # Some integrations (for example twscrape's TWS_HTTP_BACKEND) read their
     # own environment variables directly. They must not prevent app settings
@@ -59,9 +64,8 @@ class Settings(BaseSettings):
     @field_validator(
         "discord_bot_token",
         "database_url",
+        "new_database_instance_id",
         "api_key",
-        "discord_guild_id",
-        "public_base_url",
         "x_bearer_token",
         "twscrape_auth_token",
         "twscrape_ct0",
@@ -73,11 +77,12 @@ class Settings(BaseSettings):
         "webshare_proxy_locations",
         "ytdlp_proxy_url",
         "youtube_api_key",
-        "google_client_id",
-        "google_client_secret",
-        "google_redirect_uri",
         "spotify_client_id",
         "spotify_client_secret",
+        "aws_endpoint_url_s3",
+        "aws_access_key_id",
+        "aws_secret_access_key",
+        "aws_region",
         mode="before",
     )
     @classmethod
@@ -86,6 +91,12 @@ class Settings(BaseSettings):
         if value == "":
             return None
         return value
+
+    @model_validator(mode="after")
+    def reject_old_database_setting(self):
+        if os.environ.get("NEW_DATABASE_URL") or dotenv_values(Path(".env")).get("NEW_DATABASE_URL"):
+            raise ValueError("NEW_DATABASE_URL is retired; configure DATABASE_URL only")
+        return self
 
     @property
     def cors_allowed_origin_list(self) -> list[str]:

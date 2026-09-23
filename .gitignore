@@ -1,29 +1,42 @@
+# Local credentials
 .env
+.env.*
+!.env.example
+
+# Python environments and caches
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 tmp_pytest*/
-data/*.db
-data/*.db-*
-exports/
-*.stdout.log
-*.stderr.log
-*-local.stdout.log
-*-local.stderr.log
-web/node_modules/
-web/dist/
-web/test-results/
-web/playwright-report/
-web/auto-imports.d.ts
-web/components.d.ts
-api-dev.stderr.log
+pytest-cache-files-*/
 
-# Local installers, logs, and temporary build/test artifacts
+# Generated frontend files (all three apps)
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+test-results/
+playwright-report/
+auto-imports.d.ts
+components.d.ts
+
+# Local installers, logs, and temporary work
 *.exe
 *.msi
 *.msix
 *.msixbundle
 *.log
 .tmp/
-pytest-cache-files-*/
+
+# Generated exports, database backups, and private review data
+data/*.db
+data/*.db-*
+exports/
+/exports.zip
+*.dump
+db-migration/input/
+db-migration/workspace/
+db-migration/reports/
+db-migration/archive/
+db-migration/DB_KEY.txt

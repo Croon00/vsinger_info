@@ -59,28 +59,6 @@ TRAILING_TIMESTAMP_RE = re.compile(r"\s+(?:(?:\d{1,2}:){1,2}\d{1,2})$")
 NON_SONG_ATTENDEE_LABEL_RE = re.compile(r"^@\s*\d+\s*人\s*$")
 
 
-def register_youtube_live(
-    *,
-    source_item_id: int,
-    source_id: int,
-    youtube_video_id: str,
-    youtube_url: str,
-) -> None:
-    """Register a YouTube live so its post-stream setlist can be collected."""
-    with get_connection() as conn:
-        conn.execute(
-            """
-            INSERT INTO youtube_live_archives (
-                source_item_id, source_id, youtube_video_id, youtube_url
-            )
-            VALUES (%s, %s, %s, %s)
-            ON CONFLICT (source_item_id, youtube_video_id) DO NOTHING
-            """,
-            (source_item_id, source_id, youtube_video_id, youtube_url),
-        )
-        conn.commit()
-
-
 def _normalise_match_text(value: str | None) -> str:
     """Compare Japanese/Roman titles without whitespace or punctuation noise."""
     return re.sub(r"[\s\W_]", "", (value or "").casefold())

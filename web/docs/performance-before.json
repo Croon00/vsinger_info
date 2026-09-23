@@ -1,0 +1,44 @@
+[
+  {
+    "label": "artists cold",
+    "ms": 9933,
+    "status": 200,
+    "bytes": 59959,
+    "timing": null
+  },
+  {
+    "label": "artists repeat",
+    "ms": 7995,
+    "status": 200,
+    "bytes": 59959,
+    "timing": null
+  },
+  {
+    "label": "artist archives all",
+    "ms": 1158,
+    "status": 200,
+    "bytes": 1521022,
+    "timing": null
+  },
+  {
+    "label": "search title",
+    "ms": 867,
+    "status": 200,
+    "bytes": 113335,
+    "timing": null
+  },
+  {
+    "label": "search original",
+    "ms": 704,
+    "status": 200,
+    "bytes": 1016,
+    "timing": null
+  },
+  {
+    "label": "concerts ready",
+    "ms": 652,
+    "status": 200,
+    "bytes": 936104,
+    "timing": null
+  }
+]

@@ -1,0 +1,12 @@
+node_modules/
+.vite/
+dist/
+*.local
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
+test-results/
+playwright-report/
+.preview.log
+.preview-error.log

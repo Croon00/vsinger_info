@@ -1,0 +1,4529 @@
+{
+  "$defs": {
+    "EntityInput": {
+      "additionalProperties": false,
+      "properties": {
+        "client_ref": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Client Ref",
+          "type": "string"
+        },
+        "entity_type": {
+          "title": "Entity Type",
+          "type": "string",
+          "enum": [
+            "artists",
+            "artist_aliases",
+            "agencies",
+            "artist_group_members",
+            "external_accounts",
+            "artist_external_accounts",
+            "songs",
+            "song_artists",
+            "karaoke_numbers",
+            "videos",
+            "live_archives",
+            "archive_artists",
+            "source_documents",
+            "archive_sources",
+            "performances",
+            "performance_artists",
+            "concerts",
+            "concert_artists",
+            "concert_ticket_windows",
+            "albums",
+            "album_artists",
+            "recordings",
+            "recording_artists",
+            "recording_external_ids",
+            "album_tracks",
+            "recording_lyrics",
+            "covers",
+            "cover_artists"
+          ]
+        },
+        "operation": {
+          "default": "create",
+          "enum": [
+            "create",
+            "update"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "data": {
+          "additionalProperties": true,
+          "title": "Data",
+          "type": "object"
+        },
+        "target_id": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Id"
+        },
+        "expected_version": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Version"
+        },
+        "provenance": {
+          "additionalProperties": true,
+          "title": "Provenance",
+          "type": "object"
+        }
+      },
+      "required": [
+        "client_ref",
+        "entity_type",
+        "data"
+      ],
+      "title": "EntityInput",
+      "type": "object",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "artist_aliases"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_aliasesPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_aliasesCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "agencies"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/agenciesPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/agenciesCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "artist_group_members"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_group_membersPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_group_membersCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "external_accounts"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/external_accountsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/external_accountsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "artist_external_accounts"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_external_accountsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/artist_external_accountsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "songs"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/songsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/songsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "song_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/song_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/song_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "karaoke_numbers"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/karaoke_numbersPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/karaoke_numbersCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "videos"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/videosPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/videosCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "live_archives"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/live_archivesPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/live_archivesCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "archive_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/archive_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/archive_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "source_documents"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/source_documentsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/source_documentsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "archive_sources"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/archive_sourcesPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/archive_sourcesCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "performances"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/performancesPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/performancesCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "performance_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/performance_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/performance_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "concerts"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concertsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concertsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "concert_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concert_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concert_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "concert_ticket_windows"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concert_ticket_windowsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/concert_ticket_windowsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "albums"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/albumsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/albumsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "album_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/album_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/album_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "recordings"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recordingsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recordingsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "recording_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_artistsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "recording_external_ids"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_external_idsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_external_idsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "album_tracks"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/album_tracksPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/album_tracksCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "recording_lyrics"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_lyricsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/recording_lyricsCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "covers"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/coversPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/coversCreate"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "entity_type": {
+                "const": "cover_artists"
+              }
+            }
+          },
+          "then": {
+            "if": {
+              "properties": {
+                "operation": {
+                  "const": "update"
+                }
+              },
+              "required": [
+                "operation"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/cover_artistsPatch"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/cover_artistsCreate"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Ref": {
+      "additionalProperties": false,
+      "properties": {
+        "$ref": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "$Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "$ref"
+      ],
+      "title": "Ref",
+      "type": "object"
+    },
+    "artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "title": "Slug",
+          "type": "string"
+        },
+        "name_native": {
+          "title": "Name Native",
+          "type": "string"
+        },
+        "name_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Ko"
+        },
+        "name_latin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Latin"
+        },
+        "entity_kind": {
+          "title": "Entity Kind",
+          "type": "string",
+          "enum": [
+            "solo",
+            "group"
+          ]
+        },
+        "is_virtual": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Virtual"
+        },
+        "agency_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agency Id"
+        },
+        "birthday_month": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birthday Month"
+        },
+        "birthday_day": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birthday Day"
+        },
+        "debut_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Debut Date"
+        },
+        "bio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bio"
+        },
+        "theme_color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Theme Color"
+        },
+        "avatar_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Avatar Url"
+        },
+        "show_in_catalog": {
+          "default": false,
+          "title": "Show In Catalog",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "slug",
+        "name_native",
+        "entity_kind"
+      ],
+      "title": "artistsCreate",
+      "type": "object"
+    },
+    "artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "slug": {
+          "default": null,
+          "title": "Slug",
+          "type": "string"
+        },
+        "name_native": {
+          "default": null,
+          "title": "Name Native",
+          "type": "string"
+        },
+        "name_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Ko"
+        },
+        "name_latin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Latin"
+        },
+        "entity_kind": {
+          "default": null,
+          "title": "Entity Kind",
+          "type": "string",
+          "enum": [
+            "solo",
+            "group"
+          ]
+        },
+        "is_virtual": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Is Virtual"
+        },
+        "agency_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agency Id"
+        },
+        "birthday_month": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birthday Month"
+        },
+        "birthday_day": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birthday Day"
+        },
+        "debut_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Debut Date"
+        },
+        "bio": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bio"
+        },
+        "theme_color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Theme Color"
+        },
+        "avatar_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Avatar Url"
+        },
+        "show_in_catalog": {
+          "default": false,
+          "title": "Show In Catalog",
+          "type": "boolean"
+        }
+      },
+      "title": "artistsPatch",
+      "type": "object"
+    },
+    "artist_aliasesCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "alias": {
+          "title": "Alias",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artist_id",
+        "alias"
+      ],
+      "title": "artist_aliasesCreate",
+      "type": "object"
+    },
+    "artist_aliasesPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "alias": {
+          "default": null,
+          "title": "Alias",
+          "type": "string"
+        }
+      },
+      "title": "artist_aliasesPatch",
+      "type": "object"
+    },
+    "agenciesCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "name_native": {
+          "title": "Name Native",
+          "type": "string"
+        },
+        "name_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Ko"
+        },
+        "website_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Website Url"
+        }
+      },
+      "required": [
+        "name_native"
+      ],
+      "title": "agenciesCreate",
+      "type": "object"
+    },
+    "agenciesPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "name_native": {
+          "default": null,
+          "title": "Name Native",
+          "type": "string"
+        },
+        "name_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name Ko"
+        },
+        "website_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Website Url"
+        }
+      },
+      "title": "agenciesPatch",
+      "type": "object"
+    },
+    "artist_group_membersCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Group Id"
+        },
+        "member_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Member Id"
+        },
+        "joined_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Joined On"
+        },
+        "left_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Left On"
+        }
+      },
+      "required": [
+        "group_id",
+        "member_id"
+      ],
+      "title": "artist_group_membersCreate",
+      "type": "object"
+    },
+    "artist_group_membersPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "group_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Group Id"
+        },
+        "member_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Member Id"
+        },
+        "joined_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Joined On"
+        },
+        "left_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Left On"
+        }
+      },
+      "title": "artist_group_membersPatch",
+      "type": "object"
+    },
+    "external_accountsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "youtube",
+            "spotify",
+            "x",
+            "website",
+            "fanclub"
+          ]
+        },
+        "platform_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Platform Id"
+        },
+        "handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handle"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "collection_enabled": {
+          "default": false,
+          "title": "Collection Enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "platform",
+        "url"
+      ],
+      "title": "external_accountsCreate",
+      "type": "object"
+    },
+    "external_accountsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "default": null,
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "youtube",
+            "spotify",
+            "x",
+            "website",
+            "fanclub"
+          ]
+        },
+        "platform_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Platform Id"
+        },
+        "handle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handle"
+        },
+        "url": {
+          "default": null,
+          "title": "Url",
+          "type": "string"
+        },
+        "collection_enabled": {
+          "default": false,
+          "title": "Collection Enabled",
+          "type": "boolean"
+        }
+      },
+      "title": "external_accountsPatch",
+      "type": "object"
+    },
+    "artist_external_accountsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "account_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Account Id"
+        },
+        "relationship": {
+          "title": "Relationship",
+          "type": "string",
+          "enum": [
+            "owner",
+            "member"
+          ]
+        },
+        "is_primary": {
+          "default": false,
+          "title": "Is Primary",
+          "type": "boolean"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artist_id",
+        "account_id",
+        "relationship"
+      ],
+      "title": "artist_external_accountsCreate",
+      "type": "object"
+    },
+    "artist_external_accountsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "account_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Account Id"
+        },
+        "relationship": {
+          "default": null,
+          "title": "Relationship",
+          "type": "string",
+          "enum": [
+            "owner",
+            "member"
+          ]
+        },
+        "is_primary": {
+          "default": false,
+          "title": "Is Primary",
+          "type": "boolean"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "artist_external_accountsPatch",
+      "type": "object"
+    },
+    "songsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "title_native": {
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "title_latin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Latin"
+        },
+        "language_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Code"
+        }
+      },
+      "required": [
+        "title_native"
+      ],
+      "title": "songsCreate",
+      "type": "object"
+    },
+    "songsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "title_native": {
+          "default": null,
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "title_latin": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Latin"
+        },
+        "language_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language Code"
+        }
+      },
+      "title": "songsPatch",
+      "type": "object"
+    },
+    "song_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Song Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "song_id",
+        "artist_id"
+      ],
+      "title": "song_artistsCreate",
+      "type": "object"
+    },
+    "song_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "song_artistsPatch",
+      "type": "object"
+    },
+    "karaoke_numbersCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Song Id"
+        },
+        "provider": {
+          "title": "Provider",
+          "type": "string",
+          "enum": [
+            "tj",
+            "ky"
+          ]
+        },
+        "number": {
+          "title": "Number",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        }
+      },
+      "required": [
+        "song_id",
+        "provider",
+        "number"
+      ],
+      "title": "karaoke_numbersCreate",
+      "type": "object"
+    },
+    "karaoke_numbersPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "provider": {
+          "default": null,
+          "title": "Provider",
+          "type": "string",
+          "enum": [
+            "tj",
+            "ky"
+          ]
+        },
+        "number": {
+          "default": null,
+          "title": "Number",
+          "type": "string"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        }
+      },
+      "title": "karaoke_numbersPatch",
+      "type": "object"
+    },
+    "videosCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "youtube"
+          ]
+        },
+        "platform_video_id": {
+          "title": "Platform Video Id",
+          "type": "string"
+        },
+        "source_account_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Account Id"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
+        },
+        "duration_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Seconds"
+        },
+        "availability": {
+          "default": "unknown",
+          "title": "Availability",
+          "type": "string",
+          "enum": [
+            "public",
+            "unlisted",
+            "private",
+            "deleted",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "platform",
+        "platform_video_id",
+        "title"
+      ],
+      "title": "videosCreate",
+      "type": "object"
+    },
+    "videosPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "default": null,
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "youtube"
+          ]
+        },
+        "platform_video_id": {
+          "default": null,
+          "title": "Platform Video Id",
+          "type": "string"
+        },
+        "source_account_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Account Id"
+        },
+        "title": {
+          "default": null,
+          "title": "Title",
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Published At"
+        },
+        "duration_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Seconds"
+        },
+        "availability": {
+          "default": "unknown",
+          "title": "Availability",
+          "type": "string",
+          "enum": [
+            "public",
+            "unlisted",
+            "private",
+            "deleted",
+            "unknown"
+          ]
+        }
+      },
+      "title": "videosPatch",
+      "type": "object"
+    },
+    "live_archivesCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Video Id"
+        },
+        "primary_artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Primary Artist Id"
+        },
+        "broadcast_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Broadcast At"
+        },
+        "setlist_state": {
+          "default": "unprocessed",
+          "title": "Setlist State",
+          "type": "string",
+          "enum": [
+            "unprocessed",
+            "partial",
+            "complete",
+            "unavailable"
+          ]
+        }
+      },
+      "required": [
+        "video_id"
+      ],
+      "title": "live_archivesCreate",
+      "type": "object"
+    },
+    "live_archivesPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Video Id"
+        },
+        "primary_artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Primary Artist Id"
+        },
+        "broadcast_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Broadcast At"
+        },
+        "setlist_state": {
+          "default": "unprocessed",
+          "title": "Setlist State",
+          "type": "string",
+          "enum": [
+            "unprocessed",
+            "partial",
+            "complete",
+            "unavailable"
+          ]
+        }
+      },
+      "title": "live_archivesPatch",
+      "type": "object"
+    },
+    "archive_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Archive Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "host",
+            "guest"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "archive_id",
+        "artist_id",
+        "role"
+      ],
+      "title": "archive_artistsCreate",
+      "type": "object"
+    },
+    "archive_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Archive Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "role": {
+          "default": null,
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "host",
+            "guest"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "archive_artistsPatch",
+      "type": "object"
+    },
+    "source_documentsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "source_kind": {
+          "title": "Source Kind",
+          "type": "string",
+          "enum": [
+            "youtube_comment",
+            "video_description",
+            "announcement",
+            "official_page",
+            "manual_note"
+          ]
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "external_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Id"
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Captured At"
+        },
+        "content_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Text"
+        },
+        "source_metadata": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Source Metadata",
+          "type": "object"
+        }
+      },
+      "required": [
+        "source_kind"
+      ],
+      "title": "source_documentsCreate",
+      "type": "object"
+    },
+    "source_documentsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "source_kind": {
+          "default": null,
+          "title": "Source Kind",
+          "type": "string",
+          "enum": [
+            "youtube_comment",
+            "video_description",
+            "announcement",
+            "official_page",
+            "manual_note"
+          ]
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Url"
+        },
+        "external_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "External Id"
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Captured At"
+        },
+        "content_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Text"
+        },
+        "source_metadata": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Source Metadata",
+          "type": "object"
+        }
+      },
+      "title": "source_documentsPatch",
+      "type": "object"
+    },
+    "archive_sourcesCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Archive Id"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Document Id"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "setlist_evidence",
+            "metadata_evidence"
+          ]
+        }
+      },
+      "required": [
+        "archive_id",
+        "document_id",
+        "role"
+      ],
+      "title": "archive_sourcesCreate",
+      "type": "object"
+    },
+    "archive_sourcesPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Archive Id"
+        },
+        "document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Document Id"
+        },
+        "role": {
+          "default": null,
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "setlist_evidence",
+            "metadata_evidence"
+          ]
+        }
+      },
+      "title": "archive_sourcesPatch",
+      "type": "object"
+    },
+    "performancesCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Archive Id"
+        },
+        "ordinal": {
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "start_seconds": {
+          "title": "Start Seconds",
+          "type": "integer"
+        },
+        "end_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Seconds"
+        },
+        "raw_title": {
+          "title": "Raw Title",
+          "type": "string"
+        },
+        "raw_artist": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Artist"
+        },
+        "raw_timestamp": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Timestamp"
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "required": [
+        "archive_id",
+        "ordinal",
+        "start_seconds",
+        "raw_title"
+      ],
+      "title": "performancesCreate",
+      "type": "object"
+    },
+    "performancesPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "archive_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Archive Id"
+        },
+        "ordinal": {
+          "default": null,
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "start_seconds": {
+          "default": null,
+          "title": "Start Seconds",
+          "type": "integer"
+        },
+        "end_seconds": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Seconds"
+        },
+        "raw_title": {
+          "default": null,
+          "title": "Raw Title",
+          "type": "string"
+        },
+        "raw_artist": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Artist"
+        },
+        "raw_timestamp": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Timestamp"
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "title": "performancesPatch",
+      "type": "object"
+    },
+    "performance_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "performance_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Performance Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "lead",
+            "guest"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "performance_id",
+        "artist_id",
+        "role"
+      ],
+      "title": "performance_artistsCreate",
+      "type": "object"
+    },
+    "performance_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "performance_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Performance Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "role": {
+          "default": null,
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "lead",
+            "guest"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "performance_artistsPatch",
+      "type": "object"
+    },
+    "concertsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "event_format": {
+          "title": "Event Format",
+          "type": "string",
+          "enum": [
+            "onsite",
+            "online",
+            "hybrid"
+          ]
+        },
+        "event_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event Date"
+        },
+        "starts_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starts At"
+        },
+        "ends_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ends At"
+        },
+        "timezone_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone Name"
+        },
+        "time_precision": {
+          "default": "unknown",
+          "title": "Time Precision",
+          "type": "string",
+          "enum": [
+            "unknown",
+            "date",
+            "datetime"
+          ]
+        },
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City"
+        },
+        "venue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Venue"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "postponed",
+            "cancelled",
+            "completed"
+          ]
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "required": [
+        "title",
+        "event_format",
+        "status"
+      ],
+      "title": "concertsCreate",
+      "type": "object"
+    },
+    "concertsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "default": null,
+          "title": "Title",
+          "type": "string"
+        },
+        "event_format": {
+          "default": null,
+          "title": "Event Format",
+          "type": "string",
+          "enum": [
+            "onsite",
+            "online",
+            "hybrid"
+          ]
+        },
+        "event_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event Date"
+        },
+        "starts_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starts At"
+        },
+        "ends_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ends At"
+        },
+        "timezone_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone Name"
+        },
+        "time_precision": {
+          "default": "unknown",
+          "title": "Time Precision",
+          "type": "string",
+          "enum": [
+            "unknown",
+            "date",
+            "datetime"
+          ]
+        },
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "City"
+        },
+        "venue": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Venue"
+        },
+        "status": {
+          "default": null,
+          "title": "Status",
+          "type": "string",
+          "enum": [
+            "scheduled",
+            "postponed",
+            "cancelled",
+            "completed"
+          ]
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "title": "concertsPatch",
+      "type": "object"
+    },
+    "concert_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "concert_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Concert Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "concert_id",
+        "artist_id"
+      ],
+      "title": "concert_artistsCreate",
+      "type": "object"
+    },
+    "concert_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "concert_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Concert Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "concert_artistsPatch",
+      "type": "object"
+    },
+    "concert_ticket_windowsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "concert_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Concert Id"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "opens_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opens At"
+        },
+        "closes_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closes At"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "price_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price Text"
+        }
+      },
+      "required": [
+        "concert_id"
+      ],
+      "title": "concert_ticket_windowsCreate",
+      "type": "object"
+    },
+    "concert_ticket_windowsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "concert_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Concert Id"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "opens_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Opens At"
+        },
+        "closes_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closes At"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "price_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Price Text"
+        }
+      },
+      "title": "concert_ticket_windowsPatch",
+      "type": "object"
+    },
+    "albumsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "title_native": {
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "album_type": {
+          "title": "Album Type",
+          "type": "string",
+          "enum": [
+            "single",
+            "ep",
+            "album",
+            "compilation",
+            "other"
+          ]
+        },
+        "release_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Year"
+        },
+        "release_month": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Month"
+        },
+        "release_day": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Day"
+        },
+        "cover_image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cover Image Url"
+        },
+        "spotify_album_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spotify Album Id"
+        }
+      },
+      "required": [
+        "title_native",
+        "album_type"
+      ],
+      "title": "albumsCreate",
+      "type": "object"
+    },
+    "albumsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "title_native": {
+          "default": null,
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "album_type": {
+          "default": null,
+          "title": "Album Type",
+          "type": "string",
+          "enum": [
+            "single",
+            "ep",
+            "album",
+            "compilation",
+            "other"
+          ]
+        },
+        "release_year": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Year"
+        },
+        "release_month": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Month"
+        },
+        "release_day": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Release Day"
+        },
+        "cover_image_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cover Image Url"
+        },
+        "spotify_album_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spotify Album Id"
+        }
+      },
+      "title": "albumsPatch",
+      "type": "object"
+    },
+    "album_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "album_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Album Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "album_id",
+        "artist_id"
+      ],
+      "title": "album_artistsCreate",
+      "type": "object"
+    },
+    "album_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "album_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Album Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "album_artistsPatch",
+      "type": "object"
+    },
+    "recordingsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "title_native": {
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "version_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version Label"
+        },
+        "duration_ms": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Ms"
+        },
+        "official_video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Official Video Id"
+        }
+      },
+      "required": [
+        "title_native"
+      ],
+      "title": "recordingsCreate",
+      "type": "object"
+    },
+    "recordingsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        },
+        "title_native": {
+          "default": null,
+          "title": "Title Native",
+          "type": "string"
+        },
+        "title_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Title Ko"
+        },
+        "version_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version Label"
+        },
+        "duration_ms": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration Ms"
+        },
+        "official_video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Official Video Id"
+        }
+      },
+      "title": "recordingsPatch",
+      "type": "object"
+    },
+    "recording_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Recording Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "primary",
+            "featured"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "recording_id",
+        "artist_id",
+        "role"
+      ],
+      "title": "recording_artistsCreate",
+      "type": "object"
+    },
+    "recording_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Recording Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "role": {
+          "default": null,
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "primary",
+            "featured"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "recording_artistsPatch",
+      "type": "object"
+    },
+    "recording_external_idsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Recording Id"
+        },
+        "platform": {
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "spotify"
+          ]
+        },
+        "external_id": {
+          "title": "External Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "recording_id",
+        "platform",
+        "external_id"
+      ],
+      "title": "recording_external_idsCreate",
+      "type": "object"
+    },
+    "recording_external_idsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Recording Id"
+        },
+        "platform": {
+          "default": null,
+          "title": "Platform",
+          "type": "string",
+          "enum": [
+            "spotify"
+          ]
+        },
+        "external_id": {
+          "default": null,
+          "title": "External Id",
+          "type": "string"
+        }
+      },
+      "title": "recording_external_idsPatch",
+      "type": "object"
+    },
+    "album_tracksCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "album_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Album Id"
+        },
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Recording Id"
+        },
+        "disc_number": {
+          "default": 1,
+          "title": "Disc Number",
+          "type": "integer"
+        },
+        "track_number": {
+          "title": "Track Number",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "album_id",
+        "recording_id",
+        "track_number"
+      ],
+      "title": "album_tracksCreate",
+      "type": "object"
+    },
+    "album_tracksPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "album_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Album Id"
+        },
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Recording Id"
+        },
+        "disc_number": {
+          "default": 1,
+          "title": "Disc Number",
+          "type": "integer"
+        },
+        "track_number": {
+          "default": null,
+          "title": "Track Number",
+          "type": "integer"
+        }
+      },
+      "title": "album_tracksPatch",
+      "type": "object"
+    },
+    "recording_lyricsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Recording Id"
+        },
+        "original_lyrics": {
+          "title": "Original Lyrics",
+          "type": "string"
+        },
+        "translation_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Translation Ko"
+        },
+        "pronunciation_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pronunciation Ko"
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "required": [
+        "recording_id",
+        "original_lyrics"
+      ],
+      "title": "recording_lyricsCreate",
+      "type": "object"
+    },
+    "recording_lyricsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "recording_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Recording Id"
+        },
+        "original_lyrics": {
+          "default": null,
+          "title": "Original Lyrics",
+          "type": "string"
+        },
+        "translation_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Translation Ko"
+        },
+        "pronunciation_ko": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pronunciation Ko"
+        },
+        "source_document_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Document Id"
+        }
+      },
+      "title": "recording_lyricsPatch",
+      "type": "object"
+    },
+    "coversCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Video Id"
+        },
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        }
+      },
+      "required": [
+        "video_id"
+      ],
+      "title": "coversCreate",
+      "type": "object"
+    },
+    "coversPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "video_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Video Id"
+        },
+        "song_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Song Id"
+        }
+      },
+      "title": "coversPatch",
+      "type": "object"
+    },
+    "cover_artistsCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "cover_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Cover Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "title": "Artist Id"
+        },
+        "role": {
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "vocal",
+            "featured"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cover_id",
+        "artist_id",
+        "role"
+      ],
+      "title": "cover_artistsCreate",
+      "type": "object"
+    },
+    "cover_artistsPatch": {
+      "additionalProperties": false,
+      "properties": {
+        "cover_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Cover Id"
+        },
+        "artist_id": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/Ref"
+            }
+          ],
+          "default": null,
+          "title": "Artist Id"
+        },
+        "role": {
+          "default": null,
+          "title": "Role",
+          "type": "string",
+          "enum": [
+            "vocal",
+            "featured"
+          ]
+        },
+        "position": {
+          "default": 0,
+          "title": "Position",
+          "type": "integer"
+        }
+      },
+      "title": "cover_artistsPatch",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "entities": {
+      "items": {
+        "$ref": "#/$defs/EntityInput"
+      },
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Entities",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_version",
+    "entities"
+  ],
+  "title": "ImportEnvelope",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
