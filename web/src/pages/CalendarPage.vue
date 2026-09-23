@@ -478,7 +478,12 @@ async function openEvent(event: CalendarEvent) {
         </component>
       </div>
     </ResourceState>
-    <component :is="mobile ? Drawer : Dialog" :open="dayDialog" @update:open="dayDialog = $event">
+    <component
+      :is="mobile ? Drawer : Dialog"
+      :key="mobile ? 'drawer' : 'dialog'"
+      :open="dayDialog"
+      @update:open="dayDialog = $event"
+    >
       <component :is="mobile ? DrawerContent : DialogContent" class="day-events-dialog sm:max-w-xl">
         <component :is="mobile ? DrawerHeader : DialogHeader" class="pr-8">
           <component :is="mobile ? DrawerTitle : DialogTitle">

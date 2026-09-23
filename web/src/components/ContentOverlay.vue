@@ -73,7 +73,12 @@ async function restoreFocus(event: Event) {
 }
 </script>
 <template>
-  <component :is="mobile ? Drawer : Dialog" :open="open" @update:open="close">
+  <component
+    :is="mobile ? Drawer : Dialog"
+    :key="mobile ? 'drawer' : 'dialog'"
+    :open="open"
+    @update:open="close"
+  >
     <component
       :is="mobile ? DrawerContent : DialogContent"
       class="content-overlay sm:max-w-2xl"
