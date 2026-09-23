@@ -30,6 +30,25 @@ import ConcertRow from '@/components/ConcertRow.vue'
 import ArtistStatistics from '@/components/ArtistStatistics.vue'
 const route = useRoute()
 const router = useRouter()
+function readReturnState() {
+  const { artistReturnTo, artistBackSteps } = window.history.state ?? {}
+  if (
+    typeof artistReturnTo === 'string' &&
+    (artistReturnTo === '/' || /^\/(?:explore|search)(?:[?#]|$)/.test(artistReturnTo)) &&
+    Number.isSafeInteger(artistBackSteps) &&
+    artistBackSteps > 0
+  ) {
+    return { to: artistReturnTo, steps: artistBackSteps as number }
+  }
+  return null
+}
+const returnState = ref(readReturnState())
+watch(
+  () => route.fullPath,
+  () => {
+    returnState.value = readReturnState()
+  },
+)
 const mobile = useMediaQuery('(max-width: 768px)')
 const id = computed(() => String(route.params.artistId))
 const tab = computed(() =>
@@ -159,18 +178,25 @@ const past = computed(() =>
     .sort((a, b) => b.starts_at.localeCompare(a.starts_at)),
 )
 function changeTab(value: string | number) {
+  if (String(value) === tab.value) return
+  const origin = returnState.value
   router.push({
     query: { ...route.query, tab: String(value), event: undefined, lyrics: undefined },
+    state: origin
+      ? { artistReturnTo: origin.to, artistBackSteps: origin.steps + 1 }
+      : undefined,
   })
+}
+function returnToList() {
+  if (returnState.value) router.go(-returnState.value.steps)
+  else router.push('/explore')
 }
 </script>
 <template>
   <div class="page-container artist-page page-enter">
-    <Button as-child variant="ghost" class="back-link">
-      <RouterLink to="/explore">
-        <ArrowLeft data-icon="inline-start" />
-        모든 아티스트
-      </RouterLink>
+    <Button type="button" variant="ghost" class="back-link" @click="returnToList">
+      <ArrowLeft data-icon="inline-start" />
+      뒤로가기
     </Button>
     <ResourceState :loading="loading" :error="error" @retry="reload">
       <template v-if="data">

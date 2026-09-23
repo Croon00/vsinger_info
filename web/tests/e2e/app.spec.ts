@@ -57,6 +57,31 @@ test('explore keeps its search query on Enter and clears only on request', async
   await expect(page.locator('.artist-grid .artist-tile')).toHaveCount(12)
 })
 
+test('artist back button returns to the entry page across detail tabs', async ({ page }) => {
+  await visit(page, '/')
+  await page.getByRole('link', { name: 'HACHI 아티스트 상세' }).click()
+  await page.getByRole('tab', { name: '통계' }).click()
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL('/')
+
+  await visit(page, '/explore?q=하치')
+  await page.getByRole('link', { name: 'HACHI 아티스트 상세' }).click()
+  await page.getByRole('tab', { name: '통계' }).click()
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL(`/explore?q=${encodeURIComponent('하치')}`)
+
+  await visit(page, '/search?q=HACHI')
+  await page.getByRole('link', { name: 'HACHI 아티스트 상세' }).click()
+  await page.getByRole('tab', { name: '통계' }).click()
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL('/search?q=HACHI')
+  await expect(page.getByRole('textbox', { name: '통합검색' })).toHaveValue('HACHI')
+
+  await visit(page, '/artists/1')
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL('/explore')
+})
+
 test('search finds original artists and songs and seeks through the YouTube API', async ({
   page,
 }) => {
