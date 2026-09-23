@@ -9,7 +9,7 @@
 | `start-local.ps1` | 프로젝트 가상환경의 API 8000, 조회 웹 5174를 숨김 실행. 사용 중인 포트는 건너뜀 |
 | `register-local-startup.ps1` | Windows 로그인 시 `start-local.ps1`을 실행하는 예약 작업 등록 |
 | `migrate_catalog.py` | 새 DB 상태/계약 검사. `--apply`는 명시적 스키마 생성 |
-| `migrate_runtime_state.py` | `LEGACY_DATABASE_URL` 읽기 전용 원본에서 X·Discord·YouTube 대기 작업 선택 이전 dry-run. `--apply`는 승인 manifest와 운영 전환 때만 사용. [5단계 계약](../docs/backend-service-step-5-migration.md) |
+| `migrate_runtime_state.py` | `LEGACY_DATABASE_URL`을 읽기 전용으로 사용하는 선택 이전·receipt 확인 도구. 운영 DB 이전은 [2026-09-23 기록](../docs/backend-cutover-2026-09-23.md)대로 완료했다. 동일 manifest의 재실행은 적용 없이 receipt를 반환한다. 새 적용은 별도 대상·범위가 확정된 경우에만 검토 |
 | `import_legacy_setlists.py` | 보존한 이전 DB 덤프의 세트리스트 검사·고정 배치 반영 (`--apply`, `--apply-safe-duplicates`) |
 | `correct_legacy_group_live_hosts.py` | 그룹 채널 영상의 명시적 멤버 진행자 203건 검사·수정 (`--apply`) |
 | `apply_reviewed_legacy_setlists.py` | 사용자 결정 파일에 따른 예외 영상 검사·반영 (`--apply`) |

@@ -37,7 +37,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 현재 사용자 조회 `/api`, X poller·Discord URL sender, 독립 YouTube·Spotify worker는 단일 `DATABASE_URL`의 신규 DB를 사용한다. 구 SQL 연결 함수는 차단되어 있다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행한다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용한다.
 
-전체 서비스의 운영 전환 준비는 아직 완료되지 않았다. X·Discord, 독립 YouTube, 등록된 Spotify 계정, 선택 이전·설정 통합을 로컬 검증했다. 실제 운영 검증이 남아 있다. 최신 검증 결과와 완료 조건은 [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md)을 따른다.
+선택한 runtime 상태의 신규 DB 이전은 [운영 DB 이전 기록](docs/backend-cutover-2026-09-23.md)대로 완료했다. X·Discord, 독립 YouTube, 등록된 Spotify 계정, 설정 통합의 로컬 검증과 별개로, X provider 오류 확인·Discord 활성화·실제 운영 검증은 남아 있다. 최신 완료 조건은 [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md)을 따른다.
 
 ## 새 DB 관리자
 
@@ -73,6 +73,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 통합 3단계 결과](docs/backend-phase-3-runtime-migration.md) | 선택 이전 dry-run, snapshot manifest, 적용·재실행 검증 |
 | [백엔드 통합 4단계 결과](docs/backend-phase-4-runtime.md) | external_accounts 기반 X 수집, durable Discord URL sender, 명령·분류·자동 등록 제거 |
 | [백엔드 통합 5단계 전환](docs/backend-phase-5-cutover.md) | `/api` 통합, 배포 잠금, 최종 이전·Railway 활성화 순서와 롤백 |
+| [2026-09-23 운영 DB 이전 기록](docs/backend-cutover-2026-09-23.md) | 적용 영수증·검증 건수·남은 운영 장애 |
 | [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집·Discord URL 전송 흐름, 설정, 보안 |
 | [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
 | [프로필 이미지 저장](docs/avatar-storage.md) | Neon 이미지 이전, 크기 최적화, 캐시·교체와 복구 |

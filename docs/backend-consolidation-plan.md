@@ -1,6 +1,6 @@
 # 백엔드 통합 최종 계획 — 신규 DB 일원화
 
-확정 기준: 2026-09-22. 1~3단계 기반, X 수집·최소 Discord sender의 1차 구현, 정식 `/api` 통합을 수행했다. **전체 서비스 운영 전환 준비는 미완료다.** [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 따라 X·Discord 안정화 이후 독립 YouTube와 등록된 Spotify 계정 수집기의 신규 DB 호환을 완성한 뒤 실제 상태 이전과 운영 연결을 전환한다. 단계별 실행 기록은 [1단계](backend-phase-1-baseline.md), [2단계](backend-phase-2-runtime-schema.md), [3단계](backend-phase-3-runtime-migration.md), [4단계](backend-phase-4-runtime.md), 현재 실행 경로는 [백엔드 구조](backend-architecture.md)를 따른다.
+확정 기준: 2026-09-22, 상태 갱신: 2026-09-23. 정식 `/api` 통합과 독립 YouTube·등록 Spotify 수집 코드를 구현했고, **운영 DB 선택 이전은 완료했다.** [이전 기록](backend-cutover-2026-09-23.md)에 영수증과 검증 결과가 있다. X provider 복구, 수정 코드 배포, Discord 실제 전송 검증이 남아 있어 전체 서비스 운영 전환은 미완료다. 단계별 실행 기록은 [1단계](backend-phase-1-baseline.md), [2단계](backend-phase-2-runtime-schema.md), [3단계](backend-phase-3-runtime-migration.md), [4단계](backend-phase-4-runtime.md), 현재 실행 경로는 [백엔드 구조](backend-architecture.md)를 따른다.
 
 ## 1. 목표와 범위
 
@@ -154,7 +154,7 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 완료 조건: 선택 집합 일치, 제외 항목 유입 0, 참조 오류 0, 성공 알림의 pending 변환 0, 재실행 중복 0. 실제 이전 실행은 검증된 명세와 전환 시점에 맞춰 5단계에서 수행한다.
 
-**완료:** 2026-09-21 읽기 전용 실데이터 dry-run과 로컬 PostgreSQL 적용·재실행 검증을 완료했다. 결과와 전환 시 재검증 조건은 [3단계 결과](backend-phase-3-runtime-migration.md)에 기록한다. 실제 이전은 수행하지 않았다.
+**완료:** 2026-09-21 읽기 전용 실데이터 dry-run과 로컬 PostgreSQL 적용·재실행 검증을 완료했다. 당시 결과는 [3단계 결과](backend-phase-3-runtime-migration.md)에 기록했다. 실제 운영 DB 적용도 2026-09-23 [이전 기록](backend-cutover-2026-09-23.md)에 따라 완료했다.
 
 ### 4단계 — 수집기·최소 Discord 봇 전환
 
@@ -162,7 +162,7 @@ external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령�
 
 완료 조건: fixture에서 신규 글·첫 조회 기준선·중복·무 route·offline·재시도·pagination·계정 순환·lease·전송 결과 불명 처리를 검증하고 X가 다른 수집이나 Google을 호출하지 않는다. YouTube·등록된 Spotify 계정은 계정/작업→신규 DB 저장→조회까지 검증한다. admin-web은 검증에 사용하지 않는다.
 
-**부분 구현:** 2026-09-22 external_accounts 기반 X poller와 URL sender, Discord 관리 명령·X 분류·X→YouTube 자동 등록 제거를 구현했다. [4단계 결과](backend-phase-4-runtime.md)는 당시 검증 범위다. 전체 서비스 재검증에서 발견한 X·Discord 계약 위반은 [보완 1단계](backend-service-step-1-runtime.md)에서 수정했다. [보완 2단계](backend-service-step-2-jobs.md)에서 독립 작업 실행기를 완료했다. [보완 3단계](backend-service-step-3-youtube.md)에서 YouTube handler·신규 저장을 로컬 검증했다. [보완 4단계](backend-service-step-4-spotify.md)에서 등록된 Spotify 계정 handler와 신규 DB 저장 경로를 로컬 검증했다. 실제 상태 이전과 운영 검증은 남아 있다. [보완 계획 A~D](backend-service-readiness-plan.md)에 따라 수정·개발하며 실제 상태 이전과 운영 연결 전환은 아직 수행하지 않았다.
+**코드 구현·선택 이전 완료, 운영 검증 진행 중:** external_accounts 기반 X poller와 URL sender를 구현하고 Discord 관리 명령·X 분류·X→YouTube 자동 등록을 제거했다. 독립 YouTube·등록 Spotify 수집은 [보완 2~4단계](backend-service-readiness-plan.md)에서 로컬 검증했고 운영 DB 선택 이전도 완료했다. 현재 X provider 오류, YouTube poll 수정의 배포, 실제 Discord 전송 검증이 남아 있다. [4단계 결과](backend-phase-4-runtime.md)는 당시 검증 범위다.
 
 ### 5단계 — API 통합·실제 이전·runtime 전환
 
@@ -170,7 +170,7 @@ external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령�
 
 완료 조건: 정상 runtime은 신규 DB만 사용하고 구 DB 쓰기 경로는 실행되지 않는다. 기존 성공 알림 재전송과 과거 글 대량 알림 없이 계정별 수집을 재개한다. 연결 변경만으로 구 SQL이 신규 DB에서 실행되지 않는다.
 
-**API 통합·잠금 구현, 운영 전환 보류:** 2026-09-22 정식 조회 경로를 `/api`로 통합하고 legacy 쓰기/provider router를 운영 앱에서 분리했다. `RUNTIME_CUTOVER_ENABLED=false`일 때 새 runtime은 API만 실행한다. [보완 계획 A~F](backend-service-readiness-plan.md)의 구현·통합 검증과 이전 작업 선택 보완이 선행 조건이다. 그 뒤 최종 snapshot, migration apply, Railway runtime 활성화를 [5단계 운영 전환](backend-phase-5-cutover.md) 순서로 수행한다.
+**API 통합·DB 이전 완료, runtime 활성화 미완료:** 정식 조회 경로를 `/api`로 통합하고 legacy 쓰기/provider router를 운영 앱에서 분리했다. 선택한 runtime 상태는 신규 DB에 적용했다. 현재 DB에서 별도 writer의 동작이 관찰돼 실행 위치를 확인해야 하며, X provider 오류와 Discord 실제 전송 검증도 남아 있다. Railway 잠금 변수 변경은 [운영 전환](backend-phase-5-cutover.md)의 남은 조건을 확인한 뒤 수행한다.
 
 ### 6단계 — 레거시·환경설정·배포 정리
 

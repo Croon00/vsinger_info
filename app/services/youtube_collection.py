@@ -45,8 +45,11 @@ async def collect_poll(job, payload):
                 videos.extend(await provider.videos(missing))
     except YouTubeFailure as exc:
         _translate(exc)
-    if any(v.channel_id != payload.channel_id for v in videos):
+    if payload.backfill_video_ids and any(v.channel_id != payload.channel_id for v in videos):
         raise PermanentJobError('Channel mismatch')
+    # An uploads playlist can include a video whose current owner is another
+    # channel. Ignore that entry while continuing to poll the requested owner.
+    videos = [video for video in videos if video.channel_id == payload.channel_id]
     last = state['last_polled_at']
     gap = bool(truncated and last and all(v.published_at and v.published_at > last for v in videos))
     return dict(state=state, captured_at=captured, playlist=playlist, truncated=truncated, gap=gap,

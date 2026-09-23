@@ -1,8 +1,8 @@
 # 백엔드 후속 작업
 
-갱신: 2026-09-23. 현재 계약은 [통합 조회 API](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 웹 검증은 [QA](../web/docs/qa.md)에 있다. 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이다. **전체 서비스 운영 전환은 준비 미완료**이며 최신 결함·누락 기능·개발 순서는 [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 모은다.
+갱신: 2026-09-23. 현재 계약은 [통합 조회 API](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 웹 검증은 [QA](../web/docs/qa.md)에 있다. 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이다. **운영 DB 선택 이전은 완료했으나 전체 서비스 활성화·검증은 미완료**이며 [운영 DB 이전 기록](backend-cutover-2026-09-23.md)에 현재 상태를 적었다. 최신 결함·누락 기능·개발 순서는 [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 모은다.
 
-통합 `/api`는 새 Neon의 아티스트·라이브·검색·통계·공연·앨범·가사를 조회한다. X poller와 최소 Discord sender는 신규 DB 코드로 전환했지만 실제 상태 이전과 운영 활성화는 아직 수행하지 않았다. 미지원 데이터는 실제 화면에서 목업으로 보충하지 않는다.
+통합 `/api`는 새 Neon의 아티스트·라이브·검색·통계·공연·앨범·가사를 조회한다. X poller와 최소 Discord sender의 신규 DB 코드는 구현됐고 선택 상태 이전도 수행했다. Discord 활성화와 실제 전송 검증은 남아 있다. 미지원 데이터는 실제 화면에서 목업으로 보충하지 않는다.
 
 ## 백엔드 통합 구현 순서
 
@@ -10,10 +10,10 @@
 
 - [x] 1. [선택 이전 조사](backend-phase-1-baseline.md): X 매핑·활성 상태·잘못된 source 제외, `Hao_RKM` 병합 범위, YouTube 서브 채널 등록, 최소 행·필드 및 writer 후보 목록 확정. 미해결 매핑 충돌 0개.
 - [x] 2. [운영 스키마·연결 기반](backend-phase-2-runtime-schema.md): 신규 DB에 `002` 계정 상태·원문·route·delivery·작업·이전 영수증 schema 적용, 공통 Settings·identity/revision guard와 legacy init 차단. 기존 DB 변경 없음.
-- [x] 3. [선택 이전 도구·검증](backend-phase-3-runtime-migration.md): 실데이터 읽기 전용 dry-run, snapshot/manifest, 참조·제외 집합, 로컬 원자 적용·영수증·재실행 중복 0 검증. 실제 이전은 전환 시 수행.
+- [x] 3. [선택 이전 도구·검증](backend-phase-3-runtime-migration.md): 실데이터 읽기 전용 dry-run, snapshot/manifest, 참조·제외 집합, 로컬 원자 적용·영수증·재실행 중복 0 검증. 실제 적용 결과는 [운영 DB 이전 기록](backend-cutover-2026-09-23.md)에 있다.
 - [x] 4. 수집기·최소 Discord sender 로컬 전환: [X/Discord 보완 1단계](backend-service-step-1-runtime.md), [독립 작업 실행기](backend-service-step-2-jobs.md), [YouTube 신규 DB 수집](backend-service-step-3-youtube.md), [등록된 Spotify 계정 수집](backend-service-step-4-spotify.md)을 구현·검증했다. 실제 운영 검증은 전환 시 수행한다.
 - [x] 5a. 정식 `/api` 계약과 신규 프론트 통합, legacy router 미마운트, `RUNTIME_CUTOVER_ENABLED` 배포 잠금.
-- [ ] 5b. [서비스 보완 A~F](backend-service-readiness-plan.md) 완료 후 기존 writer 정지·최종 명세 재검증·선택 이전·신규 DB runtime 활성화. [전환 순서](backend-phase-5-cutover.md)를 따른다.
+- [ ] 5b. [서비스 보완 A~F](backend-service-readiness-plan.md) 완료 후 선택 이전까지 수행했다. 신규 DB runtime의 실제 수집·Discord 활성화와 장애 확인이 남았다. [이전 기록](backend-cutover-2026-09-23.md)과 [전환 순서](backend-phase-5-cutover.md)를 따른다.
 - [ ] 6. `/api/v2`·임시 호환 경로·중복 설정 제거, Google 및 구 API/UI legacy 격리, 원격 봇 명령 정리·운영 검증.
 - [ ] 별도 후속: admin-web에 수집 설정·route·작업/전송 상태 관리 추가. 현재 개발에서는 앱이 없는 것으로 취급하고 관리 API·연동도 제외.
 
@@ -34,7 +34,7 @@ admin-web은 이번 개발에서 없는 것으로 취급한다. YouTube·등록�
 
 ## 데이터 품질과 운영 경로
 
-- [ ] [최종 통합 계획](backend-consolidation-plan.md)에 따라 신규 DB 하나로 운영한다. 필수 상태만 이전하고 기존 DB는 보존한다. X/Discord 안정화는 완료했고 YouTube 수집·저장을 로컬 검증했으며 등록된 Spotify 계정 수집·저장은 로컬 검증했으며 실제 상태 전환이 남아 있다. 이미 반영된 음악 자료는 유지한다.
+- [ ] [최종 통합 계획](backend-consolidation-plan.md)에 따라 신규 DB 하나로 운영한다. 필수 상태는 이전했고 기존 DB는 보존한다. YouTube·등록된 Spotify 계정 수집은 로컬 검증했으며 X provider 오류와 Discord 실제 전송 검증이 남아 있다. 이미 반영된 음악 자료는 유지한다.
 - [x] 2026-09-20 [로컬 카탈로그 관리자](admin-web-plan.md) 1차 구현: JSON/수동 초안, 원본 비교, 승인·미리보기·원자적 반영, 수동 수정·보관·백업. 초기 데이터는 사용자 검수 전이며 전문 세트리스트 편집기·중복 병합은 후속 작업이다. 새 조회 API 전환은 완료했다.
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결을 실제로 검수한다. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. 재수집/로컬 LLM 실행은 별도 작업이며 원문·외부 ID·출처·생성 버전을 보존한다.
 - [x] X 실행 경로의 분류·공연 추출·Calendar·YouTube 자동 등록을 제거했다. X는 신규 DB 원문 저장과 Discord 원문 URL 전송으로 끝나며 독립 YouTube setlist/음악 integration은 별도 모듈로 유지한다. Google 데이터는 구 DB에 보존하고 정상 실행 경로의 코드는 legacy 설정으로 격리했다.

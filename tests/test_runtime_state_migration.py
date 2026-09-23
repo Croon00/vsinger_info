@@ -21,7 +21,7 @@ def fixture_plan(conn):
     conn.row_factory = dict_row
     identity = runtime.verify_target(conn)
     plan = {
-        "contract": "runtime-subset-v2",
+        "contract": "runtime-subset-v3",
         "target": identity,
         "baseline_at": "2026-09-21T00:00:00+00:00",
         "account_versions": {str(account): 1},
@@ -74,6 +74,10 @@ def test_apply_is_atomic_audited_and_idempotent(database):
     first = runtime.apply_plan(database, plan, manifest)
     database.commit()
     assert first["applied"]
+    assert runtime.completed_receipt(database, manifest) == {
+        "applied": False, "operation_id": first["operation_id"],
+        "counts": manifest["counts"],
+    }
     assert database.execute("SELECT count(*) AS n FROM collection_states").fetchone()["n"] == 1
     assert database.execute("SELECT status FROM notification_deliveries").fetchone()["status"] == "sent"
     assert database.execute("SELECT count(*) AS n FROM runtime_legacy_id_map").fetchone()["n"] == 6
@@ -83,6 +87,46 @@ def test_apply_is_atomic_audited_and_idempotent(database):
     database.commit()
     assert not second["applied"] and second["operation_id"] == first["operation_id"]
     assert database.execute("SELECT count(*) AS n FROM source_items").fetchone()["n"] == 1
+
+
+def test_apply_merges_occupied_runtime_without_rewriting_existing_source(database):
+    apply(database)
+    plan = fixture_plan(database)
+    account = plan["collection_states"][0]["external_account_id"]
+    database.execute("""INSERT INTO collection_states
+      (external_account_id,cursor_value,last_seen_external_id,status,
+       lease_owner,lease_expires_at,provider_state)
+      VALUES (%s,'90','90','polling','old-worker',clock_timestamp()+interval '5 minutes',
+              '{"x_baseline_initialized":true}'::jsonb)""", (account,))
+    database.execute("""INSERT INTO source_items
+      (external_account_id,external_id,source_url,raw_text,published_at,collected_at)
+      VALUES (%s,'post-1','https://x.com/fixture/status/1','existing body',
+              '2026-09-21T00:00:00Z','2026-09-21T00:01:00Z')""", (account,))
+    database.execute("""INSERT INTO worker_jobs (job_type,idempotency_key,status)
+      VALUES ('youtube_poll','existing-poll','pending')""")
+    plan["source_items"][0]["published_at"] = datetime(2026, 9, 21, tzinfo=UTC)
+    manifest = runtime.public_manifest(plan)
+    manifest["approved_for_apply"] = True
+
+    result = runtime.apply_plan(database, plan, manifest)
+    database.commit()
+    assert result["applied"]
+    state = database.execute("""SELECT cursor_value,status,lease_owner,next_poll_at,
+                               provider_state FROM collection_states
+                               WHERE external_account_id=%s""", (account,)).fetchone()
+    assert state["cursor_value"] == "100" and state["status"] == "idle"
+    assert state["lease_owner"] is None
+    assert state["provider_state"]["legacy_source_ids"] == [10]
+    assert database.execute("SELECT raw_text FROM source_items").fetchone()["raw_text"] == "existing body"
+    assert database.execute("SELECT count(*) AS n FROM worker_jobs").fetchone()["n"] == 2
+    assert database.execute("SELECT count(*) AS n FROM notification_deliveries").fetchone()["n"] == 1
+
+
+def test_merge_cursor_does_not_regress_target():
+    assert runtime.merge_cursor("100", "200") == "200"
+    assert runtime.merge_cursor("100", None) == "100"
+    with pytest.raises(runtime.RuntimeMigrationError, match="cannot be ordered"):
+        runtime.merge_cursor("after-a", "after-b")
 
 
 def test_apply_rejects_unapproved_or_changed_manifest(database):

@@ -1,5 +1,7 @@
 # 백엔드 보완 5단계 — 선택 이전과 설정·legacy 경계
 
+이 문서는 보완 5단계 당시의 dry-run 기록이다. 최종 운영 DB 적용 여부와 건수는 [2026-09-23 이전 기록](backend-cutover-2026-09-23.md)을 따른다.
+
 기준: 2026-09-23. 이번 단계는 로컬 코드·fixture 검증이다. 운영 writer 정지, 최종 manifest 적용, Railway 변경, Discord·provider 실동작 확인은 [전환 절차](backend-phase-5-cutover.md)에서 수행한다.
 
 ## 이전 대상과 재개 의미

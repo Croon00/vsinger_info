@@ -385,7 +385,7 @@ def build_plan(old_conn, new_conn, *, baseline_at: datetime | None = None) -> di
             }
 
     plan = {
-        "contract": "runtime-subset-v2", "target": target,
+        "contract": "runtime-subset-v3", "target": target,
         "baseline_at": baseline_at,
         "account_versions": {str(row["account"]["account_id"]): row["account"]["version"]
                              for row in mapping["mappings"] if row.get("account") and row["status"] == "matched"},
@@ -407,6 +407,7 @@ def public_manifest(plan: dict) -> dict:
     counts = {name: len(plan[name]) for name in
               ("collection_states", "routes", "source_items", "deliveries", "worker_jobs")}
     manifest = {"contract": plan["contract"], "target": plan["target"],
+                "merge_policy": "preserve-existing-runtime-v1",
                 "baseline_at": (plan["baseline_at"].isoformat() if isinstance(plan.get("baseline_at"), datetime)
                                 else plan.get("baseline_at")),
                 "source_snapshot_hash": plan["source_snapshot_hash"], "counts": counts,
@@ -460,6 +461,110 @@ def assert_target_preconditions(conn, plan: dict) -> None:
         raise RuntimeMigrationError("External account versions changed after dry-run")
 
 
+def lock_target_for_merge(conn) -> None:
+    # A live collector does not participate in the advisory lock. Serialize its
+    # DB writes while verifying and importing the selected legacy subset.
+    conn.execute("""LOCK TABLE external_accounts, collection_states, source_items,
+        discord_users, discord_guilds, discord_channels, notification_routes,
+        notification_deliveries, worker_jobs IN SHARE ROW EXCLUSIVE MODE""")
+
+
+def merge_cursor(old: str | None, current: str | None) -> str | None:
+    if not old:
+        return current
+    if not current:
+        return old
+    if old == current:
+        return current
+    if old.isdigit() and current.isdigit():
+        return str(max(int(old), int(current)))
+    raise RuntimeMigrationError("Existing and legacy X cursors cannot be ordered")
+
+
+def merge_provider_state(current: dict, legacy: dict) -> dict:
+    merged = dict(current)
+    for key, value in legacy.items():
+        if key == "youtube_pending_video_ids":
+            merged[key] = list(dict.fromkeys([*merged.get(key, []), *value]))
+        elif key == "youtube_legacy_pending_checks":
+            for video_id, details in value.items():
+                if video_id in merged.get(key, {}) and merged[key][video_id] != details:
+                    raise RuntimeMigrationError("Existing YouTube pending check conflicts with legacy")
+            merged[key] = {**merged.get(key, {}), **value}
+        elif key == "youtube_baseline_at":
+            merged.setdefault(key, value)
+        elif key in merged and merged[key] != value:
+            raise RuntimeMigrationError(f"Existing provider state conflicts on {key}")
+        else:
+            merged[key] = value
+    return merged
+
+
+def validate_existing_runtime(conn, plan: dict) -> dict:
+    account_ids = [state["external_account_id"] for state in plan["collection_states"]]
+    states = {row["external_account_id"]: row for row in conn.execute(
+        """SELECT external_account_id,cursor_value,last_seen_external_id,status,
+                  lease_expires_at,provider_state FROM collection_states
+           WHERE external_account_id=ANY(%s)""", (account_ids,))}
+    for state in plan["collection_states"]:
+        current = states.get(state["external_account_id"])
+        if not current:
+            continue
+        if "legacy_source_ids" in state["provider_state"]:
+            merge_cursor(state["cursor_value"], current["cursor_value"])
+            merge_cursor(state["last_seen_external_id"], current["last_seen_external_id"])
+        elif current["status"] == "polling" and current["lease_expires_at"]:
+            raise RuntimeMigrationError("Active YouTube poll must finish before runtime merge")
+        merge_provider_state(current["provider_state"], state["provider_state"])
+
+    existing_items = {(row["external_account_id"], row["external_id"]): row for row in conn.execute(
+        """SELECT external_account_id,external_id,source_url,raw_text,published_at
+           FROM source_items WHERE external_account_id=ANY(%s)""", (account_ids,))}
+    body_differences = 0
+    for item in plan["source_items"]:
+        current = existing_items.get((item["external_account_id"], item["external_id"]))
+        if not current:
+            continue
+        if current["source_url"] != item["source_url"] or current["published_at"] != item["published_at"]:
+            raise RuntimeMigrationError("Existing source item URL or publication time conflicts with legacy")
+        body_differences += current["raw_text"] != item["raw_text"]
+
+    route_keys = {(r["external_account_id"], r["channel_id"]): r for r in plan["routes"]}
+    for route in conn.execute("""SELECT external_account_id,guild_id,channel_id,
+                               owner_discord_user_id,is_active FROM notification_routes"""):
+        planned = route_keys.get((route["external_account_id"], route["channel_id"]))
+        if planned and any(route[field] != planned[field] for field in
+                           ("guild_id", "owner_discord_user_id", "is_active")):
+            raise RuntimeMigrationError("Existing notification route conflicts with legacy")
+    if conn.execute("SELECT 1 FROM notification_deliveries LIMIT 1").fetchone():
+        raise RuntimeMigrationError("Existing deliveries need a separate conflict review")
+    job_keys = {(j["job_type"], j["idempotency_key"]) for j in plan["worker_jobs"]}
+    for job in conn.execute("SELECT job_type,idempotency_key FROM worker_jobs"):
+        if (job["job_type"], job["idempotency_key"]) in job_keys:
+            raise RuntimeMigrationError("Existing worker job conflicts with legacy")
+    return {"existing_states": len(states), "existing_item_body_differences": body_differences}
+
+
+def completed_receipt(conn, manifest: dict) -> dict | None:
+    if not manifest.get("approved_for_apply"):
+        return None
+    body = dict(manifest)
+    manifest_hash = body.pop("manifest_hash", None)
+    body["approved_for_apply"] = False
+    if not manifest_hash or digest(body) != manifest_hash:
+        raise RuntimeMigrationError("Approved manifest hash is invalid")
+    if verify_target(conn) != manifest["target"]:
+        raise RuntimeMigrationError("Target database changed after dry-run")
+    operation_id = uuid.uuid5(NAMESPACE, manifest_hash)
+    existing = conn.execute("""SELECT manifest_hash FROM runtime_migration_receipts
+                               WHERE operation_id=%s""", (operation_id,)).fetchone()
+    if not existing:
+        return None
+    if existing["manifest_hash"] != manifest_hash:
+        raise RuntimeMigrationError("Existing operation receipt hash mismatch")
+    return {"applied": False, "operation_id": str(operation_id), "counts": manifest["counts"]}
+
+
 def apply_plan(conn, plan: dict, manifest: dict) -> dict:
     expected = public_manifest(plan)
     supplied = dict(manifest)
@@ -468,6 +573,7 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
     if not approved or supplied != expected:
         raise RuntimeMigrationError("Exact dry-run manifest with approved_for_apply=true is required")
     conn.execute("SELECT pg_advisory_xact_lock(%s)", (LOCK_ID,))
+    lock_target_for_merge(conn)
     assert_target_preconditions(conn, plan)
     operation_id = uuid.uuid5(NAMESPACE, expected["manifest_hash"])
     existing = conn.execute(
@@ -478,14 +584,7 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
         if existing["manifest_hash"] != expected["manifest_hash"]:
             raise RuntimeMigrationError("Existing operation receipt hash mismatch")
         return {"applied": False, "operation_id": str(operation_id), "counts": expected["counts"]}
-    occupied = conn.execute("""SELECT
-      (SELECT count(*) FROM collection_states) +
-      (SELECT count(*) FROM source_items) +
-      (SELECT count(*) FROM notification_routes) +
-      (SELECT count(*) FROM notification_deliveries) +
-      (SELECT count(*) FROM worker_jobs) AS total""").fetchone()["total"]
-    if occupied:
-        raise RuntimeMigrationError("Runtime tables are not empty and no matching receipt exists")
+    merge_audit = validate_existing_runtime(conn, plan)
 
     users = sorted({route["owner_discord_user_id"] for route in plan["routes"]
                     if route["owner_discord_user_id"]})
@@ -503,6 +602,31 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
                      (route["channel_id"], route["guild_id"]))
 
     for state in plan["collection_states"]:
+        current = conn.execute("""SELECT cursor_value,last_seen_external_id,status,
+                               next_poll_at,provider_state FROM collection_states
+                               WHERE external_account_id=%s""",
+                               (state["external_account_id"],)).fetchone()
+        if current:
+            provider_state = merge_provider_state(current["provider_state"], state["provider_state"])
+            is_x = "legacy_source_ids" in state["provider_state"]
+            cursor = merge_cursor(state["cursor_value"], current["cursor_value"]) if is_x else current["cursor_value"]
+            last_seen = merge_cursor(state["last_seen_external_id"], current["last_seen_external_id"]) if is_x else current["last_seen_external_id"]
+            if is_x and cursor:
+                provider_state["x_baseline_initialized"] = True
+            was_polling = is_x and current["status"] == "polling"
+            # A collector holding an old in-memory baseline must fail its lease
+            # check. Delay a fresh claim beyond that lease's lifetime.
+            conn.execute("""UPDATE collection_states SET cursor_value=%s,
+              last_seen_external_id=%s,provider_state=%s,
+              status=CASE WHEN %s THEN 'idle' ELSE status END,
+              lease_owner=CASE WHEN %s THEN NULL ELSE lease_owner END,
+              lease_expires_at=CASE WHEN %s THEN NULL ELSE lease_expires_at END,
+              next_poll_at=CASE WHEN %s THEN clock_timestamp()+interval '10 minutes'
+                                ELSE next_poll_at END
+              WHERE external_account_id=%s""",
+              (cursor,last_seen,Jsonb(json_ready(provider_state)),was_polling,was_polling,
+               was_polling,was_polling,state["external_account_id"]))
+            continue
         conn.execute("""INSERT INTO collection_states
           (external_account_id,cursor_value,last_seen_external_id,status,next_poll_at,
            last_polled_at,provider_state) VALUES (%s,%s,%s,%s,%s,%s,%s)
@@ -555,7 +679,7 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
       (operation_id,catalog_instance_id,source_fingerprint,manifest_hash,summary)
       VALUES (%s,%s,%s,%s,%s) RETURNING id""",
       (operation_id, plan["target"]["catalog_instance_id"], plan["source_snapshot_hash"],
-       expected["manifest_hash"], Jsonb(expected["counts"]))).fetchone()["id"]
+       expected["manifest_hash"], Jsonb({**expected["counts"], **merge_audit}))).fetchone()["id"]
 
     def legacy_map(source_table, legacy_id, target_table, target_id, reason):
         conn.execute("""INSERT INTO runtime_legacy_id_map
@@ -604,7 +728,20 @@ def main() -> int:
                 configure(new_conn, read_only=not args.apply)
                 supplied = json.loads(args.manifest.read_text(encoding="utf-8")) if args.apply else None
                 baseline = datetime.fromisoformat(supplied["baseline_at"]) if supplied else None
+                if args.apply:
+                    completed = completed_receipt(new_conn, supplied)
+                    if completed:
+                        print(json.dumps(completed, ensure_ascii=False))
+                        return 0
+                    new_conn.rollback()
+                    configure(new_conn, read_only=False)
+                    lock_target_for_merge(new_conn)
                 plan = build_plan(old_conn, new_conn, baseline_at=baseline)
+                if args.apply:
+                    # The source snapshot is fully materialized in plan. Do not
+                    # keep an idle legacy read transaction open for the long
+                    # target write/receipt phase.
+                    old_conn.rollback()
                 manifest = public_manifest(plan)
                 if not args.apply:
                     args.manifest.parent.mkdir(parents=True, exist_ok=True)
@@ -615,8 +752,11 @@ def main() -> int:
                               "excluded_work_count": len(manifest["excluded_work"])}
                 else:
                     result = apply_plan(new_conn, plan, supplied)
-    except psycopg.Error:
-        raise RuntimeMigrationError("Database connection or query failed during runtime migration") from None
+    except psycopg.Error as error:
+        state = error.sqlstate or "connection"
+        raise RuntimeMigrationError(
+            f"Database operation failed (SQLSTATE {state}); check the target receipt before retrying"
+        ) from None
     print(json.dumps(result, ensure_ascii=False))
     return 0
 

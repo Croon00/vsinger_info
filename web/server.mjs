@@ -1,7 +1,7 @@
 import { createReadStream, existsSync } from 'node:fs'
 import { stat } from 'node:fs/promises'
 import { createServer } from 'node:http'
-import { extname, normalize, resolve } from 'node:path'
+import { extname, normalize, resolve, sep } from 'node:path'
 
 const port = Number(process.env.PORT || 3000)
 const backendUrl = process.env.BACKEND_URL
@@ -28,54 +28,72 @@ function serveFile(response, filePath) {
   createReadStream(filePath).pipe(response)
 }
 
-async function proxyApi(request, response) {
+async function proxyApi(request, response, path) {
   if (!backendUrl) {
     response.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' })
     response.end(JSON.stringify({ detail: 'BACKEND_URL is not configured for the frontend service.' }))
     return
   }
 
-  const target = new URL(request.url || '/', backendUrl)
+  // Only the path and query may come from the browser. The configured backend
+  // remains the destination even for absolute-form HTTP request targets.
+  const target = new URL(path, backendUrl)
   const headers = { accept: request.headers.accept || 'application/json' }
   if (apiKey) headers['X-API-Key'] = apiKey
 
   try {
     const upstream = await fetch(target, { method: request.method, headers })
+    const body = Buffer.from(await upstream.arrayBuffer())
     const upstreamHeaders = {}
     for (const [name, value] of upstream.headers) {
-      if (!['connection', 'keep-alive', 'transfer-encoding'].includes(name.toLowerCase())) {
+      if (!['connection', 'keep-alive', 'transfer-encoding', 'content-encoding', 'content-length'].includes(name.toLowerCase())
+          && !(upstream.headers.has('content-encoding') && name.toLowerCase() === 'etag')) {
         upstreamHeaders[name] = value
       }
     }
     response.writeHead(upstream.status, upstreamHeaders)
-    response.end(Buffer.from(await upstream.arrayBuffer()))
+    response.end(body)
   } catch {
-    response.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' })
-    response.end(JSON.stringify({ detail: 'The frontend could not reach the backend service.' }))
+    if (response.headersSent) response.destroy()
+    else {
+      response.writeHead(502, { 'Content-Type': 'application/json; charset=utf-8' })
+      response.end(JSON.stringify({ detail: 'The frontend could not reach the backend service.' }))
+    }
   }
 }
 
 const server = createServer(async (request, response) => {
-  const method = request.method || 'GET'
-  const pathname = new URL(request.url || '/', 'http://localhost').pathname
+  try {
+    const method = request.method || 'GET'
+    const parsed = new URL(request.url || '/', 'http://localhost')
+    const pathname = parsed.pathname
 
-  if (pathname.startsWith('/api/')) {
-    if (!['GET', 'HEAD'].includes(method)) {
-      response.writeHead(405, { Allow: 'GET, HEAD', 'Content-Type': 'application/json; charset=utf-8' })
-      response.end(JSON.stringify({ detail: 'Read-only frontend proxy' }))
+    if (pathname.startsWith('/api/')) {
+      if (!['GET', 'HEAD'].includes(method)) {
+        response.writeHead(405, { Allow: 'GET, HEAD', 'Content-Type': 'application/json; charset=utf-8' })
+        response.end(JSON.stringify({ detail: 'Read-only frontend proxy' }))
+        return
+      }
+      await proxyApi(request, response, pathname + parsed.search)
       return
     }
-    await proxyApi(request, response)
-    return
-  }
 
-  const relativePath = normalize(decodeURIComponent(pathname)).replace(/^[\\/]+/, '')
-  const candidate = resolve(distDir, relativePath || 'index.html')
-  if (candidate.startsWith(distDir) && existsSync(candidate) && (await stat(candidate)).isFile()) {
-    serveFile(response, candidate)
-    return
+    const relativePath = normalize(decodeURIComponent(pathname)).replace(/^[\\/]+/, '')
+    const candidate = resolve(distDir, relativePath || 'index.html')
+    if ((candidate === distDir || candidate.startsWith(distDir + sep))
+        && existsSync(candidate) && (await stat(candidate)).isFile()) {
+      serveFile(response, candidate)
+      return
+    }
+    serveFile(response, resolve(distDir, 'index.html'))
+  } catch (error) {
+    if (response.headersSent) response.destroy()
+    else {
+      response.writeHead(error instanceof URIError || error instanceof TypeError ? 400 : 500,
+        { 'Content-Type': 'application/json; charset=utf-8' })
+      response.end(JSON.stringify({ detail: 'Unable to handle request.' }))
+    }
   }
-  serveFile(response, resolve(distDir, 'index.html'))
 })
 
 server.listen(port, '0.0.0.0', () => {

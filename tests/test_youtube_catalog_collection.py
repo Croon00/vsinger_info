@@ -212,6 +212,24 @@ def test_first_poll_baselines_history_then_new_end_queues_with_24h_delay(store, 
     assert store.execute("SELECT count(*) FROM worker_jobs WHERE job_type='youtube_collect'").fetchone()[0] == 1
 
 
+def test_poll_skips_foreign_owned_upload_without_failing_channel(store, provider):
+    req = request(store, kind='youtube_poll')
+    foreign = video(id='foreign0000', channel_id='UC' + 'b' * 22)
+    provider.recent.return_value = ('uploads', [video(), foreign], False)
+    asyncio.run(music_jobs.enqueue(req))
+    assert run()['status'] == 'succeeded'
+    assert store.execute("SELECT count(*) FROM worker_jobs WHERE job_type='youtube_collect'").fetchone()[0] == 0
+
+    new_end = datetime.now(UTC) + timedelta(seconds=1)
+    provider.recent.return_value = ('uploads', [video(ended_at=new_end), foreign], False)
+    asyncio.run(music_jobs.enqueue(req.model_copy(update={'payload': {
+        **req.payload, 'request_run': 'next-poll'}})))
+    assert run()['status'] == 'succeeded'
+    jobs = store.execute("""SELECT payload->>'youtube_video_id' FROM worker_jobs
+                            WHERE job_type='youtube_collect'""").fetchall()
+    assert jobs == [('abcdefghijk',)]
+
+
 def test_explicit_backfill_bypasses_baseline_only_for_selected_ids(store, provider):
     req = request(store, kind='youtube_poll')
     req = req.model_copy(update={'payload': {**req.payload, 'backfill_video_ids': ['abcdefghijk']}})
