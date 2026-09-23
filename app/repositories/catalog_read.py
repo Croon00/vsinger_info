@@ -38,6 +38,35 @@ PERFORMANCE_SQL = """SELECT p.id,p.archive_id,p.ordinal,p.start_seconds,p.song_i
  WHERE pa.performance_id=p.id ORDER BY pa.position,pa.id LIMIT 1
  ) singer ON true WHERE p.archived_at IS NULL"""
 
+# Match on narrow rows first; constructing PERFORMANCE_SQL for every candidate
+# makes a paged search pay for all setlist display fields and lateral aggregates.
+SEARCH_CANDIDATES_SQL = f"""WITH matched_artists AS MATERIALIZED (
+ SELECT a.id,a.name_native,a.name_ko,a.name_latin FROM artists a
+ WHERE a.archived_at IS NULL AND (a.name_native ILIKE :query OR a.name_ko ILIKE :query
+ OR a.name_latin ILIKE :query OR EXISTS (
+ SELECT 1 FROM artist_aliases al WHERE al.artist_id=a.id AND al.alias ILIKE :query))
+), matched_names AS MATERIALIZED (
+ SELECT lower(btrim(n.name)) name FROM matched_artists a
+ CROSS JOIN LATERAL (VALUES (a.name_native),(a.name_ko),(a.name_latin)) n(name)
+ WHERE n.name IS NOT NULL
+ UNION
+ SELECT lower(btrim(al.alias)) FROM artist_aliases al
+ JOIN matched_artists a ON a.id=al.artist_id
+), candidates AS MATERIALIZED (
+ SELECT p.id,p.archive_id,p.ordinal,COALESCE(l.broadcast_at,v.published_at) broadcast_at
+ FROM performances p JOIN live_archives l ON l.id=p.archive_id
+ JOIN videos v ON v.id=l.video_id
+ LEFT JOIN songs s ON s.id=p.song_id AND s.archived_at IS NULL
+ WHERE p.archived_at IS NULL AND {LIVE_VISIBLE} AND (
+ concat_ws(' ',s.title_native,s.title_ko,s.title_latin,p.raw_title,p.raw_artist) ILIKE :query
+ OR l.primary_artist_id IN (SELECT id FROM matched_artists)
+ OR EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id
+   AND pa.artist_id IN (SELECT id FROM matched_artists))
+ OR EXISTS (SELECT 1 FROM song_artists sa WHERE sa.song_id=s.id
+   AND sa.artist_id IN (SELECT id FROM matched_artists))
+ OR (p.song_id IS NULL AND lower(btrim(p.raw_artist)) IN (SELECT name FROM matched_names))
+))"""
+
 class CatalogReadRepository:
     def __init__(self, session):
         self.session = session
@@ -90,15 +119,27 @@ class CatalogReadRepository:
 
     def search(self, query, offset, limit):
         pattern = "%" + query.replace("\\","\\\\").replace("%","\\%").replace("_","\\_") + "%"
-        return self.page(f"""SELECT p.*,COALESCE(p.singer_id,l.primary_artist_id) artist_id,
+        params = {"query":pattern,"offset":offset,"limit":limit}
+        rows = self.rows(f"""{SEARCH_CANDIDATES_SQL}, page AS MATERIALIZED (
+        SELECT candidates.*,count(*) OVER() _total FROM candidates
+        ORDER BY broadcast_at DESC NULLS LAST,archive_id DESC,ordinal,id
+        LIMIT :limit OFFSET :offset)
+        SELECT p.*,COALESCE(p.singer_id,l.primary_artist_id) artist_id,
         COALESCE(p.singer_name,a.name_native,'') artist_name,p.singer_name_ko artist_name_ko,
         'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
-        v.title video_title,COALESCE(l.broadcast_at,v.published_at) broadcast_at,
-        (COALESCE(l.broadcast_at,v.published_at) AT TIME ZONE 'Asia/Seoul')::date performed_on
-        FROM ({PERFORMANCE_SQL}) p JOIN live_archives l ON l.id=p.archive_id
+        v.title video_title,page.broadcast_at,
+        (page.broadcast_at AT TIME ZONE 'Asia/Seoul')::date performed_on,page._total
+        FROM page JOIN LATERAL (SELECT * FROM ({PERFORMANCE_SQL}) detail
+          WHERE detail.id=page.id) p ON true
+        JOIN live_archives l ON l.id=page.archive_id
         JOIN videos v ON v.id=l.video_id LEFT JOIN artists a ON a.id=l.primary_artist_id AND a.archived_at IS NULL
-        WHERE {LIVE_VISIBLE} AND p.search_text ILIKE :query""", {"query":pattern},offset,limit,
-        "q.broadcast_at DESC NULLS LAST,q.archive_id DESC,q.ordinal,q.id")
+        ORDER BY page.broadcast_at DESC NULLS LAST,page.archive_id DESC,page.ordinal,page.id""",params)
+        total = rows[0].pop("_total") if rows else (
+            self.rows(SEARCH_CANDIDATES_SQL + " SELECT count(*) n FROM candidates",params)[0]["n"]
+            if offset else 0)
+        for row in rows[1:]:
+            row.pop("_total")
+        return {"items":rows,"total":total,"offset":offset,"limit":limit}
 
     def statistic_rows(self, artist_id):
         cte = f"""WITH archives AS (SELECT l.id,COALESCE(l.broadcast_at,v.published_at) happened

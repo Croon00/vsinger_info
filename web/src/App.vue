@@ -28,7 +28,7 @@ const nav = [
   { title: '설정', href: '/settings', icon: Settings2 },
 ]
 const active = computed(() =>
-  route.path === '/'
+  ['/', '/search'].includes(route.path)
     ? '/'
     : ['/calendar', '/settings'].includes(route.path)
       ? route.path

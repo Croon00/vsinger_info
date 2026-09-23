@@ -146,6 +146,14 @@ test('search finds original artists and songs and seeks through the YouTube API'
   await expect(page.locator('.setlist-song[aria-current="true"]')).toContainText('踊り子')
   await page.reload({ waitUntil: 'domcontentloaded' })
   await expect.poll(() => page.evaluate(() => (window as any).__playerTest.time)).toBe(587)
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL(`/search?q=${encodeURIComponent('요루시카')}`)
+  await expect(page.getByRole('textbox', { name: '통합검색' })).toHaveValue('요루시카')
+
+  await visit(page, '/lives/101')
+  await expect(page.locator('.setlist-song').first()).toBeVisible()
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL('/artists/1?tab=lives')
 })
 
 test('lyrics and concert overlays preserve route state, keyboard focus and back behavior', async ({

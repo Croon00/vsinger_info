@@ -59,9 +59,15 @@ watch(query, () => {
   original.value = 'all'
 })
 const singers = computed(() => [
-  ...new Map(results.value.map((p) => [p.artist.id ?? p.artist.name, p.artist])).values(),
+  ...new Map(
+    results.value
+      .filter((p) => p.artist.id != null || p.artist.name.trim())
+      .map((p) => [p.artist.id ?? p.artist.name, p.artist] as const),
+  ).values(),
 ])
-const originals = computed(() => [...new Set(results.value.map((p) => p.original_artist))])
+const originals = computed(() => [
+  ...new Set(results.value.map((p) => p.original_artist).filter((name) => name.trim())),
+])
 const performances = computed(() =>
   results.value.filter(
     (p) =>
@@ -157,7 +163,11 @@ function koreanName(original: string, korean?: string) {
             <RouterLink
               v-for="p in performances"
               :key="p.id"
-              :to="`/lives/${p.live.id}?t=${p.start_seconds}`"
+              :to="{
+                path: `/lives/${p.live.id}`,
+                query: { t: String(p.start_seconds) },
+                state: { liveReturnTo: route.fullPath },
+              }"
               class="performance-result"
             >
               <ArchiveThumbnail :video-id="p.live.video_id" />

@@ -163,3 +163,42 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   ).toBeVisible()
   expect(calls.some((p) => p.startsWith('/api/draft/') || p.startsWith('/api/songs/'))).toBe(false)
 })
+
+test('search filters ignore missing artist credits and keep navigation clickable', async ({ page }) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  const artist = {
+    id: 42, name: 'HACHI', display_name: '하치', related_artist_ids: [42], sources: [],
+  }
+  await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
+    const url = new URL(route.request().url())
+    const data = url.pathname === '/api/artists' ? [artist]
+      : url.pathname === '/api/artists/42' ? artist
+      : url.pathname === '/api/search' ? {
+          items: [
+            { id: 1, archive_id: 10, artist_id: 42, artist_name: 'HACHI',
+              song_title: 'First', original_artist: '', start_seconds: 10,
+              youtube_url: 'https://youtu.be/abcdefghijk' },
+            { id: 2, archive_id: 10, artist_id: 42, artist_name: 'HACHI',
+              song_title: 'Second', original_artist: 'Band', start_seconds: 20,
+              youtube_url: 'https://youtu.be/abcdefghijk' },
+            { id: 3, archive_id: 10, artist_id: null, artist_name: '',
+              song_title: 'Third', original_artist: 'Band', start_seconds: 30,
+              youtube_url: 'https://youtu.be/abcdefghijk' },
+          ], total: 3, offset: 0, limit: 50,
+        }
+      : { items: [], total: 0, offset: 0, limit: 12 }
+    await route.fulfill({ contentType: 'application/json', body: JSON.stringify(data) })
+  })
+  await page.goto('/search?q=하치')
+  await expect(page.locator('.performance-result')).toHaveCount(3)
+  await page.getByRole('combobox', { name: '원곡 아티스트' }).click()
+  await expect(page.getByRole('option', { name: 'Band' })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await page.getByRole('combobox', { name: '부른 아티스트' }).click()
+  await page.keyboard.press('Escape')
+  expect(await page.evaluate(() => document.body.style.pointerEvents)).not.toBe('none')
+  await page.getByRole('link', { name: 'HACHI 아티스트 상세' }).click()
+  await expect(page).toHaveURL('/artists/42')
+  expect(errors).toEqual([])
+})

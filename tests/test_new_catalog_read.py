@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from test_catalog_migration import local_server, database, apply, row
 from app.services.catalog_read import CatalogRead
+from app.schemas.read_models import Page, SearchRead
 from app.db.catalog_session import get_catalog_session
 from app.api.routers.read_api import router
 from app.core.config import settings
@@ -90,6 +91,8 @@ def test_normalized_catalog_reads_and_attribution(store):
             assert result["total"]==2
             assert result["items"][0]["original_artist"]=="Original"
             assert result["items"][0]["song_title_ko"]=="제목"
+        assert service.search("가창자",0,50)["total"]==2
+        assert service.search("Guest",0,50)["total"]==1
         assert service.search("%",0,50)["total"]==0
         assert service.search("Title",99,1)["total"]==2
         for artist in [a,guest]:
@@ -107,6 +110,34 @@ def test_normalized_catalog_reads_and_attribution(store):
         assert service.album(album)["tracks"][0]["recording_id"]==recording
         assert service.album(album)["tracks"][0]["has_lyrics"] is True
         assert service.lyrics(recording)["original_lyrics"]=="Stored lyrics"
+
+def test_unmatched_raw_original_artist_is_searchable_by_registered_names(store):
+    db,engine=store
+    original=row(db,"artists",entity_kind="group",slug="yorushika",name_native="ヨルシカ",
+                 name_ko="요루시카",name_latin="Yorushika",show_in_catalog=False)
+    row(db,"artist_aliases",artist_id=original,alias="Yoru",normalized_alias="yoru")
+    video=row(db,"videos",platform="youtube",platform_video_id="rawartist01",title="Archive",
+              published_at="2026-01-10T20:00:00+09:00")
+    archive=row(db,"live_archives",video_id=video)
+    performance=row(db,"performances",archive_id=archive,ordinal=1,raw_title="晴る",
+                    raw_artist="ヨルシカ",start_seconds=30)
+    alias_performance=row(db,"performances",archive_id=archive,ordinal=2,raw_title="別の曲",
+                          raw_artist="Yoru",start_seconds=90)
+    db.commit()
+    with Session(engine) as session:
+        session.execute(text("SET TRANSACTION READ ONLY"))
+        service=CatalogRead(session)
+        for query in ("요루시카","Yorushika","Yoru"):
+            result=service.search(query,0,50)
+            assert result["total"]==2
+            assert result["items"][0]["id"]==performance
+            assert result["items"][0]["song_id"] is None
+            assert result["items"][0]["original_artist"]=="ヨルシカ"
+            Page[SearchRead].model_validate(result)
+        second=service.search("요루시카",1,1)
+        assert second["total"]==2
+        assert second["items"][0]["id"]==alias_performance
+        assert service.search("unrelated",0,50)["total"]==0
 
 def test_archived_private_and_undated_data(store):
     db,engine=store

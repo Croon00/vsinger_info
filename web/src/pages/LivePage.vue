@@ -21,6 +21,17 @@ import { cn } from '@/lib/utils'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
+function readSearchReturnTo() {
+  const value = window.history.state?.liveReturnTo
+  return typeof value === 'string' && /^\/search(?:[?#]|$)/.test(value) ? value : null
+}
+const searchReturnTo = ref(readSearchReturnTo())
+watch(
+  () => route.fullPath,
+  () => {
+    searchReturnTo.value = readSearchReturnTo()
+  },
+)
 const id = computed(() => String(route.params.archiveId))
 const { data, loading, error, reload } = useResource((signal) => api.live(id.value, signal), [id])
 const playerHost = ref<HTMLElement>()
@@ -138,18 +149,23 @@ watch(
 watch(id, teardown)
 onBeforeUnmount(teardown)
 function seek(seconds: number) {
-  router.replace({ query: { ...route.query, t: seconds.toString() } })
+  router.replace({
+    query: { ...route.query, t: seconds.toString() },
+    state: searchReturnTo.value ? { liveReturnTo: searchReturnTo.value } : undefined,
+  })
   if (ready.value) player?.seekTo(seconds, true)
   currentTime.value = seconds
+}
+function returnFromViewer() {
+  if (searchReturnTo.value) router.back()
+  else router.push(data.value?.artist_id ? `/artists/${data.value.artist_id}?tab=lives` : '/explore')
 }
 </script>
 <template>
   <div class="page-container viewer-page page-enter">
-    <Button v-if="data" as-child variant="ghost" class="back-link">
-      <RouterLink :to="data.artist_id ? `/artists/${data.artist_id}?tab=lives` : '/explore'">
-        <ArrowLeft data-icon="inline-start" />
-        아티스트의 라이브
-      </RouterLink>
+    <Button type="button" variant="ghost" class="back-link" @click="returnFromViewer">
+      <ArrowLeft data-icon="inline-start" />
+      뒤로가기
     </Button>
     <ResourceState :loading="loading" :error="error" @retry="reload">
       <template v-if="data">
