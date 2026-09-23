@@ -9,6 +9,14 @@ import { cn } from '@/lib/utils'
 const props = defineProps<{ events: CalendarEvent[]; artists: Artist[]; showDate?: boolean }>()
 defineEmits<{ select: [event: CalendarEvent] }>()
 const artist = (id: number) => props.artists.find((a) => a.id === id)
+function subtitle(event: CalendarEvent) {
+  const owner = artist(event.artist_id)
+  if (event.kind === 'birthday' && owner?.display_name?.trim())
+    return event.person
+      ? `${owner.display_name} · ${event.person} 생일`
+      : `${owner.display_name} 생일`
+  return event.concert?.venue || owner?.name
+}
 </script>
 <template>
   <div class="agenda-list">
@@ -40,7 +48,7 @@ const artist = (id: number) => props.artists.find((a) => a.id === id)
           </span>
           <span class="entry-title">{{ event.title }}</span>
           <span class="entry-place">
-            {{ event.concert?.venue || artist(event.artist_id)?.name }}
+            {{ subtitle(event) }}
           </span>
         </span>
         <ChevronRight data-icon="inline-end" />

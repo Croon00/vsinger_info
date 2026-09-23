@@ -1,5 +1,131 @@
 import { test, expect } from '@playwright/test'
 
+test('calendar colors events by artist and shows adjacent-month events', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' })
+  const artists = [
+    { id: 42, name: 'HACHI', theme_color: '#336699', birthday: '10-01', related_artist_ids: [42], sources: [] },
+    { id: 43, name: 'Another', theme_color: '#ffcc00', birthday: '01-01', related_artist_ids: [43], sources: [] },
+  ]
+  const concerts = [
+    { id: 79, artist_id: 42, title: 'August concert', starts_at: '2026-08-31T18:00:00+09:00' },
+    { id: 80, artist_id: 42, title: 'September concert', starts_at: '2026-09-20T18:00:00+09:00' },
+    { id: 81, artist_id: 42, title: 'November concert', starts_at: '2026-11-30T18:00:00+09:00' },
+  ]
+  await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
+    const url = new URL(route.request().url())
+    if (url.pathname === '/api/artists') {
+      await route.fulfill({ json: artists })
+      return
+    }
+    if (url.pathname === '/api/concerts') {
+      const start = url.searchParams.get('start')!
+      const end = url.searchParams.get('end')!
+      const items = concerts.filter((concert) => concert.starts_at.slice(0, 10) >= start && concert.starts_at.slice(0, 10) < end)
+        .map((concert) => ({ ...concert, event_type: 'live_event', event_format: 'onsite', status: 'ready' }))
+      await route.fulfill({ json: { items, total: items.length, offset: 0, limit: 100 } })
+      return
+    }
+    throw new Error(`Unexpected API: ${url.pathname}`)
+  })
+  await page.goto('/calendar?month=2026-09-01')
+  const august = page.getByRole('button', { name: '2026년 8월 31일, 1개 일정' }).locator('..')
+  await expect(august.locator('.calendar-event-theme')).toHaveCount(1)
+  await expect(august.locator('.cell-events')).toHaveCSS('opacity', '0.22')
+  await expect(august.locator('.calendar-event-theme')).toHaveCSS('--calendar-event-color', '#336699')
+  const lightBackground = await august.locator('.calendar-event-theme').evaluate((badge) => getComputedStyle(badge).backgroundColor)
+  expect(lightBackground).not.toBe('rgb(51, 102, 153)')
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await expect(page.locator('html')).toHaveClass(/dark/)
+  const darkBackground = await august.locator('.calendar-event-theme').evaluate((badge) => getComputedStyle(badge).backgroundColor)
+  expect(darkBackground).not.toBe(lightBackground)
+  const october = page.getByRole('button', { name: '2026년 10월 1일, 1개 일정' }).locator('..')
+  await expect(october.locator('.calendar-event-theme')).toHaveCount(1)
+  await page.emulateMedia({ colorScheme: 'light' })
+  await page.goto('/calendar?month=2026-12-01')
+  const january = page.getByRole('button', { name: '2027년 1월 1일, 1개 일정' }).locator('..')
+  await expect(january.locator('.calendar-event-theme')).toHaveCSS('--calendar-event-color', '#ffcc00')
+  await expect(january.locator('.calendar-event-theme')).not.toHaveCSS('background-color', 'rgb(255, 204, 0)')
+})
+
+test('calendar keeps its grid and cached events while fetching adjacent months', async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, 'Month navigation by touch is covered in the mock browser test.')
+  const requests: URL[] = []
+  let octoberAttempts = 0
+  let releaseOctober!: () => void
+  const octoberGate = new Promise<void>((resolve) => {
+    releaseOctober = resolve
+  })
+  await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
+    const url = new URL(route.request().url())
+    if (url.pathname === '/api/artists') {
+      await route.fulfill({
+        json: [{ id: 42, name: 'HACHI', related_artist_ids: [42], sources: [] }],
+      })
+      return
+    }
+    if (url.pathname === '/api/concerts') {
+      requests.push(url)
+      const isOctober = url.searchParams.get('start') === '2026-09-01'
+      if (isOctober) {
+        await octoberGate
+        if (++octoberAttempts === 1) {
+          await route.fulfill({ status: 503, json: {} })
+          return
+        }
+      }
+      const start = url.searchParams.get('start')!
+      const end = url.searchParams.get('end')!
+      const events = [
+        { id: 80, day: '2026-09-20' },
+        { id: 82, day: '2026-10-10' },
+      ]
+      await route.fulfill({
+        json: {
+          items: events.filter(({ day }) => day >= start && day < end).map(({ id, day }) => ({
+              id,
+              artist_id: 42,
+              title: `${day} concert`,
+              event_type: 'live_event',
+              event_format: 'onsite',
+              status: 'ready',
+              starts_at: `${day}T18:00:00+09:00`,
+          })),
+          total: 2,
+          offset: 0,
+          limit: 100,
+        },
+      })
+      return
+    }
+    throw new Error(`Unexpected API: ${url.pathname}`)
+  })
+  await page.goto('/calendar?month=2026-09-01')
+  await expect(page.getByRole('button', { name: '2026년 9월 20일, 1개 일정' })).toBeVisible()
+  await page.getByRole('button', { name: '다음 달' }).click()
+  await expect(page).toHaveURL(/month=2026-10-01/)
+  await expect(page.locator('.month-grid')).toBeVisible()
+  await expect(page.getByRole('button', { name: '2026년 10월 10일, 1개 일정' })).toBeVisible()
+  await expect(page.getByText('일정 불러오는 중')).toHaveCount(0)
+  await expect(page.locator('.loading-grid')).toHaveCount(0)
+  await expect.poll(() => requests.length).toBe(2)
+  releaseOctober()
+  await expect(page.getByText('일정을 불러오지 못했어요')).toBeVisible()
+  await expect(page.locator('.month-grid')).toBeVisible()
+  await expect(page.getByRole('button', { name: '2026년 10월 10일, 1개 일정' })).toBeVisible()
+  await page.getByRole('button', { name: '다시 시도' }).click()
+  await expect(page.getByRole('button', { name: '2026년 10월 10일, 1개 일정' })).toBeVisible()
+  expect(
+    requests.map((url) => [url.searchParams.get('start'), url.searchParams.get('end')]),
+  ).toEqual([
+    ['2026-08-01', '2026-11-01'],
+    ['2026-09-01', '2026-12-01'],
+    ['2026-09-01', '2026-12-01'],
+  ])
+})
+
 // Fixtures follow existing backend DTOs. These verify real-mode HTTP paths;
 // they deliberately do not use the design mock worker or any running database.
 test('real mode uses new catalog contracts, isolates errors and displays stored birthdays', async ({

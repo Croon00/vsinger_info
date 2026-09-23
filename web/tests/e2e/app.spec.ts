@@ -1,6 +1,17 @@
 import { test, expect, type Page } from '@playwright/test'
 
 const visit = (page: Page, route: string) => page.goto(route, { waitUntil: 'domcontentloaded' })
+const recordCalendarMonthAnimations = (page: Page) =>
+  page.evaluate(() => {
+    const frames: string[][] = []
+    ;(window as Window & { calendarMonthFrames: string[][] }).calendarMonthFrames = frames
+    const animate = Element.prototype.animate
+    Element.prototype.animate = function (keyframes, options) {
+      if (this.classList.contains('calendar-month-surface') && Array.isArray(keyframes))
+        frames.push(keyframes.map((frame) => String(frame.transform)))
+      return animate.call(this, keyframes, options)
+    }
+  })
 
 test.beforeEach(async ({ page }) => {
   // Start each scenario on a document already controlled by MSW. Activating a
@@ -204,7 +215,35 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   isMobile,
 }) => {
   await visit(page, '/calendar?month=2026-09-01')
+  await recordCalendarMonthAnimations(page)
+  const waitForMonthTransition = () =>
+    page.waitForFunction(
+      () =>
+        !document.querySelector('.calendar-month-surface')?.getAnimations().length &&
+        !(document.querySelector('.calendar-month-surface') as HTMLElement)?.style.transform,
+    )
+  const expectButtonDirections = async () => {
+    const frames = await page.evaluate(
+      () => (window as Window & { calendarMonthFrames: string[][] }).calendarMonthFrames,
+    )
+    expect(frames).toHaveLength(4)
+    expect(frames[0]?.[0]).toBe('translateX(0px)')
+    expect(frames[0]?.[1]).toMatch(/^translateX\(-/)
+    expect(frames[1]?.[0]).toMatch(/^translateX\([1-9]/)
+    expect(frames[1]?.[1]).toBe('translateX(0px)')
+    expect(frames[2]?.[0]).toBe('translateX(0px)')
+    expect(frames[2]?.[1]).toMatch(/^translateX\([1-9]/)
+    expect(frames[3]?.[0]).toMatch(/^translateX\(-/)
+    expect(frames[3]?.[1]).toBe('translateX(0px)')
+  }
   if (!isMobile) {
+    await page.getByRole('button', { name: '다음 달', exact: true }).click()
+    await expect(page).toHaveURL(/month=2026-10-01/)
+    await waitForMonthTransition()
+    await page.getByRole('button', { name: '이전 달', exact: true }).click()
+    await expect(page).toHaveURL(/month=2026-09-01/)
+    await waitForMonthTransition()
+    await expectButtonDirections()
     const crowdedCell = page
       .getByRole('button', { name: '2026년 9월 20일, 5개 일정', exact: true })
       .locator('..')
@@ -247,19 +286,67 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await expect(page.getByRole('dialog').locator('.schedule-entry')).toHaveCount(5)
   await page.getByRole('button', { name: '닫기', exact: true }).click()
   await expect(page.getByRole('dialog')).not.toBeVisible()
+  const calendarSwipeHeight = (await page.locator('.calendar-month-surface').boundingBox())!.height
   await page.getByRole('button', { name: '리스트', exact: true }).click()
   await expect(page.locator('.month-grid')).toHaveCount(0)
   await expect(page.locator('.calendar-list-view')).toBeVisible()
   await page.getByRole('button', { name: '공연', exact: true }).click()
   await expect(page.locator('.month-event').filter({ hasText: '공연' })).toHaveCount(0)
   await page.getByRole('button', { name: '생일', exact: true }).click()
-  await expect(page.locator('.calendar-list-view')).toContainText('이번 달에 일정이 없습니다')
+  const emptyList = page.locator('.calendar-list-view')
+  await expect(emptyList).toContainText('이번 달에 일정이 없습니다')
+  const listBox = (await page.locator('.calendar-month-surface').boundingBox())!
+  const emptyBox = (await emptyList.getByText('이번 달에 일정이 없습니다').boundingBox())!
+  expect(listBox.height).toBeGreaterThanOrEqual(calendarSwipeHeight - 8)
+  const listSwipeY = Math.min(listBox.y + listBox.height - 40, 650)
+  expect(listSwipeY).toBeGreaterThan(emptyBox.y + emptyBox.height + 30)
+  const listClient = await page.context().newCDPSession(page)
+  await listClient.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: 300, y: listSwipeY }],
+  })
+  await listClient.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: 80, y: listSwipeY }],
+  })
+  await expect(page.locator('.calendar-month-surface')).toHaveAttribute('style', /translateX\(-/)
+  await listClient.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await expect(page).toHaveURL(/month=2026-10-01/)
+  await waitForMonthTransition()
+  await listClient.send('Input.dispatchTouchEvent', {
+    type: 'touchStart',
+    touchPoints: [{ x: 80, y: listSwipeY }],
+  })
+  await listClient.send('Input.dispatchTouchEvent', {
+    type: 'touchMove',
+    touchPoints: [{ x: 300, y: listSwipeY }],
+  })
+  await listClient.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+  await expect(page).toHaveURL(/month=2026-09-01/)
+  await waitForMonthTransition()
   await page.getByRole('button', { name: '공연', exact: true }).click()
   await page.locator('.month-event').first().click()
   await expect(page.getByRole('dialog')).toContainText('공연 일시 · 장소 · 티켓 정보')
   await page.getByRole('button', { name: '닫기', exact: true }).click()
   await page.getByRole('button', { name: '캘린더', exact: true }).click()
-  await expect(page.getByRole('button', { name: '다음 달', exact: true })).toHaveCount(0)
+  await page.evaluate(
+    () => ((window as Window & { calendarMonthFrames: string[][] }).calendarMonthFrames.length = 0),
+  )
+  const previousMonth = page.getByRole('button', { name: '이전 달', exact: true })
+  const nextMonth = page.getByRole('button', { name: '다음 달', exact: true })
+  const heading = page.locator('.calendar-toolbar [data-slot="calendar-heading"]')
+  const [previousBox, headingBox, nextBox] = await Promise.all([
+    previousMonth.boundingBox(), heading.boundingBox(), nextMonth.boundingBox(),
+  ])
+  expect(previousBox!.x + previousBox!.width).toBeLessThan(headingBox!.x)
+  expect(nextBox!.x).toBeGreaterThan(headingBox!.x + headingBox!.width)
+  await nextMonth.click()
+  await expect(page).toHaveURL(/month=2026-10-01/)
+  await waitForMonthTransition()
+  await previousMonth.click()
+  await expect(page).toHaveURL(/month=2026-09-01/)
+  await waitForMonthTransition()
+  await expectButtonDirections()
   const client = await page.context().newCDPSession(page)
   const boardBox = (await page.locator('.calendar-board').boundingBox())!
   const swipeY = boardBox.y + 180
@@ -278,11 +365,7 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await expect(page.locator('.calendar-month-surface')).toHaveAttribute('style', /translateX\(-/)
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await expect(page).toHaveURL(/month=2026-10-01/)
-  await page.waitForFunction(
-    () =>
-      !document.querySelector('.calendar-month-surface')?.getAnimations().length &&
-      !(document.querySelector('.calendar-month-surface') as HTMLElement)?.style.transform,
-  )
+  await waitForMonthTransition()
   await expect(page.getByRole('dialog')).not.toBeVisible()
   await client.send('Input.dispatchTouchEvent', {
     type: 'touchStart',
@@ -295,6 +378,31 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
   await expect(page).toHaveURL(/month=2026-09-01/)
   await expect(page.locator('.month-grid')).toBeVisible()
+})
+
+test('calendar month buttons respect reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await visit(page, '/calendar?month=2026-09-01')
+  await recordCalendarMonthAnimations(page)
+  await page.getByRole('button', { name: '다음 달', exact: true }).click()
+  await expect(page).toHaveURL(/month=2026-10-01/)
+  await expect(page.getByRole('button', { name: '다음 달', exact: true })).toBeEnabled()
+  const frames = await page.evaluate(
+    () => (window as Window & { calendarMonthFrames: string[][] }).calendarMonthFrames,
+  )
+  expect(frames).toHaveLength(0)
+})
+
+test('birthday list subtitle and artist back return to calendar', async ({ page, isMobile }) => {
+  await visit(page, '/calendar?month=2026-01-01')
+  await page.getByRole('button', { name: isMobile ? '리스트' : '리스트 보기', exact: true }).click()
+  const birthday = page.locator('.calendar-list-view .month-event').filter({ hasText: 'HACHI 생일' })
+  await expect(birthday.locator('.entry-title')).toHaveText('HACHI 생일')
+  await expect(birthday.locator('.entry-place')).toHaveText('하치 생일')
+  await birthday.click()
+  await expect(page).toHaveURL('/artists/1')
+  await page.getByRole('button', { name: '뒤로가기' }).click()
+  await expect(page).toHaveURL('/calendar?month=2026-01-01')
 })
 
 test('system theme follows the device and explicit preference survives reload', async ({

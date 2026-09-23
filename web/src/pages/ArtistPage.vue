@@ -34,7 +34,7 @@ function readReturnState() {
   const { artistReturnTo, artistBackSteps } = window.history.state ?? {}
   if (
     typeof artistReturnTo === 'string' &&
-    (artistReturnTo === '/' || /^\/(?:explore|search)(?:[?#]|$)/.test(artistReturnTo)) &&
+    (artistReturnTo === '/' || /^\/(?:explore|search|calendar)(?:[?#]|$)/.test(artistReturnTo)) &&
     Number.isSafeInteger(artistBackSteps) &&
     artistBackSteps > 0
   ) {
