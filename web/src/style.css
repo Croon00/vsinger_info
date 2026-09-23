@@ -353,20 +353,36 @@ a:focus-visible {
   font-size: 11px;
 }
 
+@media (min-width: 769px) {
+  html:has(.explore-toolbar) {
+    scrollbar-gutter: stable;
+  }
+}
 .explore-toolbar {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) minmax(0, 364px);
+  grid-template-areas:
+    'filter search'
+    'count count';
   align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
+  gap: 20px 18px;
+}
+.explore-filter {
+  grid-area: filter;
+  width: 220px;
+  max-width: 100%;
+  justify-self: start;
 }
 .explore-search {
-  width: 280px;
+  grid-area: search;
+  width: 100%;
 }
 .result-count {
+  grid-area: count;
   font-size: 12px;
   color: var(--muted-foreground);
-  margin: 20px 0 16px;
+  margin: 0 0 16px;
+  white-space: nowrap;
 }
 .artist-grid {
   display: grid;
@@ -1362,10 +1378,21 @@ a:focus-visible {
   }
 
   .explore-toolbar {
-    gap: 18px;
+    grid-template-columns: minmax(100px, 1fr) minmax(0, 200px);
+    grid-template-areas:
+      'search search'
+      'count filter';
+    justify-content: space-between;
+    column-gap: 12px;
+    margin-bottom: 20px;
   }
-  .explore-search {
-    width: 100%;
+  .explore-filter {
+    width: 90%;
+    justify-self: end;
+  }
+  .result-count {
+    align-self: end;
+    margin-bottom: 0;
   }
   .artist-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1395,9 +1422,6 @@ a:focus-visible {
   }
   .artist-tile-caption p {
     font-size: 11px;
-  }
-  .result-count {
-    margin-top: 20px;
   }
   .artist-profile {
     gap: 16px;
@@ -1660,10 +1684,7 @@ a:focus-visible {
     font-size: 11px;
   }
   .explore-toolbar {
-    gap: 12px;
-  }
-  .explore-search {
-    order: -1;
+    row-gap: 20px;
   }
   .discography-layout {
     grid-template-columns: minmax(0, 1fr);

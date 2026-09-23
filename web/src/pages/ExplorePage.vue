@@ -5,7 +5,14 @@ import { Search, X } from '@lucide/vue'
 import { InputGroup, InputGroupInput, InputGroupAddon } from '@/components/ui/input-group'
 import { Button } from '@/components/ui/button'
 import { FieldGroup, Field, FieldLabel } from '@/components/ui/field'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { favoriteIds } from '@/composables/preferences'
@@ -52,18 +59,19 @@ const filtered = computed(() => {
       <h1>아티스트 탐색</h1>
     </div>
     <div class="explore-toolbar">
-      <ToggleGroup
-        type="single"
-        :model-value="agency"
-        @update:model-value="(v) => (agency = String(v || 'all'))"
-        variant="outline"
-        aria-label="소속사 필터"
-      >
-        <ToggleGroupItem value="all">전체</ToggleGroupItem>
-        <ToggleGroupItem v-for="name in agencies" :key="name" :value="name">
-          {{ name }}
-        </ToggleGroupItem>
-      </ToggleGroup>
+      <Select v-model="agency">
+        <SelectTrigger aria-label="소속사 필터" class="explore-filter">
+          <SelectValue placeholder="소속사 전체" />
+        </SelectTrigger>
+        <SelectContent :body-lock="false">
+          <SelectGroup>
+            <SelectItem value="all">소속사 전체</SelectItem>
+            <SelectItem v-for="name in agencies" :key="name" :value="name">
+              {{ name }}
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       <form role="search" aria-label="아티스트 검색" class="explore-search" @submit.prevent>
         <FieldGroup>
           <Field>
@@ -90,8 +98,8 @@ const filtered = computed(() => {
           </Field>
         </FieldGroup>
       </form>
+      <p class="result-count" aria-live="polite">{{ filtered.length }}명의 아티스트</p>
     </div>
-    <p class="result-count" aria-live="polite">{{ filtered.length }}명의 아티스트</p>
     <ResourceState
       loading-layout="artists"
       :loading="loading"
