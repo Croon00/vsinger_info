@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.bots.discord_bot import bot
 from app.services import notification_delivery, x_collection
 from app.services.notification_delivery import deliver_pending_once
+from app.services.delivery_errors import DeliveryRetryableError
 from app.services.x_collection import collect_x_once
 from test_catalog_migration import apply, database, local_server, row
 
@@ -72,6 +73,8 @@ def post(post_id: str, text_value: str = "raw post") -> dict:
 def test_collection_paginates_deduplicates_and_queues_routes(runtime_store):
     db = runtime_store
     account = seed_x_account(db)
+    db.execute("INSERT INTO collection_states(external_account_id,last_seen_external_id) VALUES (%s,'90')", (account,))
+    db.commit()
     calls = []
 
     async def pages(platform_id, since_id):
@@ -87,7 +90,7 @@ def test_collection_paginates_deduplicates_and_queues_routes(runtime_store):
     assert first.posts_seen == 3 and first.posts_stored == 3
     assert first.deliveries_queued == 3 and first.failures == 0
     assert second.posts_stored == 0 and second.deliveries_queued == 0
-    assert calls == [("42", None), ("42", "103")]
+    assert calls == [("42", "90"), ("42", "103")]
     assert db.execute(
         "SELECT external_id FROM source_items ORDER BY id"
     ).fetchall() == [("101",), ("102",), ("103",)]
@@ -139,7 +142,7 @@ class OfflineSender:
     def is_available(self):
         return False
 
-    async def send_url(self, channel_id, url):
+    async def send_url(self, channel_id, url, *, guild_id, before_send=None):
         raise AssertionError("offline sender must not be called")
 
 
@@ -151,10 +154,12 @@ class RecordingSender:
     def is_available(self):
         return True
 
-    async def send_url(self, channel_id, url):
+    async def send_url(self, channel_id, url, *, guild_id, before_send=None):
+        if before_send:
+            assert before_send()
         self.messages.append((channel_id, url))
         if self.fail:
-            raise RuntimeError("temporary Discord error")
+            raise DeliveryRetryableError("confirmed non-delivery")
         return "9001"
 
 

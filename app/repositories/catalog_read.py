@@ -143,7 +143,11 @@ class CatalogReadRepository:
         (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks
         FROM albums a WHERE a.archived_at IS NULL
         AND (CAST(:key AS integer) IS NULL OR a.id=:key)
-        AND (CAST(:artist AS integer) IS NULL OR EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist))
+        AND (CAST(:artist AS integer) IS NULL
+          OR EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist)
+          OR EXISTS (SELECT 1 FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
+            JOIN recording_artists ra ON ra.recording_id=r.id
+            WHERE t.album_id=a.id AND ra.artist_id=:artist))
         ORDER BY a.release_year DESC NULLS LAST,a.release_month DESC NULLS LAST,a.release_day DESC NULLS LAST,a.id DESC""",
         {"artist":artist_id,"key":key})
 

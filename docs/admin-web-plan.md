@@ -4,7 +4,7 @@
 
 ## 실행
 
-프로젝트 루트의 Python 가상환경과 `requirements.txt`를 사용한다. 새 접속 정보는 Git 제외 `.env.catalog`의 `NEW_DATABASE_URL`에 두며 브라우저에 전달하지 않는다.
+이 문서는 보존된 로컬 관리자 도구의 기존 계약이다. 이번 백엔드 통합에서는 admin-web을 실행·연동하지 않으며 개편은 후속 작업이다. 실행할 경우 프로젝트 루트의 Python 가상환경과 `requirements.txt`를 사용한다. 신규 통합 DB 접속 정보는 Git 제외 `.env`의 `DATABASE_URL`에 두며 브라우저에 전달하지 않는다.
 
 최초 실행 또는 화면 수정 후:
 

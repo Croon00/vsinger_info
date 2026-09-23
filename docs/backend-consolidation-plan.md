@@ -1,6 +1,6 @@
 # 백엔드 통합 최종 계획 — 신규 DB 일원화
 
-확정 기준: 2026-09-22. 1단계 조사, 2단계 운영 스키마·연결 기반, 3단계 선택 이전 도구·검증, 4단계 X 수집·최소 Discord sender 구현을 완료했다. 실제 상태 이전과 운영 연결 전환은 5단계다. 현재 상태는 [1단계 문서](backend-phase-1-baseline.md), [2단계 결과](backend-phase-2-runtime-schema.md), [3단계 결과](backend-phase-3-runtime-migration.md), [4단계 결과](backend-phase-4-runtime.md), [백엔드 구조](backend-architecture.md)를 따른다.
+확정 기준: 2026-09-22. 1~3단계 기반, X 수집·최소 Discord sender의 1차 구현, 정식 `/api` 통합을 수행했다. **전체 서비스 운영 전환 준비는 미완료다.** [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 따라 X·Discord 안정화 이후 독립 YouTube와 등록된 Spotify 계정 수집기의 신규 DB 호환을 완성한 뒤 실제 상태 이전과 운영 연결을 전환한다. 단계별 실행 기록은 [1단계](backend-phase-1-baseline.md), [2단계](backend-phase-2-runtime-schema.md), [3단계](backend-phase-3-runtime-migration.md), [4단계](backend-phase-4-runtime.md), 현재 실행 경로는 [백엔드 구조](backend-architecture.md)를 따른다.
 
 ## 1. 목표와 범위
 
@@ -9,10 +9,10 @@
 3. 기존 DB에는 DDL·DML·시드·보정·migration·권한 변경을 수행하지 않는다. 이전 도구는 읽기 전용으로 접근하며 전환 후 정상 runtime은 기존 DB에 연결하지 않는다.
 4. X 수집 대상의 기준은 신규 DB의 `external_accounts`다. 별도의 독립 X 계정 명부를 만들지 않는다.
 5. X 기능은 **게시글 원문 저장 + Discord에 원문 URL 전송**만 남긴다. 봇 명령·interaction·X 타입 분류·X 글의 YouTube live archive 자동 등록을 제거한다.
-6. 관리는 모두 `admin-web`에 모은다. **admin-web 개편은 별도 후속 작업**이며 이번 전환의 선행 조건으로 두지 않는다.
+6. admin-web은 대규모 개편 예정이므로 이번 개발에서는 없는 것으로 취급한다. 화면·관리 API·연동을 구현하거나 의존하지 않는다. 향후 관리는 admin-web에서 별도로 설계한다.
 7. Google Calendar는 데이터를 기존 DB에 그대로 보존하고 코드·설정·API를 레거시로 격리한다. 신규 DB로 Google 데이터를 옮기거나 정상 runtime에서 기능을 실행하지 않는다.
 8. API는 최종적으로 `/api` 계약으로 통합한다. 백엔드 설정은 루트 `.env`와 공통 Settings로 정리한다.
-9. 독립 YouTube·Spotify·노래방·가사 기능은 신규 모델과 호환되게 전환한다. 기능 보존이 기존 음악 데이터 전체 이전을 뜻하지 않는다.
+9. 독립 YouTube 수집과 신규 external_accounts에 등록된 Spotify 계정의 수집·연결을 신규 모델로 전환한다. Spotify 미등록 계정은 탐색·생성·자동 연결하지 않는다. 노래방은 song_id 구축 후 TODO, 가사·번역·독음도 TODO로 남기고 이번 목표에서 제외한다. 기존 자료 조회는 유지한다.
 
 이번 범위에는 신규 관리 화면, 신규 공연 자동화, Calendar 재구현, 과거 음악 데이터 추가 이관을 포함하지 않는다.
 
@@ -91,7 +91,7 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 ## 5. 관리와 API
 
-관리 위치는 `admin-web`으로 확정한다. 이번에는 신규 DB 전환에 필요한 저장 계약·권한 경계만 정의하고 기존 관리자 기능을 유지한다. 운영 설정·상태 화면을 추가하는 개편은 후속 작업으로 둔다. 봇 명령 삭제를 admin-web 개편 완료에 종속시키지 않는다.
+향후 관리 위치는 admin-web이지만 이번 개발에서는 앱과 관리 API가 없는 것으로 취급한다. 백엔드 내부 service와 작업 실행 명령으로 수집·저장을 검증한다. 관리 UI·관리 HTTP 계약·권한 기능은 개편에서 별도로 설계한다. 봇 명령은 복구하지 않는다.
 
 초기 계정 대응·route·상태 이전은 검증된 이전 명세로 수행한다. 이는 일회성 이전 절차이며 상시 설정 파일 관리자나 새 봇 관리 명령으로 확장하지 않는다. 관리 화면이 없는 설정의 수동 변경을 정상 운영 절차로 문서화하지 않는다.
 
@@ -99,27 +99,27 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 | --- | --- |
 | `/api/artists`, `/api/lives`, `/api/albums`, 검색·통계 등 | 현재 신규 조회 서비스와 DTO를 기반으로 통합 |
 | 곡·녹음·가사 | 신규 작품/녹음 ID 기준으로 책임 분리 |
-| `/api/admin/...` | admin-web의 관리 계약. 운영 화면 확장은 후속 작업 |
+| 관리자 API/UI | 이번 개발에서 제외. 향후 admin-web 개편에서 설계 |
 | `/api/v2` | 필요 기간 같은 신규 서비스의 임시 별칭, 소비자 전환 후 제거 |
 | 구 API·prefix 없는 alias | 소비자와 ID 의미를 확인해 전환 또는 종료. 기존 DB 쓰기로 fallback하지 않음 |
 | Google auth·Calendar | 정상 API mount에서 제거하고 legacy로 격리 |
 
 `/api/artists` 등 충돌 경로는 prefix만 지우지 않는다. 소비자별 새 ID·응답 계약을 확인하고 신규 DB만 사용하는 한시적 adapter 또는 명시적 종료로 처리한다. GET에서 수집·생성·전송을 시작하지 않는다. Pydantic 계약과 페이지·필터·정렬 기준을 명시한다.
 
-로컬 관리자의 loopback·세션·CSRF 보호를 유지한다. Discord 서버 공용 설정은 해당 guild 접근·manage_guild·channel 소속 검증을 요구한다. 사용자 조회와 관리 권한을 구분하며 인증 설계를 완료하지 않은 기능을 공개하지 않는다.
+현재 관리자 앱·관리 HTTP API는 통합 개발 범위 밖이다. 향후 관리자에서는 loopback·세션·CSRF 및 Discord guild 접근·manage_guild·channel 소속 등 관리 권한을 별도로 설계한다. 이번 공개 조회 API에 관리 쓰기를 추가하지 않는다.
 
 ## 6. 설정·코드·레거시
 
-최종 backend 설정은 루트 `.env`의 `DATABASE_URL` 하나로 신규 DB를 가리킨다. 공통 Settings, 공유 SQLAlchemy pool, 요청/작업별 session을 사용한다. 관리자·migration/import·이미지 저장 설정도 같은 로더를 사용한다. 프론트 공개 설정과 로컬 도구의 작업 파일은 용도에 맞게 분리한다.
+최종 backend 설정은 루트 `.env`의 `DATABASE_URL` 하나로 신규 DB를 가리킨다. 공통 Settings, 공유 SQLAlchemy pool, 요청/작업별 session을 사용한다. 운영 migration/import·이미지 저장 설정도 같은 로더를 사용한다. 기존 admin 도구는 이번 정상 실행 경로에 포함하지 않는다. 프론트 공개 설정과 로컬 도구의 작업 파일은 용도에 맞게 분리한다.
 
-**현재 DATABASE_URL 값부터 바꾸지 않는다.** 구 SQL과 `init_db()` 경로를 격리하고 대상 identity·revision 검사와 신규 repository 전환을 완료한 뒤 연결을 전환한다. 이전 전용 읽기 소스는 `LEGACY_DATABASE_URL` 같은 명시적 별도 입력으로 받고 정상 runtime에서는 로딩하지 않는다. 실제 URL·토큰은 문서·보고서·로그에 남기지 않는다.
+로컬 코드는 구 SQL과 `init_db()` 연결을 차단하고 대상 identity·revision 검사를 완료했다. `DATABASE_URL`은 신규 DB를 가리키며 이전 전용 읽기 소스는 `LEGACY_DATABASE_URL`로만 받는다. Railway의 변수 전환은 새 코드 배포와 함께 [운영 전환 절차](backend-phase-5-cutover.md)에서 수행한다. 실제 URL·토큰은 문서·보고서·로그에 남기지 않는다.
 
-`.env.catalog`와 `NEW_DATABASE_URL`은 소비자를 모두 전환한 뒤 제거한다. 과도기 별칭이 있으면 충돌 시 오류를 내고 암묵적으로 DB를 선택하지 않는다. 기존 DB의 baseline migration이나 revision 표를 만들지 않는다. 신규 DB의 적용된 `001`은 변경하지 않고 후속 revision만 추가한다.
+`.env.catalog` 소비자를 제거했고 `NEW_DATABASE_URL`이 남으면 시작을 거부한다. 기존 DB의 baseline migration이나 revision 표를 만들지 않는다. 신규 DB의 적용된 `001/002`는 변경하지 않았다.
 
 | 현재 위치 | 처리 |
 | --- | --- |
 | `artists.py`와 artist service/repository | 신규 아티스트 마스터 사용. 수집 상태·권한을 프로필 CRUD에서 분리 |
-| `songs.py`와 song service/repository | 신규 작품·녹음·가사 계약으로 전환. 기존 곡/가사 추가 이전은 제외 |
+| `songs.py`와 song service/repository | Spotify에 필요한 신규 녹음·앨범 저장만 전환. 가사·번역·독음·노래방은 TODO로 격리 |
 | `catalog_read.py` | 신규 조회 구현 재사용 |
 | `read_catalog.py`, `read_spotify.py` | 사용 여부를 확인해 legacy 격리 또는 제거 |
 | `bots/discord_bot.py` | command/interaction·음악 SQL·생성 helper 제거. 연결과 URL 전송만 유지 |
@@ -130,7 +130,7 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 | Google OAuth·Calendar 코드와 설정 | legacy 격리. refresh·sync·callback 등 정상 실행 연결 제거 |
 | `web.bak`와 구 관리 router | 기존 DB 쓰기 경로 종료 후 legacy 격리. admin-web 개편은 별도 |
 
-기존 계층을 살려 collection/notification/catalog 책임과 legacy 경계를 구분한다. 신규 코드가 legacy를 import하지 않도록 검사한다. X 분류 제거 후 다른 소비자가 없으면 LangGraph를 제거하되, 독립 setlist·가사·번역에서 쓰는 OpenAI 의존성은 유지한다. **구 DB의 분류 컬럼이나 테이블은 삭제·수정하지 않는다.**
+기존 계층을 살려 collection/notification/catalog 책임과 legacy 경계를 구분한다. 신규 코드가 legacy를 import하지 않도록 검사한다. X 분류 제거 후 다른 소비자가 없으면 LangGraph를 제거하되, 독립 setlist 추출의 OpenAI 의존성은 유지한다. 가사·번역·독음은 정상 작업에서 호출하지 않는다. **구 DB의 분류 컬럼이나 테이블은 삭제·수정하지 않는다.**
 
 ## 7. 단계별 실행과 완료 조건
 
@@ -158,11 +158,11 @@ Discord에서는 관리·조회·검색·가사·Google 연결·수동 수집·�
 
 ### 4단계 — 수집기·최소 Discord 봇 전환
 
-external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령·X 분류·X→YouTube 연결을 제거한다. Discord 명령이 제공하던 YouTube·Spotify·노래방·가사 관리 진입점도 제거하고, 독립 음악 모듈은 X runtime과 분리해 보존한다. 신규 DB 작업 계약과 admin-web 연결은 각 독립 경로에서 후속 구현한다.
+external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령·X 분류·X→YouTube 연결을 제거한다. Discord 명령이 제공하던 YouTube·Spotify·노래방·가사 관리 진입점도 제거하고, 독립 YouTube와 등록된 Spotify 계정 수집을 신규 DB 작업 실행기와 정규화된 저장 모델로 전환한다. admin-web과 관리 API는 제외하고 내부 service·작업 실행 계약만 준비한다. 노래방·가사·번역·독음은 실행하지 않는다.
 
-완료 조건: fixture에서 신규 글·중복·무 route·offline·재시도·pagination을 검증하고 X가 다른 수집이나 Google을 호출하지 않는다. admin-web 개편은 요구하지 않는다.
+완료 조건: fixture에서 신규 글·첫 조회 기준선·중복·무 route·offline·재시도·pagination·계정 순환·lease·전송 결과 불명 처리를 검증하고 X가 다른 수집이나 Google을 호출하지 않는다. YouTube·등록된 Spotify 계정은 계정/작업→신규 DB 저장→조회까지 검증한다. admin-web은 검증에 사용하지 않는다.
 
-**완료:** 2026-09-22 external_accounts 기반 X poller와 durable URL sender를 구현하고 Discord 관리 명령, X 분류, X→YouTube 자동 등록을 제거했다. 독립 음악 모듈은 X/Discord runtime에서 분리해 보존했다. 구현·상태 전이·검증 범위는 [4단계 결과](backend-phase-4-runtime.md)에 기록한다. 실제 상태 이전과 운영 연결 전환은 수행하지 않았다.
+**부분 구현:** 2026-09-22 external_accounts 기반 X poller와 URL sender, Discord 관리 명령·X 분류·X→YouTube 자동 등록 제거를 구현했다. [4단계 결과](backend-phase-4-runtime.md)는 당시 검증 범위다. 전체 서비스 재검증에서 발견한 X·Discord 계약 위반은 [보완 1단계](backend-service-step-1-runtime.md)에서 수정했다. [보완 2단계](backend-service-step-2-jobs.md)에서 독립 작업 실행기를 완료했다. [보완 3단계](backend-service-step-3-youtube.md)에서 YouTube handler·신규 저장을 로컬 검증했다. [보완 4단계](backend-service-step-4-spotify.md)에서 등록된 Spotify 계정 handler와 신규 DB 저장 경로를 로컬 검증했다. 실제 상태 이전과 운영 검증은 남아 있다. [보완 계획 A~D](backend-service-readiness-plan.md)에 따라 수정·개발하며 실제 상태 이전과 운영 연결 전환은 아직 수행하지 않았다.
 
 ### 5단계 — API 통합·실제 이전·runtime 전환
 
@@ -170,17 +170,17 @@ external_accounts 기반 X 수집과 durable sender를 구현한다. 봇 명령�
 
 완료 조건: 정상 runtime은 신규 DB만 사용하고 구 DB 쓰기 경로는 실행되지 않는다. 기존 성공 알림 재전송과 과거 글 대량 알림 없이 계정별 수집을 재개한다. 연결 변경만으로 구 SQL이 신규 DB에서 실행되지 않는다.
 
-**코드 준비 완료:** 2026-09-22 정식 조회 경로를 `/api`로 통합하고 legacy 쓰기/provider router를 운영 앱에서 분리했다. 배포 대기 중 Discord와 수집기가 먼저 실행되지 않도록 `RUNTIME_CUTOVER_ENABLED=false` 잠금을 추가했다. 실제 최종 snapshot, migration apply, Railway runtime 활성화는 기존 writer를 중지하는 전환 시간에 [5단계 운영 전환](backend-phase-5-cutover.md) 순서로 수행한다.
+**API 통합·잠금 구현, 운영 전환 보류:** 2026-09-22 정식 조회 경로를 `/api`로 통합하고 legacy 쓰기/provider router를 운영 앱에서 분리했다. `RUNTIME_CUTOVER_ENABLED=false`일 때 새 runtime은 API만 실행한다. [보완 계획 A~F](backend-service-readiness-plan.md)의 구현·통합 검증과 이전 작업 선택 보완이 선행 조건이다. 그 뒤 최종 snapshot, migration apply, Railway runtime 활성화를 [5단계 운영 전환](backend-phase-5-cutover.md) 순서로 수행한다.
 
 ### 6단계 — 레거시·환경설정·배포 정리
 
-Google과 구 API/UI를 격리하고 임시 v2/호환 alias·중복 env 로딩을 종료한다. 해당 bot의 원격 slash command 제거를 검증하고 운영·복구 문서를 갱신한다.
+Google과 구 API/UI를 격리하고 임시 v2/호환 alias·중복 env 로딩을 종료한다. 정상 runtime의 구 DB 접근 차단과 설정 통합은 보완 계획 E에서 실제 운영 전환 전에 완료한다. alias 제거는 소비자 전환 확인 후 수행한다. 해당 bot의 원격 slash command 제거를 검증하고 운영·복구 문서를 갱신한다.
 
 완료 조건: 신규 실행 경로에 legacy import·Google 호출·기존 DB 접속·X 분류·YouTube 자동 등록이 없다. 기존 DB와 제외 데이터는 변경 없이 보존된다.
 
 ### 별도 후속 — admin-web 개편
 
-외부 계정 수집 설정, route, 작업/전송 상태와 재시도 관리 화면을 추가한다. 봇 명령의 일대일 복제는 하지 않으며 이미 정의한 서비스·권한 계약을 사용한다.
+외부 계정·route·작업 관리는 대규모 개편에서 다시 설계한다. 이번 개발에서는 관리자 앱이 없는 것으로 취급한다. 노래방은 song_id 구축 후, 가사·번역·독음도 별도 TODO이며 이번 통합 완료 조건에서 제외한다.
 
 ## 8. 전환 검증과 복구
 

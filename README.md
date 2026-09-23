@@ -16,13 +16,14 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 uvicorn app.main:app --reload
 ```
 
-과도기에는 루트 `.env.catalog` 또는 환경변수의 `NEW_DATABASE_URL`에 신규 PostgreSQL 접속 정보를 설정한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며, 로컬 API를 실행해도 DB가 로컬로 복사되지는 않는다. 기존 `.env`의 `DATABASE_URL`은 전환 migration의 읽기 원본으로만 보존한다. `data/twscrape_accounts.db`는 X 수집 도구의 별도 계정 저장소다.
+루트 `.env` 또는 서버 환경변수의 `DATABASE_URL`에 신규 PostgreSQL 접속 정보를 설정한다. 이전 원본을 읽는 도구에만 `LEGACY_DATABASE_URL`을 별도로 제공한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며, 로컬 API를 실행해도 DB가 로컬로 복사되지는 않는다. `data/twscrape_accounts.db`는 X 수집 도구의 별도 계정 저장소다.
 
 - API: http://127.0.0.1:8000
 - API 문서: http://127.0.0.1:8000/docs
 - 프로세스 상태: http://127.0.0.1:8000/health — DB 연결까지 검사하는 주소는 아니다.
+- 준비 상태: http://127.0.0.1:8000/ready — 신규 DB와 음악 worker 상태 조회. worker가 활성화됐는데 필수 provider 인증 설정, handler 또는 heartbeat가 빠지면 ready=false다.
 - `app.main:app`과 `app.api.main:app`은 같은 API다.
-- 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않는다. `DATABASE_AUTO_INIT`는 격리된 legacy 설정이며 켜지 않는다.
+- 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않으며 구 SQL 연결은 차단되어 있다.
 
 다른 터미널에서 새 프론트를 실행한다.
 
@@ -34,11 +35,13 @@ npm run dev
 
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
-현재 사용자 조회 `/api`와 X poller·Discord URL sender는 루트 `.env.catalog`의 `NEW_DATABASE_URL`을 명시적으로 사용합니다. 기존 `DATABASE_URL`은 배포 전환 시점까지 이전 원본으로만 보존하며 정상 API/runtime에서는 사용하지 않습니다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행합니다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용합니다.
+현재 사용자 조회 `/api`, X poller·Discord URL sender, 독립 YouTube·Spotify worker는 단일 `DATABASE_URL`의 신규 DB를 사용한다. 구 SQL 연결 함수는 차단되어 있다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행한다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용한다.
+
+전체 서비스의 운영 전환 준비는 아직 완료되지 않았다. X·Discord, 독립 YouTube, 등록된 Spotify 계정, 선택 이전·설정 통합을 로컬 검증했다. 실제 운영 검증이 남아 있다. 최신 검증 결과와 완료 조건은 [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md)을 따른다.
 
 ## 새 DB 관리자
 
-`admin-web`에서 `npm ci`, `npm run build` 후 프로젝트 루트에서 `.\.venv\Scripts\python.exe scripts/run_admin.py`를 실행하고 http://127.0.0.1:8010 을 연다. 새 DB 설정은 `.env.catalog`의 `NEW_DATABASE_URL`만 사용한다. [사용 안내](docs/admin-web-plan.md)를 따른다.
+`admin-web` 개편과 운영 연동은 이번 백엔드 목표 밖이다. 보존된 로컬 관리자 도구의 기존 안내는 [사용 안내](docs/admin-web-plan.md)를 따른다. 현재 설정 이름은 단일 `DATABASE_URL`이다.
 
 ## 실행 범위
 
@@ -58,6 +61,13 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | 문서 | 다루는 내용 |
 | --- | --- |
 | [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md) | 신규 DB 일원화, 수집·알림 필수 항목만 이전, external_accounts 기반 X 수집, API·설정 통합 |
+| [보완 1단계 결과](docs/backend-service-step-1-runtime.md) | X/Discord 안정화, 변경한 실행 주기·실패 처리와 검증 결과 |
+| [보완 4단계 결과](docs/backend-service-step-4-spotify.md) | 등록된 Spotify 계정의 앨범·녹음·트랙 저장과 공동 크레딧 보존 |
+| [보완 5단계 결과](docs/backend-service-step-5-migration.md) | 선택 이전·설정 통합·레거시 차단과 Railway 변수표 |
+| [보완 6단계 결과](docs/backend-service-step-6-validation.md) | 이전→수집→조회 통합, 웹 브라우저·회귀 검증과 PR·배포 준비 |
+| [보완 3단계 결과](docs/backend-service-step-3-youtube.md) | 신규 YouTube 채널 감시·세트리스트·커버 저장, 댓글 대기와 수동 수정 보존 |
+| [보완 2단계 결과](docs/backend-service-step-2-jobs.md) | 독립 작업 실행기, 로컬 명령, 재시도·취소·heartbeat·readiness 계약 |
+| [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md) | 전체 서비스 준비 판정, 재현 결함 6건, YouTube 등 독립 수집기 개발 순서와 합격 기준 |
 | [백엔드 통합 1단계 준비](docs/backend-phase-1-baseline.md) | 읽기 전용 계정 매핑·선택 이전 조사 절차, 참고 기준선, 실행 전 확인 목록 |
 | [백엔드 통합 2단계 결과](docs/backend-phase-2-runtime-schema.md) | 신규 DB 운영 스키마, 연결 guard, 적용·검증 결과 |
 | [백엔드 통합 3단계 결과](docs/backend-phase-3-runtime-migration.md) | 선택 이전 dry-run, snapshot manifest, 적용·재실행 검증 |

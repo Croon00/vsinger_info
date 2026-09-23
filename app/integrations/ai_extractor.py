@@ -67,7 +67,7 @@ async def extract_youtube_setlist(comment: str) -> list[dict[str, str | None]] |
             return None
         result = YouTubeSetlistExtraction.model_validate(json.loads(content))
     except Exception as exc:
-        logger.warning("YouTube setlist AI extraction failed: %s", exc)
+        logger.warning("YouTube setlist AI extraction failed (%s)", type(exc).__name__)
         return None
 
     entries: list[dict[str, str | None]] = []

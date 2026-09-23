@@ -1,4 +1,4 @@
-"""Explicit unified-DB schema migration. Never imports app/runtime or reads DATABASE_URL."""
+"""Explicit unified-DB schema migration using the guarded runtime DB URL."""
 from __future__ import annotations
 
 import argparse
@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import psycopg
+from dotenv import dotenv_values
 from psycopg import sql
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,16 +29,12 @@ class MigrationError(Exception):
 
 
 def load_connection() -> str:
-    value = os.environ.get("NEW_DATABASE_URL")
+    local = dotenv_values(ROOT / ".env")
+    if os.environ.get("NEW_DATABASE_URL") or local.get("NEW_DATABASE_URL"):
+        raise MigrationError("NEW_DATABASE_URL is retired; configure DATABASE_URL")
+    value = os.environ.get("DATABASE_URL") or local.get("DATABASE_URL")
     if not value:
-        path = ROOT / ".env.catalog"
-        if path.exists():
-            for line in path.read_text(encoding="utf-8-sig").splitlines():
-                key, sep, candidate = line.partition("=")
-                if sep and key.strip() == "NEW_DATABASE_URL":
-                    value = candidate.strip()
-    if not value:
-        raise MigrationError("NEW_DATABASE_URL is not configured")
+        raise MigrationError("DATABASE_URL is not configured")
     parts = urlsplit(value)
     if parts.scheme not in {"postgres", "postgresql"} or not parts.hostname or not parts.password:
         raise MigrationError("Invalid catalog connection format")

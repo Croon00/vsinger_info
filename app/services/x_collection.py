@@ -1,6 +1,7 @@
 """X polling orchestration with no classification or cross-collector side effects."""
 from __future__ import annotations
 
+import asyncio
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -39,6 +40,8 @@ def _published_at(value: str | None) -> datetime:
 
 def _newest_id(posts: list[dict], fallback: str | None) -> str | None:
     ids = [str(post["id"]) for post in posts if post.get("id")]
+    if fallback:
+        ids.append(fallback)
     if not ids:
         return fallback
     if all(value.isdigit() for value in ids):
@@ -51,15 +54,30 @@ async def collect_x_once(
     fetch_pages: PageFetcher = fetch_post_pages,
     worker_id: str | None = None,
     account_limit: int = 100,
+    poll_interval_seconds: float = 0,
+    fetch_timeout_seconds: float = 240,
 ) -> CollectionResult:
     """Collect every fetched page, then atomically persist and advance each cursor."""
     worker_id = worker_id or f"x-{uuid4()}"
-    with catalog_runtime_session() as session:
-        accounts = claim_x_accounts(session, worker_id=worker_id, limit=account_limit)
-    result = CollectionResult(accounts=len(accounts))
-    for account in accounts:
+    if not 0 < fetch_timeout_seconds < 300:
+        raise ValueError("X fetch timeout must be shorter than its 300 second lease")
+    result = CollectionResult()
+    visited: list[int] = []
+    for _ in range(account_limit):
+        claim_owner = f"{worker_id}-{uuid4()}"
+        with catalog_runtime_session() as session:
+            accounts = claim_x_accounts(session, worker_id=claim_owner, limit=1,
+                                        exclude_ids=tuple(visited))
+        if not accounts:
+            break
+        account = accounts[0]
+        visited.append(account.id)
+        result.accounts += 1
         try:
-            pages = await fetch_pages(account.platform_id, account.last_seen_external_id)
+            pages = await asyncio.wait_for(
+                fetch_pages(account.platform_id, account.last_seen_external_id),
+                timeout=fetch_timeout_seconds,
+            )
             raw_posts = [post for page in pages for post in page]
             result.posts_seen += len(raw_posts)
             normalized = [
@@ -82,14 +100,19 @@ async def collect_x_once(
                 stored, queued = store_x_posts(
                     session, account=account, posts=normalized,
                     next_cursor=_newest_id(raw_posts, account.last_seen_external_id),
+                    poll_interval_seconds=poll_interval_seconds,
                 )
             result.posts_stored += stored
             result.deliveries_queued += queued
         except Exception as exc:
             result.failures += 1
-            logger.exception("X account %s collection failed", account.id)
-            with catalog_runtime_session() as session:
-                fail_x_account(
-                    session, account_id=account.id, worker_id=worker_id, error=str(exc)
-                )
+            logger.warning("X account %s collection failed (%s)", account.id, type(exc).__name__)
+            try:
+                with catalog_runtime_session() as session:
+                    fail_x_account(
+                        session, account_id=account.id, worker_id=account.lease_owner,
+                        error=type(exc).__name__,
+                    )
+            except Exception:
+                logger.error("Could not persist failure for X account %s", account.id)
     return result

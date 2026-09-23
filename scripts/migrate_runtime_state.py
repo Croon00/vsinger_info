@@ -8,9 +8,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
+import sys
 import uuid
 from collections import defaultdict
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import psycopg
@@ -18,12 +21,16 @@ from dotenv import dotenv_values
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+from app.schemas.worker_jobs import JobRequest
+
 try:
     from scripts import audit_single_db_readiness as audit
 except ModuleNotFoundError:  # Direct ``python scripts/...`` execution.
     import audit_single_db_readiness as audit
 
-ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = (
     ROOT / "db-migration" / "reports" / "single-db-readiness"
     / "runtime-migration-manifest.json"
@@ -60,8 +67,10 @@ def json_ready(value):
     return json.loads(canonical(value).decode("utf-8"))
 
 
-def configured_url(variable: str, filename: str) -> str:
-    value = (dotenv_values(ROOT / filename).get(variable) or "").strip()
+def configured_url(variable: str, filename: str = ".env") -> str:
+    if os.environ.get("NEW_DATABASE_URL") or dotenv_values(ROOT / ".env").get("NEW_DATABASE_URL"):
+        raise RuntimeMigrationError("NEW_DATABASE_URL is retired; configure DATABASE_URL only")
+    value = (os.environ.get(variable) or dotenv_values(ROOT / filename).get(variable) or "").strip()
     if not value:
         raise RuntimeMigrationError(f"{variable} is not configured in {filename}")
     return value
@@ -117,7 +126,7 @@ def choose_cursor(rows: list[dict], account_id: int) -> tuple[str | None, int]:
     return str(chosen["last_seen_external_id"]), chosen["id"]
 
 
-def build_plan(old_conn, new_conn) -> dict:
+def build_plan(old_conn, new_conn, *, baseline_at: datetime | None = None) -> dict:
     target = verify_target(new_conn)
     legacy = audit.load_legacy(old_conn)
     catalog = audit.load_catalog(new_conn)
@@ -151,6 +160,7 @@ def build_plan(old_conn, new_conn) -> dict:
                                "selected_cursor_source_id": selected_source},
         })
 
+    baseline_at = baseline_at or datetime.now(timezone.utc)
     monitor_rows = [row for row in legacy["monitors"] if row["id"] in monitor_account]
     for row in monitor_rows:
         collection_states.append({
@@ -161,7 +171,8 @@ def build_plan(old_conn, new_conn) -> dict:
             "next_poll_at": row["next_check_at"],
             "last_polled_at": row["last_checked_at"],
             "provider_state": {"legacy_monitor_id": row["id"],
-                               "uploads_playlist_id": row["uploads_playlist_id"]},
+                               "uploads_playlist_id": row["uploads_playlist_id"],
+                               "youtube_baseline_at": baseline_at.isoformat()},
         })
 
     selected_routes = [row for row in legacy["routes"] if row["source_id"] in source_account]
@@ -242,26 +253,140 @@ def build_plan(old_conn, new_conn) -> dict:
            WHERE monitor_id=ANY(%s) AND status<>'processed' ORDER BY id""",
         (list(monitor_account),),
     )]
-    video_ids = [row["youtube_video_id"] for row in unfinished]
+    pending_archives = [dict(row) for row in old_conn.execute(
+        """SELECT a.id,a.youtube_video_id,a.attempts,a.last_checked_at,a.next_check_at,
+                  a.updated_at,a.status,v.id AS channel_video_id,v.monitor_id,
+                  v.status AS channel_status,v.last_error
+           FROM youtube_live_archives a
+           LEFT JOIN youtube_channel_videos v ON v.youtube_video_id=a.youtube_video_id
+             AND v.monitor_id=ANY(%s)
+           WHERE a.status='pending' ORDER BY a.id,v.id""",
+        (list(monitor_account),),
+    )]
+    archive_by_video = defaultdict(list)
+    excluded_archives = []
+    for archive in pending_archives:
+        if archive["channel_video_id"] is None:
+            excluded_archives.append({"legacy_archive_id": archive["id"],
+                                      "external_video_id": archive["youtube_video_id"],
+                                      "reason": "no_approved_youtube_monitor; X_auto_registration_not_migrated"})
+            continue
+        if archive["attempts"] >= 168:
+            excluded_archives.append({"legacy_archive_id": archive["id"],
+                                      "external_video_id": archive["youtube_video_id"],
+                                      "reason": "legacy_wait_limit_exhausted"})
+            continue
+        archive_by_video[archive["youtube_video_id"]].append(archive)
+    if any(len({monitor_account[a["monitor_id"]] for a in rows}) > 1
+           for rows in archive_by_video.values()):
+        raise RuntimeMigrationError("Pending archive maps to multiple approved accounts")
+    video_ids = list({row["youtube_video_id"] for row in unfinished} | set(archive_by_video))
     catalog_videos = {}
     if video_ids:
-        catalog_videos = {row["platform_video_id"]: row["id"] for row in new_conn.execute(
-            "SELECT platform_video_id,id FROM videos WHERE platform='youtube' AND platform_video_id=ANY(%s)",
+        catalog_videos = {row["platform_video_id"]: row for row in new_conn.execute(
+            """SELECT v.platform_video_id,v.id,v.source_account_id,v.archived_at,
+                      l.setlist_state AS archive_state,
+                      EXISTS (SELECT 1 FROM performances p WHERE p.archive_id=l.id
+                              AND p.archived_at IS NULL) AS has_performances,
+                      EXISTS (SELECT 1 FROM covers c WHERE c.video_id=v.id) AS has_cover
+               FROM videos v LEFT JOIN live_archives l ON l.video_id=v.id AND l.archived_at IS NULL
+               WHERE v.platform='youtube' AND v.platform_video_id=ANY(%s)""",
             (video_ids,),
         )}
-    jobs = [{
-        "legacy_job_id": row["id"], "job_type": "youtube_collect",
-        "idempotency_key": f"legacy:youtube_channel_videos:{row['id']}",
-        "external_account_id": monitor_account[row["monitor_id"]],
-        "video_id": catalog_videos.get(row["youtube_video_id"]),
-        "payload": {"youtube_video_id": row["youtube_video_id"], "video_title": row["video_title"],
-                    "actual_end_at": row["actual_end_at"], "legacy_status": row["status"]},
-        "status": "retry" if row["last_error"] else "pending",
-        "next_attempt_at": row["collect_after"], "last_error": row["last_error"],
-    } for row in unfinished]
+    channel_ids = {row["id"]: row["youtube_channel_id"] for row in monitor_rows}
+    jobs = []
+    excluded_work = []
+    states_by_account = {s["external_account_id"]: s for s in collection_states}
+    work = {}
+    for row in unfinished:
+        key = row["youtube_video_id"]
+        account_id = monitor_account[row["monitor_id"]]
+        if key in work and work[key][0] != account_id:
+            raise RuntimeMigrationError("Unfinished video maps to multiple approved accounts")
+        work.setdefault(key, (account_id, row))
+    for external_id, archives in archive_by_video.items():
+        archive = archives[0]
+        account_id = monitor_account[archive["monitor_id"]]
+        if external_id in work and work[external_id][0] != account_id:
+            raise RuntimeMigrationError("Archive and channel work account mismatch")
+        work.setdefault(external_id, (account_id, None))
+    for external_id, (account_id, channel_row) in sorted(work.items()):
+        existing_video = catalog_videos.get(external_id)
+        if existing_video and (existing_video["archived_at"] is not None or
+                               existing_video["source_account_id"] not in (None, account_id)):
+            raise RuntimeMigrationError("Existing catalog video ownership or archived-state conflict")
+        archives = archive_by_video.get(external_id, [])
+        if channel_row and not archives and channel_row["collect_after"] is None and channel_row["actual_end_at"] is None:
+            states_by_account[account_id]["provider_state"].setdefault("youtube_pending_video_ids", []).append(external_id)
+            excluded_work.append({"external_video_id": external_id,
+                                  "reason": "awaiting_video_end_in_poll_state",
+                                  "account_id": account_id,
+                                  "catalog_video_id": existing_video["id"] if existing_video else None,
+                                  "legacy_channel_video_id": channel_row["id"],
+                                  "legacy_archive_ids": []})
+            continue
+        skip_reason = None
+        if existing_video:
+            if existing_video.get("has_performances"):
+                skip_reason = "catalog_archive_already_has_performances"
+            elif existing_video.get("archive_state") == "complete":
+                skip_reason = "catalog_archive_marked_complete"
+            elif existing_video.get("has_cover"):
+                skip_reason = "catalog_video_is_cover"
+        if skip_reason:
+            excluded_work.append({"external_video_id": external_id, "reason": skip_reason,
+                                  "account_id": account_id,
+                                  "catalog_video_id": existing_video["id"],
+                                  "legacy_channel_video_id": channel_row["id"] if channel_row else None,
+                                  "legacy_archive_ids": sorted({a["id"] for a in archives})})
+            continue
+        # Several legacy source rows can point to the same channel video. One
+        # current worker job resumes the external video; retain every old row.
+        archive = max(archives, key=lambda row: (row["attempts"], row["last_checked_at"] or datetime.min.replace(tzinfo=timezone.utc))) if archives else None
+        monitor_id = archive["monitor_id"] if archive else channel_row["monitor_id"]
+        channel_id = channel_ids[monitor_id]
+        if not re.fullmatch(r"UC[A-Za-z0-9_-]{22}", channel_id) or not re.fullmatch(r"[A-Za-z0-9_-]{11}", external_id):
+            raise RuntimeMigrationError("Invalid approved YouTube channel or video ID")
+        wait_count = int(archive["attempts"]) if archive else 0
+        archive_next_check = min(a["next_check_at"] for a in archives) if archives else None
+        archive_last_check = max((a["last_checked_at"] for a in archives if a["last_checked_at"]), default=None)
+        payload = dict(channel_id=channel_id, youtube_video_id=external_id,
+                       purpose="archive", wait_count=wait_count)
+        request = JobRequest(job_type="youtube_collect", external_account_id=account_id,
+                             video_id=existing_video["id"] if existing_video else None, payload=payload)
+        last_error = (channel_row or {}).get("last_error")
+        jobs.append({"legacy_job_id": channel_row["id"] if channel_row else None,
+                     "legacy_archive_ids": sorted({a["id"] for a in archives}),
+                     "legacy_archive_states": [dict(id=a["id"], attempts=a["attempts"],
+                                                    last_checked_at=a["last_checked_at"],
+                                                    next_check_at=a["next_check_at"]) for a in archives],
+                     "job_type": "youtube_collect", "idempotency_key": request.key(),
+                     "external_account_id": account_id, "video_id": request.video_id,
+                     "external_video_id": external_id,
+                     "payload": request.parsed_payload().model_dump(),
+                     "status": "retry" if last_error else "pending",
+                     "next_attempt_at": archive_next_check if archive else (
+                         channel_row["collect_after"] or (channel_row["actual_end_at"] + timedelta(hours=24)
+                             if channel_row["actual_end_at"] else None)),
+                     "last_checked_at": archive_last_check,
+                     "attempt_count": 0,
+                     "legacy_wait_count": wait_count,
+                     "last_error": last_error})
+
+    for job in jobs:
+        state = states_by_account[job["external_account_id"]]
+        if job["legacy_job_id"] is not None and job["next_attempt_at"] is None:
+            state["provider_state"].setdefault("youtube_pending_video_ids", []).append(job["external_video_id"])
+        if job["legacy_archive_ids"]:
+            state["provider_state"].setdefault("youtube_legacy_pending_checks", {})[job["external_video_id"]] = {
+                "archive_ids": job["legacy_archive_ids"],
+                "wait_count": job["legacy_wait_count"],
+                "last_checked_at": job["last_checked_at"].isoformat() if job["last_checked_at"] else None,
+            }
 
     plan = {
-        "contract": "runtime-subset-v1", "target": target,
+        "contract": "runtime-subset-v2", "target": target,
+        "baseline_at": baseline_at,
         "account_versions": {str(row["account"]["account_id"]): row["account"]["version"]
                              for row in mapping["mappings"] if row.get("account") and row["status"] == "matched"},
         "collection_states": collection_states,
@@ -269,6 +394,8 @@ def build_plan(old_conn, new_conn) -> dict:
         "source_items": list(items_by_key.values()),
         "deliveries": deliveries,
         "worker_jobs": jobs,
+        "excluded_archives": excluded_archives,
+        "excluded_work": excluded_work,
         "legacy_item_keys": {str(k): list(v) for k, v in item_key_by_legacy.items()},
         "route_keys": {str(k): list(v) for k, v in route_key_by_legacy.items()},
     }
@@ -280,10 +407,43 @@ def public_manifest(plan: dict) -> dict:
     counts = {name: len(plan[name]) for name in
               ("collection_states", "routes", "source_items", "deliveries", "worker_jobs")}
     manifest = {"contract": plan["contract"], "target": plan["target"],
+                "baseline_at": (plan["baseline_at"].isoformat() if isinstance(plan.get("baseline_at"), datetime)
+                                else plan.get("baseline_at")),
                 "source_snapshot_hash": plan["source_snapshot_hash"], "counts": counts,
-                "excluded": ["google", "x_classification", "x_youtube_autoregistration",
-                             "legacy_music_catalog", "processed_youtube_jobs"],
+                "selected_accounts": plan["account_versions"],
+                "x_cursors": [{"account_id": s["external_account_id"],
+                                "legacy_source_ids": s["provider_state"]["legacy_source_ids"],
+                                "last_seen_external_id": s["last_seen_external_id"]}
+                               for s in plan["collection_states"] if "legacy_source_ids" in s["provider_state"]],
+                "route_owners": [{"account_id": r["external_account_id"],
+                                  "legacy_route_ids": r["legacy_route_ids"],
+                                  "guild_id": r["guild_id"], "channel_id": r["channel_id"],
+                                  "owner_discord_user_id": r["owner_discord_user_id"]}
+                                 for r in plan["routes"]],
+                "sent_delivery_ids": [d["legacy_delivery_id"] for d in plan["deliveries"]],
+                "source_item_mapping": [{"legacy_item_id": int(legacy_id),
+                                         "account_id": key[0], "external_id": key[1]}
+                                        for legacy_id, key in sorted(plan["legacy_item_keys"].items(),
+                                                                     key=lambda pair: int(pair[0]))],
+                "youtube_work": [{"external_video_id": j["external_video_id"],
+                                  "account_id": j["external_account_id"],
+                                  "legacy_channel_video_id": j["legacy_job_id"],
+                                  "legacy_archive_ids": j["legacy_archive_ids"],
+                                  "legacy_archive_states": j.get("legacy_archive_states", []),
+                                  "catalog_video_id": j["video_id"],
+                                  "wait_count": j["legacy_wait_count"],
+                                  "last_checked_at": j["last_checked_at"],
+                                  "next_attempt_at": j["next_attempt_at"],
+                                  "status": j["status"], "last_error_present": bool(j["last_error"])}
+                                 for j in plan["worker_jobs"]],
+                "excluded_archives": plan.get("excluded_archives", []),
+                "excluded_work": plan.get("excluded_work", []),
+                "excluded": {"google": "legacy_data_preserved", "x_classification": "feature_removed",
+                             "x_youtube_autoregistration": "feature_removed",
+                             "legacy_music_catalog": "outside_selected_runtime_subset",
+                             "processed_youtube_jobs": "historical_completed_work"},
                 "approved_for_apply": False}
+    manifest = json_ready(manifest)
     manifest["manifest_hash"] = digest(manifest)
     return manifest
 
@@ -386,7 +546,10 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
           RETURNING id""", (job["job_type"], job["idempotency_key"], job["external_account_id"],
                              job["video_id"], Jsonb(json_ready(job["payload"])), job["status"],
                              job["next_attempt_at"], job["last_error"])).fetchone()
-        job_ids[job["legacy_job_id"]] = row["id"]
+        if job["legacy_job_id"] is not None:
+            job_ids[job["legacy_job_id"]] = row["id"]
+        for archive_id in job["legacy_archive_ids"]:
+            job_ids[("youtube_live_archives", archive_id)] = row["id"]
 
     receipt_id = conn.execute("""INSERT INTO runtime_migration_receipts
       (operation_id,catalog_instance_id,source_fingerprint,manifest_hash,summary)
@@ -420,7 +583,8 @@ def apply_plan(conn, plan: dict, manifest: dict) -> dict:
                                  (route_ids[route_key], item_ids[tuple(delivery["item_key"])] )).fetchone()["id"]
         legacy_map("notification_deliveries", delivery["legacy_delivery_id"], "notification_deliveries", target_id, "confirmed sent delivery")
     for legacy_id, target_id in job_ids.items():
-        legacy_map("youtube_channel_videos", legacy_id, "worker_jobs", target_id, "unfinished independent YouTube work")
+        table, value = legacy_id if isinstance(legacy_id, tuple) else ("youtube_channel_videos", legacy_id)
+        legacy_map(table, value, "worker_jobs", target_id, "approved independent YouTube resume work")
     return {"applied": True, "operation_id": str(operation_id), "counts": expected["counts"]}
 
 
@@ -429,24 +593,31 @@ def main() -> int:
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
-    legacy_url = configured_url("DATABASE_URL", ".env")
-    new_url = configured_url("NEW_DATABASE_URL", ".env.catalog")
+    legacy_url = configured_url("LEGACY_DATABASE_URL")
+    new_url = configured_url("DATABASE_URL")
     if legacy_url == new_url:
         raise RuntimeMigrationError("Legacy and target URLs are identical")
-    with psycopg.connect(legacy_url, connect_timeout=20, row_factory=dict_row) as old_conn:
-        with psycopg.connect(new_url, connect_timeout=20, row_factory=dict_row) as new_conn:
-            configure(old_conn, read_only=True)
-            configure(new_conn, read_only=not args.apply)
-            plan = build_plan(old_conn, new_conn)
-            manifest = public_manifest(plan)
-            if not args.apply:
-                args.manifest.parent.mkdir(parents=True, exist_ok=True)
-                args.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                result = {"dry_run": True, **manifest}
-            else:
-                supplied = json.loads(args.manifest.read_text(encoding="utf-8"))
-                result = apply_plan(new_conn, plan, supplied)
-        print(json.dumps(result, ensure_ascii=False))
+    try:
+        with psycopg.connect(legacy_url, connect_timeout=20, row_factory=dict_row) as old_conn:
+            with psycopg.connect(new_url, connect_timeout=20, row_factory=dict_row) as new_conn:
+                configure(old_conn, read_only=True)
+                configure(new_conn, read_only=not args.apply)
+                supplied = json.loads(args.manifest.read_text(encoding="utf-8")) if args.apply else None
+                baseline = datetime.fromisoformat(supplied["baseline_at"]) if supplied else None
+                plan = build_plan(old_conn, new_conn, baseline_at=baseline)
+                manifest = public_manifest(plan)
+                if not args.apply:
+                    args.manifest.parent.mkdir(parents=True, exist_ok=True)
+                    args.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                    result = {"dry_run": True, "manifest": str(args.manifest),
+                              "manifest_hash": manifest["manifest_hash"], "counts": manifest["counts"],
+                              "excluded_archive_count": len(manifest["excluded_archives"]),
+                              "excluded_work_count": len(manifest["excluded_work"])}
+                else:
+                    result = apply_plan(new_conn, plan, supplied)
+    except psycopg.Error:
+        raise RuntimeMigrationError("Database connection or query failed during runtime migration") from None
+    print(json.dumps(result, ensure_ascii=False))
     return 0
 
 

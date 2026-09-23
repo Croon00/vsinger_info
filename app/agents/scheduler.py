@@ -14,8 +14,14 @@ logger = logging.getLogger(__name__)
 
 async def run_agent_once() -> dict[str, int | bool]:
     """Run X collection and Discord delivery without other collectors or Google."""
-    collection = await collect_x_once()
-    delivery = await deliver_pending_once(bot)
+    collection, delivery = await asyncio.gather(
+        collect_x_once(poll_interval_seconds=max(1, settings.agent_interval_seconds)),
+        deliver_pending_once(bot),
+        return_exceptions=True,
+    )
+    for result in (collection, delivery):
+        if isinstance(result, BaseException):
+            raise result
     return {
         "accounts": collection.accounts,
         "posts_seen": collection.posts_seen,
@@ -32,12 +38,33 @@ async def run_agent_once() -> dict[str, int | bool]:
 
 
 async def agent_loop() -> None:
-    """Run the minimal worker at the configured interval."""
+    """Independent clocks: due X accounts and Discord retries cannot block each other."""
+    async with asyncio.TaskGroup() as tasks:
+        tasks.create_task(_x_loop())
+        tasks.create_task(_delivery_loop())
+
+
+async def _x_loop() -> None:
+    interval = max(1, settings.agent_interval_seconds)
     if not settings.agent_run_on_start:
-        await asyncio.sleep(settings.agent_interval_seconds)
+        await asyncio.sleep(interval)
     while True:
         try:
-            logger.info("agent 실행 완료: %s", await run_agent_once())
+            result = await collect_x_once(poll_interval_seconds=interval)
+            if result.accounts or result.failures:
+                logger.info("X collection: %s", result)
         except Exception:
-            logger.exception("agent 실행에 실패했습니다.")
-        await asyncio.sleep(settings.agent_interval_seconds)
+            logger.error("X collection cycle failed")
+        # DB next_poll_at controls provider frequency; this only checks due work.
+        await asyncio.sleep(min(10, interval))
+
+
+async def _delivery_loop() -> None:
+    while True:
+        try:
+            result = await deliver_pending_once(bot)
+            if any((result.sent, result.retried, result.failed, result.skipped, result.unknown)):
+                logger.info("Discord delivery: %s", result)
+        except Exception:
+            logger.error("Discord delivery cycle failed")
+        await asyncio.sleep(5)

@@ -4,11 +4,11 @@
 
 ## 연결 설정
 
-루트의 Git 제외 파일 `.env.catalog` 또는 서버 환경변수에 다음 값을 설정한다. 비밀값은 프론트 환경변수에 넣지 않는다.
+루트의 Git 제외 파일 `.env` 또는 서버 환경변수에 다음 값을 설정한다. 비밀값은 프론트 환경변수에 넣지 않는다.
 
-- `NEW_DATABASE_URL`: 새 카탈로그 DB
+- `DATABASE_URL`: 새 통합 DB
 - `AWS_ENDPOINT_URL_S3`: 해당 Neon 브랜치의 S3 endpoint
-- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: 저장소 자격 증명
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: 명시적 이미지 업로드 도구 전용. 일반 조회 API의 이미지 URL 생성에는 불필요
 - `AWS_REGION`: 저장소 리전
 - `AVATAR_BUCKET`: 이미지 버킷. 이번 적용값은 `avator-image`
 

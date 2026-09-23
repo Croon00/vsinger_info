@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import uuid
 from pathlib import Path
 
@@ -35,9 +36,9 @@ PROPOSALS = (
 
 
 def catalog_url() -> str:
-    value = (dotenv_values(ROOT / ".env.catalog").get("NEW_DATABASE_URL") or "").strip()
+    value = (os.environ.get("DATABASE_URL") or dotenv_values(ROOT / ".env").get("DATABASE_URL") or "").strip()
     if not value:
-        raise RuntimeError("NEW_DATABASE_URL is not configured")
+        raise RuntimeError("DATABASE_URL is not configured")
     return value
 
 

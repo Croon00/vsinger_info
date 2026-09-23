@@ -14,7 +14,7 @@ X 게시글 타입 분류, 공연·티켓 추출, 링크 페이지 조회, Googl
 ## 경계와 안정성
 
 - SQL은 `app/repositories/runtime_delivery.py`, 업무 상태 전이는 `app/services/`에 둔다.
-- 신규 runtime은 `NEW_DATABASE_URL` 전용 session만 사용하고 기존 `app/core/db.py`를 import하지 않는다.
+- 신규 runtime은 `DATABASE_URL`의 identity-guarded session만 사용하고 기존 `app/core/db.py`를 import하지 않는다.
 - 원문·route별 delivery·cursor를 원자적으로 반영한다.
 - pagination을 끝까지 확보하지 못하면 cursor를 전진시키지 않는다.
 - 한 계정 실패가 다른 계정의 수집을 중단시키지 않게 한다.

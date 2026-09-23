@@ -26,6 +26,7 @@ async def test_runtime_starts_only_api_before_cutover(monkeypatch):
         runtime, "start_discord_bot", lambda: _record(calls, "discord")
     )
     monkeypatch.setattr(runtime, "agent_loop", lambda: _record(calls, "agent"))
+    monkeypatch.setattr(runtime, "music_worker_loop", lambda: _record(calls, "music"))
 
     await runtime.main()
 
@@ -42,7 +43,8 @@ async def test_runtime_starts_discord_and_agent_after_cutover(monkeypatch):
         runtime, "start_discord_bot", lambda: _record(calls, "discord")
     )
     monkeypatch.setattr(runtime, "agent_loop", lambda: _record(calls, "agent"))
+    monkeypatch.setattr(runtime, "music_worker_loop", lambda: _record(calls, "music"))
 
     await runtime.main()
 
-    assert calls == ["api", "discord", "agent"]
+    assert calls == ["api", "discord", "agent", "music"]

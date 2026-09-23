@@ -2,6 +2,8 @@
 
 완료일: 2026-09-21. 이 단계에서는 기존 DB와 신규 DB를 모두 읽기 전용으로 확인했다. 실제 운영 데이터 이전은 실행하지 않았다.
 
+현재 실행 계약은 [보완 5단계 결과](backend-service-step-5-migration.md)를 따른다. 아래 변수명과 YouTube 선택 범위는 2026-09-21 당시 기록이다.
+
 ## 도구 계약
 
 [`scripts/migrate_runtime_state.py`](../scripts/migrate_runtime_state.py)는 기본 실행이 dry-run이다. 기존 DB의 `DATABASE_URL`과 신규 DB의 `NEW_DATABASE_URL`이 같으면 중단하며, 기존 DB에는 항상 읽기 전용 트랜잭션을 사용한다.

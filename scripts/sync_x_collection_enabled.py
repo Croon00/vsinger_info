@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import uuid
 from collections import defaultdict
 from pathlib import Path
@@ -31,7 +32,7 @@ LEGACY_X_EXCLUDED_SOURCE_IDS = {12, 72, 73}
 
 
 def load_url(variable: str, filename: str) -> str:
-    value = (dotenv_values(ROOT / filename).get(variable) or "").strip()
+    value = (os.environ.get(variable) or dotenv_values(ROOT / filename).get(variable) or "").strip()
     if not value:
         raise RuntimeError(f"{variable} is not configured in {filename}")
     parsed = urlsplit(value)
@@ -233,8 +234,8 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--operation-id", type=uuid.UUID, default=DEFAULT_OPERATION_ID)
     args = parser.parse_args()
-    legacy_url = load_url("DATABASE_URL", ".env")
-    catalog_url = load_url("NEW_DATABASE_URL", ".env.catalog")
+    legacy_url = load_url("LEGACY_DATABASE_URL", ".env")
+    catalog_url = load_url("DATABASE_URL", ".env")
     if legacy_url == catalog_url:
         raise RuntimeError("Legacy and catalog URLs resolve to the same configured value")
     with psycopg.connect(legacy_url, connect_timeout=20) as old_conn:

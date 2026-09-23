@@ -18,7 +18,7 @@ class CatalogIdentityError(RuntimeError):
 
 
 def catalog_url() -> str:
-    return settings.new_database_url or ""
+    return settings.database_url or ""
 
 
 @lru_cache(maxsize=4)
@@ -84,7 +84,7 @@ def catalog_runtime_session():
     """Yield a writable, identity-checked session for workers and delivery jobs."""
     url = catalog_url()
     if not url:
-        raise CatalogIdentityError("NEW_DATABASE_URL is not configured")
+        raise CatalogIdentityError("DATABASE_URL is not configured")
     with Session(catalog_engine(url), autoflush=False, expire_on_commit=False) as session:
         session.execute(text("SET LOCAL statement_timeout='30s'"))
         verify_catalog_identity(session)

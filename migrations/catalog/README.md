@@ -26,8 +26,8 @@
 | expected-schema.json | 로컬 PostgreSQL에서 검증한 컬럼·제약·인덱스·트리거·함수 정의 |
 | ../../scripts/migrate_catalog.py | 명시적 실행, 빈 DB 검사, 트랜잭션/체크섬 검증 |
 
-새 접속 정보는 루트의 Git 제외 파일 `.env.catalog`에 `NEW_DATABASE_URL`로 저장한다.
-환경변수에 같은 키가 있으면 환경변수가 우선한다. 기존 `.env`의 `DATABASE_URL`은 읽거나 변경하지 않는다.
+새 접속 정보는 루트의 Git 제외 파일 `.env`에 `DATABASE_URL`로 저장한다.
+환경변수에 같은 키가 있으면 환경변수가 우선한다. 이전 원본 DB의 `LEGACY_DATABASE_URL`은 schema 도구가 읽지 않는다.
 프론트 VITE 변수·문서·로그에 DB URL을 넣지 않는다.
 
 ## 실행

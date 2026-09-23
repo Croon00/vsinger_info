@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 from collections import Counter, defaultdict
 from datetime import date, datetime, timezone
@@ -56,7 +57,7 @@ HAO_SOURCE_IDS = [14, 79779]
 
 
 def load_url(variable: str, filename: str) -> str:
-    value = (dotenv_values(ROOT / filename).get(variable) or "").strip()
+    value = (os.environ.get(variable) or dotenv_values(ROOT / filename).get(variable) or "").strip()
     if not value:
         raise RuntimeError(f"{variable} is not configured in {filename}")
     parsed = urlsplit(value)
@@ -504,8 +505,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report-dir", type=Path, default=DEFAULT_REPORT_DIR)
     args = parser.parse_args()
-    legacy_url = load_url("DATABASE_URL", ".env")
-    catalog_url = load_url("NEW_DATABASE_URL", ".env.catalog")
+    legacy_url = load_url("LEGACY_DATABASE_URL", ".env")
+    catalog_url = load_url("DATABASE_URL", ".env")
     if legacy_url == catalog_url:
         raise RuntimeError("Legacy and catalog URLs resolve to the same configured value")
     args.report_dir.mkdir(parents=True, exist_ok=True)

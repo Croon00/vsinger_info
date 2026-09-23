@@ -241,7 +241,7 @@ def test_legacy_init_is_blocked_on_unified_database(database, monkeypatch):
         "database_url",
         f"postgresql://catalog_test@127.0.0.1:{info.port}/{info.dbname}",
     )
-    with pytest.raises(RuntimeError, match="Legacy init_db is blocked"):
+    with pytest.raises(RuntimeError, match="Legacy SQL access is disabled"):
         init_db()
 
 

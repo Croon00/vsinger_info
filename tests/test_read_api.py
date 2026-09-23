@@ -55,16 +55,13 @@ def test_statistics_include_empty_archives_unknown_artists_and_tied_rank():
     assert [s.rank for s in result.songs]==[1,1]
     assert result.artists[0].percentage==50
 
-def test_engine_is_reused_but_database_url_changes_are_respected(monkeypatch):
-    sessions._engine_for_url.cache_clear()
-    factory=Mock(side_effect=[object(),object()])
+def test_legacy_engine_cannot_open_the_unified_database(monkeypatch):
+    monkeypatch.setattr(settings,'database_url','postgresql://test/unified')
+    factory=Mock()
     monkeypatch.setattr(sessions,'create_engine',factory)
-    monkeypatch.setattr(settings,'database_url','postgresql://test/db1')
-    assert sessions.get_engine() is sessions.get_engine()
-    monkeypatch.setattr(settings,'database_url','postgresql://test/db2')
-    sessions.get_engine()
-    assert factory.call_count==2
-    sessions._engine_for_url.cache_clear()
+    with pytest.raises(RuntimeError, match='Legacy SQL access is disabled'):
+        sessions.get_engine()
+    factory.assert_not_called()
 
 def test_cache_coalesces_and_does_not_cache_errors():
     async def scenario():

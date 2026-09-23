@@ -7,6 +7,7 @@ git-ignored readiness report directory and never changes either database.
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -28,7 +29,7 @@ CHANNELS = {
 
 
 def configured(name: str, filename: str) -> str:
-    value = (dotenv_values(ROOT / filename).get(name) or "").strip()
+    value = (os.environ.get(name) or dotenv_values(ROOT / filename).get(name) or "").strip()
     if not value:
         raise RuntimeError(f"{name} is not configured")
     return value
@@ -36,7 +37,7 @@ def configured(name: str, filename: str) -> str:
 
 def main() -> int:
     api_key = configured("YOUTUBE_API_KEY", ".env")
-    catalog_url = configured("NEW_DATABASE_URL", ".env.catalog")
+    catalog_url = configured("DATABASE_URL", ".env")
     response = httpx.get(
         "https://www.googleapis.com/youtube/v3/channels",
         params={
