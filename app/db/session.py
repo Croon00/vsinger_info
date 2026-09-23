@@ -8,14 +8,11 @@ from app.core.config import settings
 
 
 def get_engine() -> Engine:
-    if not settings.database_url:
-        raise RuntimeError("DATABASE_URL is required for database access.")
-    # Existing deployments use psycopg 3, not psycopg2. SQLAlchemy's bare
-    # ``postgresql://`` URL otherwise selects the unavailable psycopg2 driver.
-    url = settings.database_url
-    if url.startswith("postgresql://"):
-        url = url.replace("postgresql://", "postgresql+psycopg://", 1)
-    return create_engine(url, pool_pre_ping=True)
+    raise RuntimeError("Legacy SQL access is disabled; use catalog_session")
+
+
+def _engine_for_url(url: str) -> Engine:
+    raise RuntimeError("Legacy SQL access is disabled; use catalog_session")
 
 
 def get_session() -> Generator[Session, None, None]:

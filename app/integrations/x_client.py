@@ -95,6 +95,61 @@ async def fetch_recent_posts(
     if not settings.x_bearer_token:
         raise RuntimeError("X_BEARER_TOKEN이 설정되어 있지 않습니다.")
 
+    data = await _fetch_x_api_page(user_id, since_id, max_results=max_results)
+    return data.get("data", [])
+
+
+async def fetch_post_pages(
+    user_id: str,
+    since_id: str | None = None,
+    *,
+    page_size: int = 100,
+    max_pages: int = 20,
+) -> list[list[dict[str, Any]]]:
+    """Fetch all bounded pages after ``since_id`` without advancing DB state."""
+    if not 5 <= page_size <= 100:
+        raise ValueError("page_size must be between 5 and 100")
+    if not 1 <= max_pages <= 100:
+        raise ValueError("max_pages must be between 1 and 100")
+    if x_provider() == "twscrape":
+        capacity = page_size * max_pages
+        posts = await _fetch_recent_posts_twscrape(
+            user_id, since_id, capacity + 1
+        )
+        if len(posts) > capacity:
+            raise RuntimeError(
+                f"X pagination exceeded the safety limit ({max_pages} pages); cursor was not advanced"
+            )
+        return [posts[index:index + page_size] for index in range(0, len(posts), page_size)]
+
+    pages: list[list[dict[str, Any]]] = []
+    token: str | None = None
+    for _ in range(max_pages):
+        payload = await _fetch_x_api_page(
+            user_id, since_id, max_results=page_size, pagination_token=token
+        )
+        page = payload.get("data", [])
+        if page:
+            pages.append(page)
+        token = payload.get("meta", {}).get("next_token")
+        if not token:
+            return pages
+    if token:
+        raise RuntimeError(
+            f"X pagination exceeded the safety limit ({max_pages} pages); cursor was not advanced"
+        )
+    return pages
+
+
+async def _fetch_x_api_page(
+    user_id: str,
+    since_id: str | None,
+    *,
+    max_results: int,
+    pagination_token: str | None = None,
+) -> dict[str, Any]:
+    if not settings.x_bearer_token:
+        raise RuntimeError("X_BEARER_TOKEN이 설정되어 있지 않습니다.")
     params = {
         "max_results": str(max_results),
         "tweet.fields": "created_at,entities",
@@ -102,6 +157,8 @@ async def fetch_recent_posts(
     }
     if since_id:
         params["since_id"] = since_id
+    if pagination_token:
+        params["pagination_token"] = pagination_token
 
     async with httpx.AsyncClient(timeout=30) as client:
         response = await client.get(
@@ -110,9 +167,7 @@ async def fetch_recent_posts(
             params=params,
         )
         response.raise_for_status()
-        data = response.json()
-
-    return data.get("data", [])
+        return response.json()
 
 
 def post_url(username: str, post_id: str) -> str:

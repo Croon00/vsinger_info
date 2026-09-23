@@ -1,0 +1,44 @@
+[
+  {
+    "label": "artists cold",
+    "ms": 1469,
+    "status": 200,
+    "bytes": 26602,
+    "timing": "db;dur=1325.5, queries;desc=\"2\""
+  },
+  {
+    "label": "artists repeat",
+    "ms": 393,
+    "status": 200,
+    "bytes": 26602,
+    "timing": "db;dur=291.6, queries;desc=\"2\""
+  },
+  {
+    "label": "artist archives first page",
+    "ms": 485,
+    "status": 200,
+    "bytes": 2169,
+    "timing": "db;dur=383.2, queries;desc=\"3\""
+  },
+  {
+    "label": "artist statistics",
+    "ms": 871,
+    "status": 200,
+    "bytes": 321454,
+    "timing": "db;dur=709.3, queries;desc=\"4\""
+  },
+  {
+    "label": "search OR",
+    "ms": 361,
+    "status": 200,
+    "bytes": 21945,
+    "timing": "db;dur=287.0, queries;desc=\"1\""
+  },
+  {
+    "label": "concerts",
+    "ms": 295,
+    "status": 200,
+    "bytes": 52792,
+    "timing": "db;dur=218.4, queries;desc=\"1\""
+  }
+]

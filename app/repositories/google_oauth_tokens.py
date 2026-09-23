@@ -1,7 +1,7 @@
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from app.core.config import settings
+from app.legacy.config import settings
 from app.core.db import get_connection
 
 

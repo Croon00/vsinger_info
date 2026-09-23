@@ -1,0 +1,34 @@
+{
+  "legacy": {
+    "total_ms": 7466,
+    "artists": 75,
+    "groups": {
+      "artists": {
+        "queries": 1,
+        "ms": 148.6730999995416
+      },
+      "sources": {
+        "queries": 1,
+        "ms": 71.77469999987807
+      },
+      "representative_video": {
+        "queries": 94,
+        "ms": 7173.344400000133
+      }
+    }
+  },
+  "v2": {
+    "total_ms": 170,
+    "artists": 75,
+    "groups": {
+      "artists": {
+        "queries": 1,
+        "ms": 71.50280000041676
+      },
+      "sources": {
+        "queries": 1,
+        "ms": 71.33220000014262
+      }
+    }
+  }
+}

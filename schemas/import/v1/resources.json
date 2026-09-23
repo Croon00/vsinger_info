@@ -1,0 +1,1357 @@
+{
+  "artists": {
+    "name": "artists",
+    "title": "통합 아티스트 명부",
+    "fields": [
+      {
+        "name": "slug",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "주소에 사용할 고정 식별 문자열. 이름을 바꿔도 자동 변경하지 않음",
+        "example": "hachi"
+      },
+      {
+        "name": "name_native",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "공식 원어 이름",
+        "example": "HACHI"
+      },
+      {
+        "name": "name_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "검수한 한국어 이름. 임의 번역 금지",
+        "example": "하치"
+      },
+      {
+        "name": "name_latin",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "공식 영어/로마자 표기. 원어와 같으면 생략 가능",
+        "example": "NULL"
+      },
+      {
+        "name": "entity_kind",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "solo(개인 활동 주체), group(그룹)",
+        "example": "solo",
+        "options": [
+          "solo",
+          "group"
+        ]
+      },
+      {
+        "name": "is_virtual",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "description": "가상 캐릭터 활동 여부. NULL은 아직 확인 안 됨",
+        "example": "true"
+      },
+      {
+        "name": "agency_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "agencies.id. 소속사가 없거나 미확인일 때 비움",
+        "example": "3",
+        "reference": "agencies"
+      },
+      {
+        "name": "birthday_month",
+        "type": "SMALLINT",
+        "nullable": true,
+        "description": "생일 월. 생년은 저장하지 않음",
+        "example": "8"
+      },
+      {
+        "name": "birthday_day",
+        "type": "SMALLINT",
+        "nullable": true,
+        "description": "생일 일. 월과 함께 입력하거나 함께 비움",
+        "example": "1"
+      },
+      {
+        "name": "debut_date",
+        "type": "DATE",
+        "nullable": true,
+        "description": "정확히 확인된 데뷔 날짜. 연도만 알면 날짜를 만들지 않음",
+        "example": "2020-08-01"
+      },
+      {
+        "name": "bio",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "검수된 프로필 소개",
+        "example": "아티스트 소개문"
+      },
+      {
+        "name": "theme_color",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "캘린더 등에서 쓸 색상. #RRGGBB 형식",
+        "example": "#8B74D6"
+      },
+      {
+        "name": "avatar_url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "프로필 이미지 주소. 없으면 화면의 이름 폴백",
+        "example": "https://example.com/avatar.jpg"
+      },
+      {
+        "name": "show_in_catalog",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "description": "사용자 탐색 목록에 노출할지. 수집 여부와 독립",
+        "example": "true",
+        "default": false
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "artist_aliases": {
+    "name": "artist_aliases",
+    "title": "아티스트 검색 별칭",
+    "fields": [
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "별칭의 주인. artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "alias",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "사용자가 검색할 수 있는 별칭 원문",
+        "example": "검색용 별명"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "agencies": {
+    "name": "agencies",
+    "title": "소속사",
+    "fields": [
+      {
+        "name": "name_native",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "소속사 원어 이름",
+        "example": "예시 소속사"
+      },
+      {
+        "name": "name_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "한국어 표기",
+        "example": "예시 소속사 한국어명"
+      },
+      {
+        "name": "website_url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "공식 사이트",
+        "example": "https://example.com"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "artist_group_members": {
+    "name": "artist_group_members",
+    "title": "그룹과 멤버 관계",
+    "fields": [
+      {
+        "name": "group_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "그룹인 artists.id",
+        "example": "10",
+        "reference": "artists"
+      },
+      {
+        "name": "member_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "멤버인 artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "joined_on",
+        "type": "DATE",
+        "nullable": true,
+        "description": "정확히 확인된 가입일",
+        "example": "2023-04-01"
+      },
+      {
+        "name": "left_on",
+        "type": "DATE",
+        "nullable": true,
+        "description": "정확히 확인된 탈퇴일. NULL만으로 현재 재적을 확정하지 않음",
+        "example": "NULL"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "external_accounts": {
+    "name": "external_accounts",
+    "title": "외부 플랫폼 계정",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "youtube, spotify, x, website, fanclub 등 허용 종류",
+        "example": "youtube",
+        "options": [
+          "youtube",
+          "spotify",
+          "x",
+          "website",
+          "fanclub"
+        ]
+      },
+      {
+        "name": "platform_id",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "플랫폼의 고정 ID. @핸들과 구분",
+        "example": "외부 채널 ID"
+      },
+      {
+        "name": "handle",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "변할 수 있는 계정 핸들",
+        "example": "@example"
+      },
+      {
+        "name": "url",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "외부 계정의 공식 주소",
+        "example": "https://example.com/channel"
+      },
+      {
+        "name": "collection_enabled",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "description": "향후 수집 대상으로 사용할지. website/fanclub은 false로 제한; 실제 수집기 연결은 별도",
+        "example": "false",
+        "default": false
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "artist_external_accounts": {
+    "name": "artist_external_accounts",
+    "title": "아티스트와 계정 연결",
+    "fields": [
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "account_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "external_accounts.id",
+        "example": "20",
+        "reference": "external_accounts"
+      },
+      {
+        "name": "relationship",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "owner(명의/주체), member(공유 계정 참여자)",
+        "example": "owner",
+        "options": [
+          "owner",
+          "member"
+        ]
+      },
+      {
+        "name": "is_primary",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "description": "해당 아티스트의 해당 플랫폼 대표 계정 여부",
+        "example": "true",
+        "default": false
+      },
+      {
+        "name": "label",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "해당 아티스트 프로필에서 보일 버튼 이름. 비우면 종류별 기본 이름",
+        "example": "Official"
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "해당 아티스트의 프로필 링크 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "songs": {
+    "name": "songs",
+    "title": "곡 작품 마스터",
+    "fields": [
+      {
+        "name": "title_native",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "원어 곡명",
+        "example": "Lemon"
+      },
+      {
+        "name": "title_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "한국어 표기. 영어 원어를 복사해 채우지 않음",
+        "example": "NULL"
+      },
+      {
+        "name": "title_latin",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "영어/로마자 표기",
+        "example": "NULL"
+      },
+      {
+        "name": "language_code",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "가사의 언어 코드. 다국어는 mul 등 계약으로 처리",
+        "example": "ja"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "song_artists": {
+    "name": "song_artists",
+    "title": "곡의 원곡 아티스트",
+    "fields": [
+      {
+        "name": "song_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "songs.id",
+        "example": "301",
+        "reference": "songs"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "2",
+        "reference": "artists"
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "원곡 명의 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "karaoke_numbers": {
+    "name": "karaoke_numbers",
+    "title": "노래방 수록 번호",
+    "fields": [
+      {
+        "name": "song_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "songs.id",
+        "example": "301",
+        "reference": "songs"
+      },
+      {
+        "name": "provider",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "tj 또는 ky",
+        "example": "tj",
+        "options": [
+          "tj",
+          "ky"
+        ]
+      },
+      {
+        "name": "number",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "노래방 번호. 계산용 숫자가 아니므로 문자열로 보존",
+        "example": "012345"
+      },
+      {
+        "name": "source_url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "번호를 확인한 출처",
+        "example": "https://example.com/catalog"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "videos": {
+    "name": "videos",
+    "title": "공통 영상 정보",
+    "fields": [
+      {
+        "name": "platform",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "1차 허용 플랫폼 youtube. 추후 확장은 계약 변경",
+        "example": "youtube",
+        "options": [
+          "youtube"
+        ]
+      },
+      {
+        "name": "platform_video_id",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "플랫폼의 영상 고유 ID",
+        "example": "검수된 11자리 YouTube ID"
+      },
+      {
+        "name": "source_account_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "업로드 계정. external_accounts.id",
+        "example": "20",
+        "reference": "external_accounts"
+      },
+      {
+        "name": "title",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "확인한 영상 제목",
+        "example": "라이브 아카이브 제목"
+      },
+      {
+        "name": "published_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "영상 공개/업로드 시각. 실제 방송 시각과 다를 수 있음",
+        "example": "2026-09-20T10:00:00Z"
+      },
+      {
+        "name": "duration_seconds",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "영상 전체 길이(초). 모르면 0 대신 NULL",
+        "example": "7200"
+      },
+      {
+        "name": "availability",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "public, unlisted, private, deleted, unknown 제안값",
+        "example": "public",
+        "default": "unknown",
+        "options": [
+          "public",
+          "unlisted",
+          "private",
+          "deleted",
+          "unknown"
+        ]
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "live_archives": {
+    "name": "live_archives",
+    "title": "라이브 방송",
+    "fields": [
+      {
+        "name": "video_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "videos.id. 한 영상에 라이브 행 하나",
+        "example": "100",
+        "reference": "videos"
+      },
+      {
+        "name": "primary_artist_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "화면에 대표로 보여줄 artists.id. 단독 가창자를 뜻하지 않음",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "broadcast_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "확인된 실제 방송 시각. 업로드 시각 자동 복사 금지",
+        "example": "2026-09-20T18:00:00+09:00"
+      },
+      {
+        "name": "setlist_state",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "unprocessed(미정리), partial(일부), complete(완료), unavailable(확보 불가)",
+        "example": "partial",
+        "default": "unprocessed",
+        "options": [
+          "unprocessed",
+          "partial",
+          "complete",
+          "unavailable"
+        ]
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "archive_artists": {
+    "name": "archive_artists",
+    "title": "방송 참여자",
+    "fields": [
+      {
+        "name": "archive_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "live_archives.id",
+        "example": "200",
+        "reference": "live_archives"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "host(진행), guest(게스트). 불명확하면 관계 승인을 보류",
+        "example": "host",
+        "options": [
+          "host",
+          "guest"
+        ]
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "출연진 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "source_documents": {
+    "name": "source_documents",
+    "title": "원문·출처 스냅샷",
+    "fields": [
+      {
+        "name": "source_kind",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "youtube_comment, video_description, announcement, official_page, manual_note 제안값",
+        "example": "youtube_comment",
+        "options": [
+          "youtube_comment",
+          "video_description",
+          "announcement",
+          "official_page",
+          "manual_note"
+        ]
+      },
+      {
+        "name": "source_url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "원문 주소. 외부 원문이 없으면 비움",
+        "example": "https://example.com/source"
+      },
+      {
+        "name": "external_id",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "댓글/게시글 등 외부 식별자. 수정본도 같은 ID일 수 있음",
+        "example": "외부 댓글 ID"
+      },
+      {
+        "name": "captured_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "실제로 원문을 확보한 시각. 모르면 현재 시각으로 꾸미지 않음",
+        "example": "2026-09-19T02:00:00Z"
+      },
+      {
+        "name": "content_text",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "댓글·설명·공지 원문",
+        "example": "15:30 곡명 / 원곡자"
+      },
+      {
+        "name": "source_metadata",
+        "type": "JSONB",
+        "nullable": false,
+        "description": "승인에 필요한 원본 메타데이터·추출 출처. 비밀·계정 토큰 제외",
+        "example": "영상 ID 및 확인한 공식 출처",
+        "default": {}
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "archive_sources": {
+    "name": "archive_sources",
+    "title": "라이브의 근거 문서 연결",
+    "fields": [
+      {
+        "name": "archive_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "live_archives.id",
+        "example": "200",
+        "reference": "live_archives"
+      },
+      {
+        "name": "document_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "source_documents.id",
+        "example": "300",
+        "reference": "source_documents"
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "setlist_evidence(세트리스트 근거), metadata_evidence(방송 정보 근거)",
+        "example": "setlist_evidence",
+        "options": [
+          "setlist_evidence",
+          "metadata_evidence"
+        ]
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "performances": {
+    "name": "performances",
+    "title": "세트리스트의 가창 한 건",
+    "fields": [
+      {
+        "name": "archive_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "live_archives.id",
+        "example": "200",
+        "reference": "live_archives"
+      },
+      {
+        "name": "ordinal",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "방송 안 세트리스트 순번. 1부터 시작",
+        "example": "3"
+      },
+      {
+        "name": "song_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "songs.id. 검수된 미매칭 상태는 허용",
+        "example": "301",
+        "reference": "songs"
+      },
+      {
+        "name": "start_seconds",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "영상 시작부터 노래 시작까지 초. 근거 없는 0 입력 금지",
+        "example": "930"
+      },
+      {
+        "name": "end_seconds",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "노래 종료 시점(초)",
+        "example": "1170"
+      },
+      {
+        "name": "raw_title",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "입력 원문에서의 곡명. 정규 곡명으로 덮어쓰지 않음",
+        "example": "수집 당시 곡명"
+      },
+      {
+        "name": "raw_artist",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "원문의 원곡 아티스트 표기",
+        "example": "수집 당시 원곡자"
+      },
+      {
+        "name": "raw_timestamp",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "원문 시각 문자열. 수동 등록이면 생략 가능",
+        "example": "15:30"
+      },
+      {
+        "name": "source_document_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "이 행의 근거. source_documents.id",
+        "example": "300",
+        "reference": "source_documents"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "performance_artists": {
+    "name": "performance_artists",
+    "title": "실제 가창자 연결",
+    "fields": [
+      {
+        "name": "performance_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "performances.id",
+        "example": "400",
+        "reference": "performances"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "lead(주 가창), guest(함께 부른 게스트)",
+        "example": "lead",
+        "options": [
+          "lead",
+          "guest"
+        ]
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "가창자 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "concerts": {
+    "name": "concerts",
+    "title": "공연 마스터",
+    "fields": [
+      {
+        "name": "title",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "공연 공식 타이틀",
+        "example": "예시 ONE-MAN LIVE"
+      },
+      {
+        "name": "event_format",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "onsite(현장), online(온라인), hybrid(병행)",
+        "example": "onsite",
+        "options": [
+          "onsite",
+          "online",
+          "hybrid"
+        ]
+      },
+      {
+        "name": "event_date",
+        "type": "DATE",
+        "nullable": true,
+        "description": "공연 기준 시간대의 현지 날짜. 날짜 미정이면 비움",
+        "example": "2026-09-20"
+      },
+      {
+        "name": "starts_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "확인된 실제 시작 시각. 시간 미정이면 00:00 대신 NULL",
+        "example": "2026-09-20T18:00:00+09:00"
+      },
+      {
+        "name": "ends_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "확인된 종료 시각",
+        "example": "NULL"
+      },
+      {
+        "name": "timezone_name",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "IANA 시간대 이름. 정확한 시작 시각이 있으면 필수",
+        "example": "Asia/Tokyo"
+      },
+      {
+        "name": "time_precision",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "unknown(날짜 미정), date(날짜만), datetime(시각까지)",
+        "example": "date",
+        "default": "unknown",
+        "options": [
+          "unknown",
+          "date",
+          "datetime"
+        ]
+      },
+      {
+        "name": "city",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "개최 도시. 온라인이거나 미확인이면 비움",
+        "example": "도쿄"
+      },
+      {
+        "name": "venue",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "공연장 이름. 미확인 장소를 만들어 넣지 않음",
+        "example": "예시 홀"
+      },
+      {
+        "name": "status",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "scheduled, postponed, cancelled, completed 중 검수한 상태",
+        "example": "scheduled",
+        "options": [
+          "scheduled",
+          "postponed",
+          "cancelled",
+          "completed"
+        ]
+      },
+      {
+        "name": "source_document_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "기준 공지의 source_documents.id",
+        "example": "310",
+        "reference": "source_documents"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "concert_artists": {
+    "name": "concert_artists",
+    "title": "공연 출연진",
+    "fields": [
+      {
+        "name": "concert_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "concerts.id",
+        "example": "500",
+        "reference": "concerts"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "출연진 표시 순서. 첫 출연자를 대표 이름·색상으로 사용",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "concert_ticket_windows": {
+    "name": "concert_ticket_windows",
+    "title": "티켓 판매 구간",
+    "fields": [
+      {
+        "name": "concert_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "concerts.id",
+        "example": "500",
+        "reference": "concerts"
+      },
+      {
+        "name": "label",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "판매 구간 이름",
+        "example": "일반 예매"
+      },
+      {
+        "name": "opens_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "정확한 예매 시작 시각",
+        "example": "2026-08-01T12:00:00+09:00"
+      },
+      {
+        "name": "closes_at",
+        "type": "TIMESTAMPTZ",
+        "nullable": true,
+        "description": "정확한 예매 종료 시각",
+        "example": "2026-09-19T23:59:00+09:00"
+      },
+      {
+        "name": "url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "공식 예매/안내 주소",
+        "example": "https://example.com/tickets"
+      },
+      {
+        "name": "price_text",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "통화·좌석별 조건을 포함한 안내 문구",
+        "example": "지정석 9,800엔"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "albums": {
+    "name": "albums",
+    "title": "발매 앨범",
+    "fields": [
+      {
+        "name": "title_native",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "원어 앨범명",
+        "example": "예시 앨범"
+      },
+      {
+        "name": "title_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "한국어 앨범명",
+        "example": "NULL"
+      },
+      {
+        "name": "album_type",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "single, ep, album, compilation, other 제안값. 외부 플랫폼 값을 검수하여 분류",
+        "example": "album",
+        "options": [
+          "single",
+          "ep",
+          "album",
+          "compilation",
+          "other"
+        ]
+      },
+      {
+        "name": "release_year",
+        "type": "SMALLINT",
+        "nullable": true,
+        "description": "확인한 발매 연도",
+        "example": "2026"
+      },
+      {
+        "name": "release_month",
+        "type": "SMALLINT",
+        "nullable": true,
+        "description": "확인한 발매 월. 월이 있으면 연도도 필수",
+        "example": "9"
+      },
+      {
+        "name": "release_day",
+        "type": "SMALLINT",
+        "nullable": true,
+        "description": "확인한 발매 일. 일이 있으면 연/월도 필수",
+        "example": "20"
+      },
+      {
+        "name": "cover_image_url",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "앨범 자켓 이미지 주소",
+        "example": "https://example.com/album.jpg"
+      },
+      {
+        "name": "spotify_album_id",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "Spotify 앨범 식별자",
+        "example": "검수한 외부 앨범 ID"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "album_artists": {
+    "name": "album_artists",
+    "title": "앨범 발매 명의",
+    "fields": [
+      {
+        "name": "album_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "albums.id",
+        "example": "600",
+        "reference": "albums"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "공식 발매 명의 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "recordings": {
+    "name": "recordings",
+    "title": "녹음·음원 버전",
+    "fields": [
+      {
+        "name": "song_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "공통 작품 songs.id. 미확정이면 비움",
+        "example": "301",
+        "reference": "songs"
+      },
+      {
+        "name": "title_native",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "발매 음원 원어 제목. 작품 제목과 버전 표기가 다를 수 있음",
+        "example": "예시 곡 (Live)"
+      },
+      {
+        "name": "title_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "검수한 한국어 음원 제목",
+        "example": "NULL"
+      },
+      {
+        "name": "version_label",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "버전 설명. 없다고 원본 버전으로 단정하지 않음",
+        "example": "Live version"
+      },
+      {
+        "name": "duration_ms",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "재생 길이(밀리초)",
+        "example": "215000"
+      },
+      {
+        "name": "official_video_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "대표 공식 MV의 videos.id",
+        "example": "101",
+        "reference": "videos"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "recording_artists": {
+    "name": "recording_artists",
+    "title": "음원 가창자",
+    "fields": [
+      {
+        "name": "recording_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "recordings.id",
+        "example": "700",
+        "reference": "recordings"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "primary(주 가창), featured(피처링)",
+        "example": "primary",
+        "options": [
+          "primary",
+          "featured"
+        ]
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "가창 명의 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "recording_external_ids": {
+    "name": "recording_external_ids",
+    "title": "음원 외부 ID",
+    "fields": [
+      {
+        "name": "recording_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "recordings.id",
+        "example": "700",
+        "reference": "recordings"
+      },
+      {
+        "name": "platform",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "1차 spotify. 추가 플랫폼은 허용 목록 확장",
+        "example": "spotify",
+        "options": [
+          "spotify"
+        ]
+      },
+      {
+        "name": "external_id",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "플랫폼의 트랙 고유 ID",
+        "example": "검수한 Spotify 트랙 ID"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "album_tracks": {
+    "name": "album_tracks",
+    "title": "앨범 내 수록 위치",
+    "fields": [
+      {
+        "name": "album_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "albums.id",
+        "example": "600",
+        "reference": "albums"
+      },
+      {
+        "name": "recording_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "recordings.id",
+        "example": "700",
+        "reference": "recordings"
+      },
+      {
+        "name": "disc_number",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "디스크 번호",
+        "example": "1",
+        "default": 1
+      },
+      {
+        "name": "track_number",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "디스크 안의 트랙 번호",
+        "example": "3"
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  },
+  "recording_lyrics": {
+    "name": "recording_lyrics",
+    "title": "버전별 가사",
+    "fields": [
+      {
+        "name": "recording_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "recordings.id. 녹음당 가사 묶음 최대 하나",
+        "example": "700",
+        "reference": "recordings"
+      },
+      {
+        "name": "original_lyrics",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "검수한 원문 가사. 줄바꿈 보존",
+        "example": "설명용 가사 자리"
+      },
+      {
+        "name": "translation_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "한국어 번역",
+        "example": "NULL"
+      },
+      {
+        "name": "pronunciation_ko",
+        "type": "TEXT",
+        "nullable": true,
+        "description": "한국어 독음",
+        "example": "NULL"
+      },
+      {
+        "name": "source_document_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "확인 근거 source_documents.id",
+        "example": "320",
+        "reference": "source_documents"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "covers": {
+    "name": "covers",
+    "title": "공식 커버 영상",
+    "fields": [
+      {
+        "name": "video_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "videos.id. 영상당 커버 분류 한 건",
+        "example": "102",
+        "reference": "videos"
+      },
+      {
+        "name": "song_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "description": "커버한 작품 songs.id",
+        "example": "302",
+        "reference": "songs"
+      }
+    ],
+    "versioned": true,
+    "archivable": true
+  },
+  "cover_artists": {
+    "name": "cover_artists",
+    "title": "커버 참여자",
+    "fields": [
+      {
+        "name": "cover_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "covers.id",
+        "example": "800",
+        "reference": "covers"
+      },
+      {
+        "name": "artist_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "artists.id",
+        "example": "1",
+        "reference": "artists"
+      },
+      {
+        "name": "role",
+        "type": "TEXT",
+        "nullable": false,
+        "description": "vocal(가창 명의), featured(피처링)",
+        "example": "vocal",
+        "options": [
+          "vocal",
+          "featured"
+        ]
+      },
+      {
+        "name": "position",
+        "type": "INTEGER",
+        "nullable": false,
+        "description": "참여자 표시 순서",
+        "example": "0",
+        "default": 0
+      }
+    ],
+    "versioned": false,
+    "archivable": false
+  }
+}

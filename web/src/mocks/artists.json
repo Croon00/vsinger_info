@@ -1,0 +1,266 @@
+[
+  {
+    "id": 1,
+    "name": "HACHI",
+    "display_name": "하치",
+    "roman": "HACHI",
+    "agency": "RK Music",
+    "image": "/images/artists/1.png",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/07/【アー写（宣材画像）】HACHI_新KV_仕上げ72dpi-640x640.png",
+    "official_url": "https://rkmusic.jp/artist/227/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/227/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@HACHIVSinger"
+      }
+    ],
+    "birthday": "01-16"
+  },
+  {
+    "id": 2,
+    "name": "花譜",
+    "display_name": "카후",
+    "roman": "KAF",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/2.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2020/09/KAF_ArtistVisual_OWL.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/kaf/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/kaf/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@virtual_kaf"
+      },
+      {
+        "label": "X",
+        "url": "https://twitter.com/virtual_kaf"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 3,
+    "name": "瀬戸乃 とと",
+    "display_name": "세토노 토토",
+    "roman": "SETONO TOTO",
+    "agency": "RK Music",
+    "image": "/images/artists/3.png",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/07/【宣材画像（正方形）】瀬戸乃とと-640x640.png",
+    "official_url": "https://rkmusic.jp/artist/219/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/219/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@Setono_Toto"
+      }
+    ],
+    "birthday": "10-10"
+  },
+  {
+    "id": 4,
+    "name": "理芽",
+    "display_name": "리메",
+    "roman": "RIM",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/4.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2020/09/KT_HP_1280x600.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/rim/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/rim/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/c/RIM_virtual"
+      },
+      {
+        "label": "X",
+        "url": "https://twitter.com/RIM_virtual"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 5,
+    "name": "VESPERBELL",
+    "display_name": "베스퍼벨",
+    "roman": "VESPERBELL",
+    "agency": "RK Music",
+    "image": "/images/artists/5.png",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/07/KV_正方形案-640x640.png",
+    "official_url": "https://rkmusic.jp/artist/286/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/286/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@VESPERBELL"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 6,
+    "name": "ヰ世界情緒",
+    "display_name": "이세계정서",
+    "roman": "ISEKAIJOUCHO",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/6.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2020/09/221b6b4b1d9a1b1fb454b25cc05e2b1e-scaled.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/isekaijoucho/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/isekaijoucho/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/channel/UCah4_WVjmr8XA7i5aigwV-Q"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 7,
+    "name": "焔魔 るり",
+    "display_name": "엔마 루리",
+    "roman": "ENMA RURI",
+    "agency": "RK Music",
+    "image": "/images/artists/7.jpg",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/03/【アー写潜在画像スクエア】焔魔るり_新キービジュアル-640x640.jpg",
+    "official_url": "https://rkmusic.jp/artist/19/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/19/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@EnmaRuri"
+      }
+    ],
+    "birthday": "09-03"
+  },
+  {
+    "id": 8,
+    "name": "春猿火",
+    "display_name": "하루사루히",
+    "roman": "HARUSARUHI",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/8.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2020/09/fe35d64309b0bbf11ee8c2ff6d1e19ce.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/harusaruhi/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/harusaruhi/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/channel/UCE7gtjLeZKNXLp5YURzYYeg"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 9,
+    "name": "水瀬 凪",
+    "display_name": "미나세 나기",
+    "roman": "MINASE NAGI",
+    "agency": "RK Music",
+    "image": "/images/artists/9.png",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/07/水瀬-凪_kv_スクエア_高画質-640x640.png",
+    "official_url": "https://rkmusic.jp/artist/223/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/223/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@MinaseNagi"
+      }
+    ],
+    "birthday": "06-14"
+  },
+  {
+    "id": 10,
+    "name": "幸祜",
+    "display_name": "코코",
+    "roman": "KOKO",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/10.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2020/10/KOKO_Visual_2026_1280.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/koko/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/koko/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/channel/UC7Gow-kNHq21oejSIDg9PAg"
+      },
+      {
+        "label": "X",
+        "url": "https://twitter.com/KOKO__virtual"
+      }
+    ],
+    "birthday": null
+  },
+  {
+    "id": 11,
+    "name": "KMNZ",
+    "display_name": "케모노즈",
+    "roman": "KMNZ",
+    "agency": "RK Music",
+    "image": "/images/artists/11.png",
+    "image_source": "https://rkmusic.jp/wp/wp-content/uploads/2026/07/KMNZ_アー写KV（正方形）-640x640.png",
+    "official_url": "https://rkmusic.jp/artist/316/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://rkmusic.jp/artist/316/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@KMNZOFFICIAL"
+      }
+    ],
+    "birthday": "01-11"
+  },
+  {
+    "id": 12,
+    "name": "明透",
+    "display_name": "아스",
+    "roman": "ASU",
+    "agency": "KAMITSUBAKI STUDIO",
+    "image": "/images/artists/12.jpg",
+    "image_source": "https://kamitsubaki.jp/wp-content/uploads/2023/06/1280x600.jpg",
+    "official_url": "https://kamitsubaki.jp/artist/asu/",
+    "links": [
+      {
+        "label": "공식 사이트",
+        "url": "https://kamitsubaki.jp/artist/asu/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/channel/UCBLGjbYv6-xxju1i44RjnnA"
+      }
+    ],
+    "birthday": null
+  }
+]

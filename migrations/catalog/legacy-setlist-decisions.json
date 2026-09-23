@@ -1,0 +1,35 @@
+{
+  "source_dump_sha256": "0a059e007616e99cfe02d1980ab70aeb8b755084e92dc020b448483ef0c56b27",
+  "decisions": {
+    "xF44iE-Sok0": {
+      "action": "select_archive",
+      "legacy_archive_id": 4136,
+      "expected_performances": 10,
+      "reason": "User selected the 10-song version and rejected the distinct one-song version."
+    },
+    "tR4jmnavtDk": {
+      "action": "exclude",
+      "reason": "User confirmed this is not a live archive."
+    },
+    "cyRZGtNx_a4": {
+      "action": "exclude",
+      "reason": "User requested removal from the live archive migration; rows describe view milestones."
+    },
+    "FHoFxjx8QGU": {
+      "action": "replace_setlist",
+      "legacy_archive_id": 959,
+      "verified_video_duration_seconds": 4499,
+      "reason": "User supplied an eight-song list and corrected the sixth start time to 00:51:31 after the official YouTube duration check.",
+      "performances": [
+        {"start_seconds": 738, "raw_timestamp": "00:12:18", "raw_title": "地球最後の告白を", "raw_artist": "kemu"},
+        {"start_seconds": 1014, "raw_timestamp": "00:16:54", "raw_title": "ワールズエンド・ダンスホール", "raw_artist": "wowaka"},
+        {"start_seconds": 2188, "raw_timestamp": "00:36:28", "raw_title": "G4L", "raw_artist": "Giga"},
+        {"start_seconds": 2455, "raw_timestamp": "00:40:55", "raw_title": "泡沫の夜", "raw_artist": "nqrse"},
+        {"start_seconds": 2793, "raw_timestamp": "00:46:33", "raw_title": "ヤミタイガール", "raw_artist": "れるりり"},
+        {"start_seconds": 3091, "raw_timestamp": "00:51:31", "raw_title": "神っぽいな", "raw_artist": "ピノキオピー"},
+        {"start_seconds": 3961, "raw_timestamp": "01:06:01", "raw_title": "好きすぎて滅！", "raw_artist": "M!LK"},
+        {"start_seconds": 4232, "raw_timestamp": "01:10:32", "raw_title": "好きすぎて滅！", "raw_artist": "M!LK"}
+      ]
+    }
+  }
+}

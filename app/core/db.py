@@ -130,10 +130,8 @@ RIOT_MUSIC_SYSTEM_USER_ID = "system:riotmusic"
 
 
 def get_connection() -> Connection:
-    """환경변수 DATABASE_URL로 PostgreSQL 연결을 만들고 row를 dict 형태로 반환합니다."""
-    if not settings.database_url:
-        raise RuntimeError("DATABASE_URL is required for database-backed routes.")
-    return psycopg.connect(settings.database_url, row_factory=dict_row)
+    """Legacy SQL is preserved for reference, never connected by normal runtime."""
+    raise RuntimeError("Legacy SQL access is disabled; use the guarded unified DB repositories")
 
 
 def _seed_rkmusic_x_sources(conn: Connection) -> None:
@@ -243,6 +241,18 @@ def _seed_artist_x_sources(
 def init_db() -> None:
     """앱 실행에 필요한 PostgreSQL 테이블과 기존 DB의 누락 컬럼을 준비합니다."""
     with get_connection() as conn:
+        managed = conn.execute(
+            """
+            SELECT to_regclass('public.catalog_instance') IS NOT NULL
+               AND to_regclass('public.catalog_schema_migrations') IS NOT NULL
+               AS managed
+            """
+        ).fetchone()["managed"]
+        if managed:
+            raise RuntimeError(
+                "Legacy init_db is blocked for the managed unified database. "
+                "Use scripts/migrate_catalog.py explicitly."
+            )
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS artists (

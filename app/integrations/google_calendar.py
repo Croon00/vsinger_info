@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 
 import httpx
 
-from app.core.config import settings
+from app.legacy.config import settings
 from app.repositories.google_oauth_tokens import calendar_recipients, get_token, save_token
 
 
