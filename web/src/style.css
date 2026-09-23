@@ -392,7 +392,7 @@ a:focus-visible {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   column-gap: 24px;
-  row-gap: 40px;
+  row-gap: 16px;
 }
 .loading-grid {
   width: 100%;
@@ -1306,7 +1306,7 @@ a:focus-visible {
   }
   .artist-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 32px 24px;
+    gap: 18px 24px;
   }
   .viewer-layout {
     grid-template-columns: minmax(0, 1fr) 280px;
@@ -1406,7 +1406,7 @@ a:focus-visible {
   }
   .artist-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px 12px;
+    gap: 16px 14px;
   }
   .artist-grid .artist-tile-caption {
     flex-wrap: nowrap;

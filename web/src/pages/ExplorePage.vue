@@ -35,8 +35,8 @@ const agencies = computed(() =>
   [...new Set((data.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
 )
 const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
+const favoritesForSort = new Set(favoriteIds.value)
 const filtered = computed(() => {
-  const favorites = new Set(favoriteIds.value)
   return (data.value ?? [])
     .filter(
       (a) =>
@@ -47,7 +47,7 @@ const filtered = computed(() => {
     )
     .sort(
       (a, b) =>
-        Number(favorites.has(b.id)) - Number(favorites.has(a.id)) ||
+        Number(favoritesForSort.has(b.id)) - Number(favoritesForSort.has(a.id)) ||
         nameCollator.compare(a.roman || a.name, b.roman || b.name) ||
         a.id - b.id,
     )
