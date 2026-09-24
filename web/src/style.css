@@ -139,6 +139,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 body {
   margin: 0;
@@ -357,11 +358,6 @@ a:focus-visible {
   font-size: 11px;
 }
 
-@media (min-width: 769px) {
-  html:has(.explore-toolbar) {
-    scrollbar-gutter: stable;
-  }
-}
 .explore-toolbar {
   display: grid;
   grid-template-columns: minmax(160px, 1fr) minmax(0, 364px);

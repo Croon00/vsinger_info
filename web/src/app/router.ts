@@ -1,7 +1,9 @@
+import { ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/pages/HomePage.vue'
 const positions = new Map<string, number>()
 const key = (path: string) => path.replace(/([?&])(event|lyrics)=\d+/g, '').replace(/[?&]$/, '')
+export const pendingExploreScroll = ref<number | null>(null)
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -16,7 +18,13 @@ export const router = createRouter({
   ],
   scrollBehavior(to, from, saved) {
     if (to.path === from.path) return false
-    return saved ?? { top: positions.get(key(to.fullPath)) ?? 0 }
+    const position = saved ?? { top: positions.get(key(to.fullPath)) ?? 0 }
+    if (to.path === '/explore' && position.top > 0) {
+      pendingExploreScroll.value = position.top
+      return false
+    }
+    pendingExploreScroll.value = null
+    return { ...position, behavior: 'instant' }
   },
 })
 router.beforeEach((to, from) => {

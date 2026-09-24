@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMediaQuery } from '@vueuse/core'
+import { ConfigProvider } from 'reka-ui'
 import { AudioLines, House, Compass, CalendarDays, Settings2, Heart } from '@lucide/vue'
 import {
   Sidebar,
@@ -37,6 +38,7 @@ const active = computed(() =>
 const activeIndex = computed(() => nav.findIndex((item) => item.href === active.value))
 </script>
 <template>
+  <ConfigProvider :scroll-body="false">
   <a href="#main-content" class="skip-link">본문으로 이동</a>
   <SidebarProvider :open="wide" style="--sidebar-width: 232px; --sidebar-width-icon: 80px">
     <Sidebar v-if="!mobile" collapsible="icon">
@@ -113,4 +115,5 @@ const activeIndex = computed(() => nav.findIndex((item) => item.href === active.
     </div>
     <ContentOverlay />
   </SidebarProvider>
+  </ConfigProvider>
 </template>

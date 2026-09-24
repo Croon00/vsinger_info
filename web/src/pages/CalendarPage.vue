@@ -281,10 +281,16 @@ async function animateMonth(from: number, to: number, durationToken = '--duratio
   const surface = monthSurface.value
   if (!surface || reducedMotion.value) return
   const style = getComputedStyle(surface)
+  const rawDuration = style.getPropertyValue(durationToken).trim()
+  const durationMs = rawDuration.endsWith('ms')
+    ? Number(rawDuration.slice(0, -2))
+    : rawDuration.endsWith('s')
+      ? Number(rawDuration.slice(0, -1)) * 1000
+      : NaN
   swipeAnimation = surface.animate(
     [{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }],
     {
-      duration: parseFloat(style.getPropertyValue(durationToken)) || 250,
+      duration: Number.isFinite(durationMs) ? durationMs : 250,
       easing: style.getPropertyValue('--ease-smooth-out').trim() || 'ease-out',
       fill: 'forwards',
     },

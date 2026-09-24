@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { pendingExploreScroll } from '@/app/router'
 import { Search, X } from '@lucide/vue'
 import { InputGroup, InputGroupInput, InputGroupAddon } from '@/components/ui/input-group'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,27 @@ const router = useRouter()
 const query = ref(String(route.query.q ?? ''))
 const agency = ref('all')
 const { data, loading, error, reload } = useResource(api.artists)
+watch(
+  [loading, pendingExploreScroll],
+  ([isLoading, top], _, onCleanup) => {
+    if (isLoading || top === null) return
+    let frame = 0
+    let cancelled = false
+    onCleanup(() => {
+      cancelled = true
+      cancelAnimationFrame(frame)
+    })
+    nextTick(() => {
+      if (cancelled) return
+      frame = requestAnimationFrame(() => {
+        if (cancelled || pendingExploreScroll.value !== top) return
+        window.scrollTo({ top, behavior: 'instant' })
+        pendingExploreScroll.value = null
+      })
+    })
+  },
+  { flush: 'post', immediate: true },
+)
 watch(query, (q) => router.replace({ query: { ...route.query, q: q || undefined } }))
 watch(
   () => route.query.q,
@@ -63,7 +85,7 @@ const filtered = computed(() => {
         <SelectTrigger aria-label="소속사 필터" class="explore-filter">
           <SelectValue placeholder="소속사 전체" />
         </SelectTrigger>
-        <SelectContent :body-lock="false">
+        <SelectContent>
           <SelectGroup>
             <SelectItem value="all">소속사 전체</SelectItem>
             <SelectItem v-for="name in agencies" :key="name" :value="name">
