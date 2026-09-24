@@ -382,6 +382,80 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await expect(page.locator('.month-grid')).toBeVisible()
 })
 
+test('translated calendar view control keeps toggling without runtime errors', async ({
+  page,
+  isMobile,
+}) => {
+  const errors: string[] = []
+  page.on('pageerror', (error) => errors.push(error.message))
+  await visit(page, '/calendar?month=2026-09-01')
+  await expect(page.locator('.month-grid')).toBeVisible()
+  const viewControl = page.getByRole('button', {
+    name: isMobile ? '리스트' : '리스트 보기',
+    exact: true,
+  })
+  await viewControl.evaluate((button) => {
+    const label = button.querySelector('span:last-child')!
+    const text = label.firstChild!
+    const outer = document.createElement('font')
+    const inner = document.createElement('font')
+    inner.textContent = text.textContent
+    outer.append(inner)
+    text.replaceWith(outer)
+  })
+  await viewControl.click()
+  await expect(page.locator('.calendar-list-view')).toBeVisible()
+  await page.getByRole('button', { name: isMobile ? '캘린더' : '캘린더 보기', exact: true }).click()
+  await expect(page.locator('.month-grid')).toBeVisible()
+  expect(errors).toEqual([])
+})
+
+test('translated mobile controls keep horizontal overflow inside their control rows', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 844 })
+  await visit(page, '/artists/1')
+  await expect(page.getByRole('tab')).toHaveCount(4)
+  await page.getByRole('tab').evaluateAll((tabs) => {
+    const labels = ['Live broadcasts', 'Statistics', 'Original songs', 'Concert information']
+    tabs.forEach((tab, index) => {
+      const text = [...tab.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+      )
+      if (!text) return
+      const outer = document.createElement('font')
+      const inner = document.createElement('font')
+      inner.textContent = labels[index]
+      outer.append(inner)
+      text.replaceWith(outer)
+    })
+  })
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
+    .toBeLessThanOrEqual(320)
+
+  await visit(page, '/calendar?month=2026-09-01')
+  await expect(page.locator('.month-grid')).toBeVisible()
+  await page.locator('.calendar-view-controls button').evaluateAll((buttons) => {
+    const labels = ['Favorite artists', 'All artists', 'List view']
+    buttons.forEach((button, index) => {
+      const target = button.querySelector('span:last-child') ?? button
+      const text = [...target.childNodes].find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim(),
+      )
+      if (!text) return
+      const outer = document.createElement('font')
+      const inner = document.createElement('font')
+      inner.textContent = labels[index]
+      outer.append(inner)
+      text.replaceWith(outer)
+    })
+  })
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
+    .toBeLessThanOrEqual(320)
+})
+
 test('calendar month buttons respect reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await visit(page, '/calendar?month=2026-09-01')

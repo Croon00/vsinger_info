@@ -401,8 +401,12 @@ async function openEvent(event: CalendarEvent) {
           </ToggleGroupItem>
         </ToggleGroup>
         <Button variant="outline" :aria-pressed="listView" @click="listView = !listView">
-          <component :is="listView ? CalendarIcon : List" data-icon="inline-start" />
-          {{ listView ? (mobile ? '캘린더' : '캘린더 보기') : mobile ? '리스트' : '리스트 보기' }}
+          <span class="contents" aria-hidden="true">
+            <component :is="listView ? CalendarIcon : List" data-icon="inline-start" />
+          </span>
+          <span>
+            {{ listView ? (mobile ? '캘린더' : '캘린더 보기') : mobile ? '리스트' : '리스트 보기' }}
+          </span>
         </Button>
       </div>
     </div>

@@ -601,6 +601,10 @@ a:focus-visible {
   }
 }
 @media (max-width: 768px) {
+  .artist-tabs > [data-slot='tabs-list'] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
   .artist-tabs > [data-slot='tabs-list'] [data-slot='tabs-trigger'] {
     padding-inline: 8px;
   }
@@ -2151,7 +2155,7 @@ a:focus-visible {
 @media (max-width: 768px) {
   .calendar-page .calendar-page-heading { margin-inline: 12px; flex-wrap: nowrap; gap: 8px; }
   .calendar-page .calendar-page-heading h1 { width: auto; flex-shrink: 0; }
-  .calendar-page .calendar-view-controls { width: auto; margin-left: auto; gap: 6px; }
+  .calendar-page .calendar-view-controls { width: auto; min-width: 0; max-width: 100%; margin-left: auto; gap: 6px; overflow-x: auto; }
   .calendar-page .calendar-view-controls button { height: 30px; min-width: 0; padding-inline: 8px; font-size: 11px; gap: 4px; }
   .calendar-page .calendar-toolbar [data-slot='calendar-heading'] { font-size: 18px; }
   .calendar-page .calendar-options button,
