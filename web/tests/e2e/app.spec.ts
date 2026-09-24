@@ -336,7 +336,9 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   const nextMonth = page.getByRole('button', { name: '다음 달', exact: true })
   const heading = page.locator('.calendar-toolbar [data-slot="calendar-heading"]')
   const [previousBox, headingBox, nextBox] = await Promise.all([
-    previousMonth.boundingBox(), heading.boundingBox(), nextMonth.boundingBox(),
+    previousMonth.boundingBox(),
+    heading.boundingBox(),
+    nextMonth.boundingBox(),
   ])
   expect(previousBox!.x + previousBox!.width).toBeLessThan(headingBox!.x)
   expect(nextBox!.x).toBeGreaterThan(headingBox!.x + headingBox!.width)
@@ -396,13 +398,68 @@ test('calendar month buttons respect reduced motion', async ({ page }) => {
 test('birthday list subtitle and artist back return to calendar', async ({ page, isMobile }) => {
   await visit(page, '/calendar?month=2026-01-01')
   await page.getByRole('button', { name: isMobile ? '리스트' : '리스트 보기', exact: true }).click()
-  const birthday = page.locator('.calendar-list-view .month-event').filter({ hasText: 'HACHI 생일' })
+  const birthday = page
+    .locator('.calendar-list-view .month-event')
+    .filter({ hasText: 'HACHI 생일' })
   await expect(birthday.locator('.entry-title')).toHaveText('HACHI 생일')
   await expect(birthday.locator('.entry-place')).toHaveText('하치 생일')
   await birthday.click()
   await expect(page).toHaveURL('/artists/1')
   await page.getByRole('button', { name: '뒤로가기' }).click()
   await expect(page).toHaveURL('/calendar?month=2026-01-01')
+})
+
+test('calendar view persists and mobile grid and list keep their layout', async ({
+  page,
+  isMobile,
+}) => {
+  const currentMonth = await page.evaluate(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+  })
+  await visit(page, `/calendar?month=${currentMonth}`)
+  const today = page.locator('.month-cell[data-today]:not([data-outside])')
+  await expect(today).toHaveCount(1)
+  const backgrounds = await page.evaluate(() => {
+    const todayCell = document.querySelector<HTMLElement>('.month-cell[data-today]')!
+    const otherCell = document.querySelector<HTMLElement>('.month-cell:not([data-today])')!
+    return [
+      getComputedStyle(todayCell).backgroundColor,
+      getComputedStyle(otherCell).backgroundColor,
+    ]
+  })
+  expect(backgrounds[0]).not.toBe(backgrounds[1])
+
+  await visit(page, '/calendar?month=2026-09-01')
+  if (isMobile) {
+    const lastCell = page.locator('.month-grid tbody tr:last-child .month-cell').first()
+    await expect(lastCell).toHaveCSS('border-bottom-style', 'solid')
+    await expect(page.locator('.mobile-event-label').first()).toBeVisible()
+    await expect(page.locator('.mobile-event-label svg')).toHaveCount(0)
+  }
+
+  await page.getByRole('button', { name: isMobile ? '리스트' : '리스트 보기', exact: true }).click()
+  await expect(page.locator('.calendar-list-view')).toBeVisible()
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.locator('.calendar-list-view')).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: isMobile ? '캘린더' : '캘린더 보기', exact: true }),
+  ).toBeVisible()
+
+  if (isMobile) {
+    const entry = page.locator('.calendar-list-view .schedule-entry').first()
+    await expect(entry).toBeVisible()
+    const avatar = await entry.locator('.artist-avatar').boundingBox()
+    const copy = await entry.locator('.entry-copy').boundingBox()
+    const row = await entry.boundingBox()
+    expect(avatar).not.toBeNull()
+    expect(copy).not.toBeNull()
+    expect(row).not.toBeNull()
+    expect(avatar!.height).toBe(64)
+    expect(copy!.height).toBeLessThanOrEqual(avatar!.height)
+    expect(avatar!.y).toBeGreaterThanOrEqual(row!.y + 11)
+    expect(avatar!.y + avatar!.height).toBeLessThanOrEqual(row!.y + row!.height - 11)
+  }
 })
 
 test('system theme follows the device and explicit preference survives reload', async ({

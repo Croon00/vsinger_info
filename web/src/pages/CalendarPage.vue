@@ -42,7 +42,7 @@ import { capabilities } from '@/api/config'
 import { api } from '@/api/client'
 import type { CalendarEvent, Concert } from '@/api/types'
 import { useResource } from '@/composables/useResource'
-import { favoriteIds, calendarScope } from '@/composables/preferences'
+import { favoriteIds, calendarScope, calendarView } from '@/composables/preferences'
 import { calendarEvents, dateKey, formatDate, monthKey, todayKey, changeMonth } from '@/lib/dates'
 import { openOverlay } from '@/lib/overlays'
 import ResourceState from '@/components/ResourceState.vue'
@@ -107,7 +107,12 @@ function visibleEventCount(date: string) {
     ? capacity
     : Math.max(mobile.value ? 1 : 3, Math.floor((eventSpace.value - 12) / rowStep))
 }
-const listView = ref(false)
+const listView = computed({
+  get: () => calendarView.value === 'list',
+  set: (value: boolean) => {
+    calendarView.value = value ? 'list' : 'calendar'
+  },
+})
 const dayDialog = ref(false)
 const month = computed(() => monthKey(route.query.month))
 const placeholder = computed(() => parseDate(month.value))
@@ -541,6 +546,7 @@ async function openEvent(event: CalendarEvent) {
                           :date="day"
                           class="month-cell"
                           :data-outside="day.month !== m.value.month || undefined"
+                          :data-today="day.toString() === todayKey() || undefined"
                           @click="
                             (event: MouseEvent) => {
                               if (!(event.target as HTMLElement).closest('button')) chooseDate(day)
@@ -580,7 +586,7 @@ async function openEvent(event: CalendarEvent) {
                                     :is="event.kind === 'birthday' ? Cake : CalendarIcon"
                                     data-icon="inline-start"
                                   />
-                                  <span class="truncate">
+                                  <span class="calendar-event-name">
                                     {{
                                       event.kind === 'birthday'
                                         ? event.title
@@ -601,8 +607,13 @@ async function openEvent(event: CalendarEvent) {
                                 class="calendar-event-theme mobile-event-label"
                                 :style="eventThemeStyle(event)"
                               >
-                                <Cake v-if="event.kind === 'birthday'" class="size-2" />
-                                <span class="truncate">{{ artist(event.artist_id)?.name }}</span>
+                                <span class="calendar-event-name">
+                                  {{
+                                    event.kind === 'birthday'
+                                      ? `${artist(event.artist_id)?.name ?? ''} 생일`
+                                      : artist(event.artist_id)?.name
+                                  }}
+                                </span>
                               </Badge>
                             </div>
                             <span

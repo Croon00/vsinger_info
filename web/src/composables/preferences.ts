@@ -29,6 +29,9 @@ export const calendarScope = ref(
     (v) => v === 'favorites' || v === 'all',
   ),
 )
+export const calendarView = ref<'calendar' | 'list'>(
+  read('calendar-view', 'calendar', (v) => v === 'calendar' || v === 'list'),
+)
 export const statusMessage = ref('')
 let announceTimer: ReturnType<typeof setTimeout>
 export function announce(message: string) {
@@ -54,6 +57,7 @@ function save(key: string, value: unknown) {
 }
 watch(favoriteIds, (v) => save(favoriteKey, v), { deep: true })
 watch(calendarScope, (v) => save('calendar-scope', v))
+watch(calendarView, (v) => save('calendar-view', v))
 const media = window.matchMedia('(prefers-color-scheme: dark)')
 function applyTheme() {
   const dark = theme.value === 'dark' || (theme.value === 'system' && media.matches)
