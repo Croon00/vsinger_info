@@ -17,6 +17,12 @@ ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "migrations" / "catalog"
 REVISION_TABLE = "catalog_schema_migrations"
 LOCK_ID = 731064921
+# CHECK constraints that later revisions add to revision-001 tables. The 001
+# snapshot predates them, so base comparison ignores them and verify() checks them.
+LATER_BASE_CONSTRAINTS = {
+    ("artists", "artists_name_latin_ascii"): "003",
+    ("songs", "songs_title_latin_ascii"): "003",
+}
 TYPE_NAMES = {
     "BIGINT": "bigint", "INTEGER": "integer", "SMALLINT": "smallint",
     "TEXT": "text", "UUID": "uuid", "BOOLEAN": "boolean", "DATE": "date",
@@ -129,9 +135,23 @@ def schema_shape(conn) -> dict:
 def base_schema_shape(shape: dict) -> dict:
     base_tables = set(expected_columns(include_runtime=False)) | {REVISION_TABLE}
     return {
-        name: rows if name == "functions" else [row for row in rows if row[0] in base_tables]
+        name: rows if name == "functions" else [
+            row for row in rows
+            if row[0] in base_tables
+            and not (name == "constraints" and (row[0], row[1]) in LATER_BASE_CONSTRAINTS)
+        ]
         for name, rows in shape.items()
     }
+
+
+def verify_later_constraints(conn, applied: set[str]) -> None:
+    found = {tuple(r) for r in conn.execute("""
+        SELECT c.relname,k.conname FROM pg_constraint k JOIN pg_class c ON c.oid=k.conrelid
+        JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND k.contype='c'
+    """)}
+    for key, version in LATER_BASE_CONSTRAINTS.items():
+        if (key in found) != (version in applied):
+            raise MigrationError("Later revision constraint differs: " + key[1])
 
 
 def verify_columns(conn, *, include_runtime: bool = True) -> None:
@@ -182,6 +202,7 @@ def verify(conn, *, require_empty: bool = False) -> dict:
         raise MigrationError("Pending catalog migrations")
     verify_columns(conn)
     verify_base_schema(conn)
+    verify_later_constraints(conn, {version for version, _ in revisions})
     identity = conn.execute(
         "SELECT id,schema_version,initial_import_id,initialized_at FROM public.catalog_instance"
     ).fetchall()

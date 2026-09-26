@@ -147,7 +147,7 @@ class RemoteCatalog:
         revisions = tuple(s.execute(text(
             "SELECT version FROM catalog_schema_migrations ORDER BY version"
         )).scalars())
-        if revisions != ("001", "002"):
+        if revisions not in {("001", "002"), ("001", "002", "003")}:
             raise DomainError("지원하지 않는 DB migration revision입니다.", 409)
         r = (
             s.execute(

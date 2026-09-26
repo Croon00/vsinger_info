@@ -17,6 +17,7 @@
 | `backfill_catalog_video_durations.py` | 새 카탈로그의 누락 영상 길이를 YouTube API로 조회 (`--fetch`)하고 검증된 값만 반영 (`--apply`) |
 | `apply_reviewed_duration_conflict.py` | 사용자 검수로 바로잡은 곡 시각과 API 영상 길이를 함께 반영 (`--apply`) |
 | `verify_legacy_setlist_import.py` | 새 카탈로그의 이관 건수·참조·예외 영상 읽기 전용 검증 |
+| `audit_song_master_readiness.py` | 곡 마스터 1단계 읽기 전용 측정. 계정 보유율·원문 키 빈도·기존 곡 상태를 Git 제외 `db-migration/reports/song-master-audit/`에 저장 |
 | `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
 | `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |

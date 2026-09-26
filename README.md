@@ -80,6 +80,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
 | [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 원격 스키마와 사용자 v2 연결 완료, 데이터 검수·운영 기능 이전은 별도 |
 | [기존 세트리스트 빠른 이관 계획](docs/setlist-migration-plan.md) | 덤프의 가창 행을 새 카탈로그로 옮기기 위한 범위·변환·보류·검증 절차 |
+| [곡 마스터 구축 계획](docs/song-master-plan.md) | 외부 목록 기반 곡 seed, latin/한국어 표기 규칙, song_id 연결 순서 |
 | [기존 세트리스트 이관 결과](docs/setlist-migration-report.md) | 2026-09-21 실제 반영 건수, 사용자 결정, 검증 결과와 남은 범위 |
 | [새 DB 마이그레이션](migrations/catalog/README.md) | 실제 적용 DDL, 전용 접속 설정, 실행·검증 범위 |
 | [카탈로그 테이블·필드](docs/catalog-schema.md) | 새 DB 도메인별 상세 필드와 로컬 검수 저장소 설계 |
