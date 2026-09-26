@@ -36,7 +36,7 @@ DEFAULT_MANIFEST = (
     / "runtime-migration-manifest.json"
 )
 NAMESPACE = uuid.UUID("f5a9e298-502c-4d44-aea2-ab27d276370c")
-EXPECTED_REVISIONS = {("001", "002"), ("001", "002", "003")}
+EXPECTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "003", "004")}
 LOCK_ID = 731064922
 
 

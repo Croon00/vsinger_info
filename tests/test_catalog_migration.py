@@ -100,15 +100,15 @@ def reject(conn, code, callback):
 def test_schema_contract_and_empty_initial_state(database):
     report = apply(database)
     assert report["applied"] and report["non_identity_row_count"] == 0
-    assert report["applied_versions"] == ["001", "002", "003"]
+    assert report["applied_versions"] == ["001", "002", "003", "004"]
     assert report["schema_version"] == "catalog-v2"
     assert not report["initial_data_imported"]
-    assert len(migration.table_names(database)) == 42
+    assert len(migration.table_names(database)) == 46
     second = migration.migrate(database)
     assert not second["applied"]
     assert second["catalog_instance_id"] == report["catalog_instance_id"]
     expected = migration.expected_columns()
-    assert len(expected) == 41
+    assert len(expected) == 45
     assert {"title_latin", "language_code"} <= {f["name"] for f in expected["songs"]}
     assert "karaoke_numbers" in expected
     assert not {"artist_links", "song_credits", "recording_credits", "legacy_entity_map"} & expected.keys()
@@ -139,7 +139,7 @@ def test_upgrade_from_001_preserves_catalog_rows(database):
     database.commit()
 
     report = apply(database)
-    assert report["applied_versions"] == ["002", "003"]
+    assert report["applied_versions"] == ["002", "003", "004"]
     assert database.execute(
         "SELECT platform_id,collection_enabled FROM external_accounts WHERE id=%s", (account,)
     ).fetchone() == ("123", True)
@@ -288,6 +288,52 @@ def test_latin_fields_accept_only_plain_ascii(database):
         reject(database, "23514", lambda: row(database, "songs", title_native="x", title_latin=value))
 
 
+def test_song_identity_keys_external_ids_aliases_and_merges(database):
+    apply(database)
+    song, other = row(database, "songs", title_native="夜に駆ける"), row(database, "songs", title_native="Other")
+    before = database.execute("SELECT updated_at FROM songs WHERE id=%s", (song,)).fetchone()[0]
+    row(database, "song_external_ids", song_id=song, provider="vocadb", external_id="12345")
+    row(database, "song_external_ids", song_id=song, provider="wikidata", external_id="Q123")
+    row(database, "song_external_ids", song_id=song, provider="musicbrainz_work",
+        external_id="0a1b2c3d-0000-4000-8000-123456789abc")
+    assert database.execute("SELECT updated_at FROM songs WHERE id=%s", (song,)).fetchone()[0] > before
+    # The same external entity can never back two songs.
+    reject(database, "23505", lambda: row(database, "song_external_ids", song_id=other,
+                                          provider="vocadb", external_id="12345"))
+    for provider, value in (("vocadb", "0"), ("wikidata", "123"), ("musicbrainz_work", "not-a-uuid"), ("spotify", "x")):
+        reject(database, "23514", lambda: row(database, "song_external_ids", song_id=other,
+                                              provider=provider, external_id=value))
+    row(database, "song_aliases", song_id=song, alias="밤을 달리다", normalized_alias="밤을 달리다",
+        locale="ko", source="manual")
+    reject(database, "23505", lambda: row(database, "song_aliases", song_id=song, alias="밤을  달리다",
+                                          normalized_alias="밤을 달리다", source="manual"))
+    reject(database, "23514", lambda: row(database, "song_aliases", song_id=song, alias="x",
+                                          normalized_alias="x", source="translator"))
+
+    key = row(database, "song_match_keys", title_key="夜に駆ける", artist_key="yoasobi",
+              sample_raw_title="夜に駆ける", sample_raw_artist="YOASOBI", occurrence_count=3)
+    reject(database, "23505", lambda: row(database, "song_match_keys", title_key="夜に駆ける",
+                                          artist_key="yoasobi", sample_raw_title="x"))
+    # confirmed <=> song_id, and a decision always records who and when.
+    reject(database, "23514", lambda: database.execute(
+        "UPDATE song_match_keys SET status='confirmed' WHERE id=%s", (key,)))
+    reject(database, "23514", lambda: database.execute(
+        "UPDATE song_match_keys SET status='confirmed',song_id=%s WHERE id=%s", (song, key)))
+    database.execute("""UPDATE song_match_keys SET status='confirmed',song_id=%s,decided_by='manual',
+                        decided_at=clock_timestamp() WHERE id=%s""", (song, key))
+    assert database.execute("SELECT version FROM song_match_keys WHERE id=%s", (key,)).fetchone()[0] == 2
+    row(database, "song_match_keys", title_key="こんつきー", sample_raw_title="こんつきー",
+        status="not_song", decided_by="manual", decided_at="2026-09-27T00:00:00Z")
+    reject(database, "23001", lambda: database.execute("DELETE FROM songs WHERE id=%s", (song,)))
+
+    merge = row(database, "song_merges", source_song_id=other, target_song_id=song, reason="duplicate")
+    reject(database, "23505", lambda: row(database, "song_merges", source_song_id=other,
+                                          target_song_id=song, reason="again"))
+    reject(database, "23514", lambda: row(database, "song_merges", source_song_id=song,
+                                          target_song_id=song, reason="self"))
+    reject(database, "23514", lambda: database.execute("DELETE FROM song_merges WHERE id=%s", (merge,)))
+
+
 def test_upgrade_from_002_adds_latin_constraints_and_keeps_rows(database):
     migration.configure_transaction(database, read_only=False)
     database.execute("""
@@ -305,7 +351,7 @@ def test_upgrade_from_002_adds_latin_constraints_and_keeps_rows(database):
     song = row(database, "songs", title_native="Lemon", title_latin="Lemon")
     database.commit()
     report = apply(database)
-    assert report["applied_versions"] == ["003"]
+    assert report["applied_versions"] == ["003", "004"]
     assert database.execute("SELECT title_latin FROM songs WHERE id=%s", (song,)).fetchone()[0] == "Lemon"
     database.execute("ALTER TABLE songs DROP CONSTRAINT songs_title_latin_ascii")
     with pytest.raises(migration.MigrationError, match="songs_title_latin_ascii"):

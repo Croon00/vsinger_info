@@ -1,0 +1,45 @@
+{
+  "song_aliases": [
+    {"name": "id", "type": "INTEGER", "nullable": false},
+    {"name": "song_id", "type": "INTEGER", "nullable": false},
+    {"name": "alias", "type": "TEXT", "nullable": false},
+    {"name": "normalized_alias", "type": "TEXT", "nullable": false},
+    {"name": "locale", "type": "TEXT", "nullable": true},
+    {"name": "source", "type": "TEXT", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "song_external_ids": [
+    {"name": "id", "type": "INTEGER", "nullable": false},
+    {"name": "song_id", "type": "INTEGER", "nullable": false},
+    {"name": "provider", "type": "TEXT", "nullable": false},
+    {"name": "external_id", "type": "TEXT", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ],
+  "song_match_keys": [
+    {"name": "id", "type": "INTEGER", "nullable": false},
+    {"name": "key_version", "type": "SMALLINT", "nullable": false},
+    {"name": "title_key", "type": "TEXT", "nullable": false},
+    {"name": "artist_key", "type": "TEXT", "nullable": false},
+    {"name": "status", "type": "TEXT", "nullable": false},
+    {"name": "song_id", "type": "INTEGER", "nullable": true},
+    {"name": "sample_raw_title", "type": "TEXT", "nullable": false},
+    {"name": "sample_raw_artist", "type": "TEXT", "nullable": true},
+    {"name": "occurrence_count", "type": "INTEGER", "nullable": false},
+    {"name": "decided_by", "type": "TEXT", "nullable": true},
+    {"name": "decided_at", "type": "TIMESTAMPTZ", "nullable": true},
+    {"name": "evidence", "type": "JSONB", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "updated_at", "type": "TIMESTAMPTZ", "nullable": false},
+    {"name": "version", "type": "INTEGER", "nullable": false}
+  ],
+  "song_merges": [
+    {"name": "id", "type": "INTEGER", "nullable": false},
+    {"name": "source_song_id", "type": "INTEGER", "nullable": false},
+    {"name": "target_song_id", "type": "INTEGER", "nullable": false},
+    {"name": "import_id", "type": "INTEGER", "nullable": true},
+    {"name": "reason", "type": "TEXT", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ]
+}

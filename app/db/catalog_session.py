@@ -10,8 +10,8 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 
-# 003 only adds CHECK constraints, so code runs against the DB before and after it is applied.
-SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003")}
+# 003/004 only add constraints and new tables, so code runs before and after they are applied.
+SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "003", "004")}
 
 
 class CatalogIdentityError(RuntimeError):
