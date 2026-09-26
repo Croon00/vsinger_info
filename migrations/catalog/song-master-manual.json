@@ -1,0 +1,25 @@
+{
+  "policy": "song-master-seed-manual-v1",
+  "note": "User-directed decisions (2026-09-27) and parent-review overrides applied on top of the pilot report and the first-pass review.",
+  "existing_song_external": [
+    {"song_id": 208, "provider": "musicbrainz_work", "external_id": "b3919faf-7f88-40a5-aef6-006ef103e275",
+     "note": "僕が死のうと思ったのは: amazarashi (the songwriter's band) keeps the shared work ID"},
+    {"song_id": 10, "provider": null, "external_id": null,
+     "note": "僕が死のうと思ったのは / 中島美嘉 stays a separate song (user decision); the work ID belongs to song 208"}
+  ],
+  "review_overrides": [
+    {"item": "song:1088", "decision": "no_match",
+     "reason": "The only candidate is karuta's original version of 一番の宝物; LiSA's version stays a separate song without that ID"}
+  ],
+  "artist_overrides": [
+    {"ref": "A065", "is_virtual": false,
+     "reason": "放課後ティータイム is an anime character band, not a VTuber; is_virtual marks VTubers only (user)"}
+  ],
+  "keys": [
+    {"key_id": 16024, "song_id": 1073, "note": "W/X / Tani Yuuki is a typo of W/X/Y (user)"},
+    {"key_id": 16026, "song_id": 1073, "note": "W/X + y/Tani Yuuki: W/X/Y split at a slash by the setlist parser"},
+    {"key_id": 16025, "song_id": 1073, "note": "W/X + Y: W/X/Y split at a slash by the setlist parser"},
+    {"key_id": 24310, "new_song": {"title_native": "拝啓、はじまりの色", "artist_ids": [33]},
+     "note": "YONO (ヨノ) original song (user); no external catalog entry yet"}
+  ]
+}
