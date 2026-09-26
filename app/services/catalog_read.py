@@ -53,10 +53,12 @@ class CatalogRead:
         for index,row in enumerate(rows):
             if previous != row["count"]: rank = index+1
             previous = row["count"]
-            songs.append({"key":row["song_key"],"title":row["title"],"artist":row["artist"],
+            songs.append({"key":row["song_key"],"title":row["title"],"titleKo":row["title_ko"],
+                          "artist":row["artist"],"artistKo":row["artist_ko"],
                           "searchText":row["search"],"count":row["count"],"rank":rank,"lastPerformedAt":row["last_date"]})
             for artist in row["originals"]:
                 entry = originals.setdefault(artist["key"],{**artist,"count":0})
+                entry["nameKo"] = entry.get("nameKo") or artist.get("nameKo")
                 entry["count"] += row["count"]
         total = sum(s["count"] for s in songs)
         ranked = sorted(originals.values(),key=lambda a:(-a["count"],a["key"]))

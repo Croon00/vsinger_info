@@ -40,3 +40,5 @@ db-migration/workspace/
 db-migration/reports/
 db-migration/archive/
 db-migration/DB_KEY.txt
+
+outputs/

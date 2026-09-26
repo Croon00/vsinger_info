@@ -65,7 +65,9 @@ class SearchRead(PerformanceRead):
 class SongStat(BaseModel):
     key: str
     title: str
+    titleKo: str | None = None
     artist: str
+    artistKo: str | None = None
     searchText: str
     count: int
     lastPerformedAt: datetime | None
@@ -74,6 +76,7 @@ class SongStat(BaseModel):
 class ArtistStat(BaseModel):
     key: str
     name: str
+    nameKo: str | None = None
     count: int
     percentage: float
 

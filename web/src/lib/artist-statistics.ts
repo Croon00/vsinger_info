@@ -5,7 +5,9 @@ export type SongSort = 'most' | 'least' | 'recent' | 'oldest'
 export interface SongStatistic {
   key: string
   title: string
+  titleKo?: string | null
   artist: string
+  artistKo?: string | null
   searchText: string
   count: number
   lastPerformedAt: string | null
@@ -14,6 +16,7 @@ export interface SongStatistic {
 export interface ArtistStatistic {
   key: string
   name: string
+  nameKo?: string | null
   count: number
   percentage: number
 }
@@ -41,7 +44,9 @@ export function artistStatistics(lives: Live[]) {
         song = {
           key,
           title: performance.song_title || '곡명 미등록',
+          titleKo: performance.song_title_ko?.trim() || undefined,
           artist: performance.original_artist || '아티스트 미등록',
+          artistKo: performance.original_artist_ko?.trim() || undefined,
           searchText: '',
           count: 0,
           lastPerformedAt: null,
@@ -49,6 +54,8 @@ export function artistStatistics(lives: Live[]) {
         }
         songs.set(key, song)
       }
+      song.titleKo ||= performance.song_title_ko?.trim() || undefined
+      song.artistKo ||= performance.original_artist_ko?.trim() || undefined
       song.count++
       song.searchText += ` ${normalize(
         [
@@ -66,10 +73,12 @@ export function artistStatistics(lives: Live[]) {
         const artist = artists.get(artistKey) ?? {
           key: artistKey,
           name: performance.original_artist,
+          nameKo: performance.original_artist_ko?.trim() || undefined,
           count: 0,
           percentage: 0,
         }
         artist.count++
+        artist.nameKo ||= performance.original_artist_ko?.trim() || undefined
         artists.set(artistKey, artist)
       }
     }

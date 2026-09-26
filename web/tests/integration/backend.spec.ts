@@ -269,7 +269,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   await expect(page.locator('.statistics-count').first()).toContainText('900')
   expect(calls.filter(p => p.includes('/lives?'))).toHaveLength(1)
   expect(calls.some(p => p.includes('all_records'))).toBe(false)
-  await page.getByRole('tab', { name: '오리곡' }).click()
+  await page.getByRole('tab', { name: '발매곡' }).click()
   await expect(page.getByText('콘텐츠 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.')).toBeVisible()
   await expect(page.locator('h1')).toHaveText('HACHI')
   spotifyReady = true

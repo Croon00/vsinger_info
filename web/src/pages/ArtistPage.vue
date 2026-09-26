@@ -239,7 +239,7 @@ function returnToList() {
             </TabsTrigger>
             <TabsTrigger value="originals">
               <Disc3 />
-              오리곡
+              발매곡
             </TabsTrigger>
             <TabsTrigger value="concerts">
               <CalendarDays />

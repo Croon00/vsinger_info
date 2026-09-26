@@ -50,7 +50,9 @@ describe('artist setlist statistics', () => {
     ]).toEqual([3, 2, 5, 3, 2])
     expect(stats.songs[0]).toMatchObject({
       title: 'Same',
+      titleKo: '같은 곡',
       artist: 'A',
+      artistKo: '가수 에이',
       count: 3,
       rank: 1,
       lastPerformedAt: '2025-03-01T00:00:00Z',
@@ -59,6 +61,7 @@ describe('artist setlist statistics', () => {
       ['A', 4, 80],
       ['B', 1, 20],
     ])
+    expect(stats.artists[0]?.nameKo).toBe('가수 에이')
     expect(stats.songs.slice(1).map((s) => s.rank)).toEqual([2, 2])
   })
   it('filters translated labels and full-width text without changing the overall ranks', () => {

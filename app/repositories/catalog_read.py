@@ -29,7 +29,7 @@ PERFORMANCE_SQL = """SELECT p.id,p.archive_id,p.ordinal,p.start_seconds,p.song_i
  string_agg(COALESCE(oa.name_ko,oa.name_native),' · ' ORDER BY sa.position,sa.id) names_ko,
  string_agg(concat_ws(' ',oa.name_native,oa.name_ko,oa.name_latin,
  (SELECT string_agg(al.alias,' ') FROM artist_aliases al WHERE al.artist_id=oa.id)),' ') search,
- jsonb_agg(jsonb_build_object('key','artist:'||oa.id::text,'name',oa.name_native) ORDER BY sa.position,sa.id) artists
+ jsonb_agg(jsonb_build_object('key','artist:'||oa.id::text,'name',oa.name_native,'nameKo',oa.name_ko) ORDER BY sa.position,sa.id) artists
  FROM song_artists sa JOIN artists oa ON oa.id=sa.artist_id AND oa.archived_at IS NULL WHERE sa.song_id=s.id
  ) orig ON true
  LEFT JOIN LATERAL (
@@ -146,7 +146,9 @@ class CatalogReadRepository:
         {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}),
         entries AS (SELECT p.*,a.happened FROM ({PERFORMANCE_SQL}) p JOIN archives a ON a.id=p.archive_id
         WHERE EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id AND pa.artist_id=:artist))"""
-        songs = self.rows(cte+""" SELECT song_key,MIN(song_title) title,MIN(original_artist) artist,
+        songs = self.rows(cte+""" SELECT song_key,MIN(song_title) title,
+        MIN(NULLIF(btrim(song_title_ko),'')) title_ko,MIN(original_artist) artist,
+        MIN(NULLIF(btrim(original_artist_ko),'')) artist_ko,
         originals,COUNT(*) count,MAX(happened) last_date,string_agg(DISTINCT search_text,' ') search
         FROM entries GROUP BY song_key,originals ORDER BY count DESC,song_key""",{"artist":artist_id})
         months = self.rows(cte+""" SELECT count(*) total,count(*) FILTER(WHERE EXISTS

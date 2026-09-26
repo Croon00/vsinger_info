@@ -99,6 +99,9 @@ def test_normalized_catalog_reads_and_attribution(store):
             stats=service.statistics(artist)
             assert stats["archives"]==1 and stats["performances"]==1
             assert stats["uniqueSongs"]==1 and stats["uniqueArtists"]==1
+            assert stats["songs"][0]["titleKo"]=="제목"
+            assert stats["songs"][0]["artistKo"]=="원곡자"
+            assert stats["artists"][0]["nameKo"]=="원곡자"
             assert stats["activity"]==[{"month":"2026-01","count":1}]
         events=service.concerts(0,100,guest,"2026-09-01","2026-10-01")
         assert events["items"][0]["artist_id"]==guest

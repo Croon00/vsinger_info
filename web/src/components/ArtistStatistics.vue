@@ -64,6 +64,8 @@ watch([query, sort, () => props.lives], () => {
 const number = (value: number) => value.toLocaleString('ko-KR')
 const date = (value: string | null) =>
   value ? formatDate(value, { year: 'numeric', month: '2-digit', day: '2-digit' }) : '날짜 미등록'
+const displayName = (original: string, korean?: string | null) =>
+  korean?.trim() && korean.trim() !== original.trim() ? `${original} (${korean.trim()})` : original
 </script>
 
 <template>
@@ -151,10 +153,10 @@ const date = (value: string | null) =>
               <Table class="statistics-table" aria-label="부른 곡 통계">
                 <TableHeader>
                   <TableRow class="hover:bg-transparent">
-                    <TableHead class="w-12">순위</TableHead>
-                    <TableHead>곡 / 아티스트</TableHead>
-                    <TableHead class="statistics-date-column w-28">최근 부른 날</TableHead>
-                    <TableHead class="w-18 text-right">횟수</TableHead>
+                    <TableHead class="w-12 text-center">순위</TableHead>
+                    <TableHead>곡</TableHead>
+                    <TableHead class="statistics-date-column w-28 text-center">최근 부른 날</TableHead>
+                    <TableHead class="w-18 text-center">횟수</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -164,22 +166,22 @@ const date = (value: string | null) =>
                     class="hover:bg-transparent"
                     :class="{ 'statistics-song-row': pageIndex === page - 1 }"
                   >
-                    <TableCell>
+                    <TableCell class="text-center">
                       <span class="statistics-rank">{{ song.rank }}</span>
                     </TableCell>
                     <TableCell class="min-w-0 whitespace-normal">
-                      <div class="statistics-song-title">{{ song.title }}</div>
-                      <div class="statistics-song-artist">{{ song.artist }}</div>
+                      <div class="statistics-song-title">{{ displayName(song.title, song.titleKo) }}</div>
+                      <div class="statistics-song-artist">{{ displayName(song.artist, song.artistKo) }}</div>
                       <div class="statistics-mobile-date">
                         최근 {{ date(song.lastPerformedAt) }}
                       </div>
                     </TableCell>
-                    <TableCell class="statistics-date-column">
+                    <TableCell class="statistics-date-column text-center">
                       <time :datetime="song.lastPerformedAt ?? undefined" class="statistics-date">
                         {{ date(song.lastPerformedAt) }}
                       </time>
                     </TableCell>
-                    <TableCell class="text-right">
+                    <TableCell class="text-center">
                       <span class="statistics-count">
                         {{ number(song.count) }}
                         <small>회</small>
@@ -243,7 +245,7 @@ const date = (value: string | null) =>
                   <span class="statistics-rank">{{ pageIndex * pageSize + index + 1 }}</span>
                   <div class="statistics-artist-body">
                     <div class="statistics-artist-heading">
-                      <h3>{{ artist.name }}</h3>
+                      <h3>{{ displayName(artist.name, artist.nameKo) }}</h3>
                       <span class="statistics-artist-count">
                         {{ number(artist.count) }}회
                         <span>{{ artist.percentage.toFixed(1) }}%</span>

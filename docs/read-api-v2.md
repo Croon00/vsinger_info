@@ -28,7 +28,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /artists/{id} | 동일 노출 조건의 아티스트. 기존 DB ID/이름 기반 병합 없음 |
 | GET /artists/{id}/lives | 대표·출연·가창 연결로 참여한 아카이브. 방송일/공개일 내림차순+ID, 세트리스트 곡 목록 없이 활성 곡 수 `performance_count`를 포함한 요약 |
 | GET /lives/{id} | 아카이브와 영상, ordinal+ID 순 세트리스트 |
-| GET /artists/{id}/statistics | 가창자 ID에 따른 곡·원곡 아티스트 순위와 월별 활동량 |
+| GET /artists/{id}/statistics | 가창자 ID에 따른 곡·원곡 아티스트 순위와 월별 활동량. 곡의 `titleKo`·`artistKo`, 원곡 아티스트 순위의 `nameKo`는 저장된 한국어 이름이며 없으면 null |
 | GET /search?q=... | 원어/한국어/영문 곡명, 아카이브 대표·가창 아티스트 이름·별칭, 원곡 아티스트 이름·별칭, 미매칭 원문 OR 검색. 날짜 내림차순+아카이브+ordinal+ID |
 | GET /concerts | 보관/취소 제외 공연. artist_id, start(포함), end(제외) 선택 필터 |
 | GET /concerts/{id} | 공연·도시·장소·출처 링크·첫 티켓 정보 |
