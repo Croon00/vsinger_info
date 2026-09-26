@@ -26,13 +26,13 @@
 | 1 | 읽기 전용 측정: 아티스트별 Spotify/YouTube 계정 비율, 원문 키 빈도 분포, 기존 `songs` 450행의 출처·중복 | 완료. 아래 측정 결과 |
 | 2 | 아티스트 Spotify ID 후보 조사 → 검수 → 적용. Wikidata로 `name_ko`/`name_latin` 후보 병행 | TODO |
 | 3 | Spotify 수집과 ISRC 저장(`recording_external_ids`) | TODO |
-| 4 | 곡 식별 스키마: 원문 키 대응표, 곡 외부 ID, 곡 별칭, 병합 기록 | TODO |
+| 4 | 곡 식별 스키마: 원문 키 대응표, 곡 외부 ID, 곡 별칭, 병합 기록 | 코드·로컬 검증 완료(004, backfill 스크립트). 운영 DB 미적용 |
 | 5 | 곡 seed: Spotify ISRC → MusicBrainz work, 상위 원문 키 → VocaDB/UtaiteDB → MusicBrainz | TODO |
 | 6 | `title_ko` 보강: 저장한 외부 ID로 Wikidata 조회, 나머지는 검수 후보 | TODO |
 | 7 | 확정 키로 `performances.song_id` 소급 연결, YouTube 수집에서 확정 키 자동 부여 | TODO |
 | 8 | 곡 연결률이 충분해지면 노래방 번호 작업 시작 | TODO |
 
-5단계는 2~3단계와 독립적으로 진행할 수 있다.
+5단계는 2~3단계와 독립적으로 진행할 수 있다. 1단계 측정 결과에 따라 4단계 → 일부 연결 키 199개 확장 → 5단계 파일럿을 먼저 하고, 2·3단계(Spotify)는 버튜버 오리지널곡을 위해 병행한다.
 
 ## 0단계 검증 (2026-09-27)
 
@@ -66,3 +66,12 @@
 - 같은 곡명 9그룹은 대부분 서로 다른 곡이지만, `僕が死のうと思ったのは`처럼 같은 작품을 다른 명의로 등록했을 가능성이 있어 5단계에서 외부 ID로 확인한다.
 - Spotify는 사실상 미등록이며 `recordings`도 비어 있다. `recording_external_ids.platform`은 `spotify`만 허용하므로 3단계 ISRC 저장에는 migration이 필요하다.
 - 1회만 나온 9,276개 키는 수작업 대비 효과가 낮아 외부 DB 정확 일치로만 처리하고 나머지는 미연결로 둔다.
+
+
+## 4단계 결과 (2026-09-27)
+
+- `migrations/catalog/004_song_identity.sql`: `song_aliases`, `song_external_ids`, `song_match_keys`, `song_merges`. 기존 표·컬럼은 바꾸지 않았다. 병합 기록은 `songs`에 컬럼을 더하지 않고 별도 추가 전용 표로 두었다.
+- `scripts/backfill_song_match_keys.py`: 원문 키를 집계해 저장한다. 상태는 이미 존재하는 `performances.song_id`로만 유도한다. 모든 행이 한 곡이면 `confirmed(existing_link)`, 여러 곡이면 `ambiguous`, 일부만 연결되면 `pending`과 후보 곡을 evidence에 남긴다. 수동·외부 판정은 덮어쓰지 않고 횟수·샘플만 갱신한다. `performances`, `songs`는 변경하지 않는다.
+- 운영 DB dry-run(004 미적용 상태 미리보기): 키 15,266개 중 confirmed 1,583(가창 25,347), pending 13,683(가창 49,157), ambiguous 0, 후보 곡이 있는 pending 199. 정규화 뒤 빈 곡명 0.
+- 로컬 임시 PostgreSQL: migration 17 passed, backfill 4 passed. 전체 `python -m pytest -q -p no:cacheprovider` 326 passed, 376 warnings(기존 deprecated 경고).
+- 운영 반영 순서: 코드 배포 → `scripts/migrate_catalog.py --apply` → `--verify` → `scripts/backfill_song_match_keys.py` dry-run 확인 → `--apply`.
