@@ -120,7 +120,7 @@ Discord 관리 명령, X 타입 분류, X 본문에서 YouTube 링크를 찾아 
 ### D. 4단계 — 등록된 Spotify 계정의 수집·연결
 
 - 신규 `external_accounts`의 `platform=spotify`, `collection_enabled=true`, `archived_at IS NULL` 계정만 수집한다. `artist_external_accounts`의 기존 관계를 연결 기준으로 사용한다.
-- Spotify 고정 ID가 없거나 유효하지 않으면 오류로 남기고 수집하지 않는다. 이름 검색으로 다른 계정을 찾아 연결하거나 계정을 자동 생성·활성화하지 않는다. 미등록 아티스트는 건너뛴다.
+- Spotify 고정 ID가 없거나 유효하지 않으면 오류로 남기고 수집하지 않는다. 이름 검색으로 다른 계정을 찾아 연결하거나 계정을 자동 생성·활성화하지 않는다. 미등록 아티스트는 건너뛴다. 기존 아티스트의 ID는 수집과 분리된 후보 조사·검수·적용으로만 등록한다([곡 마스터 구축 계획](song-master-plan.md)).
 - `albums/album_artists`, `recordings/recording_artists/recording_external_ids`, `album_tracks`에 저장한다. 작품은 근거가 있을 때만 연결하고 미확정 `song_id`를 임의 생성하지 않는다.
 - 명시적 sync와 YouTube 매칭은 등록된 Spotify 계정의 작업 범위 안에서만 수행한다. 기존 수동 연결·제외를 보존하고 모호한 매칭은 보류한다. 등록되지 않은 계정을 공동 발매 관계를 이유로 자동 연결하지 않는다.
 - 가사·번역·독음·노래방 보완과 admin-web 연결은 호출하지 않는다. provider 메타데이터 원문과 이미 저장된 번역은 보존한다.

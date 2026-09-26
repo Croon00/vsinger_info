@@ -36,7 +36,7 @@ DEFAULT_MANIFEST = (
     / "runtime-migration-manifest.json"
 )
 NAMESPACE = uuid.UUID("f5a9e298-502c-4d44-aea2-ab27d276370c")
-EXPECTED_REVISIONS = ("001", "002")
+EXPECTED_REVISIONS = {("001", "002"), ("001", "002", "003")}
 LOCK_ID = 731064922
 
 
@@ -93,7 +93,7 @@ def verify_target(conn) -> dict:
     revisions = tuple(row["version"] for row in conn.execute(
         "SELECT version FROM catalog_schema_migrations ORDER BY version"
     ))
-    if not identity or identity["schema_version"] != "catalog-v2" or revisions != EXPECTED_REVISIONS:
+    if not identity or identity["schema_version"] != "catalog-v2" or revisions not in EXPECTED_REVISIONS:
         raise RuntimeMigrationError("Target identity or revision mismatch")
     return {"catalog_instance_id": identity["id"], "schema_version": identity["schema_version"]}
 

@@ -100,7 +100,7 @@ def reject(conn, code, callback):
 def test_schema_contract_and_empty_initial_state(database):
     report = apply(database)
     assert report["applied"] and report["non_identity_row_count"] == 0
-    assert report["applied_versions"] == ["001", "002"]
+    assert report["applied_versions"] == ["001", "002", "003"]
     assert report["schema_version"] == "catalog-v2"
     assert not report["initial_data_imported"]
     assert len(migration.table_names(database)) == 42
@@ -139,7 +139,7 @@ def test_upgrade_from_001_preserves_catalog_rows(database):
     database.commit()
 
     report = apply(database)
-    assert report["applied_versions"] == ["002"]
+    assert report["applied_versions"] == ["002", "003"]
     assert database.execute(
         "SELECT platform_id,collection_enabled FROM external_accounts WHERE id=%s", (account,)
     ).fetchone() == ("123", True)
@@ -277,6 +277,39 @@ def test_song_identity_collaboration_and_karaoke(database):
     row(database, "karaoke_numbers", song_id=song1, provider="ky", number="00123")
     reject(database, "23505", lambda: row(database, "karaoke_numbers", song_id=song1, provider="tj", number="00123"))
     reject(database, "23001", lambda: database.execute("DELETE FROM artists WHERE id=%s", (a,)))
+
+
+def test_latin_fields_accept_only_plain_ascii(database):
+    apply(database)
+    artist(database, "ascii", name_latin="Mrs. GREEN APPLE")
+    row(database, "songs", title_native="夜に駆ける", title_latin="Yoru ni Kakeru")
+    for value in ("Tōkyō", "Beyoncé", "夜", "Ｙｏｒｕ"):
+        reject(database, "23514", lambda: artist(database, "bad-" + str(len(value)), name_latin=value))
+        reject(database, "23514", lambda: row(database, "songs", title_native="x", title_latin=value))
+
+
+def test_upgrade_from_002_adds_latin_constraints_and_keeps_rows(database):
+    migration.configure_transaction(database, read_only=False)
+    database.execute("""
+        CREATE TABLE public.catalog_schema_migrations (
+          version text PRIMARY KEY,
+          checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),
+          applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
+        )
+    """)
+    for version in ("001", "002"):
+        path = next(p for v, p in migration.migration_files() if v == version)
+        database.execute(path.read_text(encoding="utf-8"), prepare=False)
+        database.execute("INSERT INTO catalog_schema_migrations(version,checksum) VALUES (%s,%s)",
+                         (version, migration.migration_checksums()[version]))
+    song = row(database, "songs", title_native="Lemon", title_latin="Lemon")
+    database.commit()
+    report = apply(database)
+    assert report["applied_versions"] == ["003"]
+    assert database.execute("SELECT title_latin FROM songs WHERE id=%s", (song,)).fetchone()[0] == "Lemon"
+    database.execute("ALTER TABLE songs DROP CONSTRAINT songs_title_latin_ascii")
+    with pytest.raises(migration.MigrationError, match="songs_title_latin_ascii"):
+        migration.verify(database)
 
 
 def test_date_precision_and_partial_release_dates(database):

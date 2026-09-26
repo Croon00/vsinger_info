@@ -10,7 +10,8 @@ from sqlalchemy.orm import Session
 
 from app.core.config import settings
 
-REQUIRED_REVISIONS = ("001", "002")
+# 003 only adds CHECK constraints, so code runs against the DB before and after it is applied.
+SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003")}
 
 
 class CatalogIdentityError(RuntimeError):
@@ -48,7 +49,7 @@ def verify_catalog_identity(session: Session) -> str:
         )).one()
     except SQLAlchemyError as exc:
         raise CatalogIdentityError("Unified DB schema identity is unavailable") from exc
-    if revisions != REQUIRED_REVISIONS:
+    if revisions not in SUPPORTED_REVISIONS:
         raise CatalogIdentityError("Unified DB migration revision mismatch")
     if identity.schema_version != settings.catalog_schema_version:
         raise CatalogIdentityError("Unified DB schema version mismatch")

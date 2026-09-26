@@ -118,7 +118,7 @@ SQLite의 UUID·시각·JSON은 TEXT로 저장하는 제안입니다. JSON은 �
 | `slug` | TEXT | 필수·고유 | 주소에 사용할 고정 식별 문자열. 이름을 바꿔도 자동 변경하지 않음 | hachi |
 | `name_native` | TEXT | 필수 | 공식 원어 이름 | HACHI |
 | `name_ko` | TEXT | 선택·NULL | 검수한 한국어 이름. 임의 번역 금지 | 하치 |
-| `name_latin` | TEXT | 선택·NULL | 공식 영어/로마자 표기. 원어와 같으면 생략 가능 | NULL |
+| `name_latin` | TEXT | 선택·NULL | 공식 영어/로마자 표기. 발음 부호 없는 ASCII만 허용(revision 003). 원어와 같으면 생략 가능 | NULL |
 | `entity_kind` | TEXT | 필수 | solo(개인 활동 주체), group(그룹) | solo |
 | `is_virtual` | BOOLEAN | 선택·NULL | 가상 캐릭터 활동 여부. NULL은 아직 확인 안 됨 | true |
 | `agency_id` | INTEGER FK | 선택·NULL | agencies.id. 소속사가 없거나 미확인일 때 비움 | 3 |
@@ -276,7 +276,7 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 | `id` | INTEGER PK | 필수·자동 증가 | 이 테이블 행의 고유 번호. 새 번호는 DB가 발급하며 기존 DB 번호를 그대로 재사용하지 않음 | 1 |
 | `title_native` | TEXT | 필수 | 원어 곡명 | Lemon |
 | `title_ko` | TEXT | 선택·NULL | 한국어 표기. 영어 원어를 복사해 채우지 않음 | NULL |
-| `title_latin` | TEXT | 선택·NULL | 영어/로마자 표기 | NULL |
+| `title_latin` | TEXT | 선택·NULL | 영어/로마자 표기. 발음 부호 없는 ASCII만 허용(revision 003) | NULL |
 | `language_code` | TEXT | 선택·NULL | 가사의 언어 코드. 다국어는 mul 등 계약으로 처리 | ja |
 | `created_at` | TIMESTAMPTZ | 필수·자동 | 새 DB에 이 행이 처음 등록된 시각. 공연/방송/원문 수집 시각과 별개 | 서버 현재 시각 |
 | `updated_at` | TIMESTAMPTZ | 필수·자동 | 행이 마지막 변경된 시각. 서비스가 수정 때 갱신 | 서버 현재 시각 |

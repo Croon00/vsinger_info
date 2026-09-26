@@ -21,6 +21,7 @@
 | --- | --- |
 | 001_initial.sql | 버전 고정 DDL. 음악 seed/덤프 복원 없음 |
 | 002_runtime.sql | 계정별 수집 상태, X 원문, Discord route/delivery, worker 작업, 이전 영수증 |
+| 003_latin_ascii.sql | `artists.name_latin`, `songs.title_latin`을 발음 부호 없는 ASCII로 제한. 계약 버전 `catalog-v2` 유지 |
 | columns.json | 31개 표의 필드·타입·NULL 계약 |
 | runtime-columns.json | 10개 운영 표의 필드·타입·NULL 계약 |
 | expected-schema.json | 로컬 PostgreSQL에서 검증한 컬럼·제약·인덱스·트리거·함수 정의 |
@@ -63,6 +64,7 @@
 - 웹사이트/팬클럽 링크의 수집 비활성.
 - 수정 시 timestamp/version 갱신, 관계 변경 시 소유 부모 version 갱신.
 - 원문 스냅샷·반영 영수증·변경 이력의 UPDATE/DELETE 거부.
+- revision 003(2026-09-27 작성, 운영 DB 미적용): latin 이름·제목은 출력 가능 ASCII만 허용. 001 스냅샷(`expected-schema.json`)은 이 제약을 제외하고 비교하며 `--verify`가 별도로 존재를 확인한다. 앱 revision 검사는 001-002와 001-003을 모두 허용한다.
 - 부모 자료 참조 보호. 명시적으로 소유된 연결 행만 부모 삭제 시 CASCADE.
 
 정확한 규칙은 SQL과 로컬 테스트가 기준이다. 일반 FK·CHECK로 다른 행의 의미까지 모두 검증한다고 해석하지 않는다.
