@@ -18,6 +18,9 @@
 | `apply_reviewed_duration_conflict.py` | 사용자 검수로 바로잡은 곡 시각과 API 영상 길이를 함께 반영 (`--apply`) |
 | `verify_legacy_setlist_import.py` | 새 카탈로그의 이관 건수·참조·예외 영상 읽기 전용 검증 |
 | `audit_song_master_readiness.py` | 곡 마스터 1단계 읽기 전용 측정. 계정 보유율·원문 키 빈도·기존 곡 상태를 Git 제외 `db-migration/reports/song-master-audit/`에 저장 |
+| `backfill_song_match_keys.py` | 세트리스트 원문을 `song_match_keys`로 집계. 기본 dry-run(004 적용 전에도 미리보기), `--apply`는 004 필요·영수증 기록. 기존 연결로만 상태를 유도하고 수동 판정은 유지. performances·songs는 변경하지 않음 |
+| `review_partial_match_keys.py` | 일부만 연결된 원문 키 검토. `export`는 읽기 전용으로 `migrations/catalog/partial-match-key-decisions.json` 생성(정확 일치만 confirm 미리 채움), `apply`는 dry-run, `apply --apply`는 판정만 저장·영수증 기록. 내보낸 뒤 바뀐 키는 거부 |
+| `link_performances_from_match_keys.py` | 확정 원문 키로 미연결 가창에 song_id 연결. 기본 읽기 전용 dry-run, `--apply`는 2,000 ID 단위로 영수증·행별 변경 이력과 함께 커밋. 원문·기존 연결은 변경하지 않고 보관·병합된 곡은 제외 |
 | `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
 | `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |

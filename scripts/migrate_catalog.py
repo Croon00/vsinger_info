@@ -73,11 +73,25 @@ def migration_checksum() -> str:
     return list(migration_checksums().values())[-1]
 
 
-def expected_columns(*, include_runtime: bool = True) -> dict:
-    result = json.loads((MIGRATIONS / "columns.json").read_text(encoding="utf-8"))
-    runtime = MIGRATIONS / "runtime-columns.json"
-    if include_runtime and runtime.exists():
-        result.update(json.loads(runtime.read_text(encoding="utf-8")))
+# Column contract files and the revision that creates their tables.
+COLUMN_CONTRACTS = (
+    ("001", "columns.json"),
+    ("002", "runtime-columns.json"),
+    ("004", "song-identity-columns.json"),
+)
+
+
+def expected_columns(*, include_runtime: bool = True, upto: str | None = None) -> dict:
+    """Tables expected once revisions <= ``upto`` (default: all) are applied.
+
+    ``include_runtime=False`` keeps the legacy meaning: revision 001 tables only.
+    """
+    limit = "001" if not include_runtime else upto
+    result = {}
+    for version, name in COLUMN_CONTRACTS:
+        path = MIGRATIONS / name
+        if (limit is None or version <= limit) and path.exists():
+            result.update(json.loads(path.read_text(encoding="utf-8")))
     return result
 
 
@@ -154,8 +168,8 @@ def verify_later_constraints(conn, applied: set[str]) -> None:
             raise MigrationError("Later revision constraint differs: " + key[1])
 
 
-def verify_columns(conn, *, include_runtime: bool = True) -> None:
-    expected = expected_columns(include_runtime=include_runtime)
+def verify_columns(conn, *, include_runtime: bool = True, upto: str | None = None) -> None:
+    expected = expected_columns(include_runtime=include_runtime, upto=upto)
     if table_names(conn) != set(expected) | {REVISION_TABLE}:
         raise MigrationError("Catalog table set differs from migration")
     for table, columns in expected.items():
@@ -217,10 +231,12 @@ def verify(conn, *, require_empty: bool = False) -> dict:
         ).fetchone()[0]
     if require_empty and (any(counts.values()) or identity[0][2] is not None or identity[0][3] is not None):
         raise MigrationError("Expected catalog with no initial data")
-    runtime_count = len(expected_columns()) - len(expected_columns(include_runtime=False))
+    runtime_count = len(expected_columns(upto="002")) - len(expected_columns(include_runtime=False))
+    song_identity_count = len(expected_columns()) - len(expected_columns(upto="003"))
     return {
         "catalog_tables": len(expected_columns(include_runtime=False)),
         "runtime_tables": runtime_count,
+        "song_identity_tables": song_identity_count,
         "migration_tables": 1,
         "catalog_instance_id": str(identity[0][0]),
         "schema_version": identity[0][1],
@@ -240,7 +256,7 @@ def migrate(conn) -> dict:
         if ("public", REVISION_TABLE) not in existing:
             raise MigrationError("Refusing to alter a non-empty, unmanaged database")
         applied = verify_revision_prefix(conn)
-        verify_columns(conn, include_runtime=len(applied) >= 2)
+        verify_columns(conn, upto=applied[-1][0] if applied else "001")
         if applied:
             verify_base_schema(conn)
     else:

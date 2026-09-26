@@ -70,6 +70,10 @@ SQLite의 UUID·시각·JSON은 TEXT로 저장하는 제안입니다. JSON은 �
 | B | [songs](#songs) | 곡 작품 마스터 |
 | B | [song_artists](#song_artists) | 곡의 원곡 아티스트 |
 | B | [karaoke_numbers](#karaoke_numbers) | 노래방 수록 번호 |
+| B | [song_aliases](#song-identity) | 곡 별칭 (revision 004) |
+| B | [song_external_ids](#song-identity) | 곡 외부 DB ID (revision 004) |
+| B | [song_match_keys](#song-identity) | 세트리스트 원문 키별 곡 판정 (revision 004) |
+| B | [song_merges](#song-identity) | 중복 곡 병합 기록 (revision 004) |
 | C | [videos](#videos) | 공통 영상 정보 |
 | C | [live_archives](#live_archives) | 라이브 방송 |
 | C | [archive_artists](#archive_artists) | 방송 참여자 |
@@ -332,6 +336,22 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 
 - UNIQUE(song_id, provider, number). 동일 provider+number가 다른 곡에 연결되면 충돌 후보를 검수합니다.
 - 자동 매칭 결과를 검수 없이 확정 번호로 넣지 않습니다.
+
+<a id="song-identity"></a>
+
+### 9-1. 곡 식별 보조 테이블 (revision 004)
+
+**저장 위치:** 새 Neon PostgreSQL. 정확한 제약은 `migrations/catalog/004_song_identity.sql`, 사용 순서는 [곡 마스터 구축 계획](song-master-plan.md)을 따릅니다.
+
+| 테이블 | 핵심 필드 | 규칙 |
+| --- | --- | --- |
+| `song_aliases` | song_id, alias, normalized_alias, locale?, source | UNIQUE(song_id, normalized_alias). source는 manual/vocadb/utaitedb/musicbrainz/wikidata/spotify/setlist. 정규 표기 `title_*`를 대신하지 않음 |
+| `song_external_ids` | song_id, provider, external_id | provider는 vocadb/utaitedb(숫자), musicbrainz_work(UUID), wikidata(Q번호). UNIQUE(provider, external_id)로 같은 외부 작품이 두 곡에 연결되지 않음 |
+| `song_match_keys` | key_version, title_key, artist_key, status, song_id?, occurrence_count, decided_by?, decided_at?, evidence, version | 키는 `app/core/song_keys.py` 정규화 결과이며 원곡자 없으면 빈 문자열. status는 pending/confirmed/ambiguous/rejected/not_song. confirmed일 때만 song_id가 있고, pending이 아니면 판정자·시각이 필수. song 삭제는 RESTRICT |
+| `song_merges` | source_song_id(고유), target_song_id, import_id?, reason | 자기 자신 병합 금지. 추가만 허용(UPDATE/DELETE 거부). source 곡은 보관하고 조회는 target으로 안내 |
+
+- `song_match_keys`는 판정 기록이며 `performances.song_id`를 직접 바꾸지 않습니다. 확정 키의 소급 연결은 별도 단계에서 수행합니다.
+- 별칭·외부 ID 변경은 소유 곡의 `updated_at`을 갱신합니다.
 
 ## C. 영상·라이브·세트리스트
 
