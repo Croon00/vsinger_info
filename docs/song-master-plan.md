@@ -29,7 +29,7 @@
 | 4 | 곡 식별 스키마: 원문 키 대응표, 곡 외부 ID, 곡 별칭, 병합 기록 | 완료. 2026-09-27 운영 DB에 004 적용, 원문 키 backfill 반영 |
 | 5 | 곡 seed: Spotify ISRC → MusicBrainz work, 상위 원문 키 → VocaDB/UtaiteDB → MusicBrainz | 상위 키 300개 파일럿 적용 완료(2026-09-27, 새 곡 277·새 아티스트 86). 나머지 pending 키 확장 TODO |
 | 6 | `title_ko` 보강: 저장한 외부 ID로 Wikidata 조회, 나머지는 검수 후보 | TODO |
-| 7 | 확정 키로 `performances.song_id` 소급 연결, YouTube 수집에서 확정 키 자동 부여 | 소급 연결 2회 적용(연결률 54.7%). 수집 경로 연결 TODO |
+| 7 | 확정 키로 `performances.song_id` 소급 연결, YouTube 수집에서 확정 키 자동 부여 | 소급 연결 2회 적용(연결률 54.7%). 수집 경로 자동 연결 구현(아래 7단계 수집 경로) |
 | 8 | 곡 연결률이 충분해지면 노래방 번호 작업 시작 | TODO |
 
 5단계는 2~3단계와 독립적으로 진행할 수 있다. 1단계 측정 결과에 따라 4단계 → 일부 연결 키 199개 확장 → 5단계 파일럿을 먼저 하고, 2·3단계(Spotify)는 버튜버 오리지널곡을 위해 병행한다.
@@ -138,3 +138,14 @@
 - 이어서 `scripts/link_performances_from_match_keys.py --apply`: 키 285개로 10,605건 연결, 37단위 모두 커밋. 직후 dry-run의 links는 0이다. 가창 74,555건 중 연결 40,816건(54.7%), 미연결 33,688건이다(측정 중 수집으로 가창 51건 증가). song_id가 존재하지 않는 곡을 가리키는 가창은 0건이다.
 - backfill dry-run은 판정 변경 없이 대표 표기 119건만 남았다(위 7단계 항목). 남은 pending 키는 13,199개다.
 - 되돌리기 스크립트는 아직 없다. 가창 연결은 `catalog_changes`로 건별 복원할 수 있고, 새 곡·아티스트는 import 296의 create 기록으로 찾을 수 있다.
+
+## 7단계 수집 경로 연결 (2026-09-27)
+
+- `app/repositories/youtube_collection.py`의 `persist_collect`가 가창을 넣을 때 `app/repositories/song_match_keys.py`로 confirmed 키를 조회해 같은 transaction에서 `song_id`를 채운다. 새 archive와 가창이 없던 기존 archive 재개 두 경로 모두에 적용된다. 대상 곡은 보관되지 않고 병합으로 사라지지 않은 곡이다.
+- 조회 규칙(`app/core/song_keys.py`의 `lookup_keys`/`resolve_key`)은 소급 연결 스크립트와 같다. 먼저 정규화 원문(곡명·원곡자) 정확 일치를 보고, 없고 원곡자 원문이 비어 있으면 곡명 원문을 `/`·`／`(공백 무관) 또는 공백을 둔 대시(` - ` 등)에서 나눈 (곡명, 원곡자) 쌍을 confirmed 키와 비교한다. 나눈 쌍이 여러 곡을 가리키면 연결하지 않는다. 나눈 쌍은 조회에만 쓰고 저장하지 않으며 원문도 바꾸지 않는다.
+  - 이유: 운영 수집분(2026-09-23~27) 695행은 모두 규칙 추출(`rules-1`)이고, 규칙 파서는 `곡명 / 원곡자`를 곡명 원문에 그대로 둔다. 정확 일치만으로는 16행(2.3%)만 연결됐다.
+  - 운영 DB 읽기 전용 확인: 분리 조회를 더하면 현재 미연결 가창 중 189건(키 160개)이 추가로 연결되고, 여러 곡에 걸리는 행은 0건이다. 이미 연결된 원곡자 없는 가창 1,231건에 같은 규칙을 적용해도 기존 연결과 다른 곡을 고르는 경우는 0건이다. 상위 60건을 눈으로 확인했을 때 오연결은 없었다.
+- 조회만 한다. 새 키 추가·빈도 갱신·판정은 하지 않으며, 새 원문 키는 `scripts/backfill_song_match_keys.py`, 이후 확정된 키의 소급 연결은 `scripts/link_performances_from_match_keys.py`로 한다. 소급 연결 스크립트 policy를 v2로 올리고 `catalog_changes.provenance.match`에 `exact`/`split`을 기록한다.
+- 수집 경로 연결은 `catalog_changes`를 남기지 않는다. 근거는 보존된 원문과 confirmed 키이며, 같은 규칙으로 언제든 재계산할 수 있다.
+- revision 004 표가 없으면(`to_regclass`) 연결 없이 이전처럼 저장한다. 앱이 허용하는 revision 범위(001-002~001-004)는 그대로다.
+- 로컬 임시 PostgreSQL: 수집 테스트 2개(confirmed 키만 연결, 분리 조회, 여러 곡에 걸리는 분리 쌍·pending·키 없음·보관 곡·병합 곡은 NULL, 키 표 불변 / 004 표 없음), 조회 규칙 단위 테스트 2개, 소급 연결 분리 조회 테스트 1개를 추가했다. 전체 `python -m pytest -q -p no:cacheprovider` 364 passed, 376 warnings(기존 deprecated 경고). 운영 worker에는 아직 배포하지 않았다. 배포 전까지 쌓인 미연결 가창과 위 189건은 배포 뒤 소급 연결 스크립트 한 번으로 채운다.

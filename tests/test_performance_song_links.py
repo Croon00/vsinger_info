@@ -87,3 +87,16 @@ def test_concurrent_change_rolls_back_bucket(catalog, monkeypatch):
         link.run(conn, write=True)
     assert q(conn, "SELECT count(*) AS n FROM performances WHERE song_id IS NULL").fetchone()["n"] == 6
     assert q(conn, "SELECT count(*) AS n FROM catalog_imports").fetchone()["n"] == 0
+
+
+
+def test_combined_title_artist_line_links_through_confirmed_split_key(catalog):
+    conn, lemon, _ = catalog
+    archive = q(conn, "SELECT id FROM live_archives").fetchone()["id"]
+    row(conn, "performances", archive_id=archive, ordinal=8, start_seconds=80, raw_title="Lemon  /  米津玄師")
+    row(conn, "performances", archive_id=archive, ordinal=9, start_seconds=90, raw_title="Lemon / 米津玄師", raw_artist="x")
+    assert link.run(conn, write=True)["linked"] == 3
+    linked = {r["ordinal"]: r["song_id"] for r in q(conn, "SELECT ordinal, song_id FROM performances WHERE ordinal>7")}
+    assert linked == {8: lemon, 9: None}   # a given raw artist disables splitting
+    matches = [c["provenance"]["match"] for c in q(conn, "SELECT provenance FROM catalog_changes ORDER BY entity_id")]
+    assert matches == ["exact", "exact", "split"]

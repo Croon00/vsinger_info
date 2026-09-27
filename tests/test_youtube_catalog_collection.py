@@ -349,6 +349,49 @@ def test_ai_extraction_requires_source_evidence_and_does_not_resolve_names(store
     assert store.execute("SELECT source_metadata->>'extractor' FROM source_documents").fetchone()[0].startswith('openai:')
 
 
+def match_key(db, title, status='confirmed', song=None, artist=''):
+    decided = status != 'pending'
+    return row(db, 'song_match_keys', title_key=title, artist_key=artist, status=status, song_id=song, sample_raw_title=title,
+               occurrence_count=1, decided_by='manual' if decided else None,
+               decided_at=datetime.now(UTC) if decided else None)
+
+
+SETLIST = ('00:30 「Song One」\n02:10 SONG TWO\n03:00 Song Three\n04:00 Song Four\n05:00 Song Five\n'
+           '06:00 Song Six  /  Artist\n07:00 Song Seven / Artist A / Artist B')
+
+
+def test_confirmed_match_key_links_new_performance_without_touching_keys(store, provider):
+    queue(store)
+    provider.comments.return_value = ([comment(SETLIST)], False)
+    one, gone, merged, target, six, seven_a, seven_b = (row(store, 'songs', title_native=t) for t in (
+        'One', 'Gone', 'Old', 'New', 'Six', 'Seven A', 'Seven B'))
+    store.execute('UPDATE songs SET archived_at=clock_timestamp() WHERE id=%s', (gone,))
+    row(store, 'song_merges', source_song_id=merged, target_song_id=target, reason='duplicate')
+    match_key(store, 'song one', song=one)            # wrapping quotes and case are normalized away
+    match_key(store, 'song two', status='pending')
+    match_key(store, 'song three', song=gone)         # archived song
+    match_key(store, 'song five', song=merged)        # merged-away song
+    match_key(store, 'song six', song=six, artist='artist')                     # "title / artist" split
+    match_key(store, 'song seven', song=seven_a, artist='artist a / artist b')  # two splits, two songs:
+    match_key(store, 'song seven / artist a', song=seven_b, artist='artist b')  # ambiguous, not linked
+    store.commit()
+    keys_before = store.execute('SELECT * FROM song_match_keys ORDER BY id').fetchall()
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT raw_title,raw_artist,song_id FROM performances ORDER BY ordinal').fetchall() == [
+        ('Song One', None, one), ('SONG TWO', None, None), ('Song Three', None, None), ('Song Four', None, None),
+        ('Song Five', None, None), ('Song Six  /  Artist', None, six), ('Song Seven / Artist A / Artist B', None, None)]
+    # Lookup only: raw text kept, no new keys, no counts or decisions changed.
+    assert store.execute('SELECT * FROM song_match_keys ORDER BY id').fetchall() == keys_before
+
+
+def test_collection_without_revision_004_tables_leaves_song_unlinked(store, provider):
+    queue(store)
+    store.execute('ALTER TABLE song_match_keys RENAME TO song_match_keys_hidden')
+    store.commit()
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances WHERE song_id IS NULL').fetchone()[0] == 2
+
+
 def test_adapter_normalizes_actual_start_and_duration_without_scheduled_fallback():
     response = {'items': [{'id': 'abcdefghijk', 'snippet': {'channelId': CHANNEL, 'title': 'Song', 'publishedAt': '2026-09-01T00:00:00Z'},
         'contentDetails': {'duration': 'PT1H2M3S'}, 'status': {'privacyStatus': 'public'},

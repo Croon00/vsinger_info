@@ -1,4 +1,4 @@
-from app.core.song_keys import ascii_latin, normalize_text, song_key
+from app.core.song_keys import ascii_latin, lookup_keys, normalize_text, resolve_key, song_key
 
 
 def test_width_case_space_and_wrapping_quotes_are_normalized():
@@ -28,3 +28,24 @@ def test_ascii_latin_strips_marks_and_rejects_non_latin():
     assert ascii_latin("夜に駆ける") is None
     assert ascii_latin("Heart ♡") is None
     assert ascii_latin("") is None and ascii_latin(None) is None
+
+
+
+def test_lookup_keys_offer_splits_only_without_artist():
+    assert lookup_keys("Lemon", "米津玄師") == [("lemon", "米津玄師")]
+    assert lookup_keys("怪獣  /  サカナクション", None) == [("怪獣 / サカナクション", ""), ("怪獣", "サカナクション")]
+    assert lookup_keys("からくりピエロ/40mP", None)[1] == ("からくりピエロ", "40mp")
+    assert lookup_keys("Flavor Of Life - 宇多田ヒカル", None)[1] == ("flavor of life", "宇多田ヒカル")
+    assert lookup_keys("W/X/Y", None) == [("w/x/y", ""), ("w", "x/y"), ("w/x", "y")]
+    assert lookup_keys("ロキ-みきとP", None) == [("ロキ-みきとp", "")]   # unspaced hyphen is part of titles
+    assert lookup_keys("/ Artist", None) == [("/ artist", "")]
+
+
+def test_resolve_key_prefers_exact_and_refuses_ambiguous_splits():
+    exact, split = ("w/x/y", ""), ("w/x", "y")
+    assert resolve_key([exact, split], {exact: 1, split: 2}) == exact
+    assert resolve_key([exact, split], {split: 2}) == split
+    other = ("w", "x/y")
+    assert resolve_key([exact, other, split], {other: 3, split: 3}) == other   # both name one song
+    assert resolve_key([exact, other, split], {other: 3, split: 2}) is None    # different songs
+    assert resolve_key([exact], {}) is None and resolve_key([], {}) is None

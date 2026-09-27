@@ -3,9 +3,10 @@
 Dry-run by default (READ ONLY transaction). ``--apply`` commits in buckets of
 performance IDs; each bucket writes a catalog_imports receipt and one catalog_changes
 row per performance, so every link can be traced and reversed. Only performances with
-``song_id IS NULL`` whose normalized raw text equals a confirmed key are touched; raw
-text and existing links are never changed. Keys pointing at an archived or merged-away
-song are skipped.
+``song_id IS NULL`` whose normalized raw text equals a confirmed key (or, with no raw
+artist, whose "title / artist" split equals confirmed keys of exactly one song) are
+touched; raw text and existing links are never changed. Keys pointing at an archived
+or merged-away song are skipped.
 """
 from __future__ import annotations
 
@@ -28,10 +29,10 @@ if str(ROOT) not in sys.path:
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-from app.core.song_keys import song_key  # noqa: E402
+from app.core.song_keys import KEY_VERSION, lookup_keys, resolve_key  # noqa: E402
 
-KEY_VERSION = 1
-POLICY = "performance-song-link-from-match-keys-v1"
+# v2 adds the "title / artist" split lookup (provenance.match = exact | split).
+POLICY = "performance-song-link-from-match-keys-v2"
 NAMESPACE = uuid.UUID("c2a7d0f4-1b9e-4e53-8a61-7f4d2e8b9c35")
 BUCKET_SIZE = 2000
 
@@ -57,10 +58,15 @@ def collect(conn) -> dict:
         WHERE p.archived_at IS NULL AND p.song_id IS NULL ORDER BY p.id""").fetchall()
     links = []
     per_key: Counter = Counter()
+    confirmed = {k: r["song_id"] for k, r in keys.items()}
     for p in candidates:
-        key = keys.get(song_key(p["raw_title"], p["raw_artist"]))
+        # Same rule as the collection path: exact key, else an unambiguous split of "title / artist".
+        lookup = lookup_keys(p["raw_title"], p["raw_artist"])
+        resolved = resolve_key(lookup, confirmed)
+        key = keys[resolved] if resolved else None
         if key:
-            links.append({"id": p["id"], "version": p["version"], "song_id": key["song_id"], "key_id": key["id"]})
+            links.append({"id": p["id"], "version": p["version"], "song_id": key["song_id"], "key_id": key["id"],
+                          "match": "exact" if resolved == lookup[0] else "split"})
             per_key[key["id"]] += 1
     buckets: dict[int, list[dict]] = defaultdict(list)
     for link in links:
@@ -80,9 +86,9 @@ def apply_bucket(conn, catalog_id: str, bucket: int, links: list[dict]) -> tuple
             return "already_committed", 0
         updated = rows(conn, """
             UPDATE performances p SET song_id=x.song_id
-            FROM jsonb_to_recordset(%s::jsonb) x(id integer,version integer,song_id integer,key_id integer)
+            FROM jsonb_to_recordset(%s::jsonb) x(id integer,version integer,song_id integer,key_id integer,match text)
             WHERE p.id=x.id AND p.version=x.version AND p.song_id IS NULL AND p.archived_at IS NULL
-            RETURNING p.id, x.key_id, p.song_id, p.version""", (Jsonb(links),)).fetchall()
+            RETURNING p.id, x.key_id, x.match, p.song_id, p.version""", (Jsonb(links),)).fetchall()
         if len(updated) != len(links):
             raise RuntimeError(f"Bucket {bucket}: performances changed since planning; rerun the dry-run")
         import_id = conn.execute("""INSERT INTO catalog_imports
@@ -93,7 +99,8 @@ def apply_bucket(conn, catalog_id: str, bucket: int, links: list[dict]) -> tuple
              Jsonb({"kind": POLICY, "bucket": bucket, "linked": len(updated)}))).fetchone()[0]
         changes = [{"entity_id": r["id"], "before_data": {"song_id": None},
                     "after_data": {"song_id": r["song_id"]},
-                    "provenance": {"policy": POLICY, "song_match_key_id": r["key_id"]}} for r in updated]
+                    "provenance": {"policy": POLICY, "song_match_key_id": r["key_id"], "match": r["match"]}}
+                   for r in updated]
         conn.execute("""INSERT INTO catalog_changes(import_id,entity_type,entity_id,action,before_data,after_data,provenance)
             SELECT %s,'performances',x.entity_id,'update',x.before_data,x.after_data,x.provenance
             FROM jsonb_to_recordset(%s::jsonb) x(entity_id integer,before_data jsonb,after_data jsonb,provenance jsonb)""",

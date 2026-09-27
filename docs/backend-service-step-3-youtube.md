@@ -37,7 +37,7 @@
 - 영상은 `(platform, platform_video_id)`로 식별하고 신규 행에 `source_account_id`, 제목, 공개 시각, 길이, 공개 상태를 저장한다. 기존 영상의 수동 메타데이터를 자동 갱신하지 않으며 새 관측값은 원문 문서의 메타데이터에 남긴다.
 - `broadcast_at`에는 실제 방송 시작만 사용한다. 예정 시각이나 업로드 시각을 복사하지 않는다.
 - 새 archive는 계정의 기존 `owner` 관계를 진행자(`archive_artists.host`)로 연결한다. 단일 소유자가 있을 때만 대표 표시 아티스트를 설정한다. 각 곡의 가창자로 자동 복사하지 않는다.
-- 새 가창은 `performances`에 순서·초 단위 시작·원문 timestamp·곡명·명시된 원곡자·문서 ID를 저장한다. `song_id`와 불확실한 `performance_artists`는 비워 둔다. 공동 가창 표기는 댓글/원문 행에 보존한다. 이름만으로 작품·인물을 생성하거나 병합하지 않는다.
+- 새 가창은 `performances`에 순서·초 단위 시작·원문 timestamp·곡명·명시된 원곡자·문서 ID를 저장한다. `song_id`는 원문이 `song_match_keys`의 confirmed 키와 맞을 때만 같은 transaction에서 채운다(`app/repositories/song_match_keys.py`). 정규화 원문(`app/core/song_keys.py`) 정확 일치를 먼저 보고, 원곡자 원문이 없으면 `곡명 / 원곡자`·`곡명 - 원곡자` 형태를 나눈 쌍도 비교하며, 나눈 쌍이 여러 곡을 가리키면 연결하지 않는다. 보관·병합된 곡의 키와 pending/ambiguous/rejected/not_song 키는 NULL로 둔다. 이 조회는 원문·키·곡·판정을 만들거나 바꾸지 않으며 새 원문 키와 빈도는 `scripts/backfill_song_match_keys.py`가 모은다. revision 004 표가 없으면 연결 없이 저장한다. 불확실한 `performance_artists`는 비워 둔다. 공동 가창 표기는 댓글/원문 행에 보존한다. 이름만으로 작품·인물을 생성하거나 병합하지 않는다.
 - 기존 정규 파싱의 범위 종료 시각·곡 번호·인용부호·점수 제거를 유지하고 잘못된 시간·중복 시작 시각·비가창 행을 제외한다. 선택적 기존 LLM 추출에는 댓글 최대 20,000자를 보내며 원문에 없는 timestamp·제목·원곡자를 채택하지 않는다. LLM 불가 시 정규 파싱을 사용한다.
 - 자동 추출은 검수 완료를 뜻하지 않으므로 새 세트리스트는 `partial`이다. 새 번역·독음·가사·노래방 수집은 호출하지 않는다.
 - `source_documents`에는 원문과 외부 ID/URL, 영상 메타데이터, 추출 방식/모델·버전, 추출 행과 처리 사유를 보존한다. hash는 kind·외부 ID·원문·메타데이터의 정렬 JSON으로 계산하며 확보 시각/검토 상태는 hash에서 제외한다. 같은 원문·추출 결과의 재처리는 중복 문서를 만들지 않는다.

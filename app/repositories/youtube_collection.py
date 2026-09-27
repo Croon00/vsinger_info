@@ -7,7 +7,7 @@ from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import text
 
-from app.repositories import worker_jobs
+from app.repositories import song_match_keys, worker_jobs
 from app.schemas.worker_jobs import JobRequest
 
 
@@ -141,11 +141,15 @@ def persist_collect(session, job, payload, value):
         session.execute(text('''INSERT INTO archive_sources(archive_id,document_id,role) VALUES (:archive,:document,:role)
             ON CONFLICT DO NOTHING'''), dict(archive=archive_id, document=document, role='setlist_evidence' if comment else 'metadata_evidence'))
     if new_archive or resume_archive:
-        for ordinal, entry in enumerate(value['rows'], 1):
-            session.execute(text('''INSERT INTO performances(archive_id,ordinal,start_seconds,raw_title,raw_artist,raw_timestamp,source_document_id)
-                VALUES (:archive,:ordinal,:seconds,:title,:artist,:stamp,:document)'''),
+        # Only already-confirmed keys link here; everything else stays NULL for review.
+        songs = song_match_keys.link_song_ids(
+            session, [(entry['title'], entry.get('original_artist') or None) for entry in value['rows']])
+        for ordinal, (entry, song) in enumerate(zip(value['rows'], songs, strict=True), 1):
+            session.execute(text('''INSERT INTO performances(archive_id,ordinal,start_seconds,raw_title,raw_artist,raw_timestamp,
+                    source_document_id,song_id)
+                VALUES (:archive,:ordinal,:seconds,:title,:artist,:stamp,:document,:song)'''),
                 dict(archive=archive_id, ordinal=ordinal, seconds=entry['start_seconds'], title=entry['title'],
-                     artist=entry.get('original_artist') or None, stamp=entry['timestamp'], document=document))
+                     artist=entry.get('original_artist') or None, stamp=entry['timestamp'], document=document, song=song))
     if (payload.purpose == 'cover' and outcome == 'collected' and video_id and not conflict
             and not current['archive'] and not current['cover']):
         session.execute(text('INSERT INTO covers(video_id) VALUES (:id) ON CONFLICT DO NOTHING'), {'id': video_id})
