@@ -4,7 +4,7 @@ Targets are active Spotify accounts linked as ``owner`` to an active ``show_in_c
 artist. The preview (default) only reads. ``--apply`` refuses unless catalog revision 005
 (ISRC) is applied, then in ONE transaction sets ``collection_enabled=true`` on the targets
 that are still disabled (catalog_imports receipt + one catalog_changes row each) and
-enqueues one ``spotify_collect`` job per target (``request_run=initial``, album offset 0,
+enqueues one ``spotify_collect`` job per target (``request_run`` from ``--run``, default ``initial``; album offset 0,
 no YouTube matching) through the normal job repository, so account validation and the
 idempotency key are the worker's own. Re-running enqueues nothing new.
 
@@ -34,7 +34,7 @@ from app.schemas.worker_jobs import JobRequest  # noqa: E402
 
 POLICY = "spotify-collection-start-v1"
 NAMESPACE = uuid.UUID("0b8e6f1d-4c27-4a95-b3d0-6e2a91c5f7d4")
-PAYLOAD = {"request_run": "initial", "link_youtube": False}
+PAYLOAD = {"link_youtube": False}
 
 _spec = importlib.util.spec_from_file_location("migrate_catalog", ROOT / "scripts" / "migrate_catalog.py")
 migrate_catalog = importlib.util.module_from_spec(_spec)
@@ -51,12 +51,12 @@ def targets(session) -> list[dict]:
         GROUP BY e.id ORDER BY e.id""")).mappings()]
 
 
-def request(target: dict) -> JobRequest:
+def request(target: dict, run_label: str = "initial") -> JobRequest:
     return JobRequest(job_type="spotify_collect", external_account_id=target["account_id"],
-                      payload={"spotify_artist_id": target["platform_id"], **PAYLOAD})
+                      payload={"spotify_artist_id": target["platform_id"], "request_run": run_label, **PAYLOAD})
 
 
-def run(session, *, write: bool) -> dict:
+def run(session, *, write: bool, run_label: str = "initial") -> dict:
     identity = session.execute(text("SELECT id::text, schema_version FROM catalog_instance")).one()
     revisions = {r[0] for r in session.execute(text("SELECT version FROM catalog_schema_migrations"))}
     if identity[1] != "catalog-v2":
@@ -64,7 +64,7 @@ def run(session, *, write: bool) -> dict:
     if write:
         session.execute(text("SELECT pg_advisory_xact_lock(731064925)"))
     rows = targets(session)
-    keys = {t["account_id"]: request(t).key() for t in rows}
+    keys = {t["account_id"]: request(t, run_label).key() for t in rows}
     queued = {r[0] for r in session.execute(text("""SELECT external_account_id FROM worker_jobs
         WHERE job_type='spotify_collect' AND idempotency_key = ANY(:keys)"""), {"keys": list(keys.values())})}
     disabled = [t for t in rows if not t["collection_enabled"]]
@@ -83,7 +83,7 @@ def run(session, *, write: bool) -> dict:
         if after is None:
             raise RuntimeError(f"Account {t['account_id']} changed since preview; re-run")
         changes.append((t["account_id"], after))
-    jobs = [worker_jobs.enqueue(session, request(t)) for t in rows]
+    jobs = [worker_jobs.enqueue(session, request(t, run_label)) for t in rows]
     digest = hashlib.sha256(json.dumps({"policy": POLICY, "accounts": [c[0] for c in changes]},
                                        sort_keys=True).encode()).hexdigest()
     if changes:
@@ -105,6 +105,7 @@ def run(session, *, write: bool) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--run", default="initial", help="request_run label; a new label re-collects every account")
     args = parser.parse_args()
     url = migrate_catalog.load_connection().replace("postgresql://", "postgresql+psycopg://", 1).replace(
         "postgres://", "postgresql+psycopg://", 1)
@@ -112,7 +113,7 @@ def main() -> int:
     try:
         with Session(engine) as session:
             session.execute(text("SET TRANSACTION READ ONLY" if not args.apply else "SET LOCAL lock_timeout='10s'"))
-            result = run(session, write=args.apply)
+            result = run(session, write=args.apply, run_label=args.run)
             if args.apply:
                 session.commit()
             else:

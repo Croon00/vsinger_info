@@ -54,8 +54,10 @@ def snapshot(session, album_ids, track_ids):
 def _receipt(session, job, payload, value, actions):
     body = dict(provider='spotify', account_id=job.external_account_id, artist_id=payload.spotify_artist_id,
                 offset=payload.album_offset, next=value['has_next'], actions=actions,
+                album_ids=payload.album_ids, extra_album_ids=value.get('extra_album_ids', []),
                 albums=[album.model_dump(mode='json') for album in value['albums']],
                 skipped_uncredited=value['skipped_uncredited'],
+                skipped_other_tracks=value.get('skipped_other_tracks', {}),
                 youtube_matches=value['youtube_matches'])
     manifest = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False,
                                           separators=(',', ':')).encode()).hexdigest()
@@ -64,6 +66,13 @@ def _receipt(session, job, payload, value, actions):
         ON CONFLICT (operation_id) DO NOTHING'''),
         dict(operation=str(uuid5(NAMESPACE_URL, f'spotify-job:{job.id}')), hash=manifest,
              summary=json.dumps(body, ensure_ascii=False)))
+
+
+def stored_album_ids(session, album_ids):
+    if not album_ids:
+        return set()
+    return {r[0] for r in session.execute(text('SELECT spotify_album_id FROM albums WHERE spotify_album_id IN :ids')
+                                          .bindparams(bindparam('ids', expanding=True)), {'ids': tuple(album_ids)})}
 
 
 def _isrc_recording(session, isrc):
@@ -191,6 +200,12 @@ def persist(session, job, payload, value):
                 actions.append(dict(album_id=album.id, track_id=track.id, status='slot_conflict'))
         actions.append(dict(album_id=album.id, status='created'))
     _receipt(session, job, payload, value, actions)
+    extras = [external for external in value.get('extra_album_ids', []) if external not in current['albums']]
+    for start in range(0, len(extras), 10):
+        follow = payload.model_dump()
+        follow['album_ids'] = extras[start:start + 10]
+        worker_jobs.enqueue(session, JobRequest(job_type='spotify_collect', external_account_id=job.external_account_id,
+                                                 payload=follow, max_attempts=job.max_attempts))
     if value['has_next']:
         next_offset = payload.album_offset + 10
         if next_offset > 1000:

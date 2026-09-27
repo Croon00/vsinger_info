@@ -171,6 +171,43 @@ class SpotifyCatalogClient:
             raise SpotifyFailure('incomplete_album_page')
         return items, bool(data.get('next'))
 
+    async def credited_albums(self, artist_id: str, *, max_offset: int = 1000) -> list[str]:
+        """Album IDs credited to this exact artist ID, found through search and top tracks.
+
+        ``/artists/{id}/albums`` is known to omit releases and returns nothing at all for
+        some live profiles (2026-09-28: 羽緒, 妃玖, 焔魔るり, 水瀬 凪), so every account also
+        runs this pass. The registered ID stays the only identity: search is by the
+        profile's own name, and an album is kept only when the album or one of its tracks
+        credits that ID. Search pages are followed by ``next`` (a page can hold fewer items
+        than ``limit``).
+        """
+        artist = await self.get(f'/artists/{artist_id}')
+        name = artist.get('name')
+        if artist.get('id') != artist_id or not isinstance(name, str) or not name.strip():
+            raise SpotifyFailure('malformed_artist')
+        found = {}
+        top = await self.get(f'/artists/{artist_id}/top-tracks', params={'market': MARKET})
+        for track in top.get('tracks') or []:
+            if isinstance(track, dict) and isinstance(track.get('album'), dict):
+                found.setdefault(track['album'].get('id'), None)
+        for kind in ('album', 'track'):
+            offset = 0
+            while offset <= max_offset:
+                page = (await self.get('/search', params={'q': f'artist:{name}', 'type': kind, 'market': MARKET,
+                                                          'limit': 10, 'offset': offset})).get(kind + 's') or {}
+                items = page.get('items') or []
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    album = item if kind == 'album' else item.get('album') or {}
+                    credits = item.get('artists') or []
+                    if any(isinstance(a, dict) and a.get('id') == artist_id for a in credits):
+                        found.setdefault(album.get('id'), None)
+                if not page.get('next') or not items:
+                    break
+                offset += 10
+        return [external for external in found if isinstance(external, str) and re.fullmatch(SPOTIFY_ID, external)]
+
     async def album(self, album_id: str) -> SpotifyAlbum:
         raw = await self.get(f'/albums/{album_id}', params={'market': MARKET})
         tracks, offset = [], 0

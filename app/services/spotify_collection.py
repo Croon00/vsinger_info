@@ -80,7 +80,20 @@ async def collect(job, payload):
         raise PermanentJobError('Registered Spotify ID changed')
     provider = client()
     try:
-        summaries, has_next = await provider.albums_page(payload.spotify_artist_id, offset=payload.album_offset)
+        if payload.album_ids:
+            # Follow-up for albums found by the search pass; the listing is already done.
+            summaries, has_next, extras = [{'id': external} for external in payload.album_ids], False, []
+        else:
+            summaries, has_next = await provider.albums_page(payload.spotify_artist_id, offset=payload.album_offset)
+            extras = []
+            if not has_next:
+                # /artists/{id}/albums omits releases, so the last listing page also runs the
+                # search pass and queues credited albums that are not stored yet.
+                listed = {summary.get('id') for summary in summaries}
+                found = [external for external in await provider.credited_albums(payload.spotify_artist_id)
+                         if external not in listed]
+                stored = await db_call(repository.stored_album_ids, found)
+                extras = [external for external in found if external not in stored]
         if has_next and payload.album_offset >= 1000:
             raise PermanentJobError('Spotify album page limit reached')
         unique = dict.fromkeys(summary.get('id') for summary in summaries)
@@ -88,6 +101,8 @@ async def collect(job, payload):
             raise PermanentJobError('Spotify album IDs are malformed')
         albums = []
         skipped = []
+        skipped_tracks = {}
+        registered = set(scope['artists'])
         for external in unique:
             album = await provider.album(external)
             if album.id != external:
@@ -96,6 +111,13 @@ async def collect(job, payload):
                     and not any(payload.spotify_artist_id in track.artist_ids for track in album.tracks)):
                 skipped.append(external)
                 continue
+            if not registered & set(album.artist_ids):
+                # Appears-on albums and compilations (OSTs, omnibus releases): keep only the
+                # tracks credited to a registered artist, not the whole release.
+                kept = [track for track in album.tracks if registered & set(track.artist_ids)]
+                if len(kept) != len(album.tracks):
+                    skipped_tracks[album.id] = [track.id for track in album.tracks if track not in kept]
+                    album.tracks = kept
             albums.append(album)
         # One batch request per 50 tracks; the ISRC joins releases of the same recording.
         isrcs = await provider.isrcs([track.id for album in albums for track in album.tracks])
@@ -107,8 +129,8 @@ async def collect(job, payload):
         matches = await _youtube_matches(albums, scope, snapshot) if payload.link_youtube else {}
     except SpotifyFailure as exc:
         _translate(exc)
-    return dict(scope=scope, albums=albums, skipped_uncredited=skipped,
-                has_next=has_next, snapshot=snapshot, youtube_matches=matches)
+    return dict(scope=scope, albums=albums, skipped_uncredited=skipped, skipped_other_tracks=skipped_tracks,
+                has_next=has_next, extra_album_ids=extras, snapshot=snapshot, youtube_matches=matches)
 
 
 def handlers():

@@ -6,7 +6,7 @@
 
 `music_jobs`의 `spotify_collect` handler → `services/spotify_collection.py` → `integrations/spotify_catalog.py` → `repositories/spotify_collection.py`로 실행한다. 별도 migration은 필요하지 않다. 기존 `albums`, `album_artists`, `recordings`, `recording_artists`, `recording_external_ids`, `album_tracks`, `catalog_imports`를 사용한다.
 
-등록·선점·수집 직전·저장 시 `external_accounts(platform=spotify, collection_enabled=true, archived_at IS NULL)`와 입력의 22자 고정 ID를 대조한다. `artist_external_accounts.relationship=owner`로 연결된 활성 아티스트가 없으면 provider를 호출하지 않는다. 다른 발매 명의도 **각각 등록·활성인 Spotify 계정의 owner 관계와 provider의 실제 ID 크레딧**이 함께 있어야 연결한다. 미등록 계정이나 이름이 비슷한 아티스트는 생성·활성화·추측 연결하지 않는다.
+등록·선점·수집 직전·저장 시 `external_accounts(platform=spotify, collection_enabled=true, archived_at IS NULL)`와 입력의 22자 고정 ID를 대조한다. `artist_external_accounts.relationship=owner`로 연결된 활성 아티스트가 없으면 provider를 호출하지 않는다. 다른 발매 명의도 **각각 등록·활성인 Spotify 계정의 owner 관계와 provider의 실제 ID 크레딧**이 함께 있어야 연결한다. 앨범 크레딧에 등록 아티스트가 없는 참여 앨범·컴필레이션은 등록 아티스트가 크레딧된 트랙만 저장한다(2026-09-28). 아티스트 앨범 API가 발매를 빠뜨리므로 마지막 목록 페이지 작업이 프로필 이름 검색(앨범·트랙, `next`로 끝까지)과 인기곡으로 앨범을 더 찾고, 등록 ID가 앨범 또는 트랙에 크레딧되고 아직 저장되지 않은 앨범만 10개씩 후속 작업(`album_ids`)으로 넣는다. 미등록 계정이나 이름이 비슷한 아티스트는 생성·활성화·추측 연결하지 않는다.
 
 자동 주기 수집은 추가하지 않았다. 명시적으로 입력한 작업이 Spotify 앨범 목록을 JP 시장 기준 최대 10개씩 가져오고 `album_offset`을 10씩 늘린 후속 작업을 DB에 원자 등록한다. 앨범의 트랙은 페이지당 50개, 최대 4페이지를 가져온다. 페이지나 트랙 수가 불완전하면 해당 작업을 실패 처리해 부분 앨범을 저장하지 않는다. 앨범 목록은 최대 offset 1000까지 허용하며, 상한 도달 시 조용히 완료하지 않는다. 모든 HTTP 호출은 30초 timeout과 기본 최소 1초 간격을 적용한다. 429·일시적인 5xx·timeout은 안전한 작업 재시도로, `Retry-After`는 다음 시도 시각에 반영한다. 이 한도는 실제 계정 규모와 quota를 확인해 운영 전 재검토한다. [Spotify의 아티스트 앨범 API](https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums)는 페이지 크기 상한 10과 `include_groups`/`market` 입력을 명시한다.
 

@@ -66,7 +66,8 @@ def request(account, **payload):
 def provider(monkeypatch):
     fake = SimpleNamespace(albums_page=AsyncMock(return_value=([{'id': ALBUM}], False)),
                            album=AsyncMock(return_value=make_album()),
-                           isrcs=AsyncMock(return_value={}))
+                           isrcs=AsyncMock(return_value={}),
+                           credited_albums=AsyncMock(return_value=[]))
     monkeypatch.setattr(service, 'client', lambda: fake)
     return fake
 
@@ -496,3 +497,71 @@ def test_adapter_reads_albums_in_the_japanese_market():
     asyncio.run(provider.albums_page(SINGER, offset=0))
     asyncio.run(provider.album(ALBUM))
     assert [market for _, market in seen] == ['JP', 'JP', 'JP']
+
+
+
+def test_compilation_keeps_only_tracks_credited_to_registered_artists(store, provider):
+    artist, account = register(store)
+    provider.album.return_value = make_album(artists=('v' * 22,), tracks=[
+        raw_track(id=TRACK, artists=(SINGER, 'x' * 22), number=1), raw_track(id=OTHER_TRACK, artists=('x' * 22,), number=2)])
+    enqueue(account)
+    assert run()['status'] == 'succeeded'
+    assert store.execute("SELECT external_id FROM recording_external_ids WHERE platform='spotify'").fetchall() == [(TRACK,)]
+    assert store.execute('SELECT count(*) FROM album_tracks').fetchone()[0] == 1
+    receipt = store.execute("SELECT result_summary FROM catalog_imports WHERE source_kind='batch_import'").fetchone()[0]
+    assert receipt['skipped_other_tracks'] == {ALBUM: [OTHER_TRACK]}
+    # The artist's own release keeps every track, credited to them or not.
+    provider.album.return_value = make_album(id=SECOND, tracks=[
+        raw_track(id='w' * 22, number=1), raw_track(id='y' * 22, artists=('x' * 22,), number=2)])
+    provider.albums_page.return_value = ([{'id': SECOND}], False)
+    enqueue(account, request_run='own')
+    assert run()['status'] == 'succeeded'
+    assert store.execute("SELECT count(*) FROM recording_external_ids WHERE platform='spotify'").fetchone()[0] == 3
+
+
+def test_search_pass_queues_credited_albums_missing_from_the_listing(store, provider):
+    _, account = register(store)
+    provider.credited_albums.return_value = [ALBUM, SECOND]      # ALBUM is also on the listing page
+    provider.album.side_effect = lambda external: make_album(id=external, tracks=[
+        raw_track(id=TRACK if external == ALBUM else OTHER_TRACK)])
+    enqueue(account)
+    assert run()['status'] == 'succeeded'
+    provider.credited_albums.assert_awaited_once_with(SINGER)
+    follow = store.execute("SELECT payload FROM worker_jobs WHERE status='pending'").fetchall()
+    assert [p[0]['album_ids'] for p in follow] == [[SECOND]]
+    assert run()['status'] == 'succeeded'
+    assert sorted(r[0] for r in store.execute('SELECT spotify_album_id FROM albums')) == sorted([ALBUM, SECOND])
+    assert provider.credited_albums.await_count == 1            # the follow-up does not search again
+    # A new run finds both albums stored and queues nothing more.
+    enqueue(account, request_run='again')
+    assert run()['status'] == 'succeeded'
+    assert store.execute("SELECT count(*) FROM worker_jobs WHERE status='pending'").fetchone()[0] == 0
+
+
+def test_empty_listing_is_filled_by_the_search_pass(store, provider):
+    _, account = register(store)
+    provider.albums_page.return_value = ([], False)
+    provider.credited_albums.return_value = [ALBUM]
+    enqueue(account)
+    assert run()['status'] == 'succeeded'
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT spotify_album_id FROM albums').fetchall() == [(ALBUM,)]
+
+
+def test_adapter_credited_albums_keeps_only_the_exact_artist_id():
+    def respond(request):
+        if request.url.host == 'accounts.spotify.com':
+            return httpx.Response(200, json={'access_token': 'TOKEN'})
+        path = request.url.path
+        if path.endswith('/top-tracks'):
+            return httpx.Response(200, json={'tracks': [{'album': {'id': ALBUM}}]})
+        if path == '/v1/search':
+            kind = request.url.params['type']
+            if kind == 'album':
+                return httpx.Response(200, json={'albums': {'next': None, 'items': [
+                    {'id': SECOND, 'artists': [{'id': SINGER}]}, {'id': 'z' * 22, 'artists': [{'id': GUEST}]}]}})
+            return httpx.Response(200, json={'tracks': {'next': None, 'items': [
+                {'artists': [{'id': GUEST}, {'id': SINGER}], 'album': {'id': 'c' * 22}}, {'artists': [{'id': GUEST}], 'album': {'id': 'd' * 22}}]}})
+        return httpx.Response(200, json={'id': SINGER, 'name': 'Singer'})
+    provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
+    assert asyncio.run(provider.credited_albums(SINGER)) == [ALBUM, SECOND, 'c' * 22]
