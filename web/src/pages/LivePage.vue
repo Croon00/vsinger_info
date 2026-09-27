@@ -17,6 +17,7 @@ import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { loadYouTube, clampTime, type YouTubePlayer } from '@/lib/youtube'
 import { formatDate, formatTime } from '@/lib/dates'
+import { displayName } from '@/lib/display-name'
 import { cn } from '@/lib/utils'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
@@ -261,8 +262,8 @@ function returnFromViewer() {
                           <template v-else>{{ String(index + 1).padStart(2, '0') }}</template>
                         </span>
                         <span class="setlist-name">
-                          <strong>{{ song.song_title }}</strong>
-                          <small>{{ song.original_artist }}</small>
+                          <strong>{{ displayName(song.song_title, song.song_title_ko) }}</strong>
+                          <small>{{ displayName(song.original_artist, song.original_artist_ko) }}</small>
                         </span>
                         <span class="setlist-time">{{ formatTime(song.start_seconds) }}</span>
                       </Button>

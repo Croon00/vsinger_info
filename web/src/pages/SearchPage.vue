@@ -7,6 +7,7 @@ import type { SearchPerformance } from '@/api/types'
 import { Button } from '@/components/ui/button'
 import { useResource } from '@/composables/useResource'
 import { formatDate } from '@/lib/dates'
+import { displayName } from '@/lib/display-name'
 import {
   Select,
   SelectContent,
@@ -66,7 +67,13 @@ const singers = computed(() => [
   ).values(),
 ])
 const originals = computed(() => [
-  ...new Set(results.value.map((p) => p.original_artist).filter((name) => name.trim())),
+  ...results.value
+    .filter((p) => p.original_artist.trim())
+    .reduce((map, p) => {
+      if (!map.get(p.original_artist))
+        map.set(p.original_artist, p.original_artist_ko?.trim() ?? '')
+      return map
+    }, new Map<string, string>()),
 ])
 const performances = computed(() =>
   results.value.filter(
@@ -77,9 +84,6 @@ const performances = computed(() =>
 )
 function search(q: string) {
   router.push({ path: '/search', query: { q } })
-}
-function koreanName(original: string, korean?: string) {
-  return korean?.trim() && korean !== original ? korean : ''
 }
 </script>
 <template>
@@ -131,7 +135,7 @@ function koreanName(original: string, korean?: string) {
                     :key="a.id ?? a.name"
                     :value="String(a.id ?? a.name)"
                   >
-                    {{ a.name }}
+                    {{ displayName(a.name, a.display_name) }}
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -143,8 +147,8 @@ function koreanName(original: string, korean?: string) {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="all">원곡 아티스트 전체</SelectItem>
-                  <SelectItem v-for="name in originals" :key="name" :value="name">
-                    {{ name }}
+                  <SelectItem v-for="[name, ko] in originals" :key="name" :value="name">
+                    {{ displayName(name, ko) }}
                   </SelectItem>
                 </SelectGroup>
               </SelectContent>
@@ -173,22 +177,13 @@ function koreanName(original: string, korean?: string) {
               <ArchiveThumbnail :video-id="p.live.video_id" />
               <div class="performance-song">
                 <h3 class="performance-title truncate">
-                  {{ p.song_title }} － {{ p.original_artist }}
+                  {{ displayName(p.song_title, p.song_title_ko) }}
                 </h3>
-                <p class="performance-translation truncate">
-                  {{ p.song_title_ko || p.song_title }} -
-                  {{ p.original_artist_ko || p.original_artist }}
+                <p v-if="p.original_artist.trim()" class="performance-original truncate">
+                  {{ displayName(p.original_artist, p.original_artist_ko) }}
                 </p>
                 <p class="performance-singer">
-                  <span>
-                    {{ p.artist.name }}
-                    <span
-                      v-if="koreanName(p.artist.name, p.artist.display_name)"
-                      class="performance-korean performance-singer-reading"
-                    >
-                      ({{ p.artist.display_name }})
-                    </span>
-                  </span>
+                  <span>{{ displayName(p.artist.name, p.artist.display_name) }}</span>
                   <span class="performance-mobile-date">
                     · {{ formatDate(p.live.broadcast_at) }}
                   </span>

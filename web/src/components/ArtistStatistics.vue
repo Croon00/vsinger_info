@@ -6,6 +6,7 @@ import { Search, X, ChevronLeft, ChevronRight } from '@lucide/vue'
 import type { Live, Statistics } from '@/api/types'
 import { artistStatistics, filterAndSortSongs, type SongSort } from '@/lib/artist-statistics'
 import { formatDate } from '@/lib/dates'
+import { displayName } from '@/lib/display-name'
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
@@ -64,8 +65,6 @@ watch([query, sort, () => props.lives], () => {
 const number = (value: number) => value.toLocaleString('ko-KR')
 const date = (value: string | null) =>
   value ? formatDate(value, { year: 'numeric', month: '2-digit', day: '2-digit' }) : '날짜 미등록'
-const displayName = (original: string, korean?: string | null) =>
-  korean?.trim() && korean.trim() !== original.trim() ? `${original} (${korean.trim()})` : original
 </script>
 
 <template>

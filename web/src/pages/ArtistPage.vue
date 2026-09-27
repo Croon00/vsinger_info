@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { formatDate, todayKey } from '@/lib/dates'
 import { openOverlay } from '@/lib/overlays'
+import { displayName } from '@/lib/display-name'
 import AlbumCover from '@/components/AlbumCover.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
@@ -369,8 +370,8 @@ function returnToList() {
                     <div v-for="(track, index) in album.tracks" :key="track.id" class="track-row">
                       <span class="track-number">{{ String(index + 1).padStart(2, '0') }}</span>
                       <div>
-                        <h3>{{ track.title }}</h3>
-                        <p>{{ track.title_ko || data.artist.name }}</p>
+                        <h3>{{ displayName(track.title, track.title_ko) }}</h3>
+                        <p>{{ displayName(data.artist.name, data.artist.display_name) }}</p>
                       </div>
                       <span class="track-duration">{{ track.duration }}</span>
                       <Button

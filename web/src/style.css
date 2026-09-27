@@ -897,7 +897,7 @@ a:focus-visible {
 .performance-result {
   --result-padding: 12px;
   display: grid;
-  grid-template-columns: 128px minmax(0, 1fr) minmax(160px, 28%) 16px;
+  grid-template-columns: 128px minmax(0, 1fr) minmax(176px, 31%) 16px;
   align-items: center;
   gap: 20px;
   padding: var(--result-padding);
@@ -922,19 +922,23 @@ a:focus-visible {
 }
 .archive-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
 .performance-song, .performance-context { min-width: 0; }
+/* 검색 결과 텍스트 계층: 곡명 > 원곡 아티스트 > 부른 아티스트 */
 .performance-title {
   font-size: 14px;
-  font-weight: 500;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--foreground);
 }
-.performance-korean, .performance-divider {
+.performance-original {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.5;
   color: var(--muted-foreground);
-  font-weight: 400;
 }
 .performance-singer {
   margin-top: 6px;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 500;
   line-height: 1.5;
   color: var(--foreground);
 }
@@ -1560,12 +1564,13 @@ a:focus-visible {
     grid-template-columns: clamp(80px, 24vw, 112px) minmax(0, 1fr) 16px;
     gap: 10px;
   }
-  .performance-title { font-size: 13px; line-height: 1.5; }
-  .performance-context, .performance-singer-reading { display: none; }
+  .performance-title { font-size: 13px; line-height: 1.45; }
+  .performance-original { margin-top: 1px; font-size: 11px; }
+  .performance-context { display: none; }
   .performance-singer {
     display: flex;
     gap: 3px;
-    margin-top: 3px;
+    margin-top: 4px;
     font-size: 11px;
     white-space: nowrap;
   }
@@ -2037,12 +2042,6 @@ a:focus-visible {
   }
 }
 
-.performance-translation {
-  margin-top: 2px;
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--muted-foreground);
-}
 .calendar-board { padding-bottom: 24px; }
 .calendar-board[data-size='sm'] { padding-bottom: 16px; }
 @media (max-width: 768px) {
