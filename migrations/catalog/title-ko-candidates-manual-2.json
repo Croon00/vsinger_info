@@ -1,0 +1,54 @@
+{
+  "policy": "song-title-ko-candidates-manual-v1",
+  "note": "Round 2 (songs ranked after the first 200). User preference: a near-literal translation first; when ambiguous, the Japanese reading in Hangul. The user reviews db-migration/reports/title-ko/round-2/review.md, edits it and approves in chat.",
+  "overrides": [
+    {
+      "song_id": 1816,
+      "title_ko": "다움",
+      "reason": "らしさ is the noun of -らしい (-다움); the research returned the kana unchanged"
+    }
+  ],
+  "user_review": {
+    "date": "2026-09-27",
+    "approved": "all",
+    "titles": [
+      {
+        "song_id": 1454,
+        "title_ko": "너와 여름 페스"
+      },
+      {
+        "song_id": 1462,
+        "title_ko": "처음의 츄"
+      },
+      {
+        "song_id": 1498,
+        "title_ko": "병아리"
+      },
+      {
+        "song_id": 1508,
+        "title_ko": "여름밤의 매직"
+      },
+      {
+        "song_id": 1531,
+        "title_ko": "나는 하츠네 미쿠와 키스를 했다"
+      },
+      {
+        "song_id": 1563,
+        "title_ko": "살다"
+      },
+      {
+        "song_id": 1586,
+        "title_ko": "덧없고도 영원한 사랑"
+      },
+      {
+        "song_id": 1724,
+        "title_ko": "카눌레"
+      },
+      {
+        "song_id": 1736,
+        "title_ko": "물떼새"
+      }
+    ],
+    "note": "The user edited review.md and approved every row (review-import)."
+  }
+}

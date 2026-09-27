@@ -1,0 +1,19 @@
+{
+  "policy": "song-title-ko-wikidata-manual-v1",
+  "note": "Existing title_ko values are translations (怪獣の花唄 -> 괴수의 꽃노래) or loanwords for katakana English (ドライフラワー -> 드라이 플라워). Wikidata Korean labels that only spell the Japanese reading in Hangul are kept as Korean song aliases instead of title_ko (reviewed 2026-09-27).",
+  "reading_only": [
+    {"title_native": "キミがいれば", "label": "키미가이레바"},
+    {"title_native": "恋愛写真", "label": "렌아이샤신"},
+    {"title_native": "謎", "label": "나조"},
+    {"title_native": "世界に一つだけの花", "label": "세카이니히토츠다케노하나"},
+    {"title_native": "オトナブルー", "label": "오토나블루"},
+    {"title_native": "鳥の詩", "label": "도리 노 우타"},
+    {"title_native": "ポニーテールとシュシュ", "label": "포니테일토 슈슈"},
+    {"title_native": "負けないで", "label": "마케나이데"},
+    {"title_native": "氷の上に立つように", "label": "코리노우에니타츠요니"},
+    {"title_native": "硝子の少年", "label": "가라스노쇼넨"},
+    {"title_native": "上を向いて歩こう", "label": "우에오무이테아루코"},
+    {"title_native": "大声ダイヤモンド", "label": "오고에 다이아몬드"},
+    {"title_native": "ハルウタ", "label": "하루우타"}
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "policy": "song-title-ko-candidates-manual-v1",
+  "note": "Parent review of the research proposals (2026-09-27). User preference: a near-literal translation first; when the translation is ambiguous (puns, coined words, several readings) spell the Japanese reading in Hangul. The research proposal stays as an alternative. The user reviews every 'review' row.",
+  "user_review": {
+    "date": "2026-09-27",
+    "approved": "all",
+    "note": "The user reviewed db-migration/reports/title-ko/round-1/review.md, edited four titles and approved all 200 rows.",
+    "titles": [
+      {"song_id": 1185, "title_ko": "가루눈"},
+      {"song_id": 1200, "title_ko": "네가 밤바다로 돌아갈 때까지"},
+      {"song_id": 1229, "title_ko": "너의 맥박에 춤추고 싶었어"},
+      {"song_id": 1231, "title_ko": "로스트메모리"}
+    ]
+  },
+  "overrides": [
+    {"song_id": 1251, "title_ko": "불꽃", "reason": "ヒバナ is the Japanese word 火花 (spark), not a loanword"},
+    {"song_id": 1249, "title_ko": "영혼 레볼루션", "reason": "タマシイ is 魂 (soul); レボリューション is the loanword"},
+    {"song_id": 1326, "title_ko": "치노카테", "reason": "チノカテ is written in kana on purpose (知の糧 is only one reading); ambiguous, so the reading"},
+    {"song_id": 1272, "title_ko": "반짝", "reason": "きらり has a plain literal translation"},
+    {"song_id": 1276, "title_ko": "요리요이", "reason": "寄り酔い puns on より良い; ambiguous, so the reading"},
+    {"song_id": 1297, "title_ko": "유, 산산", "reason": "憂、燦々 (ゆう、さんさん) is poetic and ambiguous; the research's 우, 찬찬 was neither a translation nor the reading"},
+    {"song_id": 1317, "title_ko": "깊은 혼수", "reason": "深昏睡 translates literally; 심혼수 is not a Korean word"},
+    {"song_id": 1237, "title_ko": "한 송이 꽃", "reason": "一輪花 translates literally; 일륜화 is only the Sino-Korean reading"},
+    {"song_id": 1226, "title_ko": "사쿠라나가시", "reason": "桜流し is a noun like 灯籠流し with no clean Korean equivalent; ambiguous, so the reading"},
+    {"song_id": 1403, "title_ko": "바다나리 해저담", "reason": "ウミユリ is 海百合 (sea lily, 바다나리)"},
+    {"song_id": 1398, "title_ko": "안녕, 또 언젠가!", "reason": "さよーなら is さようなら (goodbye), not a name"},
+    {"song_id": 1618, "title_ko": "금요일의 좋은 아침", "reason": "おはよう is a Japanese greeting; 굿모닝 was an English substitute"},
+    {"song_id": 1211, "title_ko": "용사", "reason": "勇者 is 용사 in Korean; 용자 is only the character reading"},
+    {"song_id": 1283, "title_ko": "이식보행", "reason": "二息歩行 puns on 二足歩行 (이족보행); the Sino-Korean reading keeps the pun"},
+    {"song_id": 1281, "title_ko": "애매모호", "reason": "アイマイモコ is 曖昧模糊, a Korean word too"},
+    {"song_id": 1294, "title_ko": "안녕 메모리즈", "reason": "さよなら is translated, as in さよならミッドナイト -> 안녕 미드나이트"}
+  ]
+}

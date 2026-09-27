@@ -1,0 +1,10 @@
+{
+  "policy": "song-credit-removal-v1",
+  "note": "User review 2026-09-27: HACHI (VTuber, artist 12) and ハチ (Vocaloid producer, artist 638) are different artists. The round-2 song master credited HACHI's songs to both because the setlist spelling 'HACHI' also matched ハチ's name_latin 'Hachi'.",
+  "removals": [
+    {"song_id": 1646, "artist_id": 638, "reason": "八月の蛍 is HACHI's song, not ハチ's (user review)"},
+    {"song_id": 1691, "artist_id": 638, "reason": "Rainy proof is HACHI's song, not ハチ's (same spelling collision)"},
+    {"song_id": 1869, "artist_id": 638, "reason": "ばいばい、テディベア is HACHI's song, not ハチ's (user review)"},
+    {"song_id": 1924, "artist_id": 638, "reason": "Twilight Line is HACHI's song, not ハチ's (same spelling collision)"}
+  ]
+}

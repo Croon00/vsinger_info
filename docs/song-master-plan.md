@@ -30,7 +30,7 @@
 | 3 | Spotify 수집과 ISRC 저장(`recording_external_ids`) | TODO |
 | 4 | 곡 식별 스키마: 원문 키 대응표, 곡 외부 ID, 곡 별칭, 병합 기록 | 완료. 2026-09-27 운영 DB에 004 적용, 원문 키 backfill 반영 |
 | 5 | 곡 seed: Spotify ISRC → MusicBrainz work, 상위 원문 키 → VocaDB/UtaiteDB → MusicBrainz | 원래 순위 1000위까지 적용 완료(2026-09-27, 1차 새 곡 277·새 아티스트 86, 2차 새 곡 541·새 아티스트 166). 1000위 밖 pending 키 확장 TODO |
-| 6 | `title_ko` 보강: 저장한 외부 ID로 Wikidata 조회, 나머지는 검수 후보 | TODO |
+| 6 | `title_ko` 보강: 저장한 외부 ID로 Wikidata 조회, 나머지는 검수 후보 | 상위 200곡과 201위 이후 432곡, Wikidata 결과 적용(2026-09-27, 나무위키·검수) |
 | 7 | 확정 키로 `performances.song_id` 소급 연결, YouTube 수집에서 확정 키 자동 부여 | 소급 연결 4회 적용(연결률 66.9%). 수집 경로 자동 연결 배포·운영 관측(아래 7단계 수집 경로) |
 | 8 | 곡 연결률이 충분해지면 노래방 번호 작업 시작 | TODO |
 
@@ -214,3 +214,65 @@
 - Rain 병합에서 옮긴 秦基博 명의가 大江千里와 같은 순번 0으로 들어갔다. 조회 API는 `position, id` 순이라 大江千里가 먼저 표시된다. 병합 스크립트는 옮긴 명의를 대상 곡 명의 뒤 순번으로 붙이도록 고쳤다(다음 병합부터 적용).
 - 수집 경로 자동 연결을 운영에서 처음 관측했다: 배포 뒤 16:56 KST에 수집된 가창 52건 중 28건이 저장될 때 song_id를 받았다(`catalog_changes` 없음, `シルエット/KANA-BOON` 같은 분리 조회 포함). 5건은 이어진 소급 연결로 채워졌다.
 - backfill dry-run: 새 원문 키 65개(적용 뒤 새로 수집된 원문), 대표 표기·빈도 갱신 332개. 아직 `--apply`하지 않았다.
+
+## 원문 키 backfill 재적용과 6단계 Wikidata 조회 (2026-09-27)
+
+- 사용자 승인 후 `scripts/backfill_song_match_keys.py --apply`: 새 원문 키 65개(2차 적용 뒤 수집분), 대표 표기·빈도 갱신 332개를 한 transaction으로 커밋했다. 재실행 dry-run은 inserts·updates 0이다. 키 15,331개(confirmed 2,904, pending 12,427).
+- `scripts/wikidata_title_ko.py`: 저장된 VocaDB 곡 ID(P11100)와 MusicBrainz work ID(P435)로만 Wikidata 항목을 찾는다(이름 검색 없음). `export`는 DB 읽기 전용이며 SPARQL 응답은 Git 제외 `db-migration/reports/wikidata/`에 cache한다. 결정 파일은 `migrations/catalog/title-ko-wikidata-1.json`, 검토 목록은 `migrations/catalog/title-ko-wikidata-manual-1.json`이다. `apply`는 dry-run, `apply --apply`는 한 transaction으로 `title_ko`(비어 있을 때만), 한국어 별칭, `song_external_ids`(wikidata)를 쓰고 영수증과 곡별 `catalog_changes`(QID, 라벨, CC0)를 남긴다.
+- 규칙: 곡의 ID들이 서로 다른 항목을 가리키거나 한 항목이 여러 곡에서 나오면 충돌로 두고 쓰지 않는다. 한국어 라벨은 한국어 위키백과식 구분 괄호(`나조 (코마츠 미호의 싱글)`)를 떼고, 한글이 있고 원제와 다를 때만 쓴다.
+- 결과(요청 8회): ID 1,060개(VocaDB 419, MusicBrainz 641)로 항목이 있는 곡은 90곡뿐이다. 88곡에 QID를 저장한다. 충돌 2건은 `さんぽ`(1575)와 `となりのトトロ`(1576)가 한 항목(Q1391673)에 연결된 경우라 쓰지 않았다. 한국어 라벨은 22곡에 있었다.
+  - 번역 제목 9곡은 `title_ko`로 쓴다(`ふわふわ時間`→`폭신한 시간`, `飾りじゃないのよ涙は`→`장식이 아니야, 눈물은`, `フライングゲット`→`플라잉겟` 등). 기존 `title_ko` 355곡도 번역이나 외래어 표기(`ドライフラワー`→`드라이 플라워`) 방식이다.
+  - 일본어 읽기를 한글로만 옮긴 13곡(`世界に一つだけの花`→`세카이니히토츠다케노하나`, `負けないで`→`마케나이데` 등)은 `title_ko`가 아니라 한국어 별칭(`song_aliases`, locale ko, source wikidata)으로 넣는다.
+- 운영 DB dry-run: 곡 88곡, `title_ko` 9, 한국어 별칭 13, Wikidata ID 88. 아직 적용하지 않았다.
+- 한계: `title_ko`가 없는 곡은 912곡이다. 원제가 라틴 문자인 271곡을 빼면 641곡(가창 15,210건)이 남고, Wikidata로 채울 수 있는 것은 그중 9곡이다. 빈도 상위 100곡이 4,913건, 200곡이 8,058건, 400곡이 12,263건을 차지한다. 나머지는 계획대로 출처 있는 제안을 검수 후보로 만들어 승인한 값만 쓰는 방식이 필요하다.
+- 로컬 fixture: Wikidata 테스트 4개(라벨 규칙, 항목·곡 충돌, 적용·별칭·재실행·변경 행 거부, SPARQL batch·cache) 포함 전체 `python -m pytest -q -p no:cacheprovider` 374 passed, 376 warnings(기존 deprecated 경고).
+
+## 6단계 한국어 제목 후보: 상위 200곡 (2026-09-27, 검수 대기)
+
+- `scripts/title_ko_candidates.py`: `prepare`(DB 읽기 전용)는 `title_ko`가 없고 원제가 라틴 문자가 아닌 곡을 가창 수 순으로 고르되 Wikidata 결정 파일이 제목을 주는 곡은 뺀다. 입력과 기존 `title_ko` 60개 예시(`conventions.json`)는 Git 제외 `db-migration/reports/title-ko/round-1/`에 둔다. `export`는 조사 결과와 부모 검토(`migrations/catalog/title-ko-candidates-manual-1.json`)를 합쳐 `migrations/catalog/title-ko-candidates-1.json`을 만든다. 출처(공식 한국 발매, 한국어 위키백과, 여러 한국 출처의 같은 제목)와 URL이 있고 신뢰도 high면 `accept`, 번역만 있으면 `review`, 후보가 없으면 `skip`이다. `apply --apply`는 `accept`만 빈 `title_ko`에 쓰고 영수증과 곡별 `catalog_changes`(근거·출처, reviewed)를 남긴다.
+- 대상 200곡(가창 8,057건)을 서브에이전트 5개가 40곡씩 조사했다(곡당 검색 최대 2회, 나무위키 제외). `kirocrew-research` 에이전트 하나가 역할이 다르다며 작업을 거절해 그 묶음은 `kirocrew-worker`로 다시 돌렸다.
+- 결과: 출처 있는 제목 7곡(한국 사용례 6, 한국어 위키백과 1)이고 나머지 193곡은 에이전트 번역이다. 공식 한국 발매명은 찾지 못했다. 출처가 있고 high인 3곡만 `accept`, 197곡은 `review`다.
+- 사용자 표기 방침(2026-09-27): 곡 이름은 직역에 가까운 번역을 우선하고, 말장난·조어·다의어처럼 번역이 애매하면 일본어 발음을 한글로 옮긴다. 가타카나 외래어는 한국어 외래어 표기를 쓴다.
+- 부모 검토로 15곡을 고쳤다(조사 제안은 대안으로 남김).
+  - 뜻이 분명한 말을 직역: `ヒバナ`→`불꽃`, `タマシイレボリューション`→`영혼 레볼루션`, `ウミユリ海底譚`→`바다나리 해저담`, `さよーならまたいつか！`→`안녕, 또 언젠가!`, `さよならメモリーズ`→`안녕 메모리즈`, `アイマイモコ`→`애매모호`, `勇者`→`용사`, `金曜日のおはよう`→`금요일의 좋은 아침`, `きらり`→`반짝`, `深昏睡`→`깊은 혼수`, `一輪花`→`한 송이 꽃`, 말장난을 한자음으로 살린 `二息歩行`→`이식보행`.
+  - 애매해서 발음 표기: `チノカテ`→`치노카테`, `寄り酔い`→`요리요이`, `憂、燦々`→`유, 산산`, `桜流し`→`사쿠라나가시`.
+- 검수용 목록: Git 제외 `db-migration/reports/title-ko/round-1/review.md`. 사용자 검수 뒤 `decision`을 반영해 적용한다.
+
+## 6단계 한국어 제목: 나무위키 확인 (2026-09-27, 상위 200곡)
+
+- 사용자 결정: 나무위키에서 한국어 이름을 가져온다. 문서 제목에 없으면 문서 내용도 본다. robots.txt는 문서 경로 `/w/`를 허용한다(2026-09-27 확인). 본문은 CC BY-NC-SA 2.0 KR이며 이름과 문서 URL만 저장하고, URL은 후보 파일과 `catalog_changes` 출처로 남긴다. 이용약관 페이지는 확인하지 못했다.
+- `scripts/namuwiki_title_ko.py`: `fetch`는 `/w/<원제>`, 없으면 `/w/<원제>(<아티스트>)`를 약 3초에 1회 요청해 Git 제외 `db-migration/reports/title-ko/round-1/namu/`에 cache한다. `artists`는 곡 문서가 없는 곡의 아티스트 문서를, `extract`는 읽을 발췌(문서 제목, 개요, 원제가 나오는 구절)를 cache에서 만든다(요청 없음). 요청은 곡 문서 295회, 아티스트 문서 50회였다.
+- 곡 문서 148곡(제목이 한국어 62, 일본어 86), 문서 없음 52곡(아티스트 문서 곡 목록에 원제가 있는 곡 24). 발췌 172개를 서브에이전트 4개가 읽었다(네트워크 없음, 직접 번역 금지). 한 에이전트가 직접 읽지 않고 다시 위임한 채 끝나서 그 묶음은 다시 돌렸다. 문서 제목이 한국어여도 애니메이션·한자 사전·같은 제목의 다른 곡 문서로 넘어간 경우(`春擬き`, `栞`, `燈`, `カーテンコール`, `さよならメモリーズ`)는 그 제목을 쓰지 않았다.
+- 결과: 이 곡의 나무위키 이름을 찾은 곡 148곡. `scripts/title_ko_candidates.py export`가 나무위키 이름을 첫 후보로 두고(근거 `korean_usage`, 출처 문서 URL), 문서 제목이거나 원제가 함께 적힌 구절이 근거이면서 조사 후보와 같으면 `accept`로 둔다. 다르면 조사 후보를 대안으로 두고 `review`다.
+  - `accept` 89곡(나무위키 일치 88, 기존 출처 1, 가창 3,592건), `review` 111곡(나무위키 이름이 조사 후보와 다름 59, 근거 구절 약함 1, 번역만 51).
+  - 다른 예: `ウミユリ海底譚` 바다나리→갯나리 해저담, `暁の車` 새벽의 차→여명의 수레바퀴, `うっせぇわ` 웃세와→시끄러워, `桜色舞うころ` 벚꽃빛 흩날릴 때→연분홍빛 춤출 무렵, `花人局` 화인국→미인계.
+- 로컬 fixture: 나무위키 테스트 3개(이름·본문 처리, 아티스트 변형 조회·cache·발췌, 개요 뒤 구절)와 후보 테스트(나무위키 일치·불일치·근거 약함) 통과.
+
+## 6단계 한국어 제목 적용: 상위 200곡 (2026-09-27)
+
+- 사용자가 `review.md`에서 4곡을 고치고 나머지를 승인했다: `粉雪` 가랑눈→가루눈, `君が夜の海に還るまで` 네가 밤바다에 돌아올 때까지→네가 밤바다로 돌아갈 때까지, `君の脈で踊りたかった` 너의 맥박에 맞춰 춤추고 싶었어→너의 맥박에 춤추고 싶었어, `ロストメモリー` 로스트 메모리→로스트메모리. 앞의 둘은 나무위키 이름 대신 조사 후보를 고른 것이다. 편집본은 Git 제외 `review.user-edited.md`로 보존했다.
+- 결정은 `migrations/catalog/title-ko-candidates-manual-1.json`의 `user_review`(수정 4곡, `approved: all`)에 기록했다. `export`는 사용자 제목을 근거 `user_review`로 쓰고 바뀐 후보를 대안으로 남기며, `approved: all`이면 제목이 있는 모든 곡을 `accept`로 둔다.
+- `title_ko_candidates.py apply --apply`: import 381, 200곡의 빈 `title_ko`를 한 transaction으로 채웠다(근거 나무위키 148, 사용자 수정 4, 나머지는 조사 번역·부모 수정). 재실행은 `already_committed`, 운영 DB 값은 결정 파일과 200곡 모두 같다.
+- 적용 뒤 `title_ko`가 있는 곡은 1,267곡 중 555곡, 그 곡들에 연결된 가창은 33,664건이다. Wikidata 결정 파일(번역 제목 9, 별칭 13, QID 88)은 아직 적용하지 않았다.
+
+
+## 6단계 한국어 제목: 201위 이후 432곡 (2026-09-27, 적용)
+
+- 사용자 요청 방식: 결과를 파일로 보고 사용자가 그 파일을 고친 뒤 승인한다. `title_ko_candidates.py review-import`가 편집본(`review.md`)을 `review.user-edited.md`로 보존하고, 후보 칸이 바뀐 행을 manual `user_review.titles`로(`-`나 빈칸은 제외), 승인은 `approved: all`로 기록한다. 그다음 `export` → `apply` 순서다. `wikidata_title_ko.py review-import`도 같은 방식으로 `db-migration/reports/wikidata/review-1.md`(제목·별칭·QID 표)를 결정 파일에 반영한다.
+- 대상: 남은 비라틴 원제 곡 432곡(가창 6,975건, Wikidata가 제목을 주는 9곡 제외). 대체 번역은 서브에이전트 6개가 웹 검색 없이 만들었다(직역 우선, 애매하면 발음 표기). 원제가 기호가 섞인 라틴 문자인 5곡(`S・K・Y`, `Fire◎Flower` 등)은 제목이 필요 없어 `skip`, 가나를 그대로 돌려준 `らしさ`는 부모 검토로 `다움`.
+- 나무위키: 곡 문서 요청 661회, 아티스트 문서 114회. 곡 문서 299곡, 문서 없음 133곡(아티스트 문서 곡 목록에 원제가 있는 곡 55). 발췌 354개를 서브에이전트 6개가 읽어 271곡에서 이 곡의 나무위키 이름을 찾았다.
+- 결과: `accept` 164곡(나무위키 이름이 대체 번역과 같고 근거 확인, 가창 2,732건), `review` 263곡(나무위키 이름이 번역과 다름 102, 근거 구절 약함 5, 번역만 133, 발음 표기만 23), `skip` 5곡. 검수 파일은 Git 제외 `db-migration/reports/title-ko/round-2/review.md`다.
+
+### 운영 적용 (2026-09-27)
+
+- 사용자가 두 검수 파일을 고치고 승인했다. 432곡 파일은 제목 9곡 수정, Wikidata 파일은 제목 1곡 수정(`ふわふわ時間` → 폭신푹신 타임).
+- `title_ko_candidates.py --round 2 apply --apply`: import 382, `accept` 427곡(나무위키 268, 번역 130, 발음 표기 20, 사용자 수정 9), `skip` 5곡.
+- Wikidata: 432곡 적용으로 곡 version이 바뀌어 `changed since export`로 거부됐고, cache로 다시 내보낸 뒤(요청 0회) 사용자 편집본을 다시 반영했다. 이때 두 가지를 고쳤다.
+  - 발음 표기 라벨은 곡에 `title_ko`가 생겨도 별칭으로 남긴다. 이전에는 `title_ko`가 비어 있을 때만 별칭을 만들어, 432곡 적용 뒤 별칭이 0개가 됐다. 라벨이 `title_ko`와 같으면(`謎` 나조, `大声ダイヤモンド`) 넣지 않는다.
+  - `review-import`는 검수 파일에 없던 행의 제목·별칭을 뺀다. 사용자가 보지 않은 행은 승인한 것이 아니기 때문이다(200곡 적용 전 목록에서 빠졌던 별칭 2곡).
+  - 적용: import 383, 곡 88곡, 제목 9, 별칭 9, QID 88.
+- HACHI 명의 정정: 사용자 검수에서 `八月の蛍`, `ばいばい、テディベア`의 명의를 HACHI만으로 고쳤다. 원인은 2차 파일럿이 세트리스트 표기 `HACHI`를 ハチ의 `name_latin` `Hachi`에도 맞춰, HACHI 곡 4곡(`Rainy proof`, `Twilight Line` 포함)에 ハチ를 함께 넣은 것이다. `scripts/remove_song_credits.py`와 `migrations/catalog/song-credit-removals-1.json`으로 4곡의 ハチ 명의를 지웠다(import 384, `correction`, 삭제 행은 catalog_changes에 보존). 곡 명의에 이런 충돌이 더 있는지 운영 DB를 읽기 전용으로 확인했고 이 4곡뿐이었다. `match_song_candidates.py`는 이제 원어 이름·별칭과 맞는 아티스트가 있으면 라틴·한국어 이름 일치를 쓰지 않는다.
+- 결과: 한국어 제목이 있는 곡 991/1,267곡, 그 곡들의 가창 40,733건. 비라틴 원제인데 제목이 없는 곡은 7곡(`skip`과 Wikidata 충돌 곡)이다.
+- 검증: 로컬 임시 PostgreSQL 전체 테스트 387개 통과(2026-09-27). 세 적용 모두 재실행 `already_committed`.
+
+- Wikidata 결정 파일은 200곡 적용 뒤 cache로 다시 내보냈다(요청 0회): 제목 9, 별칭 11(2곡은 200곡 적용으로 제목이 생겨 빠짐), QID 88, 충돌 2.

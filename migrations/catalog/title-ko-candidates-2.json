@@ -1,0 +1,8648 @@
+{
+ "policy": "song-title-ko-candidates-v1",
+ "summary": {
+  "songs": 432,
+  "accept": 427,
+  "review": 0,
+  "skip": 5,
+  "by_basis": {
+   "None": 0,
+   "korean_usage": 268,
+   "reading": 20,
+   "translation": 130,
+   "user_review": 9
+  },
+  "performances_accept": 6887,
+  "problems": 0
+ },
+ "items": [
+  {
+   "song_id": 1412,
+   "version": 3,
+   "title_native": "夜のピエロ",
+   "artists": [
+    "Ado"
+   ],
+   "performances": 27,
+   "title_ko": "밤의 피에로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/夜のピエロ"
+   ],
+   "namu": "밤의 피에로",
+   "note": "namu.wiki content: 밤의 피에로 2021. 06. 14. | 夜のピエロ Yoru No Pierrot | 밤의 피에로",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1413,
+   "version": 3,
+   "title_native": "夜空ノムコウ",
+   "artists": [
+    "SMAP"
+   ],
+   "performances": 27,
+   "title_ko": "밤하늘의 저편",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "요조노 무코우"
+   ],
+   "sources": [
+    "https://namu.wiki/w/夜空ノムコウ"
+   ],
+   "namu": "밤하늘의 저편",
+   "note": "namu.wiki document_title: 夜空ノムコウ 밤하늘의 저편 1 . 개요",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1416,
+   "version": 3,
+   "title_native": "最後の雨",
+   "artists": [
+    "中西保志"
+   ],
+   "performances": 27,
+   "title_ko": "마지막 비",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1417,
+   "version": 3,
+   "title_native": "歌に形はないけれど",
+   "artists": [
+    "doriko"
+   ],
+   "performances": 27,
+   "title_ko": "노래에 형태는 없지만",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/노래에 형태는 없지만?from=歌に形はないけれど"
+   ],
+   "namu": "노래에 형태는 없지만",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 노래에 형태는 없지만",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1419,
+   "version": 3,
+   "title_native": "蜜月アン・ドゥ・トロワ",
+   "artists": [
+    "DATEKEN"
+   ],
+   "performances": 27,
+   "title_ko": "밀월 Un Deux Trois",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "밀월 앙 두 트로와",
+     "where": "research/parent proposal"
+    },
+    "밀월 Un Deux Trois"
+   ],
+   "sources": [
+    "https://namu.wiki/w/밀월 Un Deux Trois?from=蜜月アン・ドゥ・トロワ"
+   ],
+   "namu": "밀월 Un Deux Trois",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 밀월 Un Deux Trois (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1432,
+   "version": 3,
+   "title_native": "ロストワンの号哭",
+   "artists": [
+    "Neru"
+   ],
+   "performances": 27,
+   "title_ko": "로스트 원의 호곡",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/로스트 원의 호곡?from=ロストワンの号哭"
+   ],
+   "namu": "로스트 원의 호곡",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 로스트 원의 호곡",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1438,
+   "version": 3,
+   "title_native": "月並みに輝け",
+   "artists": [
+    "結束バンド"
+   ],
+   "performances": 27,
+   "title_ko": "평범하게 빛나라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/月並みに輝け"
+   ],
+   "namu": "평범하게 빛나라",
+   "note": "namu.wiki document_title: 月並みに輝け 평범하게 빛나라 Shine as usual",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1424,
+   "version": 3,
+   "title_native": "ひゅるりらぱっぱ",
+   "artists": [
+    "tuki."
+   ],
+   "performances": 26,
+   "title_ko": "휴루리라팟파",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "휴루리랍파",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/ひゅるりらぱっぱ"
+   ],
+   "namu": "휴루리라팟파",
+   "note": "namu.wiki document_title: ひゅるりらぱっぱ 휴루리라팟파 | HYURURIRAPAPPA (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1425,
+   "version": 3,
+   "title_native": "みちしるべ",
+   "artists": [
+    "茅原実里"
+   ],
+   "performances": 26,
+   "title_ko": "이정표",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "미치시루베",
+     "where": "research/parent proposal"
+    },
+    "길잡이"
+   ],
+   "sources": [
+    "https://namu.wiki/w/みちしるべ"
+   ],
+   "namu": "이정표",
+   "note": "namu.wiki content: 제목 みちしるべ 이정표 가수 치하라 미노리 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1426,
+   "version": 3,
+   "title_native": "カントリー・ロード",
+   "artists": [
+    "本名陽子"
+   ],
+   "performances": 26,
+   "title_ko": "컨트리 로드",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "カントリー・ロード = Country Road, standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1428,
+   "version": 3,
+   "title_native": "スターライトパレード",
+   "artists": [
+    "SEKAI NO OWARI"
+   ],
+   "performances": 26,
+   "title_ko": "스타라이트 퍼레이드",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/スターライトパレード"
+   ],
+   "namu": "스타라이트 퍼레이드",
+   "note": "namu.wiki content: 3.1. スターライトパレード(스타라이트 퍼레이드) [편집]",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1429,
+   "version": 3,
+   "title_native": "フラッシュバッカー",
+   "artists": [
+    "結束バンド"
+   ],
+   "performances": 26,
+   "title_ko": "플래시배커",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "플래시백커"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "フラッシュバッカー = flashbacker, standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1430,
+   "version": 3,
+   "title_native": "フレンズ",
+   "artists": [
+    "レベッカ"
+   ],
+   "performances": 26,
+   "title_ko": "프렌즈",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "フレンズ = Friends, standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1431,
+   "version": 3,
+   "title_native": "レプリカント",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 26,
+   "title_ko": "레플리칸트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "레플리컨트",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/레플리칸트(요루시카)?from=レプリカント"
+   ],
+   "namu": "레플리칸트",
+   "note": "namu.wiki content: 06 レプリカント 레플리칸트 (album tracklist, 도작) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1433,
+   "version": 3,
+   "title_native": "ロマンスの神様",
+   "artists": [
+    "広瀬香美"
+   ],
+   "performances": 26,
+   "title_ko": "로맨스의 신",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/로맨스의 신?from=ロマンスの神様"
+   ],
+   "namu": "로맨스의 신",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 로맨스의 신 (from ロマンスの神様)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1434,
+   "version": 3,
+   "title_native": "夕立のりぼん",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 26,
+   "title_ko": "소나기의 리본",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "장맛비의 리본",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "소나기의 리본",
+   "note": "namu.wiki content: 소나기의 리본 夕立のりぼん MAYU 2012년 11월 7일 MAYU 최초 사용 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1436,
+   "version": 3,
+   "title_native": "星の消えた夜に",
+   "artists": [
+    "Aimer"
+   ],
+   "performances": 26,
+   "title_ko": "별이 사라진 밤에",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/星の消えた夜に"
+   ],
+   "namu": "별이 사라진 밤에",
+   "note": "namu.wiki content: 15 星の消えた夜に 별이 사라진 밤에 Hoshino Kieta Yoruni",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1437,
+   "version": 3,
+   "title_native": "曇天",
+   "artists": [
+    "DOES"
+   ],
+   "performances": 26,
+   "title_ko": "담천",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "흐린 하늘"
+   ],
+   "sources": [
+    "https://namu.wiki/w/曇天"
+   ],
+   "namu": "담천",
+   "note": "namu.wiki content: 曇天 담천 / A Cloudy Sky 가수 DOES",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1439,
+   "version": 3,
+   "title_native": "桜のあと (all quartets lead to the?)",
+   "artists": [
+    "UNISON SQUARE GARDEN"
+   ],
+   "performances": 26,
+   "title_ko": "벚꽃이 진 뒤 (all quartets lead to the?)",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "桜のあと = after the cherry blossoms; English subtitle in title kept as written",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1440,
+   "version": 3,
+   "title_native": "正しくなれない",
+   "artists": [
+    "ずっと真夜中でいいのに。"
+   ],
+   "performances": 26,
+   "title_ko": "올바르게 될 수 없어",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "바르게 될 수 없어",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/正しくなれない"
+   ],
+   "namu": "올바르게 될 수 없어",
+   "note": "namu.wiki content: 正 ( ただ ) しくなれない 올바르게 될 수 없어 | Can't Be Right (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1441,
+   "version": 3,
+   "title_native": "灰色と青",
+   "artists": [
+    "米津玄師"
+   ],
+   "performances": 26,
+   "title_ko": "잿빛과 푸름",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "회색과 파랑",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/灰色と青"
+   ],
+   "namu": "잿빛과 푸름",
+   "note": "namu.wiki content: 灰色と青 잿빛과 푸름 | Haiiro To Ao 음원 재킷 노래 요네즈 켄시 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1442,
+   "version": 3,
+   "title_native": "謎",
+   "artists": [
+    "小松未歩"
+   ],
+   "performances": 26,
+   "title_ko": "나조",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [
+    "수수께끼"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "謎 = riddle/mystery; reading_in_hangul hint given (나조), kept as reading per hint though translation '수수께끼' also plausible",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1450,
+   "version": 3,
+   "title_native": "不可幸力",
+   "artists": [
+    "Vaundy"
+   ],
+   "performances": 26,
+   "title_ko": "불가행력",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "불가항력",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/不可幸力"
+   ],
+   "namu": "불가행력",
+   "note": "namu.wiki content: 2nd 불가행력 2020. 01. 22. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1471,
+   "version": 3,
+   "title_native": "幽霊東京",
+   "artists": [
+    "Ayase"
+   ],
+   "performances": 26,
+   "title_ko": "유령 도쿄",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/유령 도쿄?from=幽霊東京"
+   ],
+   "namu": "유령 도쿄",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 유령 도쿄",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1445,
+   "version": 3,
+   "title_native": "あいつら全員同窓会",
+   "artists": [
+    "ずっと真夜中でいいのに。"
+   ],
+   "performances": 25,
+   "title_ko": "저 녀석들 전원 동창회",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그놈들 전원 동창회",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/あいつら全員同窓会"
+   ],
+   "namu": "저 녀석들 전원 동창회",
+   "note": "namu.wiki content: あいつら全員同窓会 저 녀석들 전원 동창회 2021.06.18 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1446,
+   "version": 3,
+   "title_native": "ちゅ、多様性。",
+   "artists": [
+    "ano"
+   ],
+   "performances": 25,
+   "title_ko": "츄, 다양성.",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "뽀뽀, 다양성."
+   ],
+   "sources": [
+    "https://namu.wiki/w/체인소 맨/애니메이션/음악?from=ちゅ、多様性。#7화 ED"
+   ],
+   "namu": "츄, 다양성.",
+   "note": "namu.wiki content: 7화 ED ちゅ、多様性。 츄, 다양성.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1447,
+   "version": 3,
+   "title_native": "もう恋なんてしない",
+   "artists": [
+    "槇原敬之"
+   ],
+   "performances": 25,
+   "title_ko": "이젠 사랑 따위 하지 않아",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "더 이상 사랑 같은 건 하지 않아",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/もう恋なんてしない"
+   ],
+   "namu": "이젠 사랑 따위 하지 않아",
+   "note": "namu.wiki document_title: もう恋なんてしない | 이젠 사랑 따위 하지 않아 MV (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1448,
+   "version": 3,
+   "title_native": "アンビバレント",
+   "artists": [
+    "Uru"
+   ],
+   "performances": 25,
+   "title_ko": "앰비밸런트",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "アンビバレント = ambivalent, standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1449,
+   "version": 3,
+   "title_native": "シリウスの心臓",
+   "artists": [
+    "ヰ世界情緒"
+   ],
+   "performances": 25,
+   "title_ko": "시리우스의 심장",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/シリウスの心臓"
+   ],
+   "namu": "시리우스의 심장",
+   "note": "namu.wiki document_title: シリウスの心臓 시리우스의 심장 작사 카사무라 토타",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1451,
+   "version": 3,
+   "title_native": "世田谷ナイトサファリ",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 25,
+   "title_ko": "세타가야 나이트 사파리",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "세타가야 나이트 사파리",
+   "note": "namu.wiki content: 세타가야 나이트 사파리 世田谷ナイトサファリ 하츠네 미쿠 2012년 12월 6일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1454,
+   "version": 3,
+   "title_native": "君と夏フェス",
+   "artists": [
+    "SHISHAMO"
+   ],
+   "performances": 25,
+   "title_ko": "너와 여름 페스",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "너와 여름 페스티벌",
+     "where": "proposal before user review"
+    },
+    {
+     "title_ko": "너와 여름 페스",
+     "where": "research/parent proposal"
+    },
+    "너와 여름 페스티벌"
+   ],
+   "sources": [
+    "https://namu.wiki/w/SHISHAMO/디스코그래피?from=君と夏フェス"
+   ],
+   "namu": "너와 여름 페스티벌",
+   "note": "user review 2026-09-27; namu.wiki content: 君と夏フェス (너와 여름 페스티벌) 듣기 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1455,
+   "version": 3,
+   "title_native": "盗作",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 25,
+   "title_ko": "도작",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "표절"
+   ],
+   "sources": [
+    "https://namu.wiki/w/도작?from=盗作"
+   ],
+   "namu": "도작",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 도작",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1456,
+   "version": 3,
+   "title_native": "裏表ラバーズ",
+   "artists": [
+    "wowaka"
+   ],
+   "performances": 25,
+   "title_ko": "겉과 속의 러버즈",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "겉과 속 러버즈",
+     "where": "research/parent proposal"
+    },
+    "뒤와 앞 러버즈"
+   ],
+   "sources": [
+    "https://namu.wiki/w/겉과 속의 러버즈?from=裏表ラバーズ"
+   ],
+   "namu": "겉과 속의 러버즈",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 겉과 속의 러버즈 (from 裏表ラバーズ) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1457,
+   "version": 3,
+   "title_native": "赤い糸",
+   "artists": [
+    "コブクロ"
+   ],
+   "performances": 25,
+   "title_ko": "빨간 실",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1468,
+   "version": 3,
+   "title_native": "六兆年と一夜物語",
+   "artists": [
+    "kemu"
+   ],
+   "performances": 25,
+   "title_ko": "육조 년과 하룻밤 이야기",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/육조 년과 하룻밤 이야기?from=六兆年と一夜物語"
+   ],
+   "namu": "육조 년과 하룻밤 이야기",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 육조 년과 하룻밤 이야기 (六兆年と一夜物語 에서 넘어옴)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1472,
+   "version": 3,
+   "title_native": "覚醒",
+   "artists": [
+    "Superfly"
+   ],
+   "performances": 25,
+   "title_ko": "각성",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1140,
+   "version": 3,
+   "title_native": "S・K・Y",
+   "artists": [
+    "ライブP"
+   ],
+   "performances": 24,
+   "title_ko": null,
+   "basis": null,
+   "confidence": "medium",
+   "alternatives": [
+    "스카이"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "S・K・Y is spelled-out letters, ambiguous whether acronym or word 'sky'; kept Latin letters as written per rule",
+   "decision": "skip"
+  },
+  {
+   "song_id": 1460,
+   "version": 3,
+   "title_native": "それは小さな光のような",
+   "artists": [
+    "さユり"
+   ],
+   "performances": 24,
+   "title_ko": "그것은 작은 빛과 같은",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그것은 작은 빛처럼",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/それは小さな光のような"
+   ],
+   "namu": "그것은 작은 빛과 같은",
+   "note": "namu.wiki document_title: それは小さな光のような 그것은 작은 빛과 같은｜It is like a small light (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1461,
+   "version": 3,
+   "title_native": "なないろ",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 24,
+   "title_ko": "일곱 색깔",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "나나이로"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "なないろ = seven colors, native hiragana word; translated near-literally",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1462,
+   "version": 3,
+   "title_native": "はじめてのチュウ",
+   "artists": [
+    "あんしんパパ"
+   ],
+   "performances": 24,
+   "title_ko": "처음의 츄",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "첫 뽀뽀",
+     "where": "proposal before user review"
+    },
+    "처음의 뽀뽀"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27; はじめての = first, チュウ = kiss (casual/onomatopoeic)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1463,
+   "version": 3,
+   "title_native": "イケナイ太陽",
+   "artists": [
+    "ORANGE RANGE"
+   ],
+   "performances": 24,
+   "title_ko": "나쁜 태양",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "イケナイ = naughty/not good, colloquial katakana",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1464,
+   "version": 3,
+   "title_native": "グレゴリオ",
+   "artists": [
+    "古川本舗"
+   ],
+   "performances": 24,
+   "title_ko": "그레고리오",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "グレゴリオ = Gregorio, standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1465,
+   "version": 3,
+   "title_native": "フィクサー",
+   "artists": [
+    "ぬゆり"
+   ],
+   "performances": 24,
+   "title_ko": "픽서",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/픽서(VOCALOID 오리지널 곡)?from=フィクサー"
+   ],
+   "namu": "픽서",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 픽서(VOCALOID 오리지널 곡)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1466,
+   "version": 3,
+   "title_native": "ボクノート",
+   "artists": [
+    "スキマスイッチ"
+   ],
+   "performances": 24,
+   "title_ko": "나의 노트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "보쿠노트",
+     "where": "research/parent proposal"
+    },
+    "나의 노트"
+   ],
+   "sources": [
+    "https://namu.wiki/w/스키마스위치?from=스키마 스위치"
+   ],
+   "namu": "나의 노트",
+   "note": "namu.wiki content: 도라에몽 극장판 ... 주제가 나의 노트(ボクノート) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1467,
+   "version": 3,
+   "title_native": "モノクロのキス",
+   "artists": [
+    "シド"
+   ],
+   "performances": 24,
+   "title_ko": "흑백의 키스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "모노크롬 키스",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/モノクロのキス"
+   ],
+   "namu": "흑백의 키스",
+   "note": "namu.wiki document_title: モノクロのキス 흑백의 키스 Monochrome no Kiss 가수 SID (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1469,
+   "version": 3,
+   "title_native": "六月は雨上がりの街を書く",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 24,
+   "title_ko": "6월에는 비가 그친 거리를 쓰네",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "6월은 비가 갠 거리를 쓴다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/6월에는 비가 그친 거리를 쓰네"
+   ],
+   "namu": "6월에는 비가 그친 거리를 쓰네",
+   "note": "namu.wiki document_title: 6월에는 비가 그친 거리를 쓰네(六月は雨上がりの街を書く)는 2019년 4월 10일에 발매된 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1470,
+   "version": 3,
+   "title_native": "女の子は誰でも",
+   "artists": [
+    "東京事変"
+   ],
+   "performances": 24,
+   "title_ko": "여자아이는 누구나",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/도쿄지헨?from=東京事変"
+   ],
+   "namu": "여자아이는 누구나",
+   "note": "namu.wiki content: 空が鳴っている／女の子は誰でも(하늘이 울리고 있어/여자아이라면 누구나)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1473,
+   "version": 3,
+   "title_native": "金木犀",
+   "artists": [
+    "くじら"
+   ],
+   "performances": 24,
+   "title_ko": "금목서",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/금목서(VOCALOID 오리지널 곡)?from=金木犀"
+   ],
+   "namu": "금목서",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 금목서(VOCALOID 오리지널 곡); 번역명 금목서 원제 金木犀",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1494,
+   "version": 3,
+   "title_native": "焔の扉",
+   "artists": [
+    "FictionJunction YUUKA"
+   ],
+   "performances": 24,
+   "title_ko": "불꽃의 문",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/불꽃의 문?from=焔の扉"
+   ],
+   "namu": "불꽃의 문",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 불꽃의 문",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1482,
+   "version": 3,
+   "title_native": "まちがいさがし",
+   "artists": [
+    "菅田将暉"
+   ],
+   "performances": 23,
+   "title_ko": "틀린 그림 찾기",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "실수 찾기"
+   ],
+   "sources": [
+    "https://namu.wiki/w/まちがいさがし"
+   ],
+   "namu": "틀린 그림 찾기",
+   "note": "namu.wiki content: まちがいさがし 틀린 그림 찾기 | Machigai Sagashi 음원 재킷 노래 스다 마사키",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1484,
+   "version": 3,
+   "title_native": "ヨンジュウナナ",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 23,
+   "title_ko": "사십칠",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "욘주나나",
+     "where": "research/parent proposal"
+    },
+    "47"
+   ],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "사십칠",
+   "note": "namu.wiki content: 사십칠 ヨンジュウナナ 하츠네 미쿠 2014년 1월 8일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1485,
+   "version": 3,
+   "title_native": "世界に一つだけの花",
+   "artists": [
+    "SMAP"
+   ],
+   "performances": 23,
+   "title_ko": "세상에 하나뿐인 꽃",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/世界に一つだけの花"
+   ],
+   "namu": "세상에 하나뿐인 꽃",
+   "note": "namu.wiki content: 世界に一つだけの花 세상에 하나뿐인 꽃 커버 아트",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1486,
+   "version": 3,
+   "title_native": "人間みたいね",
+   "artists": [
+    "キタニタツヤ"
+   ],
+   "performances": 23,
+   "title_ko": "인간 같네",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/키타니 타츠야"
+   ],
+   "namu": "인간 같네",
+   "note": "namu.wiki content: 4 人間みたいね (인간 같네)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1487,
+   "version": 3,
+   "title_native": "又三郎",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 23,
+   "title_ko": "마타사부로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/마타사부로?from=又三郎"
+   ],
+   "namu": "마타사부로",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 마타사부로; 又三郎(またさぶろう) 마타사부로 | Matasaburo",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1489,
+   "version": 3,
+   "title_native": "夜撫でるメノウ",
+   "artists": [
+    "Ayase"
+   ],
+   "performances": 23,
+   "title_ko": "밤을 위로하는 마노",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "밤을 어루만지는 마노",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/밤을 위로하는 마노?from=夜撫でるメノウ"
+   ],
+   "namu": "밤을 위로하는 마노",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 밤을 위로하는 마노 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1490,
+   "version": 3,
+   "title_native": "愛の賞味期限",
+   "artists": [
+    "tuki."
+   ],
+   "performances": 23,
+   "title_ko": "사랑의 유통기한",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/愛の賞味期限"
+   ],
+   "namu": "사랑의 유통기한",
+   "note": "namu.wiki content: 愛の賞味期限 사랑의 유통기한｜Love expiration date 가수 tuki.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1491,
+   "version": 3,
+   "title_native": "感電",
+   "artists": [
+    "米津玄師"
+   ],
+   "performances": 23,
+   "title_ko": "감전",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/感電"
+   ],
+   "namu": "감전",
+   "note": "namu.wiki document_title: 感電 감전 | Kanden 음원 재킷 노래 요네즈 켄시",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1492,
+   "version": 3,
+   "title_native": "春よ、来い",
+   "artists": [
+    "松任谷由実"
+   ],
+   "performances": 23,
+   "title_ko": "봄이여, 오라",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/春よ、来い"
+   ],
+   "namu": "봄이여, 오라",
+   "note": "namu.wiki content: 〈 春 ( はる ) よ、 来 ( こ ) い〉는 마츠토야 유미 가... 봄이여 오라 문서를 참고하십시오",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1493,
+   "version": 3,
+   "title_native": "木綿のハンカチーフ",
+   "artists": [
+    "太田裕美"
+   ],
+   "performances": 23,
+   "title_ko": "목면 손수건",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "木綿 = cotton, ハンカチーフ = handkerchief",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1495,
+   "version": 3,
+   "title_native": "甲賀忍法帖",
+   "artists": [
+    "陰陽座"
+   ],
+   "performances": 23,
+   "title_ko": "코우가인법첩",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "고가 인법첩",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/코가인법첩?from=甲賀忍法帖"
+   ],
+   "namu": "코우가인법첩",
+   "note": "namu.wiki document_title: 2 . 온묘자 의 10번째 싱글곡 ... 甲賀忍法帖 아티스트 陰陽座 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1496,
+   "version": 3,
+   "title_native": "第六感",
+   "artists": [
+    "Reol"
+   ],
+   "performances": 23,
+   "title_ko": "제육감",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/第六感"
+   ],
+   "namu": "제육감",
+   "note": "namu.wiki content: 第六感, 제육감",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1498,
+   "version": 3,
+   "title_native": "雛鳥",
+   "artists": [
+    "花譜"
+   ],
+   "performances": 23,
+   "title_ko": "병아리",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "새끼 새",
+     "where": "proposal before user review"
+    },
+    "병아리"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27; 雛鳥 = fledgling/baby bird",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1500,
+   "version": 3,
+   "title_native": "なごり雪",
+   "artists": [
+    "イルカ"
+   ],
+   "performances": 22,
+   "title_ko": "나고리유키",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "늦게 남은 눈"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "なごり雪 = snow lingering into spring, a well-known idiomatic/poetic term with no exact near-literal Korean equivalent; kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1501,
+   "version": 3,
+   "title_native": "オトナブルー",
+   "artists": [
+    "新しい学校のリーダーズ"
+   ],
+   "performances": 22,
+   "title_ko": "오토나 블루",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/オトナブルー"
+   ],
+   "namu": "오토나 블루",
+   "note": "namu.wiki content: オトナブルー 오토나 블루｜Otona Blue 가수 새로운 학교의 리더즈",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1502,
+   "version": 3,
+   "title_native": "トライアングラー",
+   "artists": [
+    "坂本真綾"
+   ],
+   "performances": 22,
+   "title_ko": "트라이앵글러",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "トライアングラー = triangler (coined from triangle), standard loanword spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1503,
+   "version": 3,
+   "title_native": "ハイドアンド・シーク",
+   "artists": [
+    "19's Sound Factory"
+   ],
+   "performances": 22,
+   "title_ko": "하이드 앤 시크",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/하이드 앤 시크(VOCALOID 오리지널 곡)?from=ハイドアンド・シーク"
+   ],
+   "namu": "하이드 앤 시크",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 하이드 앤 시크(VOCALOID 오리지널 곡); ハイドアンド・シーク (Hide and Seek | 하이드 앤 시크)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1504,
+   "version": 3,
+   "title_native": "ハート",
+   "artists": [
+    "あいみょん"
+   ],
+   "performances": 22,
+   "title_ko": "하트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ハート"
+   ],
+   "namu": "하트",
+   "note": "namu.wiki content: ハート 하트 | Heart 발매일 2021년 11월 24일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1505,
+   "version": 3,
+   "title_native": "バグ",
+   "artists": [
+    "かいりきベア"
+   ],
+   "performances": 22,
+   "title_ko": "버그",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/버그(프로젝트 세카이 컬러풀 스테이지! feat.하츠네 미쿠)?from=バグ"
+   ],
+   "namu": "버그",
+   "note": "namu.wiki document_title: バグ bug | 버그 버추얼 싱어 ver. ... 가수 하츠네 미쿠 25시, 나이트 코드에서. 카가미네 렌 작곡가 카이리키 베어",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1507,
+   "version": 3,
+   "title_native": "初恋",
+   "artists": [
+    "奥華子"
+   ],
+   "performances": 22,
+   "title_ko": "첫사랑",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1508,
+   "version": 3,
+   "title_native": "夏夜のマジック",
+   "artists": [
+    "indigo la End"
+   ],
+   "performances": 22,
+   "title_ko": "여름밤의 매직",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "여름밤의 마법",
+     "where": "proposal before user review"
+    },
+    {
+     "title_ko": "여름밤의 매직",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/indigo la End"
+   ],
+   "namu": "여름밤의 마법",
+   "note": "user review 2026-09-27; namu.wiki content: 52748 夏夜のマジック (여름밤의 마법) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1509,
+   "version": 3,
+   "title_native": "夏恋花火",
+   "artists": [
+    "40mP"
+   ],
+   "performances": 22,
+   "title_ko": "여름사랑불꽃",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/40meterP?from=40mP"
+   ],
+   "namu": "여름사랑불꽃",
+   "note": "namu.wiki content: 13 夏恋花火 (여름사랑불꽃) 하츠네 미쿠",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1510,
+   "version": 3,
+   "title_native": "夏霞",
+   "artists": [
+    "あたらよ"
+   ],
+   "performances": 22,
+   "title_ko": "여름 안개",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "夏霞 = summer haze",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1511,
+   "version": 3,
+   "title_native": "少年時代",
+   "artists": [
+    "井上陽水"
+   ],
+   "performances": 22,
+   "title_ko": "소년 시대",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1513,
+   "version": 3,
+   "title_native": "深海少女",
+   "artists": [
+    "ゆうゆ"
+   ],
+   "performances": 22,
+   "title_ko": "심해소녀",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/심해소녀?from=深海少女"
+   ],
+   "namu": "심해소녀",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 심해소녀",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1514,
+   "version": 3,
+   "title_native": "青い珊瑚礁",
+   "artists": [
+    "松田 聖子"
+   ],
+   "performances": 22,
+   "title_ko": "푸른 산호초",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/푸른 산호초?from=青い珊瑚礁"
+   ],
+   "namu": "푸른 산호초",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 푸른 산호초; 青い珊瑚礁 Aoi Sangoshou | 푸른 산호초 | Blue Lagoon",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1515,
+   "version": 3,
+   "title_native": "食虫植物",
+   "artists": [
+    "理芽"
+   ],
+   "performances": 22,
+   "title_ko": "식충식물",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/食虫植物"
+   ],
+   "namu": "식충식물",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 食虫植物 / 식충식물 작사 사사가와 마오 ...",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1531,
+   "version": 3,
+   "title_native": "僕は初音ミクとキスをした",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 22,
+   "title_ko": "나는 하츠네 미쿠와 키스를 했다",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "나는 하츠네 미쿠와 키스했다",
+     "where": "proposal before user review"
+    },
+    {
+     "title_ko": "나는 하츠네 미쿠와 키스를 했다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "나는 하츠네 미쿠와 키스했다",
+   "note": "user review 2026-09-27; namu.wiki content: 나는 하츠네 미쿠와 키스했다 僕は初音ミクとキスをした 하츠네 미쿠 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1128,
+   "version": 3,
+   "title_native": "Fire◎Flower",
+   "artists": [
+    "halyosy"
+   ],
+   "performances": 21,
+   "title_ko": null,
+   "basis": null,
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Latin-letter title kept as written.",
+   "decision": "skip"
+  },
+  {
+   "song_id": 1521,
+   "version": 3,
+   "title_native": "しわあわせ",
+   "artists": [
+    "Vaundy"
+   ],
+   "performances": 21,
+   "title_ko": "주름 맞추기",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "시와아와세",
+     "where": "research/parent proposal"
+    },
+    "주름과 행복"
+   ],
+   "sources": [
+    "https://namu.wiki/w/しわあわせ"
+   ],
+   "namu": "주름 맞추기",
+   "note": "namu.wiki content: しわあわせ 주름 맞추기 | Shiwaawase 노래 Vaundy (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1522,
+   "version": 3,
+   "title_native": "アイノカタチ",
+   "artists": [
+    "MISIA"
+   ],
+   "performances": 21,
+   "title_ko": "사랑의 형태",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana spelling of 愛のカタチ (ai no katachi).",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1523,
+   "version": 3,
+   "title_native": "アカイト",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 21,
+   "title_ko": "붉은 실",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "아카이토",
+     "where": "research/parent proposal"
+    },
+    "빨간 실"
+   ],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "붉은 실",
+   "note": "namu.wiki content: 붉은 실 アカイト 하츠네 미쿠 2014년 11월 2일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1524,
+   "version": 3,
+   "title_native": "ハルノヒ",
+   "artists": [
+    "あいみょん"
+   ],
+   "performances": 21,
+   "title_ko": "봄날",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ハルノヒ"
+   ],
+   "namu": "봄날",
+   "note": "namu.wiki content: ハルノヒ 봄날 | Harunohi",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1526,
+   "version": 3,
+   "title_native": "フラジール",
+   "artists": [
+    "ぬゆり"
+   ],
+   "performances": 21,
+   "title_ko": "프래질",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "프래자일",
+     "where": "research/parent proposal"
+    },
+    "프레자일"
+   ],
+   "sources": [
+    "https://namu.wiki/w/프래질?from=フラジール"
+   ],
+   "namu": "프래질",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 프래질 (from フラジール) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1527,
+   "version": 3,
+   "title_native": "ブルーアンバー",
+   "artists": [
+    "back number"
+   ],
+   "performances": 21,
+   "title_ko": "블루 앰버",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ブルーアンバー"
+   ],
+   "namu": "블루 앰버",
+   "note": "namu.wiki document_title: ブルーアンバー 블루 앰버 | Blue Amber 작사·작곡 시미즈 이요리 가수 back number",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1528,
+   "version": 3,
+   "title_native": "メフィスト",
+   "artists": [
+    "女王蜂"
+   ],
+   "performances": 21,
+   "title_ko": "메피스토",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/メフィスト"
+   ],
+   "namu": "메피스토",
+   "note": "namu.wiki content: メフィスト 메피스토｜Mephisto 노래 여왕벌",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1529,
+   "version": 3,
+   "title_native": "ヴィラン",
+   "artists": [
+    "てにをは"
+   ],
+   "performances": 21,
+   "title_ko": "빌런",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/빌런(VOCALOID 오리지널 곡)?from=ヴィラン"
+   ],
+   "namu": "빌런",
+   "note": "namu.wiki document_title: ヴィラン villain | 빌런 가수 v flower 작곡가 테니오하",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1530,
+   "version": 3,
+   "title_native": "世界はそれを愛と呼ぶんだぜ",
+   "artists": [
+    "サンボマスター"
+   ],
+   "performances": 21,
+   "title_ko": "세상은 그걸 사랑이라 부른다고",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "세계는 그것을 사랑이라 부르잖아",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/世界はそれを愛と呼ぶんだぜ"
+   ],
+   "namu": "세상은 그걸 사랑이라 부른다고",
+   "note": "namu.wiki content: 世界はそれを愛と呼ぶんだぜ 세상은 그걸 사랑이라 부른다고 발매일 2005년 8월 3일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1533,
+   "version": 3,
+   "title_native": "奈落の花",
+   "artists": [
+    "島みやえい子"
+   ],
+   "performances": 21,
+   "title_ko": "나락의 꽃",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1534,
+   "version": 3,
+   "title_native": "平行線",
+   "artists": [
+    "さユり"
+   ],
+   "performances": 21,
+   "title_ko": "평행선",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/平行線"
+   ],
+   "namu": "평행선",
+   "note": "namu.wiki content: 平行線 Heikousen • 평행선 노래 Eve , suis (from 요루시카 )",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1535,
+   "version": 3,
+   "title_native": "強盗と花束",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 21,
+   "title_ko": "강도와 꽃다발",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/강도와 꽃다발?from=強盗と花束"
+   ],
+   "namu": "강도와 꽃다발",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 강도와 꽃다발 (強盗と花束 에서 넘어옴); 強盗と花束 강도와 꽃다발 | Robber and Bouquet",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1536,
+   "version": 3,
+   "title_native": "林檎華憐歌",
+   "artists": [
+    "ビートまりお"
+   ],
+   "performances": 21,
+   "title_ko": "린고 카렌카",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "사과 화련가"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "Coined poetic compound (apple + flower-pretty-song); ambiguous, kept as reading.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1537,
+   "version": 3,
+   "title_native": "爆弾魔",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 21,
+   "title_ko": "폭탄마",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/폭탄마(요루시카)?from=爆弾魔"
+   ],
+   "namu": "폭탄마",
+   "note": "namu.wiki document_title: 폭탄마 爆弾魔 | Compulsive Bomber 작사·작곡 n-buna 보컬 suis",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1538,
+   "version": 3,
+   "title_native": "白い雪のプリンセスは",
+   "artists": [
+    "のぼる↑"
+   ],
+   "performances": 21,
+   "title_ko": "하얀 눈의 프린세스는",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/하얀 눈의 프린세스는?from=白い雪のプリンセスは"
+   ],
+   "namu": "하얀 눈의 프린세스는",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 하얀 눈의 프린세스는; 白い雪のプリンセスは The Snow White Princess is 하얀 눈의 프린세스는",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1539,
+   "version": 3,
+   "title_native": "砂の惑星",
+   "artists": [
+    "ハチ"
+   ],
+   "performances": 21,
+   "title_ko": "모래의 행성",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/모래의 행성?from=砂の惑星"
+   ],
+   "namu": "모래의 행성",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 모래의 행성",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1540,
+   "version": 3,
+   "title_native": "航海の唄",
+   "artists": [
+    "さユり"
+   ],
+   "performances": 21,
+   "title_ko": "항해의 노래",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/航海の唄"
+   ],
+   "namu": "항해의 노래",
+   "note": "namu.wiki content: 航海の唄 About a Voyage 가수 酸欠少女 さユり ... 항해의 노래",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1542,
+   "version": 3,
+   "title_native": "鳥の詩",
+   "artists": [
+    "Lia"
+   ],
+   "performances": 21,
+   "title_ko": "새의 시",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/새의 시?from=鳥の詩"
+   ],
+   "namu": "새의 시",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 새의 시 (鳥の詩 에서 넘어옴); 鳥 ( とり ) の 詩 ( うた ) 새의 시",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1553,
+   "version": 3,
+   "title_native": "サインはB",
+   "artists": [
+    "B小町"
+   ],
+   "performances": 21,
+   "title_ko": "사인은 B",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/サインはB"
+   ],
+   "namu": "사인은 B",
+   "note": "namu.wiki document_title: サインはB 사인은 B 【최애 의 아이】캐릭터 송",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1556,
+   "version": 3,
+   "title_native": "地獄でなぜ悪い",
+   "artists": [
+    "星野源"
+   ],
+   "performances": 21,
+   "title_ko": "지옥에서 왜 나빠",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "지옥이라도 어때"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1559,
+   "version": 3,
+   "title_native": "宿命",
+   "artists": [
+    "XIDEN"
+   ],
+   "performances": 21,
+   "title_ko": "숙명",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/宿命"
+   ],
+   "namu": "숙명",
+   "note": "namu.wiki content: 宿命 숙명 가수 Official髭男dism",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1563,
+   "version": 3,
+   "title_native": "生きる",
+   "artists": [
+    "水野あつ"
+   ],
+   "performances": 21,
+   "title_ko": "살다",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "산다",
+     "where": "proposal before user review"
+    },
+    "살다"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1589,
+   "version": 3,
+   "title_native": "忘れられないの",
+   "artists": [
+    "サカナクション"
+   ],
+   "performances": 21,
+   "title_ko": "잊을 수 없어",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1544,
+   "version": 3,
+   "title_native": "Magie×Magie",
+   "artists": [
+    "鬼頭明里"
+   ],
+   "performances": 20,
+   "title_ko": null,
+   "basis": null,
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Latin-letter (French) title kept as written.",
+   "decision": "skip"
+  },
+  {
+   "song_id": 1547,
+   "version": 3,
+   "title_native": "あなた",
+   "artists": [
+    "宇多田ヒカル"
+   ],
+   "performances": 20,
+   "title_ko": "당신",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1548,
+   "version": 3,
+   "title_native": "あなたがいることで",
+   "artists": [
+    "Uru"
+   ],
+   "performances": 20,
+   "title_ko": "당신이 있기에",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "당신이 있어서",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/あなたがいることで"
+   ],
+   "namu": "당신이 있기에",
+   "note": "namu.wiki document_title: あなたがいることで 당신이 있기에 발매일 2020년 2월 9일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1549,
+   "version": 3,
+   "title_native": "かわいいだけじゃだめですか？",
+   "artists": [
+    "CUTIE STREET"
+   ],
+   "performances": 20,
+   "title_ko": "귀여운 것만으론 안 되나요?",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1550,
+   "version": 3,
+   "title_native": "どんなときも。",
+   "artists": [
+    "槇原敬之"
+   ],
+   "performances": 20,
+   "title_ko": "어떤 때라도.",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "어떤 때도.",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/どんなときも。"
+   ],
+   "namu": "어떤 때라도.",
+   "note": "namu.wiki content: どんなときも。 | 어떤 때라도. MV 가사 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1551,
+   "version": 3,
+   "title_native": "カラカラ",
+   "artists": [
+    "結束バンド"
+   ],
+   "performances": 20,
+   "title_ko": "카라카라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "바싹바싹"
+   ],
+   "sources": [
+    "https://namu.wiki/w/カラカラ"
+   ],
+   "namu": "카라카라",
+   "note": "namu.wiki document_title: カラカラ 달각달각 / Karakara ... 노래 결속 밴드",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1552,
+   "version": 3,
+   "title_native": "ゲレンデがとけるほど恋したい",
+   "artists": [
+    "広瀬香美"
+   ],
+   "performances": 20,
+   "title_ko": "겔렌데가 녹을 만큼 사랑하고싶어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "게렌데가 녹을 만큼 사랑하고 싶어",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/히로세 코미"
+   ],
+   "namu": "겔렌데가 녹을 만큼 사랑하고싶어",
+   "note": "namu.wiki content: ゲレンデがとけるほど恋したい(겔렌데가 녹을 만큼 사랑하고싶어) 1995년 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1554,
+   "version": 3,
+   "title_native": "ルカルカ★ナイトフィーバー",
+   "artists": [
+    "samfree"
+   ],
+   "performances": 20,
+   "title_ko": "루카루카★나이트 피버",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/루카루카★나이트 피버?from=ルカルカ★ナイトフィーバー"
+   ],
+   "namu": "루카루카★나이트 피버",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 루카루카★나이트 피버; ルカルカ★ナイトフィーバー Luka Luka★Night Fever 루카루카★나이트 피버",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1555,
+   "version": 3,
+   "title_native": "劣等上等",
+   "artists": [
+    "Giga"
+   ],
+   "performances": 20,
+   "title_ko": "열등상등",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "렛토조토",
+     "where": "research/parent proposal"
+    },
+    "열등 상등"
+   ],
+   "sources": [
+    "https://namu.wiki/w/열등상등"
+   ],
+   "namu": "열등상등",
+   "note": "namu.wiki document_title: 劣等上等 BRING IT ON | 열등상등 가수 카가미네 린·렌 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1557,
+   "version": 3,
+   "title_native": "夕凪、某、花惑い",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 20,
+   "title_ko": "무풍, 누군가, 꽃에 취하다",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "유나기, 나니, 하나마도이",
+     "where": "research/parent proposal"
+    },
+    "저녁뜸, 어떤 것, 꽃의 혼란"
+   ],
+   "sources": [
+    "https://namu.wiki/w/무풍, 누군가, 꽃에 취하다?from=夕凪、某、花惑い"
+   ],
+   "namu": "무풍, 누군가, 꽃에 취하다",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 무풍, 누군가, 꽃에 취하다 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1558,
+   "version": 3,
+   "title_native": "太陽",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 20,
+   "title_ko": "태양",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1560,
+   "version": 3,
+   "title_native": "拍手喝采歌合",
+   "artists": [
+    "supercell"
+   ],
+   "performances": 20,
+   "title_ko": "박수갈채 가합",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "박수갈채 우타아와세"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "歌合 (utaawase, poetry/song contest) is an archaic term; literal Sino-Korean rendering used.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1561,
+   "version": 3,
+   "title_native": "拝啓、少年よ",
+   "artists": [
+    "Hump Back"
+   ],
+   "performances": 20,
+   "title_ko": "친애하는 소년이여",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "배계, 소년이여",
+     "where": "research/parent proposal"
+    },
+    "친애하는 소년이여"
+   ],
+   "sources": [
+    "https://namu.wiki/w/拝啓、少年よ"
+   ],
+   "namu": "친애하는 소년이여",
+   "note": "namu.wiki content: 拝啓、少年よ 친애하는 소년이여 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1562,
+   "version": 3,
+   "title_native": "明日も",
+   "artists": [
+    "SHISHAMO"
+   ],
+   "performances": 20,
+   "title_ko": "내일도",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/SHISHAMO"
+   ],
+   "namu": "내일도",
+   "note": "namu.wiki content: 삽입곡은 SHISHAMO 4 앨범의 수록 예정곡인 明日も(내일도)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1564,
+   "version": 3,
+   "title_native": "色彩",
+   "artists": [
+    "yama"
+   ],
+   "performances": 20,
+   "title_ko": "색채",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1565,
+   "version": 3,
+   "title_native": "花ハ踊レヤいろはにほ",
+   "artists": [
+    "チーム“ハナヤマタ”"
+   ],
+   "performances": 20,
+   "title_ko": "꽃은 춤일지어니 이로하니호",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "하나와 오도레야 이로하니호",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/花ハ踊レヤいろはにほ"
+   ],
+   "namu": "꽃은 춤일지어니 이로하니호",
+   "note": "namu.wiki document_title: 花 ( はな ) ハ 踊 ( おど ) レヤいろはにほ 꽃은 춤일지어니 이로하니호 HANAWA ODOREYA IROHANIHO (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1566,
+   "version": 3,
+   "title_native": "魔法",
+   "artists": [
+    "古川本舗"
+   ],
+   "performances": 20,
+   "title_ko": "마법",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1574,
+   "version": 3,
+   "title_native": "あの夏が飽和する",
+   "artists": [
+    "カンザキイオリ"
+   ],
+   "performances": 20,
+   "title_ko": "그 여름이 포화한다",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그 여름이 포화된다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/칸자키 이오리"
+   ],
+   "namu": "그 여름이 포화한다",
+   "note": "namu.wiki content: あの夏が飽和する。》(첫 단행본), 그 여름이 포화한다 (트랙명), 카가미네 린, 렌 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1579,
+   "version": 3,
+   "title_native": "アポロ",
+   "artists": [
+    "ポルノグラフィティ"
+   ],
+   "performances": 20,
+   "title_ko": "아폴로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/アポロ"
+   ],
+   "namu": "아폴로",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: アポロ ... 아폴로 (개요 section)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1581,
+   "version": 3,
+   "title_native": "エイミー",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 20,
+   "title_ko": "에이미",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "Amy"
+   ],
+   "sources": [
+    "https://namu.wiki/w/에이미(요루시카)?from=エイミー"
+   ],
+   "namu": "에이미",
+   "note": "namu.wiki content: 12 エイミー 에이미",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1575,
+   "version": 3,
+   "title_native": "さんぽ",
+   "artists": [
+    "井上あずみ"
+   ],
+   "performances": 19,
+   "title_ko": "산책",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1576,
+   "version": 3,
+   "title_native": "となりのトトロ",
+   "artists": [
+    "井上あずみ"
+   ],
+   "performances": 19,
+   "title_ko": "이웃집 토토로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/となりのトトロ"
+   ],
+   "namu": "이웃집 토토로",
+   "note": "namu.wiki content: 음악 히사이시 조 주제가 이노우에 아즈미 - 이웃집 토토로 (となりのトトロ)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1577,
+   "version": 3,
+   "title_native": "もののけ姫",
+   "artists": [
+    "米良美一"
+   ],
+   "performances": 19,
+   "title_ko": "모노노케 히메",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "원령 공주"
+   ],
+   "sources": [
+    "https://namu.wiki/w/모노노케 히메?from=もののけ姫"
+   ],
+   "namu": "모노노케 히메",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 모노노케 히메",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1578,
+   "version": 3,
+   "title_native": "アオハル進化論",
+   "artists": [
+    "水瀬凪"
+   ],
+   "performances": 19,
+   "title_ko": "푸른 봄의 진화론",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "청춘 진화론",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/アオハル進化論"
+   ],
+   "namu": "푸른 봄의 진화론",
+   "note": "namu.wiki content: 5th Single アオハル進化論 푸른 봄의 진화론 2024. 10. 06. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1580,
+   "version": 3,
+   "title_native": "アンノウン・マザーグース",
+   "artists": [
+    "wowaka"
+   ],
+   "performances": 19,
+   "title_ko": "언노운 마더 구스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/언노운 마더 구스?from=アンノウン・マザーグース"
+   ],
+   "namu": "언노운 마더 구스",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 언노운 마더 구스",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1582,
+   "version": 3,
+   "title_native": "エンヴィーベイビー",
+   "artists": [
+    "Kanaria"
+   ],
+   "performances": 19,
+   "title_ko": "엔비 베이비",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/엔비 베이비?from=エンヴィーベイビー"
+   ],
+   "namu": "엔비 베이비",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 엔비 베이비 (from エンヴィーベイビー)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1583,
+   "version": 3,
+   "title_native": "キラーチューン",
+   "artists": [
+    "東京事変"
+   ],
+   "performances": 19,
+   "title_ko": "킬러 튠",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "English loanwords 'killer' + 'tune'.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1584,
+   "version": 3,
+   "title_native": "ザムザ",
+   "artists": [
+    "てにをは"
+   ],
+   "performances": 19,
+   "title_ko": "잠자",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "자무자"
+   ],
+   "sources": [
+    "https://namu.wiki/w/잠자"
+   ],
+   "namu": "잠자",
+   "note": "namu.wiki document_title: ザムザ Samsa | 잠자 버추얼 싱어 ver.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1585,
+   "version": 3,
+   "title_native": "乱舞のメロディ",
+   "artists": [
+    "シド"
+   ],
+   "performances": 19,
+   "title_ko": "난무의 멜로디",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1586,
+   "version": 3,
+   "title_native": "儚くも永久のカナシ",
+   "artists": [
+    "UVERworld"
+   ],
+   "performances": 19,
+   "title_ko": "덧없고도 영원한 사랑",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "덧없어도 영구의 카나시",
+     "where": "proposal before user review"
+    },
+    "덧없어도 영구의 슬픔/사랑"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27; カナシ is ambiguous between 悲哀(sorrow)/愛(love)-type readings; kept as reading.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1587,
+   "version": 3,
+   "title_native": "地上の星",
+   "artists": [
+    "中島みゆき"
+   ],
+   "performances": 19,
+   "title_ko": "지상의 별",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/나카지마 미유키?from=地上の星#노래"
+   ],
+   "namu": "지상의 별",
+   "note": "namu.wiki content: 地上の星 ... 지상의 별 (2000년대 대표곡, 가사 제목 '지상의 별')",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1588,
+   "version": 3,
+   "title_native": "心臓デモクラシー",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 19,
+   "title_ko": "심장 데모크라시",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/심장 데모크라시?from=心臓デモクラシー"
+   ],
+   "namu": "심장 데모크라시",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 심장 데모크라시 (from 心臓デモクラシー)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1590,
+   "version": 3,
+   "title_native": "愛のうた",
+   "artists": [
+    "倖田來未"
+   ],
+   "performances": 19,
+   "title_ko": "사랑의 노래",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/愛のうた"
+   ],
+   "namu": "사랑의 노래",
+   "note": "namu.wiki content: 동명의 보컬로이드 오리지널 곡에 대한 내용은 사랑의 노래 문서를 참고하십시오. ... 愛のうた 일본 가수 코다 쿠미 의 37번째 싱글",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1591,
+   "version": 3,
+   "title_native": "明日の私に幸あれ",
+   "artists": [
+    "ナナヲアカリ"
+   ],
+   "performances": 19,
+   "title_ko": "내일의 나에게 행복 있으라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "내일의 나에게 행복이 있기를",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/明日の私に幸あれ"
+   ],
+   "namu": "내일의 나에게 행복 있으라",
+   "note": "namu.wiki document_title: 明日の私に幸あれ Good luck to me tomorrow | 내일의 나에게 행복 있으라 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1592,
+   "version": 3,
+   "title_native": "気になるあの娘",
+   "artists": [
+    "相対性理論"
+   ],
+   "performances": 19,
+   "title_ko": "신경쓰이는 그 애",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "궁금한 그 소녀",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/상대성이론(밴드)?from=소타이세이리론"
+   ],
+   "namu": "신경쓰이는 그 애",
+   "note": "namu.wiki content: 9 신경쓰이는 그 애(気になるあの娘) 야쿠시마루 에츠코, 나가이 세이이치, 마베 슈이치 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1593,
+   "version": 3,
+   "title_native": "海色",
+   "artists": [
+    "AKINO from bless4"
+   ],
+   "performances": 19,
+   "title_ko": "바다색",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/海色"
+   ],
+   "namu": "바다색",
+   "note": "namu.wiki content: 海色 ( みいろ ) ... 海色(미이로)는 '바다색', '바다의 색' 정도의 뜻이 된다.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1594,
+   "version": 3,
+   "title_native": "阿吽のビーツ",
+   "artists": [
+    "羽生まゐご"
+   ],
+   "performances": 19,
+   "title_ko": "아훔의 비트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "아운의 비츠",
+     "where": "research/parent proposal"
+    },
+    "아운의 비트"
+   ],
+   "sources": [
+    "https://namu.wiki/w/아훔의 비트?from=阿吽のビーツ"
+   ],
+   "namu": "아훔의 비트",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 아훔의 비트 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1595,
+   "version": 3,
+   "title_native": "青空のラプソディ",
+   "artists": [
+    "fhána"
+   ],
+   "performances": 19,
+   "title_ko": "푸른 하늘의 랩소디",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/青空のラプソディ"
+   ],
+   "namu": "푸른 하늘의 랩소디",
+   "note": "namu.wiki content: 푸른 하늘의 랩소디 青空のラプソディ Rhapsody of Blue Sky ... 노래 fhána",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1601,
+   "version": 3,
+   "title_native": "みずいろの雨",
+   "artists": [
+    "八神純子"
+   ],
+   "performances": 18,
+   "title_ko": "물빛의 비",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1602,
+   "version": 3,
+   "title_native": "アンコール",
+   "artists": [
+    "YOASOBI"
+   ],
+   "performances": 18,
+   "title_ko": "앙코르",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/アンコール"
+   ],
+   "namu": "앙코르",
+   "note": "namu.wiki document_title: アンコール 앙코르｜Encore 아티스트 YOASOBI",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1604,
+   "version": 3,
+   "title_native": "キミシダイ列車",
+   "artists": [
+    "ONE OK ROCK"
+   ],
+   "performances": 18,
+   "title_ko": "키미시다이",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "너에게 달린 열차"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "キミシダイ appears to be a phonetic pun on 君次第 (up to you); ambiguous coined spelling, kept as reading.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1605,
+   "version": 3,
+   "title_native": "グッバイ宣言",
+   "artists": [
+    "Chinozo"
+   ],
+   "performances": 18,
+   "title_ko": "굿바이 선언",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/굿바이 선언?from=グッバイ宣言"
+   ],
+   "namu": "굿바이 선언",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 굿바이 선언",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1606,
+   "version": 3,
+   "title_native": "シャンティ",
+   "artists": [
+    "wotaku"
+   ],
+   "performances": 18,
+   "title_ko": "샨티",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/샨티(VOCALOID 오리지널 곡)?from=シャンティ"
+   ],
+   "namu": "샨티",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 샨티(VOCALOID 오리지널 곡); シャンティ SHANTI | 샨티",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1607,
+   "version": 3,
+   "title_native": "スターマーカー",
+   "artists": [
+    "KANA-BOON"
+   ],
+   "performances": 18,
+   "title_ko": "스타 마커",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"star marker\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1608,
+   "version": 3,
+   "title_native": "ストリーミングハート",
+   "artists": [
+    "DECO*27"
+   ],
+   "performances": 18,
+   "title_ko": "스트리밍 하트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/스트리밍 하트?from=ストリーミングハート"
+   ],
+   "namu": "스트리밍 하트",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 스트리밍 하트 (from ストリーミングハート)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1609,
+   "version": 3,
+   "title_native": "チャイナアドバイス",
+   "artists": [
+    "相対性理論"
+   ],
+   "performances": 18,
+   "title_ko": "차이나 어드바이스",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"China advice\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1610,
+   "version": 3,
+   "title_native": "ツギハギスタッカート",
+   "artists": [
+    "とあ"
+   ],
+   "performances": 18,
+   "title_ko": "누덕누덕 스타카토",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "조각조각 스타카토",
+     "where": "research/parent proposal"
+    },
+    "츠기하기 스타카토"
+   ],
+   "sources": [
+    "https://namu.wiki/w/누덕누덕 스타카토"
+   ],
+   "namu": "누덕누덕 스타카토",
+   "note": "namu.wiki document_title: ツギハギスタッカート (Patchwork Staccato | 누덕누덕 스타카토) 가수 하츠네 미쿠 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1611,
+   "version": 3,
+   "title_native": "マーシャル・マキシマイザー",
+   "artists": [
+    "柊マグネタイト"
+   ],
+   "performances": 18,
+   "title_ko": "마셜 맥시마이저",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/마셜 맥시마이저?from=マーシャル・マキシマイザー"
+   ],
+   "namu": "마셜 맥시마이저",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 마셜 맥시마이저",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1612,
+   "version": 3,
+   "title_native": "ルーマー",
+   "artists": [
+    "Police Piccadilly"
+   ],
+   "performances": 18,
+   "title_ko": "루머",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/루머(VOCALOID 오리지널 곡)?from=ルーマー"
+   ],
+   "namu": "루머",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 루머(VOCALOID 오리지널 곡); ルーマー Rumor | 루머",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1613,
+   "version": 3,
+   "title_native": "大正浪漫",
+   "artists": [
+    "YOASOBI"
+   ],
+   "performances": 18,
+   "title_ko": "다이쇼 로망",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/大正浪漫"
+   ],
+   "namu": "다이쇼 로망",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 大正浪漫 ... 다이쇼 로망 (아티스트 YOASOBI, throughout text)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1614,
+   "version": 3,
+   "title_native": "徒花ネクロマンシー",
+   "artists": [
+    "フランシュシュ"
+   ],
+   "performances": 18,
+   "title_ko": "수꽃 네크로맨시",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "헛꽃 네크로맨시",
+     "where": "research/parent proposal"
+    },
+    "토바나 네크로맨시"
+   ],
+   "sources": [
+    "https://namu.wiki/w/徒花ネクロマンシー"
+   ],
+   "namu": "수꽃 네크로맨시",
+   "note": "namu.wiki content: 徒花ネクロマンシー 수꽃 네크로맨시 싱글 앨범 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1615,
+   "version": 3,
+   "title_native": "泪のムコウ",
+   "artists": [
+    "ステレオポニー"
+   ],
+   "performances": 18,
+   "title_ko": "눈물의 저편",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "泪 (tears) + ムコウ (beyond/far side)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1616,
+   "version": 3,
+   "title_native": "猟奇的なキスを私にして",
+   "artists": [
+    "ゲスの極み乙女。"
+   ],
+   "performances": 18,
+   "title_ko": "엽기적인 키스를 나에게 해줘",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "기괴한 키스를 나에게 해줘",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/猟奇的なキスを私にして"
+   ],
+   "namu": "엽기적인 키스를 나에게 해줘",
+   "note": "namu.wiki content: 猟 ( りょう ) 奇 ( き ) 的 ( てき ) なキスを 私 ( わたし ) にして 엽기적인 키스를 나에게 해줘 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1617,
+   "version": 3,
+   "title_native": "逆さまの蝶",
+   "artists": [
+    "SNoW"
+   ],
+   "performances": 18,
+   "title_ko": "뒤집힌 나비",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "逆さま = upside-down/reversed",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1619,
+   "version": 3,
+   "title_native": "金木犀の夜",
+   "artists": [
+    "きのこ帝国"
+   ],
+   "performances": 18,
+   "title_ko": "금목서의 밤",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "金木犀 = fragrant olive/osmanthus",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1620,
+   "version": 3,
+   "title_native": "銀の龍の背に乗って",
+   "artists": [
+    "中島みゆき"
+   ],
+   "performances": 18,
+   "title_ko": "은빛 용의 등을 타고",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Near-literal: riding on the silver dragon's back",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1637,
+   "version": 3,
+   "title_native": "ジャンキーナイトタウンオーケストラ",
+   "artists": [
+    "すりぃ"
+   ],
+   "performances": 18,
+   "title_ko": "정키 나이트 타운 오케스트라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/정키 나이트 타운 오케스트라?from=ジャンキーナイトタウンオーケストラ"
+   ],
+   "namu": "정키 나이트 타운 오케스트라",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 정키 나이트 타운 오케스트라; ジャンキーナイトタウンオーケストラ Junky Night Town Orchestra | 정키 나이트 타운 오케스트라",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1641,
+   "version": 3,
+   "title_native": "ユリイカ",
+   "artists": [
+    "ロクデナシ"
+   ],
+   "performances": 18,
+   "title_ko": "유레카",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ユリイカ"
+   ],
+   "namu": "유레카",
+   "note": "namu.wiki document_title: ユ リイ カ 유 레 카 | Eu re ka",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1650,
+   "version": 3,
+   "title_native": "絶え間なく藍色",
+   "artists": [
+    "獅子志司"
+   ],
+   "performances": 18,
+   "title_ko": "끊임없는 남빛",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "끊임없이 남색",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/끊임없는 남빛?from=絶え間なく藍色"
+   ],
+   "namu": "끊임없는 남빛",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 끊임없는 남빛 (from 絶え間なく藍色) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1629,
+   "version": 3,
+   "title_native": "いい日 旅立ち",
+   "artists": [
+    "山口百恵"
+   ],
+   "performances": 17,
+   "title_ko": "좋은 날, 떠나는 날",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "いい日 旅立ち = good day, day of departure",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1630,
+   "version": 3,
+   "title_native": "え？あぁ、そう。",
+   "artists": [
+    "蝶々P"
+   ],
+   "performances": 17,
+   "title_ko": "응? 아아, 그래.",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "어? 아, 그래.",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/응? 아아, 그래.?from=え？あぁ、そう。"
+   ],
+   "namu": "응? 아아, 그래.",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 응? 아아, 그래. (え？あぁ、そう。 에서 넘어옴); え？あぁ、そう。 E? Ah,sou. | 응? 아아, 그래. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1632,
+   "version": 3,
+   "title_native": "はいよろこんで",
+   "artists": [
+    "こっちのけんと"
+   ],
+   "performances": 17,
+   "title_ko": "네, 기꺼이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/はいよろこんで"
+   ],
+   "namu": "네, 기꺼이",
+   "note": "namu.wiki content: はいよろこんで 네 기꺼이 | Hai Yorokonde 가수 콧치노 켄토",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1633,
+   "version": 3,
+   "title_native": "ふたりごと",
+   "artists": [
+    "RADWIMPS"
+   ],
+   "performances": 17,
+   "title_ko": "후타리고토",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    "두 사람의 혼잣말"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ふたりごと"
+   ],
+   "namu": "후타리고토",
+   "note": "namu.wiki content: 둘이서(with the two) 후타리고토",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1634,
+   "version": 3,
+   "title_native": "アクアテラリウム",
+   "artists": [
+    "やなぎなぎ"
+   ],
+   "performances": 17,
+   "title_ko": "아쿠아테라리움",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"aquaterrarium\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1635,
+   "version": 3,
+   "title_native": "イマジネーション",
+   "artists": [
+    "SPYAIR"
+   ],
+   "performances": 17,
+   "title_ko": "이매지네이션",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"imagination\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1636,
+   "version": 3,
+   "title_native": "クライヤ",
+   "artists": [
+    "すこっぷ"
+   ],
+   "performances": 17,
+   "title_ko": "크라이어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "쿠라이야",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/크라이어?from=クライヤ"
+   ],
+   "namu": "크라이어",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 크라이어 ... 정확한 표기는 크라이어 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1638,
+   "version": 3,
+   "title_native": "ズルい幻",
+   "artists": [
+    "めいちゃん"
+   ],
+   "performances": 17,
+   "title_ko": "치사한 환상",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ズルい = unfair/sly, 幻 = illusion",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1639,
+   "version": 3,
+   "title_native": "タイムマシン",
+   "artists": [
+    "1640mP"
+   ],
+   "performances": 17,
+   "title_ko": "타임머신",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/타임머신(VOCALOID 오리지널 곡)?from=タイムマシン"
+   ],
+   "namu": "타임머신",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 타임머신(VOCALOID 오리지널 곡); タイムマシン Time Machine | 타임머신",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1640,
+   "version": 3,
+   "title_native": "プラネテス",
+   "artists": [
+    "seiza"
+   ],
+   "performances": 17,
+   "title_ko": "플라네테스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/플라네테스(VOCALOID 오리지널 곡)"
+   ],
+   "namu": "플라네테스",
+   "note": "namu.wiki document_title: プラネテス Planetes | 플라네테스 가수 하츠네 미쿠",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1642,
+   "version": 3,
+   "title_native": "レイン",
+   "artists": [
+    "シド"
+   ],
+   "performances": 17,
+   "title_ko": "레인",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"rain\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1643,
+   "version": 3,
+   "title_native": "ワールズエンド・ダンスホール",
+   "artists": [
+    "wowaka"
+   ],
+   "performances": 17,
+   "title_ko": "월즈 엔드 댄스홀",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/월즈 엔드 댄스홀?from=ワールズエンド・ダンスホール"
+   ],
+   "namu": "월즈 엔드 댄스홀",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 월즈 엔드 댄스홀; ワールズエンド・ダンスホール World's End Dancehall | 월즈 엔드 댄스홀",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1644,
+   "version": 3,
+   "title_native": "人生は夢だらけ",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 17,
+   "title_ko": "인생은 꿈으로 가득해",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "人生は夢だらけ = life is full of dreams",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1645,
+   "version": 3,
+   "title_native": "光の旋律",
+   "artists": [
+    "Kalafina"
+   ],
+   "performances": 17,
+   "title_ko": "빛의 선율",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "光の旋律 = melody of light",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1646,
+   "version": 4,
+   "title_native": "八月の蛍",
+   "artists": [
+    "HACHI",
+    "ハチ"
+   ],
+   "performances": 17,
+   "title_ko": "팔월의 반딧불이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/八月の蛍"
+   ],
+   "namu": "팔월의 반딧불이",
+   "note": "namu.wiki content: 6th Single 八月の蛍 8월의 반딧불이 ... 八月の蛍 팔월의 반딧불이 | Hachigatsu no hotaru",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1647,
+   "version": 3,
+   "title_native": "帝国少女",
+   "artists": [
+    "R Sound Design"
+   ],
+   "performances": 17,
+   "title_ko": "제국소녀",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/제국소녀?from=帝国少女"
+   ],
+   "namu": "제국소녀",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 제국소녀 (帝国少女 에서 넘어옴); 帝国少女 Imperial Girl | 제국소녀",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1648,
+   "version": 3,
+   "title_native": "明日への扉",
+   "artists": [
+    "I WiSH"
+   ],
+   "performances": 17,
+   "title_ko": "내일로의 문",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/明日への扉"
+   ],
+   "namu": "내일로의 문",
+   "note": "namu.wiki content: 한국에서 '내일로의 문'이라는 번역으로 알려져 있기도 하다.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1649,
+   "version": 3,
+   "title_native": "熱帯夜",
+   "artists": [
+    "SHISHAMO"
+   ],
+   "performances": 17,
+   "title_ko": "열대야",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/SHISHAMO"
+   ],
+   "namu": "열대야",
+   "note": "namu.wiki content: 2015년 8월 5일 싱글 앨범 '熱帯夜(열대야)' 를 발매했다.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1651,
+   "version": 3,
+   "title_native": "翡翠のまち",
+   "artists": [
+    "メル"
+   ],
+   "performances": 17,
+   "title_ko": "비취의 마을",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/비취의 마을?from=翡翠のまち"
+   ],
+   "namu": "비취의 마을",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 비취의 마을; 翡翠のまち (Town of Jade | 비취의 거리)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1652,
+   "version": 3,
+   "title_native": "背景、夏に溺れる",
+   "artists": [
+    "n-buna"
+   ],
+   "performances": 17,
+   "title_ko": "배경, 여름에 빠지다",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/배경, 여름에 빠지다?from=背景、夏に溺れる"
+   ],
+   "namu": "배경, 여름에 빠지다",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 배경, 여름에 빠지다",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1653,
+   "version": 3,
+   "title_native": "逆夢",
+   "artists": [
+    "King Gnu"
+   ],
+   "performances": 17,
+   "title_ko": "역몽",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/逆夢"
+   ],
+   "namu": "역몽",
+   "note": "namu.wiki content: 逆夢 (sakayume) 역몽 가수 King Gnu",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1654,
+   "version": 3,
+   "title_native": "雨とペトラ",
+   "artists": [
+    "須田景凪"
+   ],
+   "performances": 17,
+   "title_ko": "비와 페트라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/비와 페트라?from=雨とペトラ"
+   ],
+   "namu": "비와 페트라",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 비와 페트라 (雨とペトラ 에서 넘어옴); 雨とペトラ Rain and Petra | 비와 페트라",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1672,
+   "version": 3,
+   "title_native": "シニカルナイトプラン",
+   "artists": [
+    "Ayase"
+   ],
+   "performances": 17,
+   "title_ko": "시니컬 나이트 플랜",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/시니컬 나이트 플랜"
+   ],
+   "namu": "시니컬 나이트 플랜",
+   "note": "namu.wiki document_title: シニカルナイトプラン Cynical Night Plan | 시니컬 나이트 플랜 가수 하츠네 미쿠",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1674,
+   "version": 3,
+   "title_native": "ラピスラズリ",
+   "artists": [
+    "藍井エイル"
+   ],
+   "performances": 17,
+   "title_ko": "라피스 라줄리",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"lapis lazuli\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1682,
+   "version": 3,
+   "title_native": "神のまにまに",
+   "artists": [
+    "れるりり"
+   ],
+   "performances": 17,
+   "title_ko": "신의 뜻대로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/신의 뜻대로?from=神のまにまに"
+   ],
+   "namu": "신의 뜻대로",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 신의 뜻대로; 神のまにまに At God's Mercy | 신의 뜻대로",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1657,
+   "version": 3,
+   "title_native": "B級",
+   "artists": [
+    "ちゃんみな"
+   ],
+   "performances": 16,
+   "title_ko": "B급",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "B級 = B-grade/B-class, Latin letter kept as written",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1666,
+   "version": 3,
+   "title_native": "あたしを彼女にしたいなら",
+   "artists": [
+    "コレサワ"
+   ],
+   "performances": 16,
+   "title_ko": "나를 여자친구로 만들고 싶다면",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Near-literal: if you want to make me your girlfriend",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1667,
+   "version": 3,
+   "title_native": "お気に召すまま",
+   "artists": [
+    "Eve"
+   ],
+   "performances": 16,
+   "title_ko": "마음에 드시는 대로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "마음에 드는 대로",
+     "where": "research/parent proposal"
+    },
+    "당신 뜻대로"
+   ],
+   "sources": [
+    "https://namu.wiki/w/마음에 드시는 대로?from=お気に召すまま"
+   ],
+   "namu": "마음에 드시는 대로",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 마음에 드시는 대로 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1668,
+   "version": 3,
+   "title_native": "エンゼルフィッシュ",
+   "artists": [
+    "パトリチェフ"
+   ],
+   "performances": 16,
+   "title_ko": "엔젤피시",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"angelfish\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1669,
+   "version": 3,
+   "title_native": "エンドロール",
+   "artists": [
+    "夏代孝明"
+   ],
+   "performances": 16,
+   "title_ko": "엔드롤",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"end roll\" (credits)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1670,
+   "version": 3,
+   "title_native": "オドループ",
+   "artists": [
+    "フレデリック"
+   ],
+   "performances": 16,
+   "title_ko": "오도루프",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "춤추는 루프"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "Coined word blending 踊る (to dance) and loop; ambiguous exact meaning",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1671,
+   "version": 3,
+   "title_native": "ゴーゴー幽霊船",
+   "artists": [
+    "米津玄師"
+   ],
+   "performances": 16,
+   "title_ko": "고고 유령선",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ゴーゴー (go-go) kept as loanword + 幽霊船 = ghost ship",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1673,
+   "version": 3,
+   "title_native": "プラスティック・ラブ",
+   "artists": [
+    "竹内まりや"
+   ],
+   "performances": 16,
+   "title_ko": "플라스틱 러브",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"plastic love\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1675,
+   "version": 3,
+   "title_native": "修羅",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 16,
+   "title_ko": "수라",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "修羅 = Asura, Sino-Korean equivalent",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1676,
+   "version": 3,
+   "title_native": "修羅場",
+   "artists": [
+    "東京事変"
+   ],
+   "performances": 16,
+   "title_ko": "수라장",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "修羅場 = scene of carnage/chaos, Sino-Korean equivalent",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1678,
+   "version": 3,
+   "title_native": "勿忘",
+   "artists": [
+    "Awesome City Club"
+   ],
+   "performances": 16,
+   "title_ko": "물망",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "잊지 마"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "勿忘 = \"don't forget\"; kept as Sino-Korean reading matching the kanji",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1679,
+   "version": 3,
+   "title_native": "時には昔の話を",
+   "artists": [
+    "加藤登紀子"
+   ],
+   "performances": 16,
+   "title_ko": "때로는 옛이야기를",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "時には昔の話を = sometimes, tales of the past",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1680,
+   "version": 3,
+   "title_native": "決戦スピリット",
+   "artists": [
+    "CHiCO with HoneyWorks"
+   ],
+   "performances": 16,
+   "title_ko": "결전 스피릿",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "決戦 = decisive battle + katakana \"spirit\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1681,
+   "version": 3,
+   "title_native": "眩しいDNAだけ",
+   "artists": [
+    "ずっと真夜中でいいのに。"
+   ],
+   "performances": 16,
+   "title_ko": "눈부신 DNA뿐",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "눈부신 DNA만",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/眩しいDNAだけ"
+   ],
+   "namu": "눈부신 DNA뿐",
+   "note": "namu.wiki content: 眩しいDNAだけ 눈부신 DNA뿐 2019.02.04 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1683,
+   "version": 3,
+   "title_native": "花瓶に触れた",
+   "artists": [
+    "須田景凪"
+   ],
+   "performances": 16,
+   "title_ko": "꽃병에 닿았어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "화병을 만졌다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/꽃병에 닿았어?from=花瓶に触れた"
+   ],
+   "namu": "꽃병에 닿았어",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 꽃병에 닿았어; 花瓶に触れた 꽃병에 닿았어 가수 v flower (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1698,
+   "version": 3,
+   "title_native": "今夜このまま",
+   "artists": [
+    "あいみょん"
+   ],
+   "performances": 16,
+   "title_ko": "오늘밤 이대로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/今夜このまま"
+   ],
+   "namu": "오늘밤 이대로",
+   "note": "namu.wiki document_title: 今夜このまま 오늘 밤 이대로 | Let the Night",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1699,
+   "version": 3,
+   "title_native": "優しい彗星",
+   "artists": [
+    "YOASOBI"
+   ],
+   "performances": 16,
+   "title_ko": "상냥한 혜성",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "다정한 혜성",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/優しい彗星"
+   ],
+   "namu": "상냥한 혜성",
+   "note": "namu.wiki document_title: 優しい彗星 상냥한 혜성｜Comet 아티스트 YOASOBI (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1704,
+   "version": 3,
+   "title_native": "月光浴",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 16,
+   "title_ko": "월광욕",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "月光浴 = moonbathing, Sino-Korean coinage parallel to 일광욕 (sunbathing)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1710,
+   "version": 3,
+   "title_native": "自傷無色",
+   "artists": [
+    "ササノマリイ"
+   ],
+   "performances": 16,
+   "title_ko": "자상무색",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "자해 무색"
+   ],
+   "sources": [
+    "https://namu.wiki/w/자상무색?from=自傷無色"
+   ],
+   "namu": "자상무색",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 자상무색 (自傷無色 에서 넘어옴); 自傷無色 ( じしょうむしょく ) (Self-inflicted Achromatic | 자상무색)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1693,
+   "version": 3,
+   "title_native": "あのバンド",
+   "artists": [
+    "結束バンド"
+   ],
+   "performances": 15,
+   "title_ko": "그 밴드",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/あのバンド"
+   ],
+   "namu": "그 밴드",
+   "note": "namu.wiki content: あのバンド 그 밴드 / That Band 노래 결속 밴드",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1694,
+   "version": 3,
+   "title_native": "すべりだい",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 15,
+   "title_ko": "미끄럼틀",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "すべりだい = playground slide",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1695,
+   "version": 3,
+   "title_native": "スターライト",
+   "artists": [
+    "amazarashi"
+   ],
+   "performances": 15,
+   "title_ko": "스타라이트",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katakana loanword \"starlight\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1696,
+   "version": 3,
+   "title_native": "ポニーテールとシュシュ",
+   "artists": [
+    "AKB48"
+   ],
+   "performances": 15,
+   "title_ko": "포니테일과 슈슈",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ポニーテールとシュシュ"
+   ],
+   "namu": "포니테일과 슈슈",
+   "note": "namu.wiki content: 1 ポニーテールとシュシュ 포니테일과 슈슈",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1697,
+   "version": 3,
+   "title_native": "一途",
+   "artists": [
+    "King Gnu"
+   ],
+   "performances": 15,
+   "title_ko": "일도",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "한결같음",
+     "where": "research/parent proposal"
+    },
+    "일념"
+   ],
+   "sources": [
+    "https://namu.wiki/w/一途"
+   ],
+   "namu": "일도",
+   "note": "namu.wiki content: 一途 (ichizu) 일도(외길) 가수 King Gnu (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1700,
+   "version": 3,
+   "title_native": "優しさの理由",
+   "artists": [
+    "ChouCho"
+   ],
+   "performances": 15,
+   "title_ko": "다정함의 이유",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/優しさの理由"
+   ],
+   "namu": "다정함의 이유",
+   "note": "namu.wiki document_title: 다정함의 이유 야사시사노 리유우 優しさの理由 가수 ChouCho",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1701,
+   "version": 3,
+   "title_native": "可愛くなりたい",
+   "artists": [
+    "HoneyWorks"
+   ],
+   "performances": 15,
+   "title_ko": "귀여워지고 싶어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/귀여워지고 싶어?from=可愛くなりたい"
+   ],
+   "namu": "귀여워지고 싶어",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 귀여워지고 싶어 (可愛くなりたい 에서 넘어옴)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1702,
+   "version": 3,
+   "title_native": "声",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 15,
+   "title_ko": "목소리",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "声 = voice",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1703,
+   "version": 3,
+   "title_native": "日々",
+   "artists": [
+    "吉田山田"
+   ],
+   "performances": 15,
+   "title_ko": "나날",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "日々 = days",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1705,
+   "version": 3,
+   "title_native": "気分上々↑↑",
+   "artists": [
+    "mihimaru GT"
+   ],
+   "performances": 15,
+   "title_ko": "기분업업↑↑",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "기분 최고↑↑",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/気分上々↑↑"
+   ],
+   "namu": "기분업업↑↑",
+   "note": "namu.wiki content: 기분업업↑↑ 気分上々↑↑ 발매일 2006년 5월 3일 가수 mihimaru GT (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1706,
+   "version": 3,
+   "title_native": "水の証",
+   "artists": [
+    "ラクス・クライン（田中理恵）"
+   ],
+   "performances": 15,
+   "title_ko": "물의 증표",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "水の証 = proof/token of water",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1707,
+   "version": 3,
+   "title_native": "津軽海峡・冬景色",
+   "artists": [
+    "石川さゆり"
+   ],
+   "performances": 15,
+   "title_ko": "쓰가루 해협 겨울 풍경",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "츠가루 해협・겨울 풍경",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/津軽海峡・冬景色"
+   ],
+   "namu": "쓰가루 해협 겨울 풍경",
+   "note": "namu.wiki content: 津軽海峡・冬景色 쓰가루 해협 겨울 풍경 발매일 1977년 1월 1일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1708,
+   "version": 3,
+   "title_native": "白金ディスコ",
+   "artists": [
+    "阿良々木月火（井口裕香）"
+   ],
+   "performances": 15,
+   "title_ko": "백금 디스코",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/白金ディスコ"
+   ],
+   "namu": "백금 디스코",
+   "note": "namu.wiki content: 白金 ( プラチナ ) ディスコ 백금 ( 플라티나 ) 디스코",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1709,
+   "version": 3,
+   "title_native": "睡蓮花",
+   "artists": [
+    "湘南乃風"
+   ],
+   "performances": 15,
+   "title_ko": "수련화",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "수련꽃"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "睡蓮花 = water lily flower",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1711,
+   "version": 3,
+   "title_native": "負けないで",
+   "artists": [
+    "ZARD"
+   ],
+   "performances": 15,
+   "title_ko": "지지 말아요",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "지지 마",
+     "where": "research/parent proposal"
+    },
+    "포기하지 마"
+   ],
+   "sources": [
+    "https://namu.wiki/w/負けないで"
+   ],
+   "namu": "지지 말아요",
+   "note": "namu.wiki content: 負けないで 지지 말아요 발매일 1993년 1월 27일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1712,
+   "version": 3,
+   "title_native": "閃光",
+   "artists": [
+    "[Alexandros]"
+   ],
+   "performances": 15,
+   "title_ko": "섬광",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "閃光 = flash of light",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1713,
+   "version": 3,
+   "title_native": "雨き声残響",
+   "artists": [
+    "Orangestar"
+   ],
+   "performances": 15,
+   "title_ko": "빗소리 잔향",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "비 목소리 잔향"
+   ],
+   "sources": [
+    "https://namu.wiki/w/빗소리 잔향?from=雨き声残響"
+   ],
+   "namu": "빗소리 잔향",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 빗소리 잔향",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1728,
+   "version": 3,
+   "title_native": "ダンスホール",
+   "artists": [
+    "Mrs. GREEN APPLE"
+   ],
+   "performances": 15,
+   "title_ko": "댄스홀",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ダンスホール"
+   ],
+   "namu": "댄스홀",
+   "note": "namu.wiki content: ダンスホール 댄스홀 | Dance Hall 아티스트 Mrs. GREEN APPLE",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1735,
+   "version": 3,
+   "title_native": "再会",
+   "artists": [
+    "はるまきごはん"
+   ],
+   "performances": 15,
+   "title_ko": "재회",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "再会 = reunion",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1736,
+   "version": 3,
+   "title_native": "千鳥",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 15,
+   "title_ko": "물떼새",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "치도리",
+     "where": "proposal before user review"
+    },
+    "물떼새"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27; 千鳥 (plover bird) - proper/species name, kept as reading; direct translation possible but treated as ambiguous per convention style",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1740,
+   "version": 3,
+   "title_native": "夜の踊り子",
+   "artists": [
+    "サカナクション"
+   ],
+   "performances": 15,
+   "title_ko": "밤의 무희",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "밤의 댄서"
+   ],
+   "sources": [
+    "https://namu.wiki/w/夜の踊り子"
+   ],
+   "namu": "밤의 무희",
+   "note": "namu.wiki document_title: 夜の踊り子 밤의 무희 발매일 2012년 8월 29일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1720,
+   "version": 3,
+   "title_native": "だいしきゅーだいしゅき",
+   "artists": [
+    "femme fatale"
+   ],
+   "performances": 14,
+   "title_ko": "다이시큐다이슈키",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "だいしきゅーだいしゅき is a coined wordplay (だいすき=love + numbers pun), ambiguous, kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1721,
+   "version": 3,
+   "title_native": "ないない",
+   "artists": [
+    "ReoNa"
+   ],
+   "performances": 14,
+   "title_ko": "나이나이",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "없어없어"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ないない is colloquial/ambiguous (no-no / nothing-nothing), kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1722,
+   "version": 3,
+   "title_native": "エジソン",
+   "artists": [
+    "水曜日のカンパネラ"
+   ],
+   "performances": 14,
+   "title_ko": "에지손",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [
+    "에디슨"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "エジソン = Edison (proper name), reading kept per convention for proper names",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1723,
+   "version": 3,
+   "title_native": "カゲロウデイズ",
+   "artists": [
+    "じん"
+   ],
+   "performances": 14,
+   "title_ko": "아지랑이 데이즈",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "카게로우 데이즈",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/아지랑이 데이즈?from=カゲロウデイズ"
+   ],
+   "namu": "아지랑이 데이즈",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 아지랑이 데이즈 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1724,
+   "version": 3,
+   "title_native": "カヌレ",
+   "artists": [
+    "CHiCO with HoneyWorks"
+   ],
+   "performances": 14,
+   "title_ko": "카눌레",
+   "basis": "user_review",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "카늘레",
+     "where": "proposal before user review"
+    },
+    "까눌레"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "user review 2026-09-27; カヌレ = canelé (French pastry, loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1725,
+   "version": 3,
+   "title_native": "ケセラセラ",
+   "artists": [
+    "Mrs. GREEN APPLE"
+   ],
+   "performances": 14,
+   "title_ko": "케세라세라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "케 세라 세라"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ケセラセラ"
+   ],
+   "namu": "케세라세라",
+   "note": "namu.wiki content: ケセラセラ 케세라세라 | Que Será Será 아티스트 Mrs. GREEN APPLE",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1726,
+   "version": 3,
+   "title_native": "コールボーイ",
+   "artists": [
+    "syudou"
+   ],
+   "performances": 14,
+   "title_ko": "콜보이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/콜보이(VOCALOID 오리지널 곡)?from=コールボーイ"
+   ],
+   "namu": "콜보이",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 콜보이(VOCALOID 오리지널 곡)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1729,
+   "version": 3,
+   "title_native": "ハルジオン",
+   "artists": [
+    "YOASOBI"
+   ],
+   "performances": 14,
+   "title_ko": "봄망초",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "하루지온",
+     "where": "research/parent proposal"
+    },
+    "봄망초"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ハルジオン"
+   ],
+   "namu": "봄망초",
+   "note": "namu.wiki document_title: ハルジオン 봄망초｜Halzion 아티스트 YOASOBI (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1731,
+   "version": 3,
+   "title_native": "ラフ・メイカー",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 14,
+   "title_ko": "러프 메이커",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ラフ・メイカー = Laugh Maker (English loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1732,
+   "version": 3,
+   "title_native": "人として",
+   "artists": [
+    "SUPER BEAVER"
+   ],
+   "performances": 14,
+   "title_ko": "사람으로서",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "인간으로서",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/人として"
+   ],
+   "namu": "사람으로서",
+   "note": "namu.wiki document_title: 人として 사람으로서 노래 SUPER BEAVER (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1733,
+   "version": 3,
+   "title_native": "人魚",
+   "artists": [
+    "ポルカドットスティングレイ"
+   ],
+   "performances": 14,
+   "title_ko": "인어",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "人魚 = mermaid",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1734,
+   "version": 3,
+   "title_native": "余所事",
+   "artists": [
+    "におP"
+   ],
+   "performances": 14,
+   "title_ko": "남의 일",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "딴 일",
+     "where": "research/parent proposal"
+    },
+    "남의 일",
+    "상관없는 일"
+   ],
+   "sources": [
+    "https://namu.wiki/w/남의 일"
+   ],
+   "namu": "남의 일",
+   "note": "namu.wiki document_title: 余所事 남의 일 가수 카가미네 린 작곡가 니오 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1737,
+   "version": 3,
+   "title_native": "君じゃなきゃダメみたい",
+   "artists": [
+    "大石昌良"
+   ],
+   "performances": 14,
+   "title_ko": "네가 아니면 안될 것 같아",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "너 아니면 안 될 것 같아",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/君じゃなきゃダメみたい"
+   ],
+   "namu": "네가 아니면 안될 것 같아",
+   "note": "namu.wiki content: 君じゃなきゃダメみたい 네가 아니면 안될 것 같아 | Kimi ja nakya Dame mitai (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1738,
+   "version": 3,
+   "title_native": "命ばっかり",
+   "artists": [
+    "ぬゆり"
+   ],
+   "performances": 14,
+   "title_ko": "목숨뿐",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "목숨만",
+     "where": "research/parent proposal"
+    },
+    "목숨뿐"
+   ],
+   "sources": [
+    "https://namu.wiki/w/목숨뿐?from=命ばっかり"
+   ],
+   "namu": "목숨뿐",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 목숨뿐; 命ばっかり It's Just Life | 목숨뿐 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1739,
+   "version": 3,
+   "title_native": "嘘つき",
+   "artists": [
+    "あたらよ"
+   ],
+   "performances": 14,
+   "title_ko": "거짓말쟁이",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "嘘つき = liar; matches convention style (嘘月 -> 거짓말쟁이)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1741,
+   "version": 3,
+   "title_native": "快晴",
+   "artists": [
+    "Orangestar"
+   ],
+   "performances": 14,
+   "title_ko": "쾌청",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "맑은 날씨"
+   ],
+   "sources": [
+    "https://namu.wiki/w/쾌청(VOCALOID 오리지널 곡)?from=快晴"
+   ],
+   "namu": "쾌청",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 쾌청(VOCALOID 오리지널 곡)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1742,
+   "version": 3,
+   "title_native": "最果て",
+   "artists": [
+    "SennaRin"
+   ],
+   "performances": 14,
+   "title_ko": "최남단",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "끝의 끝",
+    "가장 먼 곳"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "最果て = the farthest end; picked most literal rendering but exact word choice ambiguous",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1743,
+   "version": 3,
+   "title_native": "未来へ",
+   "artists": [
+    "Kiroro"
+   ],
+   "performances": 14,
+   "title_ko": "미래로",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/Kiroro"
+   ],
+   "namu": "미래로",
+   "note": "namu.wiki content: 메이저 데뷔 싱글 '長い間 ' 두 번째 싱글 '未来へ '... 6월 24일에는 두 번째 싱글 <未来へ [4] >가 발매했고",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1744,
+   "version": 3,
+   "title_native": "栄光の架橋",
+   "artists": [
+    "ゆず"
+   ],
+   "performances": 14,
+   "title_ko": "영광의 가교",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/栄光の架橋"
+   ],
+   "namu": "영광의 가교",
+   "note": "namu.wiki content: 栄光の架橋 영광의 가교 발매일 2004년 7월 22일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1745,
+   "version": 3,
+   "title_native": "桜",
+   "artists": [
+    "コブクロ"
+   ],
+   "performances": 14,
+   "title_ko": "벚꽃",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "桜 = cherry blossom",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1746,
+   "version": 3,
+   "title_native": "桜が降る夜は",
+   "artists": [
+    "あいみょん"
+   ],
+   "performances": 14,
+   "title_ko": "벚꽃이 내리는 밤은",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/桜が降る夜は"
+   ],
+   "namu": "벚꽃이 내리는 밤은",
+   "note": "namu.wiki content: 桜が降る夜は 벚꽃이 내리는 밤은 | On a Cherry Blossom Night 발매일 2021년 2월 17일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1747,
+   "version": 3,
+   "title_native": "水星",
+   "artists": [
+    "tofubeats"
+   ],
+   "performances": 14,
+   "title_ko": "수성",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/水星"
+   ],
+   "namu": "수성",
+   "note": "namu.wiki document_title: 水星 ( すいせい ) 수성 | Suisei",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1748,
+   "version": 3,
+   "title_native": "氷の上に立つように",
+   "artists": [
+    "小松未歩"
+   ],
+   "performances": 14,
+   "title_ko": "얼음 위에 서 있는 것 처럼",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "얼음 위에 서듯이",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/氷の上に立つように"
+   ],
+   "namu": "얼음 위에 서 있는 것 처럼",
+   "note": "namu.wiki content: (ED) 바라는 게 하나 있어 | 얼음 위에 서 있는 것 처럼 | Still for your love (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1749,
+   "version": 3,
+   "title_native": "炉心融解",
+   "artists": [
+    "iroha(sasaki)"
+   ],
+   "performances": 14,
+   "title_ko": "노심융해",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/노심융해?from=炉心融解"
+   ],
+   "namu": "노심융해",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 노심융해 (炉心融解 에서 넘어옴); 炉心融解 ( ろしんゆうかい ) Meltdown | 노심융해",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1750,
+   "version": 3,
+   "title_native": "白ゆき",
+   "artists": [
+    "n-buna"
+   ],
+   "performances": 14,
+   "title_ko": "백설",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "흰 눈",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/백설(VOCALOID 오리지널 곡)"
+   ],
+   "namu": "백설",
+   "note": "namu.wiki document_title: 白ゆき (Snow White | 백설) 가수 하츠네 미쿠 프로듀서 n-buna (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1751,
+   "version": 3,
+   "title_native": "白雪姫",
+   "artists": [
+    "Flower"
+   ],
+   "performances": 14,
+   "title_ko": "백설공주",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "白雪姫 = Snow White",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1752,
+   "version": 3,
+   "title_native": "硝子の少年",
+   "artists": [
+    "KinKi Kids"
+   ],
+   "performances": 14,
+   "title_ko": "유리 소년",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "硝子の少年 = glass boy; reading hint confirms 硝子=가라스/glass",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1753,
+   "version": 3,
+   "title_native": "花は桜 君は美し",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 14,
+   "title_ko": "꽃은 벚꽃 너는 아름답다",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "花は桜 君は美し = the flower is the cherry blossom, you are beautiful",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1754,
+   "version": 3,
+   "title_native": "茜",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 14,
+   "title_ko": "꼭두서니",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "다홍색",
+    "적갈색"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "茜 = madder red color; single-kanji color name, ambiguous exact rendering",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1755,
+   "version": 3,
+   "title_native": "蒼のエーテル",
+   "artists": [
+    "ランカ・リー（中島愛）"
+   ],
+   "performances": 14,
+   "title_ko": "푸른 에테르",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "蒼のエーテル = ether of blue",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1756,
+   "version": 3,
+   "title_native": "虎視眈々",
+   "artists": [
+    "梅とら"
+   ],
+   "performances": 14,
+   "title_ko": "호시탐탐",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "호시탄탄",
+     "where": "research/parent proposal"
+    },
+    "호시탐탐"
+   ],
+   "sources": [
+    "https://namu.wiki/w/호시탐탐(VOCALOID 오리지널 곡)?from=虎視眈々"
+   ],
+   "namu": "호시탐탐",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 호시탐탐(VOCALOID 오리지널 곡) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1779,
+   "version": 3,
+   "title_native": "ビターチョコデコレーション",
+   "artists": [
+    "syudou"
+   ],
+   "performances": 14,
+   "title_ko": "비터 초코 데코레이션",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "비터 초콜릿 데코레이션"
+   ],
+   "sources": [
+    "https://namu.wiki/w/비터 초코 데코레이션?from=ビターチョコデコレーション"
+   ],
+   "namu": "비터 초코 데코레이션",
+   "note": "namu.wiki document_title: ビターチョコデコレーション Bitter Choco Decoration 비터 초코 데코레이션 가수 하츠네 미쿠",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1793,
+   "version": 3,
+   "title_native": "献華",
+   "artists": [
+    "羽緒"
+   ],
+   "performances": 14,
+   "title_ko": "헌화",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "献華 = offering of flowers",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1764,
+   "version": 3,
+   "title_native": "ここでキスして。",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 13,
+   "title_ko": "여기서 키스해줘.",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ここでキスして。= kiss me here.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1765,
+   "version": 3,
+   "title_native": "だってアタシのヒーロー。",
+   "artists": [
+    "LiSA"
+   ],
+   "performances": 13,
+   "title_ko": "왜냐면 나의 히어로니까.",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "だってアタシのヒーロー。= because you're my hero.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1766,
+   "version": 3,
+   "title_native": "ひとりごつ",
+   "artists": [
+    "ハチワレ（田中誠人）"
+   ],
+   "performances": 13,
+   "title_ko": "혼잣말",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "히토리고츠",
+     "where": "research/parent proposal"
+    },
+    "혼잣말하다"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ひとりごつ"
+   ],
+   "namu": "혼잣말",
+   "note": "namu.wiki document_title: ひとりごつ 혼잣말 [1] 노래 하치와레 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1767,
+   "version": 3,
+   "title_native": "ゆるふわ樹海ガール",
+   "artists": [
+    "石風呂"
+   ],
+   "performances": 13,
+   "title_ko": "푹신푹신 수해걸",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "느긋한 주카이 걸",
+     "where": "research/parent proposal"
+    },
+    "헐렁 주카이 걸"
+   ],
+   "sources": [
+    "https://namu.wiki/w/푹신푹신 수해걸?from=ゆるふわ樹海ガール"
+   ],
+   "namu": "푹신푹신 수해걸",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 푹신푹신 수해걸 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1768,
+   "version": 3,
+   "title_native": "エゴロック",
+   "artists": [
+    "すりぃ"
+   ],
+   "performances": 13,
+   "title_ko": "에고 록",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/에고 록?from=エゴロック"
+   ],
+   "namu": "에고 록",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 에고 록; エゴロック Ego Rock | 에고 록",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1769,
+   "version": 3,
+   "title_native": "カトラリー",
+   "artists": [
+    "神山羊"
+   ],
+   "performances": 13,
+   "title_ko": "커틀러리",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/커틀러리(VOCALOID 오리지널 곡)?from=カトラリー"
+   ],
+   "namu": "커틀러리",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 커틀러리(VOCALOID 오리지널 곡)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1770,
+   "version": 3,
+   "title_native": "カプチーノ",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 13,
+   "title_ko": "카푸치노",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "カプチーノ = cappuccino (loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1771,
+   "version": 3,
+   "title_native": "クリーム",
+   "artists": [
+    "yama"
+   ],
+   "performances": 13,
+   "title_ko": "크림",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/クリーム"
+   ],
+   "namu": "크림",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: クリーム (크림); クリーム ( 크림 ) 크림 | cream 가수 yama",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1772,
+   "version": 3,
+   "title_native": "シネマ",
+   "artists": [
+    "Ayase"
+   ],
+   "performances": 13,
+   "title_ko": "시네마",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/シネマ(프로젝트 세카이 컬러풀 스테이지! feat.하츠네 미쿠)"
+   ],
+   "namu": "시네마",
+   "note": "namu.wiki document_title: シネマ Cinema | 시네마 버추얼 싱어 ver.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1773,
+   "version": 3,
+   "title_native": "スロウダウナー",
+   "artists": [
+    "ろくろ"
+   ],
+   "performances": 13,
+   "title_ko": "슬로우 다우너",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/슬로우 다우너?from=スロウダウナー"
+   ],
+   "namu": "슬로우 다우너",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 슬로우 다우너",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1774,
+   "version": 3,
+   "title_native": "ソプラノ",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 13,
+   "title_ko": "소프라노",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ソプラノ = soprano (loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1775,
+   "version": 3,
+   "title_native": "チョコレートミルク",
+   "artists": [
+    "Aqu3ra"
+   ],
+   "performances": 13,
+   "title_ko": "초콜릿 밀크",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/초콜릿 밀크?from=チョコレートミルク"
+   ],
+   "namu": "초콜릿 밀크",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 초콜릿 밀크; チョコレートミルク (초콜릿 밀크) 가수 하츠네 미쿠 작곡가 apu3ra",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1776,
+   "version": 3,
+   "title_native": "テレパス",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 13,
+   "title_ko": "텔레패스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "텔레파스",
+     "where": "research/parent proposal"
+    },
+    "텔레파시"
+   ],
+   "sources": [
+    "https://namu.wiki/w/テレパス?from=テレパス"
+   ],
+   "namu": "텔레패스",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 텔레패스 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1778,
+   "version": 3,
+   "title_native": "ノスタルジア",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 13,
+   "title_ko": "노스탤지어",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ノスタルジア = nostalgia (loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1780,
+   "version": 3,
+   "title_native": "ロスタイムメモリー",
+   "artists": [
+    "じん"
+   ],
+   "performances": 13,
+   "title_ko": "로스타임 메모리",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/로스타임 메모리?from=ロスタイムメモリー"
+   ],
+   "namu": "로스타임 메모리",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 로스타임 메모리 (from ロスタイムメモリー)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1781,
+   "version": 3,
+   "title_native": "上を向いて歩こう",
+   "artists": [
+    "坂本九"
+   ],
+   "performances": 13,
+   "title_ko": "위를 보며 걷자",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "위를 보고 걷자",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/上を向いて歩こう"
+   ],
+   "namu": "위를 보며 걷자",
+   "note": "namu.wiki content: 사카모토 큐 「위를 보며 걷자」 ... 上を向いて歩こう Sukiyaki (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1782,
+   "version": 3,
+   "title_native": "会いたくて会いたくて",
+   "artists": [
+    "西野カナ"
+   ],
+   "performances": 13,
+   "title_ko": "보고 싶어서 보고 싶어서",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "만나고 싶어 만나고 싶어",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/会いたくて 会いたくて"
+   ],
+   "namu": "보고 싶어서 보고 싶어서",
+   "note": "namu.wiki content: 会いたくて会いたくて Aitakute Aitakute | 보고 싶어서 보고 싶어서 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1783,
+   "version": 3,
+   "title_native": "夏色えがおで1, 2, Jump!",
+   "artists": [
+    "μ's"
+   ],
+   "performances": 13,
+   "title_ko": "여름빛 미소로 1, 2, Jump!",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "夏色えがおで1, 2, Jump! = with a summer-colored smile, 1, 2, Jump!",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1784,
+   "version": 3,
+   "title_native": "夕景イエスタデイ",
+   "artists": [
+    "じん"
+   ],
+   "performances": 13,
+   "title_ko": "해질녘 예스터데이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "저녁빛 예스터데이",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/해질녘 예스터데이?from=夕景イエスタデイ"
+   ],
+   "namu": "해질녘 예스터데이",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 해질녘 예스터데이 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1785,
+   "version": 3,
+   "title_native": "太陽系デスコ",
+   "artists": [
+    "ナユタン星人"
+   ],
+   "performances": 13,
+   "title_ko": "태양계 디스코",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/태양계 디스코?from=太陽系デスコ"
+   ],
+   "namu": "태양계 디스코",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 태양계 디스코; 太陽系デスコ Solar System Disco | 태양계 디스코",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1786,
+   "version": 3,
+   "title_native": "恋は渾沌の隷也",
+   "artists": [
+    "後ろから這いより隊G"
+   ],
+   "performances": 13,
+   "title_ko": "사랑은 혼돈의 노예",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "사랑은 혼돈의 노예다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/恋は渾沌の隷也"
+   ],
+   "namu": "사랑은 혼돈의 노예",
+   "note": "namu.wiki content: 恋は 渾沌 ( カオス ) の 隷 ( しもべ ) 也 사랑은 혼돈 ( 카오스 ) 의 노예 ( 종 ) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1787,
+   "version": 3,
+   "title_native": "愛が灯る",
+   "artists": [
+    "ロクデナシ"
+   ],
+   "performances": 13,
+   "title_ko": "사랑이 환하게 켜지네",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "사랑이 켜지다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/愛が灯る"
+   ],
+   "namu": "사랑이 환하게 켜지네",
+   "note": "namu.wiki document_title: 愛が灯る 사랑이 환하게 켜지네 | The Flame of Love (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1788,
+   "version": 3,
+   "title_native": "明け星",
+   "artists": [
+    "LiSA"
+   ],
+   "performances": 13,
+   "title_ko": "새벽별",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "明け星 = dawn star",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1789,
+   "version": 3,
+   "title_native": "月虹",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 13,
+   "title_ko": "월홍",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "달의 무지개",
+    "월무지개"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "月虹 = moonbow/lunar rainbow, coined compound; Sino-Korean form chosen but exact usage rare",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1790,
+   "version": 3,
+   "title_native": "正しい街",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 13,
+   "title_ko": "올바른 거리",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "正しい街 = the correct/right town",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1791,
+   "version": 3,
+   "title_native": "永遠の不在証明",
+   "artists": [
+    "東京事変"
+   ],
+   "performances": 13,
+   "title_ko": "영원의 부재증명",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/永遠の不在証明"
+   ],
+   "namu": "영원의 부재증명",
+   "note": "namu.wiki content: 永遠の不在証明 영원의 부재증명 MV ver. Full ver. 노래 도쿄지헨",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1792,
+   "version": 3,
+   "title_native": "深海のリトルクライ",
+   "artists": [
+    "sasakure.UK"
+   ],
+   "performances": 13,
+   "title_ko": "심해의 리틀 크라이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/심해의 리틀 크라이?from=深海のリトルクライ"
+   ],
+   "namu": "심해의 리틀 크라이",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 심해의 리틀 크라이; 深海のリトルクライ (Little Cry of The Abyss) (심해의 리틀 크라이)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1794,
+   "version": 3,
+   "title_native": "硝子窓",
+   "artists": [
+    "King Gnu"
+   ],
+   "performances": 13,
+   "title_ko": "유리창",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/硝子窓"
+   ],
+   "namu": "유리창",
+   "note": "namu.wiki document_title: 硝子窓 (GLASS WINDOW) 유리창",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1795,
+   "version": 3,
+   "title_native": "福寿草",
+   "artists": [
+    "ぐにょ"
+   ],
+   "performances": 13,
+   "title_ko": "복수초",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "福寿草 = Amur adonis (flower species name), direct kanji-to-hanja translation",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1796,
+   "version": 3,
+   "title_native": "脳内革命ガール",
+   "artists": [
+    "MARETU"
+   ],
+   "performances": 13,
+   "title_ko": "뇌내혁명 걸",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/뇌내혁명 걸?from=脳内革命ガール"
+   ],
+   "namu": "뇌내혁명 걸",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 뇌내혁명 걸 (from 脳内革命ガール)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1797,
+   "version": 3,
+   "title_native": "花に赤い糸",
+   "artists": [
+    "麻倉もも"
+   ],
+   "performances": 13,
+   "title_ko": "꽃에 붉은 실",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "花に赤い糸 near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1820,
+   "version": 3,
+   "title_native": "キメラ",
+   "artists": [
+    "DECO*27"
+   ],
+   "performances": 13,
+   "title_ko": "키메라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "키마이라"
+   ],
+   "sources": [
+    "https://namu.wiki/w/키메라(VOCALOID 오리지널 곡)?from=キメラ"
+   ],
+   "namu": "키메라",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 키메라(VOCALOID 오리지널 곡); キメラ Chimera | 키메라",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1824,
+   "version": 3,
+   "title_native": "チュルリラ・チュルリラ・ダッダッダ！",
+   "artists": [
+    "和田たけあき"
+   ],
+   "performances": 13,
+   "title_ko": "츄루리라·츄루리라·땃땃따!",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "츄루리라・츄루리라・닷닷다!",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/츄루리라·츄루리라·땃땃따!"
+   ],
+   "namu": "츄루리라·츄루리라·땃땃따!",
+   "note": "namu.wiki document_title: チュルリラ・チュルリラ・ダッダッダ！... 츄루리라・츄루리라・땃땃따! 가수 유즈키 유카리 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1832,
+   "version": 3,
+   "title_native": "メロウ",
+   "artists": [
+    "須田景凪"
+   ],
+   "performances": 13,
+   "title_ko": "멜로우",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/스다 케이나"
+   ],
+   "namu": "멜로우",
+   "note": "namu.wiki content: 2023년 2분기 애니메이션 스킵과 로퍼 의 OP인 メロウ | 멜로우 를 통해",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1838,
+   "version": 3,
+   "title_native": "少年よ我に帰れ",
+   "artists": [
+    "やくしまるえつこ"
+   ],
+   "performances": 13,
+   "title_ko": "소년이여 나에게로 돌아가",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "소년이여 나에게로 돌아와",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/少年よ我に帰れ"
+   ],
+   "namu": "소년이여 나에게로 돌아가",
+   "note": "namu.wiki content: 少年よ我に帰れ 소년이여 나에게로 돌아가 [1] TV ver. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1802,
+   "version": 3,
+   "title_native": "LA・LA・LA LOVE SONG",
+   "artists": [
+    "久保田利伸"
+   ],
+   "performances": 12,
+   "title_ko": null,
+   "basis": null,
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "already Latin-letter title, kept as written",
+   "decision": "skip"
+  },
+  {
+   "song_id": 1812,
+   "version": 3,
+   "title_native": "あの夢をなぞって",
+   "artists": [
+    "YOASOBI"
+   ],
+   "performances": 12,
+   "title_ko": "그 꿈을 덧그리며",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그 꿈을 따라 그려",
+     "where": "research/parent proposal"
+    },
+    "그 꿈을 덧그리며"
+   ],
+   "sources": [
+    "https://namu.wiki/w/あの夢をなぞって"
+   ],
+   "namu": "그 꿈을 덧그리며",
+   "note": "namu.wiki document_title: あの 夢 ( ゆめ ) をなぞって 그 꿈을 덧그리며｜Tracing A Dream (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1813,
+   "version": 3,
+   "title_native": "おねがいダーリン",
+   "artists": [
+    "ナナホシ管弦楽団"
+   ],
+   "performances": 12,
+   "title_ko": "부탁해 달링",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/부탁해 달링?from=おねがいダーリン"
+   ],
+   "namu": "부탁해 달링",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 부탁해 달링 (おねがいダーリン 에서 넘어옴); おねがいダーリン Please. Darling / ONEgai Darlin' 부탁해 달링, 부탁이야 달링",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1814,
+   "version": 3,
+   "title_native": "どうにかなっちゃいそう！",
+   "artists": [
+    "NOMELON NOLEMON"
+   ],
+   "performances": 12,
+   "title_ko": "어떻게 되어버릴 것 같아",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "어떻게든 될 것 같아!",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/どうにかなっちゃいそう！"
+   ],
+   "namu": "어떻게 되어버릴 것 같아",
+   "note": "namu.wiki content: どうにかなっちゃいそう！ 어떻게 되어버릴 것 같아 | crazy! 2024. 7. 7. Release (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1815,
+   "version": 3,
+   "title_native": "はるのとなり",
+   "artists": [
+    "佐々木恵梨"
+   ],
+   "performances": 12,
+   "title_ko": "봄의 곁",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "봄 옆에서"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "はるのとなり near-literal; となり = beside/next to",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1816,
+   "version": 3,
+   "title_native": "らしさ",
+   "artists": [
+    "SUPER BEAVER"
+   ],
+   "performances": 12,
+   "title_ko": "다움",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "title_ko": "らしさ",
+     "where": "research proposal"
+    },
+    "나다움",
+    "특유의 느낌"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "parent review: らしさ is the noun of -らしい (-다움); the research returned the kana unchanged",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1817,
+   "version": 3,
+   "title_native": "エイリアンエイリアン",
+   "artists": [
+    "ナユタン星人"
+   ],
+   "performances": 12,
+   "title_ko": "에일리언 에일리언",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/에일리언 에일리언?from=エイリアンエイリアン"
+   ],
+   "namu": "에일리언 에일리언",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 에일리언 에일리언; エイリアンエイリアン Alien Alien | 에일리언 에일리언",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1818,
+   "version": 3,
+   "title_native": "カメレオン",
+   "artists": [
+    "King Gnu"
+   ],
+   "performances": 12,
+   "title_ko": "카멜레온",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/카멜레온(VOCALOID 오리지널 곡)?from=カメレオン"
+   ],
+   "namu": "카멜레온",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 카멜레온(VOCALOID 오리지널 곡)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1819,
+   "version": 3,
+   "title_native": "ガチャガチャきゅ～と・ふぃぎゅ@メイト",
+   "artists": [
+    "MOSAIC.WAV"
+   ],
+   "performances": 12,
+   "title_ko": "가챠가챠 큐~트・피규@메이트",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "coined mixed katakana/symbol title, kept as reading of title_latin Gachagacha Cu~te Figu@mate",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1821,
+   "version": 3,
+   "title_native": "キャットラビング",
+   "artists": [
+    "香椎モイミ"
+   ],
+   "performances": 12,
+   "title_ko": "캣 러빙",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/캣 러빙?from=キャットラビング"
+   ],
+   "namu": "캣 러빙",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 캣 러빙 (from キャットラビング)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1822,
+   "version": 3,
+   "title_native": "ギミー! レボリューション",
+   "artists": [
+    "内田真礼"
+   ],
+   "performances": 12,
+   "title_ko": "기미! 레볼루션",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ギミー!レボリューション = Gimme! Revolution, katakana English loanword",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1823,
+   "version": 3,
+   "title_native": "ダダダダ天使",
+   "artists": [
+    "ナナヲアカリ"
+   ],
+   "performances": 12,
+   "title_ko": "다다다다 천사",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ダダダダ天使"
+   ],
+   "namu": "다다다다 천사",
+   "note": "namu.wiki document_title: ダダダダ天使 다다다다천사 | Dadadada Tenshi 가수 나나오아카리",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1825,
+   "version": 3,
+   "title_native": "テレキャスタービーボーイ",
+   "artists": [
+    "すりぃ"
+   ],
+   "performances": 12,
+   "title_ko": "텔레캐스터 비보이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/텔레캐스터 비보이"
+   ],
+   "namu": "텔레캐스터 비보이",
+   "note": "namu.wiki document_title: テレキャスタービーボーイ Telecaster B-boy | 텔레캐스터 비보이",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1826,
+   "version": 3,
+   "title_native": "ナモナキヒト",
+   "artists": [
+    "amazarashi"
+   ],
+   "performances": 12,
+   "title_ko": "이름 없는 사람",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ナモナキヒト"
+   ],
+   "namu": "이름 없는 사람",
+   "note": "namu.wiki content: ナモナキヒト 이름 없는 사람 | Namonaki Hito 아티스트 amazarashi",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1827,
+   "version": 3,
+   "title_native": "ヒトツボシ",
+   "artists": [
+    "KOH+"
+   ],
+   "performances": 12,
+   "title_ko": "히토츠보시",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "한 개의 별"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ヒトツボシ likely 一つ星 (one star) but written ambiguously in katakana, could be proper noun; kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1828,
+   "version": 3,
+   "title_native": "ヒミツ",
+   "artists": [
+    "ポルカドットスティングレイ"
+   ],
+   "performances": 12,
+   "title_ko": "히미츠",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "비밀"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ヒミツ = 秘密 (secret) written in katakana for stylistic effect; near-literal would be 비밀 but stylistic katakana choice suggests ambiguity in intent, giving reading as primary with translation as alternative",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1829,
+   "version": 3,
+   "title_native": "プロトディスコ",
+   "artists": [
+    "ぬゆり"
+   ],
+   "performances": 12,
+   "title_ko": "프로토 디스코",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/プロトディスコ?from=プロトディスコ"
+   ],
+   "namu": "프로토 디스코",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 프로토 디스코",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1830,
+   "version": 3,
+   "title_native": "ベビ・デビ",
+   "artists": [
+    "CULUA"
+   ],
+   "performances": 12,
+   "title_ko": "베비・데비",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "베이비・데비"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ベビ・デビ"
+   ],
+   "namu": "베비・데비",
+   "note": "namu.wiki document_title: ベビ・デビ 베비・데비 | BEBI.DEBI 가수 CULUA",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1831,
+   "version": 3,
+   "title_native": "ホシキラ",
+   "artists": [
+    "ランカ・リー（中島愛）"
+   ],
+   "performances": 12,
+   "title_ko": "호시키라",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "별의 반짝임"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ホシキラ likely coined blend of 星 (star) + キラキラ (sparkle), ambiguous coined word; kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1833,
+   "version": 3,
+   "title_native": "メーベル",
+   "artists": [
+    "須田景凪"
+   ],
+   "performances": 12,
+   "title_ko": "메이블",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "메벨",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/메이블(VOCALOID 오리지널 곡)?from=メーベル"
+   ],
+   "namu": "메이블",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 메이블(VOCALOID 오리지널 곡); メーベル Mabel | 메이블 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1834,
+   "version": 3,
+   "title_native": "レディーレ",
+   "artists": [
+    "須田景凪"
+   ],
+   "performances": 12,
+   "title_ko": "레디레",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/레디레"
+   ],
+   "namu": "레디레",
+   "note": "namu.wiki document_title: レディーレ Redire | 레디레 가수 v flower 작곡가 벌룬",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1835,
+   "version": 3,
+   "title_native": "何なんw",
+   "artists": [
+    "藤井風"
+   ],
+   "performances": 12,
+   "title_ko": "뭐야ㅋ",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "무슨 일이야w",
+     "where": "research/parent proposal"
+    },
+    "뭐야w"
+   ],
+   "sources": [
+    "https://namu.wiki/w/何なんw"
+   ],
+   "namu": "뭐야ㅋ",
+   "note": "namu.wiki content: 何なんw 뭐야ㅋ 발매일 2019년 11월 18일 가수 후지이 카제 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1836,
+   "version": 4,
+   "title_native": "夜空にふたつ",
+   "artists": [
+    "koyori"
+   ],
+   "performances": 12,
+   "title_ko": "밤하늘에 두 개",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "밤하늘에 둘",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/koyori"
+   ],
+   "namu": "밤하늘에 두 개",
+   "note": "namu.wiki content: 밤하늘에 두 개 夜空にふたつ 하츠네 미쿠 2011년 4월 20일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1837,
+   "version": 3,
+   "title_native": "大声ダイヤモンド",
+   "artists": [
+    "AKB48"
+   ],
+   "performances": 12,
+   "title_ko": "오고에 다이아몬드",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [
+    "큰 목소리 다이아몬드"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "reading_in_hangul provided (오고에 다이아몬드); 大声 could be translated but reading matches convention style for AKB48 title",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1839,
+   "version": 3,
+   "title_native": "愛唄",
+   "artists": [
+    "GReeeeN"
+   ],
+   "performances": 12,
+   "title_ko": "사랑 노래",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "愛唄 near-literal, matches convention pattern (愛言葉 -> 사랑의 말)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1840,
+   "version": 3,
+   "title_native": "愛言葉Ⅲ",
+   "artists": [
+    "DECO*27"
+   ],
+   "performances": 12,
+   "title_ko": "사랑의 말 Ⅲ",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "사랑의 말 III",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/사랑의 말 Ⅲ?from=愛言葉Ⅲ"
+   ],
+   "namu": "사랑의 말 Ⅲ",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 사랑의 말 Ⅲ (愛言葉Ⅲ 에서 넘어옴); 愛言葉Ⅲ (Love Words Ⅲ | 사랑의 말 Ⅲ) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1841,
+   "version": 3,
+   "title_native": "昼鳶",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 12,
+   "title_ko": "낮도둑",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "낮 솔개",
+     "where": "research/parent proposal"
+    },
+    "낮의 솔개"
+   ],
+   "sources": [
+    "https://namu.wiki/w/昼鳶"
+   ],
+   "namu": "낮도둑",
+   "note": "namu.wiki document_title: 昼 ( ひる ) 鳶 ( とび ) 낮도둑 | Burglar 작사·작곡 n-buna (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1842,
+   "version": 3,
+   "title_native": "未来予想図Ⅱ",
+   "artists": [
+    "DREAMS COME TRUE"
+   ],
+   "performances": 12,
+   "title_ko": "미래 예상도 II",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "未来予想図Ⅱ near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1843,
+   "version": 3,
+   "title_native": "泥中に咲く",
+   "artists": [
+    "ウォルピスカーター"
+   ],
+   "performances": 12,
+   "title_ko": "진흙 속에 피다",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/진흙 속에 피다?from=泥中に咲く"
+   ],
+   "namu": "진흙 속에 피다",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 진흙 속에 피다",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1844,
+   "version": 3,
+   "title_native": "真夜中のドア〜Stay With Me",
+   "artists": [
+    "松原みき"
+   ],
+   "performances": 12,
+   "title_ko": "한밤중의 문〜Stay With Me",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "真夜中のドア〜Stay With Me near-literal; English subtitle kept as written",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1845,
+   "version": 3,
+   "title_native": "美人",
+   "artists": [
+    "ちゃんみな"
+   ],
+   "performances": 12,
+   "title_ko": "미인",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "美人 near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1846,
+   "version": 3,
+   "title_native": "蝶",
+   "artists": [
+    "天野月子"
+   ],
+   "performances": 12,
+   "title_ko": "나비",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "蝶 near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1847,
+   "version": 3,
+   "title_native": "覚醒.exe",
+   "artists": [
+    "MEDA"
+   ],
+   "performances": 12,
+   "title_ko": "각성.exe",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "覚醒.exe near-literal, .exe kept as written",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1848,
+   "version": 3,
+   "title_native": "輝く空の静寂には",
+   "artists": [
+    "Kalafina"
+   ],
+   "performances": 12,
+   "title_ko": "빛나는 하늘의 정적에는",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "輝く空の静寂には near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1849,
+   "version": 3,
+   "title_native": "遠く遠く",
+   "artists": [
+    "槇原敬之"
+   ],
+   "performances": 12,
+   "title_ko": "멀리 멀리",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "遠く遠く near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1850,
+   "version": 3,
+   "title_native": "雑踏、僕らの街",
+   "artists": [
+    "トゲナシトゲアリ"
+   ],
+   "performances": 12,
+   "title_ko": "소란, 우리들의 거리",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "雑踏、僕らの街 near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1851,
+   "version": 3,
+   "title_native": "音を浮かべて",
+   "artists": [
+    "wouca"
+   ],
+   "performances": 12,
+   "title_ko": "소리를 띄우며",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "音を浮かべて near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1852,
+   "version": 3,
+   "title_native": "香水",
+   "artists": [
+    "瑛人"
+   ],
+   "performances": 12,
+   "title_ko": "향수",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/香水"
+   ],
+   "namu": "향수",
+   "note": "namu.wiki document_title: 香水 향수 아티스트 에이토 발매일 일본 2019년 4월 21일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1872,
+   "version": 3,
+   "title_native": "イヤホンと蝉時雨",
+   "artists": [
+    "Orangestar"
+   ],
+   "performances": 12,
+   "title_ko": "이어폰과 매미소리",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "이어폰과 저녁 매미 소나기",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/이어폰과 매미소리?from=イヤホンと蝉時雨"
+   ],
+   "namu": "이어폰과 매미소리",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 이어폰과 매미소리 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1874,
+   "version": 3,
+   "title_native": "オツキミリサイタル",
+   "artists": [
+    "じん"
+   ],
+   "performances": 12,
+   "title_ko": "달맞이 리사이틀",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "오츠키미 리사이틀",
+     "where": "research/parent proposal"
+    },
+    "달구경 리사이틀"
+   ],
+   "sources": [
+    "https://namu.wiki/w/달맞이 리사이틀?from=オツキミリサイタル"
+   ],
+   "namu": "달맞이 리사이틀",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 달맞이 리사이틀; オツキミリサイタル (Moon-Viewing Recital) (달맞이 리사이틀) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1881,
+   "version": 3,
+   "title_native": "セレナーデ",
+   "artists": [
+    "なとり"
+   ],
+   "performances": 12,
+   "title_ko": "세레나데",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/セレナーデ"
+   ],
+   "namu": "세레나데",
+   "note": "namu.wiki document_title: セレナーデ 세레나데｜Serenade",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1885,
+   "version": 3,
+   "title_native": "ハルウタ",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 12,
+   "title_ko": "봄노래",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "하루우타",
+     "where": "research/parent proposal"
+    },
+    "봄노래"
+   ],
+   "sources": [
+    "https://namu.wiki/w/ハルウタ"
+   ],
+   "namu": "봄노래",
+   "note": "namu.wiki document_title: ハルウタ 봄노래 ... 2012년 4월 25일에 발매된 이키모노가카리의 23번째 싱글 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1899,
+   "version": 3,
+   "title_native": "死ぬのがいいわ",
+   "artists": [
+    "藤井風"
+   ],
+   "performances": 12,
+   "title_ko": "죽는 편이 나아",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "죽는 게 나아",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/死ぬのがいいわ"
+   ],
+   "namu": "죽는 편이 나아",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 死ぬのがいいわ; 死ぬのがいいわ 죽는 편이 나아 가수 후지이 카제 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1910,
+   "version": 3,
+   "title_native": "青春アミーゴ",
+   "artists": [
+    "修二と彰"
+   ],
+   "performances": 12,
+   "title_ko": "청춘 아미고",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "青春アミーゴ near-literal; アミーゴ standard loanword amigo",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1862,
+   "version": 3,
+   "title_native": "Honey♥Come!!",
+   "artists": [
+    "小倉唯"
+   ],
+   "performances": 11,
+   "title_ko": null,
+   "basis": null,
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "already Latin-letter title, kept as written",
+   "decision": "skip"
+  },
+  {
+   "song_id": 1864,
+   "version": 3,
+   "title_native": "KIRA★KIRA★TRAIN",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 11,
+   "title_ko": "키라★키라★트레인",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "KIRA★KIRA★TRAIN kept as written per Latin-letter rule; kira kira is katakana sparkle sound, kept as reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1867,
+   "version": 3,
+   "title_native": "お呪い",
+   "artists": [
+    "なきそ"
+   ],
+   "performances": 11,
+   "title_ko": "주문",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "부적",
+     "where": "research/parent proposal"
+    },
+    "주술"
+   ],
+   "sources": [
+    "https://namu.wiki/w/주문(Synthesizer V 오리지널 곡)?from=お呪い"
+   ],
+   "namu": "주문",
+   "note": "namu.wiki document_title: 주문(Synthesizer V 오리지널 곡) ... お呪い 주문 가수 하나쿠마 치후유 작곡가 나키소 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1868,
+   "version": 3,
+   "title_native": "さくら(独唱)",
+   "artists": [
+    "森山直太朗"
+   ],
+   "performances": 11,
+   "title_ko": "사쿠라(독창)",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "さくら(独唱) - さくら kept as reading (proper title convention), 独唱 translated as solo/solo vocal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1869,
+   "version": 4,
+   "title_native": "ばいばい、テディベア",
+   "artists": [
+    "HACHI",
+    "ハチ"
+   ],
+   "performances": 11,
+   "title_ko": "바이바이, 테디베어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ばいばい、テディベア"
+   ],
+   "namu": "바이바이, 테디베어",
+   "note": "namu.wiki document_title: ばいばい、テディベア 바이바이, 테디베어 | Bye bye, teddy bear",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1870,
+   "version": 3,
+   "title_native": "まつり",
+   "artists": [
+    "藤井風"
+   ],
+   "performances": 11,
+   "title_ko": "마츠리",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "축제"
+   ],
+   "sources": [
+    "https://namu.wiki/w/まつり"
+   ],
+   "namu": "마츠리",
+   "note": "namu.wiki document_title: まつり 마츠리｜Matsuri 아티스트 Fujii Kaze",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1871,
+   "version": 3,
+   "title_native": "イガク",
+   "artists": [
+    "原口沙輔"
+   ],
+   "performances": 11,
+   "title_ko": "의학",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "이가쿠",
+     "where": "research/parent proposal"
+    },
+    "의학"
+   ],
+   "sources": [
+    "https://namu.wiki/w/의학(UTAU 오리지널 곡)?from=イガク"
+   ],
+   "namu": "의학",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 의학(UTAU 오리지널 곡); イガク Medicine | 의학 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1873,
+   "version": 3,
+   "title_native": "エンパープル",
+   "artists": [
+    "はるまきごはん"
+   ],
+   "performances": 11,
+   "title_ko": "엠퍼플",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "엔퍼플",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/엠퍼플"
+   ],
+   "namu": "엠퍼플",
+   "note": "namu.wiki document_title: エンパープル (Empurple | 엠퍼플) 버추얼 싱어 ver. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1875,
+   "version": 3,
+   "title_native": "オルフェンズの涙",
+   "artists": [
+    "MISIA"
+   ],
+   "performances": 11,
+   "title_ko": "오르페우스의 눈물",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "오르펜즈의 눈물"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "オルフェンズの涙 - オルフェンズ likely refers to Orphans (Mobile Suit Gundam: Iron-Blooded Orphans tie-in), proper name kept as reading, 涙 translated",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1876,
+   "version": 3,
+   "title_native": "クスシキ",
+   "artists": [
+    "Mrs. GREEN APPLE"
+   ],
+   "performances": 11,
+   "title_ko": "쿠스시키",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "신비한"
+   ],
+   "sources": [
+    "https://namu.wiki/w/クスシキ"
+   ],
+   "namu": "쿠스시키",
+   "note": "namu.wiki content: 쿠스시키 | KUSUSHIKI 아티스트 Mrs. GREEN APPLE 음반 クスシキ",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1877,
+   "version": 3,
+   "title_native": "ゴールデンイエロー",
+   "artists": [
+    "FLG4"
+   ],
+   "performances": 11,
+   "title_ko": "골든 옐로우",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "ゴールデンイエロー = golden yellow, katakana English loanword",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1878,
+   "version": 3,
+   "title_native": "シャングリラ",
+   "artists": [
+    "チャットモンチー"
+   ],
+   "performances": 11,
+   "title_ko": "샹그릴라",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "シャングリラ = Shangri-La, standard loanword",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1879,
+   "version": 3,
+   "title_native": "ジェミニ",
+   "artists": [
+    "Dixie Flatline"
+   ],
+   "performances": 11,
+   "title_ko": "제미니",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/제미니(VOCALOID 오리지널 곡)?from=ジェミニ"
+   ],
+   "namu": "제미니",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 제미니(VOCALOID 오리지널 곡); ジェミニ (Gemini, 제미니)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1880,
+   "version": 4,
+   "title_native": "スキスキ絶頂症",
+   "artists": [
+    "koyori"
+   ],
+   "performances": 11,
+   "title_ko": "좋아 좋아 절정증",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/좋아 좋아 절정증?from=スキスキ絶頂症"
+   ],
+   "namu": "좋아 좋아 절정증",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 좋아 좋아 절정증",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1882,
+   "version": 3,
+   "title_native": "ティニタス",
+   "artists": [
+    "Diα"
+   ],
+   "performances": 11,
+   "title_ko": "티니타스",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [
+    "이명"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ティニタス = tinnitus, standard loanword",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1883,
+   "version": 3,
+   "title_native": "テロメアの産声",
+   "artists": [
+    "Heavenz"
+   ],
+   "performances": 11,
+   "title_ko": "텔로미어의 첫 울음",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "テロメアの産声 near-literal; テロメア standard loanword telomere, 産声 = birth cry",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1884,
+   "version": 3,
+   "title_native": "トゲめくスピカ",
+   "artists": [
+    "ポルカドットスティングレイ"
+   ],
+   "performances": 11,
+   "title_ko": "가시 돋는 스피카",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "トゲめくスピカ near-literal; トゲめく = to become thorny/prickly, スピカ standard loanword Spica",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1886,
+   "version": 3,
+   "title_native": "ヒロイン育成計画",
+   "artists": [
+    "HoneyWorks"
+   ],
+   "performances": 11,
+   "title_ko": "히로인 육성계획",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/히로인 육성계획?from=ヒロイン育成計画"
+   ],
+   "namu": "히로인 육성계획",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 히로인 육성계획 (from ヒロイン育成計画)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1887,
+   "version": 3,
+   "title_native": "ヘビーローテーション",
+   "artists": [
+    "AKB48"
+   ],
+   "performances": 11,
+   "title_ko": "헤비 로테이션",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ヘビーローテーション"
+   ],
+   "namu": "헤비 로테이션",
+   "note": "namu.wiki content: ヘビーローテーション 17th 싱글... ‘좋아하는 사람이 생기면, 머릿 속은, 계속, 헤비 로테이션!’; song list entry ヘビーローテーション 싱글 17집",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1888,
+   "version": 3,
+   "title_native": "ホシアイ",
+   "artists": [
+    "レフティーモンスターP"
+   ],
+   "performances": 11,
+   "title_ko": "호시아이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "별의 만남"
+   ],
+   "sources": [
+    "https://namu.wiki/w/호시아이"
+   ],
+   "namu": "호시아이",
+   "note": "namu.wiki document_title: ホシアイ (호시아이) 가수 GUMI 작곡가 레프티 몬스터",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1889,
+   "version": 3,
+   "title_native": "ロマンスがありあまる",
+   "artists": [
+    "ゲスの極み乙女。"
+   ],
+   "performances": 11,
+   "title_ko": "로맨스가 남아돌아",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "로맨스가 넘쳐나",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/게스노키와미오토메"
+   ],
+   "namu": "로맨스가 남아돌아",
+   "note": "namu.wiki content: 3 로맨스가 남아돌아(ロマンスがありあまる) MV (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1890,
+   "version": 3,
+   "title_native": "偏食",
+   "artists": [
+    "香椎モイミ"
+   ],
+   "performances": 11,
+   "title_ko": "편식",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/편식(VOCALOID 오리지널 곡)?from=偏食"
+   ],
+   "namu": "편식",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 편식(VOCALOID 오리지널 곡); 편식 (偏食) 가수 하츠네 미쿠 작곡가 카시이 모이미",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1891,
+   "version": 3,
+   "title_native": "君が光に変えて行く",
+   "artists": [
+    "Kalafina"
+   ],
+   "performances": 11,
+   "title_ko": "그대가 빛으로 바꾸어 가",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그대가 빛으로 바꿔가",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/君が光に変えて行く"
+   ],
+   "namu": "그대가 빛으로 바꾸어 가",
+   "note": "namu.wiki content: 君が光に変えて行く (그대가 빛으로 바꾸어 가) ... 君が光に変えて行く 키미가 히카리니 카에테 유쿠 당신이 빛으로 바꾸어 가 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1892,
+   "version": 3,
+   "title_native": "君色に染まる",
+   "artists": [
+    "TOKOTOKO"
+   ],
+   "performances": 11,
+   "title_ko": "너의 색으로 물들어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "그대색으로 물들다",
+     "where": "research/parent proposal"
+    },
+    "너의 색으로 물들다"
+   ],
+   "sources": [
+    "https://namu.wiki/w/너의 색으로 물들어?from=君色に染まる"
+   ],
+   "namu": "너의 색으로 물들어",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 너의 색으로 물들어 (from 君色に染まる) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1893,
+   "version": 3,
+   "title_native": "夢見る少女じゃいられない",
+   "artists": [
+    "相川七瀬"
+   ],
+   "performances": 11,
+   "title_ko": "꿈꾸는 소녀로는 있을 수 없어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "꿈꾸는 소녀로 있을 수 없어",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/夢見る少女じゃいられない"
+   ],
+   "namu": "꿈꾸는 소녀로는 있을 수 없어",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 夢見る少女じゃいられない; 꿈꾸는 소녀로는 있을 수 없어 (heading) 1. 개요 아이카와 나나세 의 1995년도 데뷔곡 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1894,
+   "version": 3,
+   "title_native": "小悪魔だってかまわない!",
+   "artists": [
+    "めいちゃん"
+   ],
+   "performances": 11,
+   "title_ko": "작은 악마라도 상관없어!",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: even a little devil is fine",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1895,
+   "version": 3,
+   "title_native": "心絵",
+   "artists": [
+    "ロードオブメジャー"
+   ],
+   "performances": 11,
+   "title_ko": "마음속의 그림",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "코코로에",
+     "where": "research/parent proposal"
+    },
+    "마음의 그림"
+   ],
+   "sources": [
+    "https://namu.wiki/w/心絵"
+   ],
+   "namu": "마음속의 그림",
+   "note": "namu.wiki content: 心絵 (2004) 마음속의 그림 / Kokoroe 아티스트 로드 오브 메이저 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1896,
+   "version": 3,
+   "title_native": "春の歌",
+   "artists": [
+    "スピッツ"
+   ],
+   "performances": 11,
+   "title_ko": "봄의 노래",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1897,
+   "version": 3,
+   "title_native": "月のしずく",
+   "artists": [
+    "RUI"
+   ],
+   "performances": 11,
+   "title_ko": "달의 물방울",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "달의 이슬"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1898,
+   "version": 3,
+   "title_native": "朝ごはんの歌",
+   "artists": [
+    "手嶌葵"
+   ],
+   "performances": 11,
+   "title_ko": "아침밥의 노래",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1900,
+   "version": 3,
+   "title_native": "流行",
+   "artists": [
+    "椎名林檎"
+   ],
+   "performances": 11,
+   "title_ko": "유행",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "single-word Sino-Japanese term with direct Sino-Korean cognate",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1901,
+   "version": 3,
+   "title_native": "浴槽とネオンテトラ",
+   "artists": [
+    "REISAI"
+   ],
+   "performances": 11,
+   "title_ko": "욕조와 네온테트라",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "bathtub and neon tetra (fish); katakana loanword kept as standard spelling",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1902,
+   "version": 3,
+   "title_native": "瑠璃色の地球",
+   "artists": [
+    "松田 聖子"
+   ],
+   "performances": 11,
+   "title_ko": "유리색의 지구",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "푸른 유리빛 지구"
+   ],
+   "sources": [
+    "https://namu.wiki/w/SUPREME(마츠다 세이코)?from=瑠璃色の地球"
+   ],
+   "namu": "유리색의 지구",
+   "note": "namu.wiki content: 瑠璃色の地球 유리색의 지구 4' 26\" 카와하라 신지",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1903,
+   "version": 3,
+   "title_native": "純情スカート",
+   "artists": [
+    "40mP"
+   ],
+   "performances": 11,
+   "title_ko": "순정 스커트",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/순정 스커트?from=純情スカート"
+   ],
+   "namu": "순정 스커트",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 순정 스커트",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1904,
+   "version": 3,
+   "title_native": "紗痲",
+   "artists": [
+    "煮ル果実"
+   ],
+   "performances": 11,
+   "title_ko": "사마",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "샤마",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/사마(VOCALOID 오리지널 곡)?from=紗痲"
+   ],
+   "namu": "사마",
+   "note": "namu.wiki document_title: 『 紗痲 ( しゃま ) 』 (Shama, 사마) 가수 v flower 작곡가 니루 카지츠 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1905,
+   "version": 3,
+   "title_native": "葛飾ラプソディー",
+   "artists": [
+    "堂島孝平"
+   ],
+   "performances": 11,
+   "title_ko": "가츠시카 랩소디",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Katsushika (place name, reading) + Rhapsody (loanword)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1906,
+   "version": 3,
+   "title_native": "詩書きとコーヒー",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 11,
+   "title_ko": "시 쓰기와 커피",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "시를 쓰는 것과 커피"
+   ],
+   "sources": [
+    "https://namu.wiki/w/시 쓰기와 커피?from=詩書きとコーヒー"
+   ],
+   "namu": "시 쓰기와 커피",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 시 쓰기와 커피 (詩書きとコーヒー 에서 넘어옴); 詩 ( し ) 書 ( か ) きとコーヒー 시 쓰기와 커피 | Songwriting and Coffee",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1907,
+   "version": 3,
+   "title_native": "透影",
+   "artists": [
+    "深影"
+   ],
+   "performances": 11,
+   "title_ko": "투영",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "투영자(그림자)"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "透影 (透=see-through, 影=shadow) parallels existing Sino-Korean word 투영 (projection); coined compound, some ambiguity",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1908,
+   "version": 3,
+   "title_native": "雨",
+   "artists": [
+    "森高千里"
+   ],
+   "performances": 11,
+   "title_ko": "비",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "single kanji, literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1909,
+   "version": 3,
+   "title_native": "雫",
+   "artists": [
+    "スキマスイッチ"
+   ],
+   "performances": 11,
+   "title_ko": "물방울",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "방울"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "literal: droplet",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1911,
+   "version": 3,
+   "title_native": "青春病",
+   "artists": [
+    "藤井風"
+   ],
+   "performances": 11,
+   "title_ko": "청춘병",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Sino-Japanese compound with direct Sino-Korean cognate reading",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1934,
+   "version": 3,
+   "title_native": "オルターエゴ",
+   "artists": [
+    "Misumi"
+   ],
+   "performances": 11,
+   "title_ko": "얼터 에고",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "알터 에고",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/얼터 에고(VOCALOID 오리지널 곡)?from=オルターエゴ"
+   ],
+   "namu": "얼터 에고",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 얼터 에고(VOCALOID 오리지널 곡) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1959,
+   "version": 3,
+   "title_native": "孤独の宗教",
+   "artists": [
+    "syudou"
+   ],
+   "performances": 11,
+   "title_ko": "고독의 종교",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/고독의 종교?from=孤独の宗教"
+   ],
+   "namu": "고독의 종교",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 고독의 종교 (from 孤独の宗教)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1965,
+   "version": 3,
+   "title_native": "最高到達点",
+   "artists": [
+    "SEKAI NO OWARI"
+   ],
+   "performances": 11,
+   "title_ko": "최고도달점",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/最高到達点"
+   ],
+   "namu": "최고도달점",
+   "note": "namu.wiki content: 最高到達点 The Peak 작사/작곡 Fukase, Nakajin ... 곡명은 最高到達点(최고도달점)이고 영어 제목은 The Peak이다.",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1925,
+   "version": 3,
+   "title_native": "かぐや",
+   "artists": [
+    "n-buna"
+   ],
+   "performances": 10,
+   "title_ko": "카구야",
+   "basis": "reading",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "proper name (Princess Kaguya reference)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1926,
+   "version": 3,
+   "title_native": "さよならはエモーション",
+   "artists": [
+    "サカナクション"
+   ],
+   "performances": 10,
+   "title_ko": "이별은 이모션",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "안녕은 이모션"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "さよなら=goodbye/farewell, エモーション=emotion loanword",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1927,
+   "version": 3,
+   "title_native": "さよならベル",
+   "artists": [
+    "indigo la End"
+   ],
+   "performances": 10,
+   "title_ko": "이별의 벨",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "안녕의 벨"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: goodbye bell",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1928,
+   "version": 3,
+   "title_native": "なくもんか",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 10,
+   "title_ko": "울 것 같니",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "안 울거든",
+    "울 리가 있나"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "colloquial idiom なくもんか (won't cry / as if I'd cry); rhetorical nuance somewhat ambiguous",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1929,
+   "version": 3,
+   "title_native": "ぼくらのレットイットビー",
+   "artists": [
+    "はりーP"
+   ],
+   "performances": 10,
+   "title_ko": "우리들의 렛 잇 비",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "우리들의 Let It Be",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/우리들의 렛 잇 비?from=ぼくらのレットイットビー"
+   ],
+   "namu": "우리들의 렛 잇 비",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 우리들의 렛 잇 비 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1930,
+   "version": 3,
+   "title_native": "よくばり",
+   "artists": [
+    "Ayase"
+   ],
+   "performances": 10,
+   "title_ko": "욕심쟁이",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "탐욕스러운"
+   ],
+   "sources": [
+    "https://namu.wiki/w/Ayase"
+   ],
+   "namu": "욕심쟁이",
+   "note": "namu.wiki content: 욕심쟁이 よくばり 하츠네 미쿠 2020년 6월 22일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1931,
+   "version": 3,
+   "title_native": "アイヲウタエ",
+   "artists": [
+    "春奈るな"
+   ],
+   "performances": 10,
+   "title_ko": "사랑을 노래해",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/アイヲウタエ"
+   ],
+   "namu": "사랑을 노래해",
+   "note": "namu.wiki content: アイヲウタエ 아이오 우타에 사랑을 노래해",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1932,
+   "version": 3,
+   "title_native": "アンインストール",
+   "artists": [
+    "石川智晶"
+   ],
+   "performances": 10,
+   "title_ko": "언인스톨",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "katakana English loanword \"uninstall\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1933,
+   "version": 3,
+   "title_native": "エルフ",
+   "artists": [
+    "Ado"
+   ],
+   "performances": 10,
+   "title_ko": "엘프",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/エルフ"
+   ],
+   "namu": "엘프",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: エルフ (분류: Ado 2025년 노래); エルフ 엘프 | Elf 가수 Ado",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1935,
+   "version": 3,
+   "title_native": "クロノスタシス",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 10,
+   "title_ko": "크로노스타시스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/クロノスタシス"
+   ],
+   "namu": "크로노스타시스",
+   "note": "namu.wiki document_title: クロノスタシス 크로노스타시스 MV ver. Full ver. 노래 작사 후지와라 모토오",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1936,
+   "version": 3,
+   "title_native": "ゴーストレタッチ",
+   "artists": [
+    "深影"
+   ],
+   "performances": 10,
+   "title_ko": "고스트 리터치",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "katakana loanwords \"ghost\" + \"retouch\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1937,
+   "version": 3,
+   "title_native": "サザンクロス",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 10,
+   "title_ko": "서던 크로스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/サザンクロス"
+   ],
+   "namu": "서던 크로스",
+   "note": "namu.wiki content: サザンクロス Southern Cross / 서던 크로스 발매일 2014년 3월 12일 가수 BUMP OF CHICKEN",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1938,
+   "version": 3,
+   "title_native": "ジェヘナ",
+   "artists": [
+    "wotaku"
+   ],
+   "performances": 10,
+   "title_ko": "게헨나",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "제헤나"
+   ],
+   "sources": [
+    "https://namu.wiki/w/게헨나(VOCALOID 오리지널 곡)?from=ジェヘナ"
+   ],
+   "namu": "게헨나",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 게헨나(VOCALOID 오리지널 곡); ジェヘナ Gehenna | 게헨나",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1939,
+   "version": 3,
+   "title_native": "ジレンマ",
+   "artists": [
+    "ecosystem"
+   ],
+   "performances": 10,
+   "title_ko": "딜레마",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "katakana loanword \"dilemma\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1940,
+   "version": 3,
+   "title_native": "ダンデライオン",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 10,
+   "title_ko": "단델라이온",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "댄들라이언",
+     "where": "research/parent proposal"
+    },
+    "댄디라이온"
+   ],
+   "sources": [
+    "https://namu.wiki/w/단델라이온(BUMP OF CHICKEN)?from=ダンデライオン"
+   ],
+   "namu": "단델라이온",
+   "note": "namu.wiki document_title: ダンデライオン 단델라이온 / Dandelion (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1941,
+   "version": 3,
+   "title_native": "チョコレイト・ディスコ",
+   "artists": [
+    "Perfume"
+   ],
+   "performances": 10,
+   "title_ko": "초콜릿 디스코",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/チョコレイト・ディスコ"
+   ],
+   "namu": "초콜릿 디스코",
+   "note": "namu.wiki content: 초콜릿 디스코 Chocolate Disco チョコレイト・ディスコ",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1942,
+   "version": 3,
+   "title_native": "テレパシ",
+   "artists": [
+    "DECO*27"
+   ],
+   "performances": 10,
+   "title_ko": "텔레파시",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/텔레파시(VOCALOID 오리지널 곡)"
+   ],
+   "namu": "텔레파시",
+   "note": "namu.wiki document_title: テレパシ Telepathy | 텔레파시 가수 하츠네 미쿠 작곡가 DECO*27",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1943,
+   "version": 3,
+   "title_native": "ド屑",
+   "artists": [
+    "なきそ"
+   ],
+   "performances": 10,
+   "title_ko": "개쓰레기",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "완전 쓰레기",
+     "where": "research/parent proposal"
+    },
+    "도쿠즈"
+   ],
+   "sources": [
+    "https://namu.wiki/w/개쓰레기?from=ド屑"
+   ],
+   "namu": "개쓰레기",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 개쓰레기 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1944,
+   "version": 3,
+   "title_native": "ヒステリックナイトガール",
+   "artists": [
+    "PSYQUI"
+   ],
+   "performances": 10,
+   "title_ko": "히스테릭 나이트 걸",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/ヒステリックナイトガール"
+   ],
+   "namu": "히스테릭 나이트 걸",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: ヒステリックナイトガール; ヒステリックナイトガール Hysteric Night Girl | 히스테릭 나이트 걸",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1945,
+   "version": 3,
+   "title_native": "マカロニ",
+   "artists": [
+    "Perfume"
+   ],
+   "performances": 10,
+   "title_ko": "마카로니",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/マカロニ"
+   ],
+   "namu": "마카로니",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: マカロニ ... 마카로니 Macaroni",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1946,
+   "version": 3,
+   "title_native": "メルティランドナイトメア",
+   "artists": [
+    "はるまきごはん"
+   ],
+   "performances": 10,
+   "title_ko": "멜티 랜드 나이트메어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/멜티 랜드 나이트메어?from=メルティランドナイトメア"
+   ],
+   "namu": "멜티 랜드 나이트메어",
+   "note": "namu.wiki document_title: メルティランドナイトメア Melty Land Nightmare 멜티 랜드 나이트메어",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1947,
+   "version": 3,
+   "title_native": "リンネ",
+   "artists": [
+    "ハチ"
+   ],
+   "performances": 10,
+   "title_ko": "윤회",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "린네"
+   ],
+   "sources": [
+    "https://namu.wiki/w/윤회(하치)?from=リンネ"
+   ],
+   "namu": "윤회",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 윤회(하치) (リンネ 에서 넘어옴); リンネ (윤회) 가수 하츠네 미쿠 작곡가 하치",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1948,
+   "version": 3,
+   "title_native": "ルバート",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 10,
+   "title_ko": "루바토",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/루바토(요루시카)"
+   ],
+   "namu": "루바토",
+   "note": "namu.wiki document_title: ルバート 루바토 | Rubato 발매일 2024년 5월 29일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1949,
+   "version": 3,
+   "title_native": "ヴィーナスとジーザス",
+   "artists": [
+    "やくしまるえつこ"
+   ],
+   "performances": 10,
+   "title_ko": "비너스와 지저스",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "katakana loanwords \"Venus\" and \"Jesus\"",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1950,
+   "version": 3,
+   "title_native": "今好きになる。",
+   "artists": [
+    "HoneyWorks"
+   ],
+   "performances": 10,
+   "title_ko": "지금 좋아하게 돼.",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "지금 좋아지다.",
+     "where": "research/parent proposal"
+    },
+    "지금 사랑하게 되다."
+   ],
+   "sources": [
+    "https://namu.wiki/w/지금 좋아하게 돼.?from=今好きになる。"
+   ],
+   "namu": "지금 좋아하게 돼.",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 지금 좋아하게 돼. (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1951,
+   "version": 3,
+   "title_native": "会心の一撃",
+   "artists": [
+    "RADWIMPS"
+   ],
+   "performances": 10,
+   "title_ko": "회심의 일격",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/会心の一撃"
+   ],
+   "namu": "회심의 일격",
+   "note": "namu.wiki content: 会心の一撃 회심의 일격｜Kaishin No Ichigeki 가수 RADWIMPS",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1952,
+   "version": 3,
+   "title_native": "刹那プラス",
+   "artists": [
+    "みきとP"
+   ],
+   "performances": 10,
+   "title_ko": "찰나 플러스",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "설나 플러스",
+     "where": "research/parent proposal"
+    },
+    "찰나 플러스"
+   ],
+   "sources": [
+    "https://namu.wiki/w/미키토P"
+   ],
+   "namu": "찰나 플러스",
+   "note": "namu.wiki content: 찰나 플러스 刹那プラス 하츠네 미쿠 2012년 5월 14일 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1953,
+   "version": 3,
+   "title_native": "北ウイング",
+   "artists": [
+    "中森明菜"
+   ],
+   "performances": 10,
+   "title_ko": "북쪽 윙",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    "노스 윙"
+   ],
+   "sources": [
+    "https://namu.wiki/w/北ウイング"
+   ],
+   "namu": "북쪽 윙",
+   "note": "namu.wiki document_title: 北ウイング 북쪽 윙 [1] 일곱 번째 싱글 발매일 1984년 1월 1일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1954,
+   "version": 3,
+   "title_native": "友達の唄",
+   "artists": [
+    "BUMP OF CHICKEN"
+   ],
+   "performances": 10,
+   "title_ko": "친구의 노래",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/友達の唄"
+   ],
+   "namu": "친구의 노래",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 友達の唄; 문서가 존재하는 유즈의 노래 친구의 노래",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1955,
+   "version": 3,
+   "title_native": "咲かせや咲かせ",
+   "artists": [
+    "EGOIST"
+   ],
+   "performances": 10,
+   "title_ko": "피어라 피어나거라",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "피어라, 피어라",
+     "where": "research/parent proposal"
+    },
+    "피어나라 피어나라"
+   ],
+   "sources": [
+    "https://namu.wiki/w/피어라 피어나거라"
+   ],
+   "namu": "피어라 피어나거라",
+   "note": "namu.wiki document_title: 咲かせや咲かせ 피어라 피어나거라 발매일 2019년 5월 15일 가수 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1956,
+   "version": 3,
+   "title_native": "夜明けのオクターブ",
+   "artists": [
+    "坂本真綾"
+   ],
+   "performances": 10,
+   "title_ko": "새벽의 옥타브",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: dawn's octave (katakana loanword kept)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1957,
+   "version": 3,
+   "title_native": "夢灯籠",
+   "artists": [
+    "RADWIMPS"
+   ],
+   "performances": 10,
+   "title_ko": "꿈의 등불",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "꿈 등롱",
+     "where": "research/parent proposal"
+    },
+    "꿈 초롱불"
+   ],
+   "sources": [
+    "https://namu.wiki/w/夢灯籠"
+   ],
+   "namu": "꿈의 등불",
+   "note": "namu.wiki content: 夢灯籠 꿈의 등불｜Dream lantern 가수 RADWIMPS (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1958,
+   "version": 3,
+   "title_native": "威風堂々",
+   "artists": [
+    "梅とら"
+   ],
+   "performances": 10,
+   "title_ko": "위풍당당",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/위풍당당(VOCALOID 오리지널 곡)?from=威風堂々"
+   ],
+   "namu": "위풍당당",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 위풍당당(VOCALOID 오리지널 곡); 威風堂々 Pomp and Circumstan | 위풍당당",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1960,
+   "version": 3,
+   "title_native": "少女A",
+   "artists": [
+    "中森明菜"
+   ],
+   "performances": 10,
+   "title_ko": "소녀A",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/少女A"
+   ],
+   "namu": "소녀A",
+   "note": "namu.wiki content: ワ·タ·シ 少女A 와 타 시 쇼오죠 A 나는 소녀A",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1961,
+   "version": 3,
+   "title_native": "心の花を咲かせよう",
+   "artists": [
+    "いきものがかり"
+   ],
+   "performances": 10,
+   "title_ko": "마음의 꽃을 피우자",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: let's make the flower of heart bloom",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1962,
+   "version": 3,
+   "title_native": "愛のうた",
+   "artists": [
+    "ストロベリー・フラワー"
+   ],
+   "performances": 10,
+   "title_ko": "사랑의 노래",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1964,
+   "version": 3,
+   "title_native": "星めぐる詩",
+   "artists": [
+    "suis"
+   ],
+   "performances": 10,
+   "title_ko": "별을 도는 시",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "별을 떠도는 시"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: poem of wandering/circling stars",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1966,
+   "version": 3,
+   "title_native": "灼熱にて純情(wii‐wii‐woo)",
+   "artists": [
+    "星街すいせい"
+   ],
+   "performances": 10,
+   "title_ko": "작열 속의 순정(wii-wii-woo)",
+   "basis": "translation",
+   "confidence": "low",
+   "alternatives": [
+    "작열하는 순정(wii-wii-woo)"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "灼熱にて純情 (purity amid scorching heat); onomatopoeic suffix kept as Latin as written",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1967,
+   "version": 3,
+   "title_native": "炎と森のカーニバル",
+   "artists": [
+    "SEKAI NO OWARI"
+   ],
+   "performances": 10,
+   "title_ko": "불꽃과 숲의 카니발",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/炎と森のカーニバル"
+   ],
+   "namu": "불꽃과 숲의 카니발",
+   "note": "namu.wiki content: 타이틀은 동명인 炎と森のカーニバル(불꽃과 숲의 카니발)이며... 3.1. 炎と森のカーニバル(불꽃과 숲의 카니발) [편집]",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1968,
+   "version": 3,
+   "title_native": "瞳をとじて",
+   "artists": [
+    "平井堅"
+   ],
+   "performances": 10,
+   "title_ko": "눈을 감고",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "near-literal: close your eyes",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1969,
+   "version": 3,
+   "title_native": "空が鳴っている",
+   "artists": [
+    "東京事変"
+   ],
+   "performances": 10,
+   "title_ko": "하늘이 울리고 있어",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "하늘이 울고 있다",
+     "where": "research/parent proposal"
+    }
+   ],
+   "sources": [
+    "https://namu.wiki/w/도쿄지헨?from=東京事変"
+   ],
+   "namu": "하늘이 울리고 있어",
+   "note": "namu.wiki content: 空が鳴っている／女の子は誰でも(하늘이 울리고 있어/여자아이라면 누구나) (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1970,
+   "version": 3,
+   "title_native": "純恋歌",
+   "artists": [
+    "湘南乃風"
+   ],
+   "performances": 10,
+   "title_ko": "순연가",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "순수한 연가"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "純恋歌, Sino-Japanese compound (pure love song) with direct Sino-Korean cognate",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1971,
+   "version": 3,
+   "title_native": "素直",
+   "artists": [
+    "槇原敬之"
+   ],
+   "performances": 10,
+   "title_ko": "솔직",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [
+    "순진"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "single Sino-Japanese word, direct Sino-Korean cognate",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1972,
+   "version": 3,
+   "title_native": "罪人",
+   "artists": [
+    "supercell"
+   ],
+   "performances": 10,
+   "title_ko": "죄인",
+   "basis": "translation",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [],
+   "namu": null,
+   "note": "Sino-Japanese word, direct Sino-Korean cognate",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1973,
+   "version": 3,
+   "title_native": "蹴っ飛ばした毛布",
+   "artists": [
+    "ずっと真夜中でいいのに。"
+   ],
+   "performances": 10,
+   "title_ko": "걷어차버린 담요",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "차 던진 담요",
+     "where": "research/parent proposal"
+    },
+    "걷어찬 이불"
+   ],
+   "sources": [
+    "https://namu.wiki/w/蹴っ飛ばした毛布"
+   ],
+   "namu": "걷어차버린 담요",
+   "note": "namu.wiki document_title: 蹴っ飛ばした毛布 걷어차버린 담요 | Kettobashita Moufu ずっと真夜中でいいのに。 (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1974,
+   "version": 3,
+   "title_native": "雨晴るる",
+   "artists": [
+    "ヨルシカ"
+   ],
+   "performances": 10,
+   "title_ko": "비가 개다",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "비 그치다",
+     "where": "research/parent proposal"
+    },
+    "비가 개다"
+   ],
+   "sources": [
+    "https://namu.wiki/w/비가 개다?from=雨晴るる"
+   ],
+   "namu": "비가 개다",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: 비가 개다 (雨晴るる 에서 넘어옴); 雨 ( あめ ) 晴 ( は ) るる 비가 개다 | After the Rain (differs from proposal)",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1991,
+   "version": 3,
+   "title_native": "LOVEずっきゅん",
+   "artists": [
+    "相対性理論"
+   ],
+   "performances": 10,
+   "title_ko": "LOVE 즛큥",
+   "basis": "reading",
+   "confidence": "low",
+   "alternatives": [
+    "LOVE 두근"
+   ],
+   "sources": [],
+   "namu": null,
+   "note": "ずっきゅん is onomatopoeia for a heart-skip/thump, no standard Korean equivalent word; Latin part kept",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1975,
+   "version": 3,
+   "title_native": "(恋は)百年戦争",
+   "artists": [
+    "相対性理論"
+   ],
+   "performances": 9,
+   "title_ko": "(사랑은) 백년전쟁",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/상대성이론(밴드)?from=소타이세이리론"
+   ],
+   "namu": "(사랑은) 백년전쟁",
+   "note": "namu.wiki content: 5 (사랑은) 백년전쟁((恋は)百年戦争) [10] 나가이 세이이치",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1976,
+   "version": 3,
+   "title_native": "25ｺ目の染色体",
+   "artists": [
+    "RADWIMPS"
+   ],
+   "performances": 9,
+   "title_ko": "25번째 염색체",
+   "basis": "korean_usage",
+   "confidence": "medium",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/25ｺ目の染色体"
+   ],
+   "namu": "25번째 염색체",
+   "note": "namu.wiki content: 25コ目の染色体 25번째 염색체 발매일 2005년 11월 23일",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1979,
+   "version": 3,
+   "title_native": "Alice in 冷凍庫",
+   "artists": [
+    "Orangestar"
+   ],
+   "performances": 9,
+   "title_ko": "Alice in 냉동고",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [],
+   "sources": [
+    "https://namu.wiki/w/Alice in 냉동고?from=Alice in 冷凍庫"
+   ],
+   "namu": "Alice in 냉동고",
+   "note": "namu.wiki document_title: DOCUMENT TITLE: Alice in 냉동고",
+   "decision": "accept"
+  },
+  {
+   "song_id": 1980,
+   "version": 3,
+   "title_native": "ANIMAる",
+   "artists": [
+    "梅とら"
+   ],
+   "performances": 9,
+   "title_ko": "ANIMA루",
+   "basis": "korean_usage",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "title_ko": "아니마루",
+     "where": "research/parent proposal"
+    },
+    "애니멀"
+   ],
+   "sources": [
+    "https://namu.wiki/w/우메토라"
+   ],
+   "namu": "ANIMA루",
+   "note": "namu.wiki content: ANIMAる ANIMA루 Megpoid , 카가미네 린 2018년 5월 23일 (differs from proposal)",
+   "decision": "accept"
+  }
+ ],
+ "problems": [],
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "exported_at": "2026-09-27T14:24:57Z"
+}

@@ -1,0 +1,1995 @@
+{
+ "policy": "song-title-ko-wikidata-v1",
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "summary": {
+  "songs_with_item": 90,
+  "decisions": 88,
+  "title_ko": 9,
+  "alias_ko": 11,
+  "wikidata_ids": 88,
+  "ko_label_not_hangul": 10,
+  "conflicts": 2
+ },
+ "songs": [
+  {
+   "song_id": 45,
+   "version": 3,
+   "title_native": "残酷な天使のテーゼ",
+   "wikidata": "Q111788626",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q111788626",
+    "via": [
+     [
+      "musicbrainz_work",
+      "343dbbe6-d9ce-3853-8d8d-230734c0424f"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "残酷な天使のテーゼ",
+     "en": "A Cruel Angel's Thesis"
+    }
+   }
+  },
+  {
+   "song_id": 51,
+   "version": 3,
+   "title_native": "I LOVE YOU",
+   "wikidata": "Q17190801",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q17190801",
+    "via": [
+     [
+      "musicbrainz_work",
+      "bc1f2b9b-0b93-3fe5-99d3-818ed41ff698"
+     ]
+    ],
+    "labels": {
+     "ko": "I Love You",
+     "ja": "I LOVE YOU",
+     "en": "I Love You"
+    }
+   }
+  },
+  {
+   "song_id": 64,
+   "version": 3,
+   "title_native": "三日月",
+   "wikidata": "Q1065433",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1065433",
+    "via": [
+     [
+      "musicbrainz_work",
+      "f3708394-0ef7-308e-93e8-b7d9cec9a6c4"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "三日月",
+     "en": "Mikazuki"
+    }
+   }
+  },
+  {
+   "song_id": 112,
+   "version": 3,
+   "title_native": "恋愛サーキュレーション",
+   "wikidata": "Q121494486",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q121494486",
+    "via": [
+     [
+      "musicbrainz_work",
+      "3b698bb2-7b84-3f30-a2a0-62d126c09bd0"
+     ]
+    ],
+    "labels": {
+     "ko": "연애 서큘레이션",
+     "ja": "恋愛サーキュレーション",
+     "en": "Renai Circulation"
+    }
+   }
+  },
+  {
+   "song_id": 145,
+   "version": 3,
+   "title_native": "Beautiful World",
+   "wikidata": "Q2762218",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q2762218",
+    "via": [
+     [
+      "musicbrainz_work",
+      "dfe117d9-8036-4182-9c0a-235290a701f3"
+     ]
+    ],
+    "labels": {
+     "ko": "Beautiful World/Kiss & Cry",
+     "ja": "Beautiful World/Kiss & Cry",
+     "en": "Beautiful World/Kiss & Cry"
+    }
+   }
+  },
+  {
+   "song_id": 153,
+   "version": 3,
+   "title_native": "千本桜",
+   "wikidata": "Q113245117",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q113245117",
+    "via": [
+     [
+      "vocadb",
+      "8394"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "千本桜",
+     "en": "Senbonzakura"
+    }
+   }
+  },
+  {
+   "song_id": 180,
+   "version": 3,
+   "title_native": "ウィーアー!",
+   "wikidata": "Q4018641",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q4018641",
+    "via": [
+     [
+      "musicbrainz_work",
+      "ed9692c3-3f66-4a66-92c6-c1379be4e2fa"
+     ]
+    ],
+    "labels": {
+     "ko": "위어!",
+     "ja": "ウィーアー!",
+     "en": "We Are!"
+    }
+   }
+  },
+  {
+   "song_id": 181,
+   "version": 3,
+   "title_native": "ムーンライト伝説",
+   "wikidata": "Q3862775",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q3862775",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8eab2bf7-968a-463d-9014-b03352af3377"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ムーンライト伝説/HEART MOVING",
+     "en": "Moonlight Densetsu"
+    }
+   }
+  },
+  {
+   "song_id": 192,
+   "version": 3,
+   "title_native": "シル・ヴ・プレジデント",
+   "wikidata": "Q109362233",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q109362233",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a4034c74-4ac2-405d-b94f-4d8149c6161e"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "シル・ヴ・プレジデント",
+     "en": "S’il Vous President"
+    }
+   }
+  },
+  {
+   "song_id": 938,
+   "version": 4,
+   "title_native": "めざせポケモンマスター",
+   "wikidata": "Q11279708",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11279708",
+    "via": [
+     [
+      "musicbrainz_work",
+      "2b1b2e61-bfc3-3d18-88ea-8bc166fd3c5f"
+     ]
+    ],
+    "labels": {
+     "ko": "메자세포케몬마스타",
+     "ja": "めざせポケモンマスター",
+     "en": "Aim to Be a Pokémon Master"
+    }
+   }
+  },
+  {
+   "song_id": 946,
+   "version": 3,
+   "title_native": "SUMMER SONG",
+   "wikidata": "Q1073338",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1073338",
+    "via": [
+     [
+      "musicbrainz_work",
+      "18049cf6-0095-3082-82f6-cd6be6aa211a"
+     ]
+    ],
+    "labels": {
+     "ko": "SUMMER SONG",
+     "ja": "SUMMER SONG",
+     "en": "Summer Song"
+    }
+   }
+  },
+  {
+   "song_id": 952,
+   "version": 3,
+   "title_native": "勇気100%",
+   "wikidata": "Q6145911",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q6145911",
+    "via": [
+     [
+      "musicbrainz_work",
+      "896e6f0e-b16b-484d-ba42-8e9f8f669bc8"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "勇気100%",
+     "en": "Yūki 100%"
+    }
+   }
+  },
+  {
+   "song_id": 966,
+   "version": 3,
+   "title_native": "Sunshine Girl",
+   "wikidata": "Q7641489",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q7641489",
+    "via": [
+     [
+      "musicbrainz_work",
+      "10a49616-66a7-3830-8c0d-e5303cb161e8"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "Sunshine Girl",
+     "en": "Sunshine Girl"
+    }
+   }
+  },
+  {
+   "song_id": 984,
+   "version": 3,
+   "title_native": "OK!",
+   "wikidata": "Q11237192",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11237192",
+    "via": [
+     [
+      "musicbrainz_work",
+      "2fc860b9-f590-4b4a-be11-7bed4c365151"
+     ]
+    ],
+    "labels": {
+     "ko": "OK! (마츠모토 리카의 싱글)",
+     "ja": "OK!",
+     "en": "OK!"
+    }
+   }
+  },
+  {
+   "song_id": 990,
+   "version": 3,
+   "title_native": "君をのせて",
+   "wikidata": "Q10885711",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q10885711",
+    "via": [
+     [
+      "musicbrainz_work",
+      "d230410a-adab-3ce8-9dc4-befb6a10b3ba"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "君をのせて",
+     "en": "Kimi wo Nosete"
+    }
+   }
+  },
+  {
+   "song_id": 1035,
+   "version": 3,
+   "title_native": "Automatic",
+   "wikidata": "Q728690",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q728690",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a51059c5-3293-361f-8d40-3a50f86cb4f4"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "Automatic/time will tell",
+     "en": "Automatic/Time Will Tell"
+    }
+   }
+  },
+  {
+   "song_id": 1049,
+   "version": 3,
+   "title_native": "ありがとう",
+   "wikidata": "Q11073952",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11073952",
+    "via": [
+     [
+      "musicbrainz_work",
+      "96a20058-5560-4f88-85b5-c852c9e38e6e"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ありがとう",
+     "en": "Arigatō"
+    }
+   }
+  },
+  {
+   "song_id": 1050,
+   "version": 4,
+   "title_native": "サクラ色",
+   "wikidata": "Q2017509",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q2017509",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8309129f-5866-4eed-9eeb-192343a5b695"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "サクラ色",
+     "en": "Sakurairo"
+    }
+   }
+  },
+  {
+   "song_id": 1052,
+   "version": 3,
+   "title_native": "たしかなこと",
+   "wikidata": "Q11270979",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11270979",
+    "via": [
+     [
+      "musicbrainz_work",
+      "5246c9f6-3e7e-35e0-b80c-d65cfcb5f8ec"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "たしかなこと",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1056,
+   "version": 3,
+   "title_native": "歌うたいのバラッド",
+   "wikidata": "Q11544994",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11544994",
+    "via": [
+     [
+      "musicbrainz_work",
+      "039a4f84-eb26-4b97-8fe1-a201c880b55c"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "歌うたいのバラッド",
+     "en": "Utautai no Ballad"
+    }
+   }
+  },
+  {
+   "song_id": 1065,
+   "version": 4,
+   "title_native": "secret base ～君がくれたもの～",
+   "wikidata": "Q755264",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q755264",
+    "via": [
+     [
+      "musicbrainz_work",
+      "d0e52756-6196-3617-99c7-efe555c7a707"
+     ]
+    ],
+    "labels": {
+     "ko": "secret base ~네가 준 것~",
+     "ja": "secret base 〜君がくれたもの〜",
+     "en": "Secret Base (Kimi ga Kureta Mono)"
+    }
+   }
+  },
+  {
+   "song_id": 1081,
+   "version": 4,
+   "title_native": "世界が終るまでは...",
+   "wikidata": "Q11362123",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11362123",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a537f308-b95c-4bbe-bd22-df83c3313b92"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "世界が終るまでは…",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1092,
+   "version": 3,
+   "title_native": "I believe",
+   "wikidata": "Q1066911",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1066911",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a488de18-9dd5-3095-a4b1-e274c512fce1"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "I believe",
+     "en": "I Believe"
+    }
+   }
+  },
+  {
+   "song_id": 1107,
+   "version": 3,
+   "title_native": "手紙～拝啓十五の君へ～",
+   "wikidata": "Q2471522",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q2471522",
+    "via": [
+     [
+      "musicbrainz_work",
+      "37fe6054-3380-451f-8ca9-4e81aad57749"
+     ]
+    ],
+    "labels": {
+     "ko": "편지~배계 15살의 너에게~",
+     "ja": "手紙 〜拝啓 十五の君へ〜",
+     "en": "Tegami"
+    }
+   }
+  },
+  {
+   "song_id": 1112,
+   "version": 3,
+   "title_native": "Butter-Fly",
+   "wikidata": "Q2928980",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q2928980",
+    "via": [
+     [
+      "musicbrainz_work",
+      "60566cf6-7fae-3468-bc1c-a65c33dc313e"
+     ]
+    ],
+    "labels": {
+     "ko": "Butter-Fly",
+     "ja": "Butter-Fly",
+     "en": "Butter-Fly"
+    }
+   }
+  },
+  {
+   "song_id": 1121,
+   "version": 3,
+   "title_native": "WHITE BREATH",
+   "wikidata": "Q11253594",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11253594",
+    "via": [
+     [
+      "musicbrainz_work",
+      "6eed24b8-0e58-4b0b-b45b-5f63e8af2936"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "WHITE BREATH",
+     "en": "White Breath"
+    }
+   }
+  },
+  {
+   "song_id": 1126,
+   "version": 3,
+   "title_native": "FINAL DISTANCE",
+   "wikidata": "Q1010478",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1010478",
+    "via": [
+     [
+      "musicbrainz_work",
+      "29738919-ba1f-3c08-95e9-3970a65ed886"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "FINAL DISTANCE",
+     "en": "Final Distance"
+    }
+   }
+  },
+  {
+   "song_id": 1136,
+   "version": 3,
+   "title_native": "to Mother",
+   "wikidata": "Q306981",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q306981",
+    "via": [
+     [
+      "musicbrainz_work",
+      "b64f500d-7ddf-3f5b-b37d-491568769505"
+     ]
+    ],
+    "labels": {
+     "ko": "To Mother",
+     "ja": "to Mother",
+     "en": "To Mother"
+    }
+   }
+  },
+  {
+   "song_id": 1139,
+   "version": 3,
+   "title_native": "HELLO ～Paradise Kiss～",
+   "wikidata": "Q1135554",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1135554",
+    "via": [
+     [
+      "musicbrainz_work",
+      "0de20834-ae13-4a1e-941d-8bee94cca6ff"
+     ]
+    ],
+    "labels": {
+     "ko": "HELLO ~Paradise Kiss~",
+     "ja": "HELLO 〜Paradise Kiss〜",
+     "en": "Hello (Paradise Kiss)"
+    }
+   }
+  },
+  {
+   "song_id": 1150,
+   "version": 3,
+   "title_native": "涙そうそう",
+   "wikidata": "Q4209411",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q4209411",
+    "via": [
+     [
+      "musicbrainz_work",
+      "cbb4fe0c-d4e2-3508-831d-c45ad800ca97"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "涙そうそう",
+     "en": "Nada Sōsō"
+    }
+   }
+  },
+  {
+   "song_id": 1176,
+   "version": 3,
+   "title_native": "夏祭り",
+   "wikidata": "Q3295035",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q3295035",
+    "via": [
+     [
+      "musicbrainz_work",
+      "656995f7-9cb7-464c-afbe-42e7d8bb9cb1"
+     ]
+    ],
+    "labels": {
+     "ko": "여름 축제 (JITTERIN'JINN의 노래)",
+     "ja": "夏祭り",
+     "en": "Natsu Matsuri"
+    }
+   }
+  },
+  {
+   "song_id": 1180,
+   "version": 4,
+   "title_native": "天城越え",
+   "wikidata": "Q11442467",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11442467",
+    "via": [
+     [
+      "musicbrainz_work",
+      "7f455b3a-c18c-3958-8299-f6fcdbb6a817"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "天城越え",
+     "en": "Amagi-goe"
+    }
+   }
+  },
+  {
+   "song_id": 1206,
+   "version": 4,
+   "title_native": "染脳",
+   "wikidata": "Q138297315",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q138297315",
+    "via": [
+     [
+      "musicbrainz_work",
+      "6fd8d3d9-993d-49fe-b322-2350bd8eb7cb"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "染脳",
+     "en": "Sennou"
+    }
+   }
+  },
+  {
+   "song_id": 1218,
+   "version": 3,
+   "title_native": "Snow halation",
+   "wikidata": "Q107634056",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q107634056",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8b18e261-b0e8-4669-a5dc-f19b55f05477"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "Snow halation",
+     "en": "Snow Halation"
+    }
+   }
+  },
+  {
+   "song_id": 1265,
+   "version": 4,
+   "title_native": "さよならエレジー",
+   "wikidata": "Q55524684",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q55524684",
+    "via": [
+     [
+      "musicbrainz_work",
+      "37b3a306-a588-4aa1-8455-8db53f0b1378"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "さよならエレジー",
+     "en": "Sayonara Elegy"
+    }
+   }
+  },
+  {
+   "song_id": 1299,
+   "version": 4,
+   "title_native": "青春コンプレックス",
+   "wikidata": "Q139576987",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q139576987",
+    "via": [
+     [
+      "musicbrainz_work",
+      "115f2677-39a8-4db9-bda3-381118765d32"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "青春コンプレックス",
+     "en": "Seisyun Complex"
+    }
+   }
+  },
+  {
+   "song_id": 1320,
+   "version": 4,
+   "title_native": "青い栞",
+   "wikidata": "Q11661006",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11661006",
+    "via": [
+     [
+      "musicbrainz_work",
+      "aeea970f-1d71-4a54-aacc-b1a38239e4aa"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "青い栞",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1323,
+   "version": 4,
+   "title_native": "さよならの夏〜コクリコ坂から〜",
+   "wikidata": "Q85868932",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q85868932",
+    "via": [
+     [
+      "musicbrainz_work",
+      "19b2807d-118f-48bc-8ee1-8c9913130d5a"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "さよならの夏 〜コクリコ坂から〜",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1325,
+   "version": 4,
+   "title_native": "キミがいれば",
+   "wikidata": "Q11296934",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11296934",
+    "via": [
+     [
+      "musicbrainz_work",
+      "35b349e3-b4ca-4afc-b580-f7bb0564e1c2"
+     ]
+    ],
+    "labels": {
+     "ko": "키미가이레바",
+     "ja": "キミがいれば",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1331,
+   "version": 4,
+   "title_native": "恋愛写真",
+   "wikidata": "Q1142474",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1142474",
+    "via": [
+     [
+      "musicbrainz_work",
+      "ed3395c0-f201-328b-80e9-1ff05bb6d9c0"
+     ]
+    ],
+    "labels": {
+     "ko": "렌아이샤신",
+     "ja": "恋愛写真",
+     "en": "Ren'ai Shashin"
+    }
+   }
+  },
+  {
+   "song_id": 1334,
+   "version": 3,
+   "title_native": "EMOVER FLOW",
+   "wikidata": "Q138297350",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q138297350",
+    "via": [
+     [
+      "musicbrainz_work",
+      "3747879d-65f8-4cde-b4ee-d744fa03f563"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "EMOVER FLOW",
+     "en": "EMOVER FLOW"
+    }
+   }
+  },
+  {
+   "song_id": 1354,
+   "version": 4,
+   "title_native": "阿修羅ちゃん",
+   "wikidata": "Q109594887",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q109594887",
+    "via": [
+     [
+      "musicbrainz_work",
+      "7f15cbe6-d32c-4c97-95ca-848bed0fe638"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "阿修羅ちゃん",
+     "en": "Ashura-chan"
+    }
+   }
+  },
+  {
+   "song_id": 1357,
+   "version": 4,
+   "title_native": "アンパンマンのマーチ",
+   "wikidata": "Q11285406",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11285406",
+    "via": [
+     [
+      "musicbrainz_work",
+      "61faaad8-2bec-4643-a17f-6e30136c2de7"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "アンパンマンのマーチ",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1363,
+   "version": 4,
+   "title_native": "散花",
+   "wikidata": "Q138297364",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q138297364",
+    "via": [
+     [
+      "musicbrainz_work",
+      "1dce56ef-617f-41f7-a6e7-646717e858b8"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "散花",
+     "en": "Sanka"
+    }
+   }
+  },
+  {
+   "song_id": 1379,
+   "version": 3,
+   "title_native": "crossing field",
+   "wikidata": "Q118592605",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q118592605",
+    "via": [
+     [
+      "musicbrainz_work",
+      "1b38913b-0ad5-4cf7-b6b1-736176b09ff2"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": null,
+     "en": "Crossing Field"
+    }
+   }
+  },
+  {
+   "song_id": 1381,
+   "version": 3,
+   "title_native": "ふわふわ時間",
+   "wikidata": "Q5367158",
+   "title_ko": "폭신푹신 타임",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q5367158",
+    "via": [
+     [
+      "musicbrainz_work",
+      "b9aa4282-9de4-3a44-9f6b-baaeb3e0fcbb"
+     ]
+    ],
+    "labels": {
+     "ko": "폭신한 시간",
+     "ja": "ふわふわ時間",
+     "en": "Fuwa Fuwa Time"
+    }
+   }
+  },
+  {
+   "song_id": 1423,
+   "version": 3,
+   "title_native": "ROLLBACK",
+   "wikidata": "Q138297281",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q138297281",
+    "via": [
+     [
+      "musicbrainz_work",
+      "998c5a3d-bbc3-4df9-bcfb-245f24f7a26e"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ROLLBACK",
+     "en": "ROLLBACK"
+    }
+   }
+  },
+  {
+   "song_id": 1426,
+   "version": 4,
+   "title_native": "カントリー・ロード",
+   "wikidata": "Q391807",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q391807",
+    "via": [
+     [
+      "musicbrainz_work",
+      "60d8e42d-48e2-3563-99e9-07c3173d5459"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "カントリー・ロード",
+     "en": "Country Road"
+    }
+   }
+  },
+  {
+   "song_id": 1433,
+   "version": 4,
+   "title_native": "ロマンスの神様",
+   "wikidata": "Q6143239",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q6143239",
+    "via": [
+     [
+      "musicbrainz_work",
+      "97359fa9-8237-45cc-a2f3-007ee8f85d86"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ロマンスの神様",
+     "en": "Romance no Kamisama"
+    }
+   }
+  },
+  {
+   "song_id": 1435,
+   "version": 3,
+   "title_native": "忘れてやらない",
+   "wikidata": "Q115919819",
+   "title_ko": "잊어주지 않을 거야",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q115919819",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a0bdc6bf-2e1e-48da-a844-4f775fdd9e4e"
+     ]
+    ],
+    "labels": {
+     "ko": "잊어주지 않을 거야",
+     "ja": "忘れてやらない",
+     "en": "Never Forget"
+    }
+   }
+  },
+  {
+   "song_id": 1442,
+   "version": 4,
+   "title_native": "謎",
+   "wikidata": "Q11632163",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11632163",
+    "via": [
+     [
+      "musicbrainz_work",
+      "b128d15e-12aa-4a83-9e43-1e0ae8bac349"
+     ]
+    ],
+    "labels": {
+     "ko": "나조 (코마츠 미호의 싱글)",
+     "ja": "謎 (曲)",
+     "en": "Nazo"
+    }
+   }
+  },
+  {
+   "song_id": 1462,
+   "version": 4,
+   "title_native": "はじめてのチュウ",
+   "wikidata": "Q11275483",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11275483",
+    "via": [
+     [
+      "musicbrainz_work",
+      "f5d003a7-2c2c-4bd4-90d7-e564829e8741"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "はじめてのチュウ",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1485,
+   "version": 4,
+   "title_native": "世界に一つだけの花",
+   "wikidata": "Q2369492",
+   "title_ko": null,
+   "alias_ko": "세카이니히토츠다케노하나",
+   "evidence": {
+    "qid": "Q2369492",
+    "via": [
+     [
+      "musicbrainz_work",
+      "f57f2314-e6c0-3f69-a9a1-04dff14bfb70"
+     ]
+    ],
+    "labels": {
+     "ko": "세카이니히토츠다케노하나",
+     "ja": "世界に一つだけの花",
+     "en": "Sekai ni Hitotsu Dake no Hana"
+    }
+   }
+  },
+  {
+   "song_id": 1494,
+   "version": 4,
+   "title_native": "焔の扉",
+   "wikidata": "Q11567276",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11567276",
+    "via": [
+     [
+      "musicbrainz_work",
+      "918de44c-2f35-4dd7-9b25-518e2033d45d"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "焔の扉",
+     "en": "Honoh no Tobira"
+    }
+   }
+  },
+  {
+   "song_id": 1497,
+   "version": 3,
+   "title_native": "長い間",
+   "wikidata": "Q11651377",
+   "title_ko": "오랫동안",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11651377",
+    "via": [
+     [
+      "musicbrainz_work",
+      "019f9164-aaa7-450c-ae55-2a0ea689c848"
+     ]
+    ],
+    "labels": {
+     "ko": "오랫동안",
+     "ja": "長い間",
+     "en": "Nagai Aida"
+    }
+   }
+  },
+  {
+   "song_id": 1500,
+   "version": 4,
+   "title_native": "なごり雪",
+   "wikidata": "Q11274248",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11274248",
+    "via": [
+     [
+      "musicbrainz_work",
+      "ea9c6db8-8458-367e-8bb5-71fcd99fb59d"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "なごり雪",
+     "en": "Nagoriyuki"
+    }
+   }
+  },
+  {
+   "song_id": 1501,
+   "version": 4,
+   "title_native": "オトナブルー",
+   "wikidata": "Q116858202",
+   "title_ko": null,
+   "alias_ko": "오토나블루",
+   "evidence": {
+    "qid": "Q116858202",
+    "via": [
+     [
+      "musicbrainz_work",
+      "f57e6f67-10e5-4597-aa59-d29682187fb2"
+     ]
+    ],
+    "labels": {
+     "ko": "오토나블루",
+     "ja": "オトナブルー",
+     "en": "Otonablue"
+    }
+   }
+  },
+  {
+   "song_id": 1512,
+   "version": 3,
+   "title_native": "消せない罪",
+   "wikidata": "Q1930953",
+   "title_ko": "지울 수 없는 죄",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1930953",
+    "via": [
+     [
+      "musicbrainz_work",
+      "ae008e58-09cc-3f92-8d7d-8cc495668abb"
+     ]
+    ],
+    "labels": {
+     "ko": "지울 수 없는 죄",
+     "ja": "消せない罪",
+     "en": "Kesenai Tsumi"
+    }
+   }
+  },
+  {
+   "song_id": 1532,
+   "version": 3,
+   "title_native": "君の銀の庭",
+   "wikidata": "Q15243216",
+   "title_ko": "그대의 은의 정원",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q15243216",
+    "via": [
+     [
+      "musicbrainz_work",
+      "11e520b0-9bdf-4d4e-bdb2-0de65095a667"
+     ]
+    ],
+    "labels": {
+     "ko": "그대의 은의 정원",
+     "ja": "君の銀の庭",
+     "en": "Kimi no Gin no Niwa"
+    }
+   }
+  },
+  {
+   "song_id": 1533,
+   "version": 4,
+   "title_native": "奈落の花",
+   "wikidata": "Q1012775",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1012775",
+    "via": [
+     [
+      "musicbrainz_work",
+      "bf380bf2-4ea0-3da1-9935-3781f3dd6cd5"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "奈落の花",
+     "en": "Naraku no Hana"
+    }
+   }
+  },
+  {
+   "song_id": 1541,
+   "version": 3,
+   "title_native": "飾りじゃないのよ涙は",
+   "wikidata": "Q11666788",
+   "title_ko": "장식이 아니야, 눈물은",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11666788",
+    "via": [
+     [
+      "musicbrainz_work",
+      "bb96ddbe-45c2-4602-962d-be0c97ae360e"
+     ]
+    ],
+    "labels": {
+     "ko": "장식이 아니야, 눈물은",
+     "ja": "飾りじゃないのよ涙は",
+     "en": "Kazari Janai no yo Namida wa"
+    }
+   }
+  },
+  {
+   "song_id": 1542,
+   "version": 4,
+   "title_native": "鳥の詩",
+   "wikidata": "Q1042494",
+   "title_ko": null,
+   "alias_ko": "도리 노 우타",
+   "evidence": {
+    "qid": "Q1042494",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a995a063-4f42-347f-afd5-024ff0a809fe"
+     ]
+    ],
+    "labels": {
+     "ko": "도리 노 우타",
+     "ja": "鳥の詩",
+     "en": "Tori no Uta"
+    }
+   }
+  },
+  {
+   "song_id": 1567,
+   "version": 3,
+   "title_native": "ETERNAL BLAZE",
+   "wikidata": "Q1317458",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1317458",
+    "via": [
+     [
+      "musicbrainz_work",
+      "c6a6d57d-02d8-3f9f-880d-61188eb85204"
+     ]
+    ],
+    "labels": {
+     "ko": "ETERNAL BLAZE",
+     "ja": "ETERNAL BLAZE",
+     "en": "Eternal Blaze"
+    }
+   }
+  },
+  {
+   "song_id": 1577,
+   "version": 4,
+   "title_native": "もののけ姫",
+   "wikidata": "Q17230545",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q17230545",
+    "via": [
+     [
+      "musicbrainz_work",
+      "0a467386-5611-3181-9e9d-fddf89a0f176"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "もののけ姫",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1583,
+   "version": 4,
+   "title_native": "キラーチューン",
+   "wikidata": "Q10851305",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q10851305",
+    "via": [
+     [
+      "musicbrainz_work",
+      "736487bd-13b6-378c-ae30-b5ecf2861430"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "キラーチューン",
+     "en": "Killer-tune"
+    }
+   }
+  },
+  {
+   "song_id": 1593,
+   "version": 4,
+   "title_native": "海色",
+   "wikidata": "Q19689987",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q19689987",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a092368a-4633-414d-9d19-1b6054f9ac3a"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "海色",
+     "en": "Miiro"
+    }
+   }
+  },
+  {
+   "song_id": 1603,
+   "version": 5,
+   "title_native": "ウイスキーが、お好きでしょ",
+   "wikidata": "Q11288321",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11288321",
+    "via": [
+     [
+      "musicbrainz_work",
+      "847fd055-7356-47e4-b9e4-1667189debf3"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ウイスキーが、お好きでしょ",
+     "en": "Whiskey ga, Osuki Desho"
+    }
+   }
+  },
+  {
+   "song_id": 1627,
+   "version": 3,
+   "title_native": "oath sign",
+   "wikidata": "Q10851995",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q10851995",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8390d82c-5848-4d18-88f7-b989f1184824"
+     ]
+    ],
+    "labels": {
+     "ko": "oath sign",
+     "ja": "oath sign",
+     "en": "Oath Sign"
+    }
+   }
+  },
+  {
+   "song_id": 1629,
+   "version": 4,
+   "title_native": "いい日 旅立ち",
+   "wikidata": "Q11258995",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11258995",
+    "via": [
+     [
+      "musicbrainz_work",
+      "074910e9-6305-3e00-9851-a1ef4e373cd2"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "いい日旅立ち",
+     "en": "Iihi Tabidachi"
+    }
+   }
+  },
+  {
+   "song_id": 1686,
+   "version": 3,
+   "title_native": "GO! GO! MANIAC",
+   "wikidata": "Q858442",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q858442",
+    "via": [
+     [
+      "musicbrainz_work",
+      "e1445460-4d0d-3428-adaf-6cc8df5982b1"
+     ]
+    ],
+    "labels": {
+     "ko": "GO! GO! MANIAC",
+     "ja": "GO! GO! MANIAC",
+     "en": "GO! GO! MANIAC!"
+    }
+   }
+  },
+  {
+   "song_id": 1696,
+   "version": 4,
+   "title_native": "ポニーテールとシュシュ",
+   "wikidata": "Q1189830",
+   "title_ko": null,
+   "alias_ko": "포니테일토 슈슈",
+   "evidence": {
+    "qid": "Q1189830",
+    "via": [
+     [
+      "musicbrainz_work",
+      "91ef293e-8200-41d9-9fc5-6d439b27e7f7"
+     ]
+    ],
+    "labels": {
+     "ko": "포니테일토 슈슈",
+     "ja": "ポニーテールとシュシュ",
+     "en": "Ponytail to Shushu"
+    }
+   }
+  },
+  {
+   "song_id": 1711,
+   "version": 4,
+   "title_native": "負けないで",
+   "wikidata": "Q1045976",
+   "title_ko": null,
+   "alias_ko": "마케나이데",
+   "evidence": {
+    "qid": "Q1045976",
+    "via": [
+     [
+      "musicbrainz_work",
+      "57029b49-ca2a-311b-9e12-7c19fbac2167"
+     ]
+    ],
+    "labels": {
+     "ko": "마케나이데",
+     "ja": "負けないで",
+     "en": "Makenaide"
+    }
+   }
+  },
+  {
+   "song_id": 1730,
+   "version": 3,
+   "title_native": "フライングゲット",
+   "wikidata": "Q1340881",
+   "title_ko": "플라잉겟",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1340881",
+    "via": [
+     [
+      "musicbrainz_work",
+      "36517696-bf4b-40c0-8f96-45b0233c713a"
+     ]
+    ],
+    "labels": {
+     "ko": "플라잉겟",
+     "ja": "フライングゲット",
+     "en": "Flying Get"
+    }
+   }
+  },
+  {
+   "song_id": 1748,
+   "version": 4,
+   "title_native": "氷の上に立つように",
+   "wikidata": "Q10942941",
+   "title_ko": null,
+   "alias_ko": "코리노우에니타츠요니",
+   "evidence": {
+    "qid": "Q10942941",
+    "via": [
+     [
+      "musicbrainz_work",
+      "1ae8fcc2-c5c8-494e-af2c-4c1a3b67e883"
+     ]
+    ],
+    "labels": {
+     "ko": "코리노우에니타츠요니",
+     "ja": "氷の上に立つように",
+     "en": "Koori no ue ni Tatsu yo ni"
+    }
+   }
+  },
+  {
+   "song_id": 1752,
+   "version": 4,
+   "title_native": "硝子の少年",
+   "wikidata": "Q719562",
+   "title_ko": null,
+   "alias_ko": "가라스노쇼넨",
+   "evidence": {
+    "qid": "Q719562",
+    "via": [
+     [
+      "musicbrainz_work",
+      "444fc236-d068-4493-9a58-baefc583c639"
+     ]
+    ],
+    "labels": {
+     "ko": "가라스노쇼넨",
+     "ja": "硝子の少年",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1770,
+   "version": 4,
+   "title_native": "カプチーノ",
+   "wikidata": "Q11294647",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11294647",
+    "via": [
+     [
+      "musicbrainz_work",
+      "b6e4b251-329a-47e0-91fb-e2597fad50c5"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "カプチーノ (ともさかりえの曲)",
+     "en": "Cappuccino"
+    }
+   }
+  },
+  {
+   "song_id": 1777,
+   "version": 3,
+   "title_native": "ナイショの話",
+   "wikidata": "Q11074944",
+   "title_ko": "비밀 이야기",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11074944",
+    "via": [
+     [
+      "musicbrainz_work",
+      "3e406069-7ff8-4378-94bc-844fbfbb7674"
+     ]
+    ],
+    "labels": {
+     "ko": "비밀 이야기",
+     "ja": "ナイショの話",
+     "en": "Naisho no Hanashi"
+    }
+   }
+  },
+  {
+   "song_id": 1781,
+   "version": 4,
+   "title_native": "上を向いて歩こう",
+   "wikidata": "Q1770488",
+   "title_ko": null,
+   "alias_ko": "우에오무이테아루코",
+   "evidence": {
+    "qid": "Q1770488",
+    "via": [
+     [
+      "musicbrainz_work",
+      "1ed08999-2d57-3c3a-a0cf-8cbe09be6b5a"
+     ]
+    ],
+    "labels": {
+     "ko": "우에오무이테아루코",
+     "ja": "上を向いて歩こう",
+     "en": "Ue o muite arukō"
+    }
+   }
+  },
+  {
+   "song_id": 1837,
+   "version": 4,
+   "title_native": "大声ダイヤモンド",
+   "wikidata": "Q1189402",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1189402",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a642d2b3-26a7-4c4a-bdb8-7d84930f0f95"
+     ]
+    ],
+    "labels": {
+     "ko": "오고에 다이아몬드",
+     "ja": "大声ダイヤモンド",
+     "en": "Ōgoe Diamond"
+    }
+   }
+  },
+  {
+   "song_id": 1844,
+   "version": 4,
+   "title_native": "真夜中のドア〜Stay With Me",
+   "wikidata": "Q11582998",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11582998",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8fa1db42-9601-4842-a5cf-7607cd2e16cf"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "真夜中のドア〜Stay With Me",
+     "en": "Mayonaka no Door〜Stay With Me"
+    }
+   }
+  },
+  {
+   "song_id": 1860,
+   "version": 3,
+   "title_native": "Hacking to the Gate",
+   "wikidata": "Q1032360",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1032360",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a2f313bc-aadf-4d77-b367-e4f0d8a8e21c"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "Hacking to the Gate",
+     "en": "Hacking to the Gate"
+    }
+   }
+  },
+  {
+   "song_id": 1885,
+   "version": 4,
+   "title_native": "ハルウタ",
+   "wikidata": "Q3783561",
+   "title_ko": null,
+   "alias_ko": "하루우타",
+   "evidence": {
+    "qid": "Q3783561",
+    "via": [
+     [
+      "musicbrainz_work",
+      "a00ed6da-5298-4d86-95d3-e17cf3e7c4a6"
+     ]
+    ],
+    "labels": {
+     "ko": "하루우타",
+     "ja": "ハルウタ",
+     "en": "Haru Uta"
+    }
+   }
+  },
+  {
+   "song_id": 1887,
+   "version": 4,
+   "title_native": "ヘビーローテーション",
+   "wikidata": "Q139799419",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q139799419",
+    "via": [
+     [
+      "musicbrainz_work",
+      "8ce879af-27a2-4723-88e8-407d544bc75c"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "ヘビーローテーション",
+     "en": "Heavy Rotation"
+    }
+   }
+  },
+  {
+   "song_id": 1897,
+   "version": 4,
+   "title_native": "月のしずく",
+   "wikidata": "Q11515757",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11515757",
+    "via": [
+     [
+      "musicbrainz_work",
+      "caf3409e-2634-4253-89a7-32263f9480c0"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "月のしずく",
+     "en": null
+    }
+   }
+  },
+  {
+   "song_id": 1908,
+   "version": 4,
+   "title_native": "雨",
+   "wikidata": "Q11659587",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q11659587",
+    "via": [
+     [
+      "musicbrainz_work",
+      "20c70c80-913c-44e8-ae1b-9a6c6ba95d29"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "雨 (森高千里の曲)",
+     "en": "Ame (song)"
+    }
+   }
+  },
+  {
+   "song_id": 1962,
+   "version": 4,
+   "title_native": "愛のうた",
+   "wikidata": "Q3776370",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q3776370",
+    "via": [
+     [
+      "musicbrainz_work",
+      "6e59967e-0845-4be3-b7cb-421213b7ec26"
+     ]
+    ],
+    "labels": {
+     "ko": null,
+     "ja": "愛のうた",
+     "en": "Ai no Uta"
+    }
+   }
+  },
+  {
+   "song_id": 1963,
+   "version": 3,
+   "title_native": "愛・おぼえていますか",
+   "wikidata": "Q3607047",
+   "title_ko": "사랑 기억하고 있습니까",
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q3607047",
+    "via": [
+     [
+      "musicbrainz_work",
+      "54bd1e10-2ee1-36ee-ae16-6487898a2293"
+     ]
+    ],
+    "labels": {
+     "ko": "사랑 기억하고 있습니까",
+     "ja": "愛・おぼえていますか",
+     "en": "Ai Oboete Imasu ka"
+    }
+   }
+  },
+  {
+   "song_id": 1987,
+   "version": 3,
+   "title_native": "GLORIA",
+   "wikidata": "Q1042342",
+   "title_ko": null,
+   "alias_ko": null,
+   "evidence": {
+    "qid": "Q1042342",
+    "via": [
+     [
+      "musicbrainz_work",
+      "3fd4cc41-bbe7-36fb-b3d3-d66490d8b29d"
+     ]
+    ],
+    "labels": {
+     "ko": "GLORIA",
+     "ja": "GLORIA",
+     "en": "Gloria"
+    }
+   }
+  }
+ ],
+ "conflicts": [
+  {
+   "song_id": 1575,
+   "qid": "Q1391673",
+   "reason": "item reached from several songs or owned by another",
+   "songs": [
+    1575,
+    1576
+   ]
+  },
+  {
+   "song_id": 1576,
+   "qid": "Q1391673",
+   "reason": "item reached from several songs or owned by another",
+   "songs": [
+    1575,
+    1576
+   ]
+  }
+ ],
+ "exported_at": "2026-09-27T14:26:25Z",
+ "requests": 0,
+ "user_review": [
+  {
+   "song_id": 1325,
+   "field": "alias_ko",
+   "from": "키미가이레바",
+   "to": null,
+   "reason": "not in review"
+  },
+  {
+   "song_id": 1331,
+   "field": "alias_ko",
+   "from": "렌아이샤신",
+   "to": null,
+   "reason": "not in review"
+  },
+  {
+   "song_id": 1381,
+   "field": "title_ko",
+   "from": "폭신한 시간",
+   "to": "폭신푹신 타임"
+  }
+ ]
+}

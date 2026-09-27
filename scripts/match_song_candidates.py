@@ -47,17 +47,21 @@ _spec.loader.exec_module(migrate_catalog)
 
 def load(conn, *, keys: int, songs: bool) -> dict:
     q = lambda sql, params=None: conn.cursor(row_factory=dict_row).execute(sql, params).fetchall()  # noqa: E731
-    by_spelling, spellings = defaultdict(set), defaultdict(set)
-    for r in q("""SELECT a.id, v.value FROM artists a
-                  CROSS JOIN LATERAL (VALUES (a.name_native),(a.name_latin),(a.name_ko)) v(value)
+    # A spelling that is some artist's native name or alias resolves to that artist only;
+    # romanized/Korean names are a fallback. Otherwise "HACHI" (VTuber) also hits
+    # ハチ (name_latin "Hachi"), a different artist.
+    primary, fallback, spellings = defaultdict(set), defaultdict(set), defaultdict(set)
+    for r in q("""SELECT a.id, v.value, v.tier FROM artists a
+                  CROSS JOIN LATERAL (VALUES (a.name_native, 1),(a.name_latin, 2),(a.name_ko, 2)) v(value, tier)
                   WHERE a.archived_at IS NULL AND v.value IS NOT NULL
-                  UNION ALL SELECT aa.artist_id, aa.alias FROM artist_aliases aa
+                  UNION ALL SELECT aa.artist_id, aa.alias, 1 FROM artist_aliases aa
                   JOIN artists a ON a.id=aa.artist_id AND a.archived_at IS NULL"""):
         key = normalize_text(r["value"])
         if key:
-            by_spelling[key].add(r["id"])
+            (primary if r["tier"] == 1 else fallback)[key].add(r["id"])
             spellings[r["id"]].add(key)
-    index = ArtistIndex(dict(by_spelling), dict(spellings))
+    by_spelling = {key: primary.get(key) or fallback[key] for key in primary.keys() | fallback.keys()}
+    index = ArtistIndex(by_spelling, dict(spellings))
     names = {r["id"]: r["name_native"] for r in q("SELECT id, name_native FROM artists")}
     song_rows = q("""SELECT s.id, s.title_native,
                        coalesce(array_agg(sa.artist_id ORDER BY sa.position, sa.id) FILTER (WHERE sa.id IS NOT NULL), '{}') AS artist_ids,
