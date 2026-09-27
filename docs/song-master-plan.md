@@ -319,3 +319,9 @@
 - 삭제: `scripts/purge_spotify_collection.py`가 Spotify 앨범 ID가 있는 앨범과 Spotify 트랙 ID가 있는 녹음(수록·크레딧·외부 ID 포함)을 한 transaction으로 지우고, 행마다 이전 값을 `catalog_changes`(`delete`)에 남긴다. 곡 연결·한국어 제목·공식 영상·가사·변경 이력이 있거나 다른 앨범에 수록된 녹음이 있으면 거부한다. 운영 미리보기(읽기 전용): 앨범 1,282, 녹음 6,338, 수록 7,385, 외부 ID 13,717, 거부 사유 0.
 - 재수집: `start_spotify_collection.py --run jp-1`이 계정 59개에 새 작업을 넣는다(`initial` 작업과 멱등 키가 다름). 운영 미리보기: 넣을 작업 59.
 - 운영 순서: 코드 배포 → `purge_spotify_collection.py --apply` → `start_spotify_collection.py --run jp-1 --apply`.
+
+### 3단계 JP 재수집 진행 (2026-09-28)
+
+- KR 수집분 삭제(import 587): 앨범 1,282, 녹음 6,338과 수록·크레딧·외부 ID. 재실행 미리보기 0. `start_spotify_collection.py --run jp-1 --apply`로 작업 59개(job 18959~) 등록. 새 코드로 일본어 원제가 저장되는 것을 확인했다.
+- 작업 7개 성공 후 Spotify가 `429 QUOTA_EXCEEDED`, `Retry-After: 72534`(약 20시간)를 돌려줬다. 같은 날 KR 전체 수집, JP 비교 조회, 검색 보완 측정(59개 계정 검색을 offset 1000까지), 재수집이 한 앱 자격 증명으로 몰린 결과로 본다. 나머지 58개는 각자 429를 받아 2026-09-28 16:10 UTC까지 재시도 대기(5회 중 1회 사용).
+- 보완: (1) 검색 보완 깊이를 유형별 offset 200으로 줄였다. 200 이후에만 나오는 앨범 수는 측정하지 않았다. (2) 한 작업이 Spotify 429를 받으면 `last_error='rate_limited'`로 기록하고, 그 `next_attempt_at`까지 claim이 모든 Spotify 작업을 건너뛴다(YouTube는 영향 없음). 기존 58개는 이전 오류 코드로 기록돼 있어, 재개 시 첫 작업이 다시 429를 받으면 그때부터 전체 대기가 적용된다.

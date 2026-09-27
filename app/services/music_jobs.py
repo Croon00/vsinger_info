@@ -24,8 +24,10 @@ logger = logging.getLogger(__name__)
 
 
 class RetryableJobError(Exception):
-    def __init__(self, *, retry_after: float = 0):
+    def __init__(self, *, retry_after: float = 0, code: str | None = None):
         self.retry_after = max(0, retry_after)
+        # 'rate_limited' pauses every job of the same provider until next_attempt_at.
+        self.code = code
 
 
 class PermanentJobError(Exception):
@@ -108,7 +110,8 @@ async def _heartbeat(job, lease_seconds, health):
 
 async def _record_failure(job, exc, retry, delay=30):
     try:
-        return await db_call(repository.fail, job, error=type(exc).__name__, retry=retry, delay=delay)
+        error = (exc.code if isinstance(exc, RetryableJobError) else None) or type(exc).__name__
+        return await db_call(repository.fail, job, error=error, retry=retry, delay=delay)
     except Exception:
         # No provider side effect occurred. The lease sweeper recovers after DB recovery.
         logger.error('Could not record failure for music job %s', job.id)

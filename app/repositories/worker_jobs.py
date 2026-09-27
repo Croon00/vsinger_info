@@ -91,7 +91,14 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
         selected = [kind for kind in kinds if kind.startswith(platform + '_')]
         if selected and session.execute(text('SELECT pg_try_advisory_xact_lock(:key)'),
                                         {'key': lock_id}).scalar_one():
-            available.extend(selected)
+            # A provider 429 on any job pauses that provider for every job until the
+            # Retry-After it gave, so queued jobs do not keep spending the quota.
+            paused = session.execute(text('''
+                SELECT 1 FROM worker_jobs WHERE job_type IN :selected AND status='retry'
+                  AND last_error='rate_limited' AND next_attempt_at > clock_timestamp() LIMIT 1
+            ''').bindparams(bindparam('selected', expanding=True)), {'selected': tuple(selected)}).first()
+            if not paused:
+                available.extend(selected)
     if not available:
         return None
     params = dict(kinds=tuple(available), interval=max(0, min_interval_seconds))

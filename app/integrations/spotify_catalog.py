@@ -171,7 +171,7 @@ class SpotifyCatalogClient:
             raise SpotifyFailure('incomplete_album_page')
         return items, bool(data.get('next'))
 
-    async def credited_albums(self, artist_id: str, *, max_offset: int = 1000) -> list[str]:
+    async def credited_albums(self, artist_id: str, *, max_offset: int = 200) -> list[str]:
         """Album IDs credited to this exact artist ID, found through search and top tracks.
 
         ``/artists/{id}/albums`` is known to omit releases and returns nothing at all for
@@ -179,7 +179,9 @@ class SpotifyCatalogClient:
         runs this pass. The registered ID stays the only identity: search is by the
         profile's own name, and an album is kept only when the album or one of its tracks
         credits that ID. Search pages are followed by ``next`` (a page can hold fewer items
-        than ``limit``).
+        than ``limit``) up to offset 200 per type. Deeper paging for prolific names spent the
+        app quota (2026-09-28: 429 QUOTA_EXCEEDED, Retry-After ~20 h); how many albums only
+        appear past offset 200 was not measured.
         """
         artist = await self.get(f'/artists/{artist_id}')
         name = artist.get('name')

@@ -16,7 +16,8 @@ def client():
 def _translate(exc):
     from app.services.music_jobs import RetryableJobError, PermanentJobError
     if exc.retry:
-        raise RetryableJobError(retry_after=exc.retry_after) from None
+        raise RetryableJobError(retry_after=exc.retry_after,
+                                code='rate_limited' if str(exc) == 'rate_limited' else None) from None
     raise PermanentJobError(str(exc)) from None
 
 

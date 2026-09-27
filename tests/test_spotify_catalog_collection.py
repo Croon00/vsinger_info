@@ -565,3 +565,21 @@ def test_adapter_credited_albums_keeps_only_the_exact_artist_id():
         return httpx.Response(200, json={'id': SINGER, 'name': 'Singer'})
     provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
     assert asyncio.run(provider.credited_albums(SINGER)) == [ALBUM, SECOND, 'c' * 22]
+
+
+def test_rate_limit_on_one_job_pauses_every_spotify_job(store, provider):
+    _, account = register(store)
+    _, other = register(store, GUEST)
+    provider.albums_page.side_effect = SpotifyFailure('rate_limited', retry=True, retry_after=3600)
+    enqueue(account)
+    asyncio.run(music_jobs.enqueue(JobRequest(job_type='spotify_collect', external_account_id=other,
+                                              payload={'spotify_artist_id': GUEST})))
+    assert run()['status'] == 'retry'
+    status, error = store.execute("SELECT status,last_error FROM worker_jobs WHERE external_account_id=%s", (account,)).fetchone()
+    assert (status, error) == ('retry', 'rate_limited')
+    assert run()['status'] == 'idle'                      # the other account's job waits too
+    assert provider.albums_page.await_count == 1
+    store.execute("UPDATE worker_jobs SET next_attempt_at=clock_timestamp() WHERE last_error='rate_limited'")
+    store.commit()
+    provider.albums_page.side_effect = None
+    assert run()['status'] == 'succeeded'                 # pause ends at the provider's Retry-After
