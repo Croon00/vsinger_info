@@ -97,6 +97,11 @@ async def collect(job, payload):
                 skipped.append(external)
                 continue
             albums.append(album)
+        # One batch request per 50 tracks; the ISRC joins releases of the same recording.
+        isrcs = await provider.isrcs([track.id for album in albums for track in album.tracks])
+        for album in albums:
+            for track in album.tracks:
+                track.isrc = isrcs.get(track.id)
         snapshot = await db_call(repository.snapshot, [album.id for album in albums],
                                  list({track.id for album in albums for track in album.tracks}))
         matches = await _youtube_matches(albums, scope, snapshot) if payload.link_youtube else {}

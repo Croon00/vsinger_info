@@ -28,6 +28,10 @@
 | `wikidata_title_ko.py` | 곡 마스터 6단계. `export`는 저장된 VocaDB 곡 ID(P11100)·MusicBrainz work ID(P435)로 Wikidata 항목을 찾아 `migrations/catalog/title-ko-wikidata-N.json` 생성(DB 읽기 전용, SPARQL cache는 `db-migration/reports/wikidata/`). 한글 번역 라벨은 `title_ko`(빈 곡만), 읽기만 옮긴 라벨(`title-ko-wikidata-manual-N.json`)은 한국어 별칭, QID는 `song_external_ids`. `apply`는 dry-run, `apply --apply`는 한 transaction·영수증·변경 이력, 재실행 no-op |
 | `title_ko_candidates.py` | 곡 마스터 6단계 검수 후보. `prepare`는 `title_ko` 없는 비라틴 원제 곡을 가창 순으로 골라 조사 입력 생성(DB 읽기 전용, `db-migration/reports/title-ko/round-N/`), `export`는 조사 결과·부모 검토(`title-ko-candidates-manual-N.json`)를 `migrations/catalog/title-ko-candidates-N.json`으로 합침(출처 있는 high만 `accept`, 번역은 `review`). `apply`는 dry-run, `apply --apply`는 `accept`만 빈 `title_ko`에 기록, 재실행 no-op |
 | `namuwiki_title_ko.py` | 곡 마스터 6단계 나무위키 확인. `fetch`는 후보 입력의 원제(없으면 `원제(아티스트)`) 문서를 약 3초에 1회 조회해 cache, `artists`는 곡 문서가 없는 곡의 아티스트 문서 조회, `extract`는 cache에서 읽기용 발췌 생성. 모두 Git 제외 `db-migration/reports/title-ko/round-N/`에 쓰고 DB는 건드리지 않음. 읽은 결과(`namu-found-*.json`)는 `title_ko_candidates.py export`가 합침 |
+| `spotify_account_candidates.py` | 곡 마스터 2단계 Spotify 계정 후보. `research`는 카탈로그 표시 아티스트 중 Spotify 링크가 없는 행을 DB 읽기 전용으로 모아 Wikidata(YouTube 채널 ID→P1902)와 Spotify 이름 검색·앨범/인기곡 제목 대조로 후보 생성(응답은 Git 제외 `db-migration/reports/spotify-accounts/cache/`), `export`는 웹 확인 결과(`research-*.json`)·수동 파일(`spotify-account-manual-1.json`)을 합쳐 `migrations/catalog/spotify-account-decisions-1.json`과 `review.md` 생성, `review-import`는 수정한 `review.md`와 승인 기록. `apply`는 dry-run, `apply --apply`는 `accept`만 `external_accounts`(수집 비활성)와 owner 링크로 한 transaction에 기록, 재실행 no-op |
+| `start_spotify_collection.py` | 곡 마스터 3단계 수집 시작. 카탈로그 표시 아티스트의 owner Spotify 계정을 미리보기(기본, 읽기 전용)하고, `--apply`는 revision 005 적용을 확인한 뒤 비활성 계정의 `collection_enabled`를 켜고(영수증·변경 이력) 계정마다 첫 `spotify_collect` 작업을 job repository로 등록. 재실행은 새 작업을 만들지 않음. 실제 수집은 배포된 worker가 처리 |
+
+
 | `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
 | `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |

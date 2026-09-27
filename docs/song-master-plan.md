@@ -26,8 +26,8 @@
 | --- | --- | --- |
 | 0 | 표기 규칙·예외 문서화, latin ASCII 제약(003) | 완료. 2026-09-27 운영 DB 적용·`--verify` 통과 |
 | 1 | 읽기 전용 측정: 아티스트별 Spotify/YouTube 계정 비율, 원문 키 빈도 분포, 기존 `songs` 450행의 출처·중복 | 완료. 아래 측정 결과 |
-| 2 | 아티스트 Spotify ID 후보 조사 → 검수 → 적용. Wikidata로 `name_ko`/`name_latin` 후보 병행 | TODO |
-| 3 | Spotify 수집과 ISRC 저장(`recording_external_ids`) | TODO |
+| 2 | 아티스트 Spotify ID 후보 조사 → 검수 → 적용. Wikidata로 `name_ko`/`name_latin` 후보 병행 | 진행 중. 아래 2단계 결과 |
+| 3 | Spotify 수집과 ISRC 저장(`recording_external_ids`) | 운영 수집 진행 중. 아래 3단계 |
 | 4 | 곡 식별 스키마: 원문 키 대응표, 곡 외부 ID, 곡 별칭, 병합 기록 | 완료. 2026-09-27 운영 DB에 004 적용, 원문 키 backfill 반영 |
 | 5 | 곡 seed: Spotify ISRC → MusicBrainz work, 상위 원문 키 → VocaDB/UtaiteDB → MusicBrainz | 원래 순위 1000위까지 적용 완료(2026-09-27, 1차 새 곡 277·새 아티스트 86, 2차 새 곡 541·새 아티스트 166). 1000위 밖 pending 키 확장 TODO |
 | 6 | `title_ko` 보강: 저장한 외부 ID로 Wikidata 조회, 나머지는 검수 후보 | 상위 200곡과 201위 이후 432곡, Wikidata 결과 적용(2026-09-27, 나무위키·검수) |
@@ -276,3 +276,27 @@
 - 검증: 로컬 임시 PostgreSQL 전체 테스트 387개 통과(2026-09-27). 세 적용 모두 재실행 `already_committed`.
 
 - Wikidata 결정 파일은 200곡 적용 뒤 cache로 다시 내보냈다(요청 0회): 제목 9, 별칭 11(2곡은 200곡 적용으로 제목이 생겨 빠짐), QID 88, 충돌 2.
+
+
+## 2단계 결과: 카탈로그 아티스트 Spotify 계정 (2026-09-28 적용)
+
+대상은 `show_in_catalog=true`인 활성 아티스트 68명 중 Spotify 링크가 없는 66명이다(Aimer, NEUN은 기존 계정). `scripts/spotify_account_candidates.py research`가 운영 DB를 읽기 전용으로 조회하고 Wikidata SPARQL 1회, Spotify API 529회를 호출했다.
+
+- 자동 판정 33명: Wikidata에서 우리 YouTube 채널 ID(P2397)와 같은 항목의 Spotify ID(P1902)가 이름이 같은 프로필을 가리킨 24명, 이름이 같은 후보가 하나이고 그 발매 제목이 우리 곡 또는 본인 채널 영상 제목과 일치한 9명. Wikidata가 멤버 프로필(`ryo (supercell)`)을 가리킨 supercell은 자동 판정하지 않았다.
+- 웹 확인 33명(서브에이전트): 공식 TuneCore·레이블 페이지 링크, Spotify 프로필에 걸린 공식 X, 공식 발매곡 일치로 22명 확인. 11명은 등록하지 않는다. 동명 무관 아티스트만 있음(LITA, TINA, BAMBI, SAKUYA, MOCO, KAGURA), 그룹 프로필로만 발매(ヨミ·カスカ=VESPERBELL, TINA=KMNZ), 발매 전 신인(宮島ルシェル, 傘屋くぐる, 電信柱ちゃん).
+- `焔魔るり`는 Wikidata의 `Ruri Enma`(곡 없음) 대신 최신 발매가 있는 `焔魔るり` 프로필, NERO는 이름 검색에 나오지 않은 `KMNZ NERO` 솔로 프로필(TuneCore 공식 링크)이다.
+- dry-run: `external_accounts` 55행 생성(모두 `collection_enabled=false`), owner·대표 링크 55행, 기존 계정 재사용 0.
+- 사용자 검수(`review-import`): LITA `KMNZ LITA`(7a8HjYl08NU5Pems4rziwY), TINA `KMNZ TINA`(4Qamyt82PzhtZ04u51z216) 솔로 프로필을 추가하고, 妃玖는 Wikidata의 `KISAKI` 대신 `妃玖`(0zbH7OGsExOBMjiME8YhlE)로 바꿨다. 수정은 `migrations/catalog/spotify-account-manual-1.json`에 기록했다.
+- 운영 적용(import 385): 계정 57개와 owner·대표 링크 57개를 한 transaction으로 만들고 변경 이력 114행을 남겼다. 재실행은 `already_committed`. 읽기 전용 점검에서 카탈로그 아티스트 68명 중 59명이 Spotify 계정을 가지며, 결정 파일과 다른 링크·수집 활성·표시 순서 중복은 0건이다. 계정이 없는 9명은 ヨミ, カスカ, MOCO, BAMBI, SAKUYA, KAGURA, 電信柱ちゃん, 宮島ルシェル, 傘屋くぐる다. 수집 활성화는 아직 하지 않았다.
+
+## 3단계: Spotify 수집과 ISRC (2026-09-28 운영 수집 시작)
+
+- 운영 반영(2026-09-28): 사용자가 배포 후 005를 적용했고 `--verify` 통과(001-005). `start_spotify_collection.py --apply`로 계정 59개 수집 활성화와 첫 작업 59개(job 17275~)를 한 transaction에 커밋했고, 재실행 미리보기는 켤 계정·넣을 작업 0이다. 약 2분 뒤 읽기 전용 확인: 작업 3개 성공·1개 실행 중·오류 0, 앨범 30개, 녹음 331개, ISRC 331개, Spotify 트랙 ID 340개(9개는 같은 ISRC 녹음에 합류).
+
+- migration 005가 `recording_external_ids.platform`에 `isrc`를 허용하고 형식을 검사한다(대문자 12자, 하이픈 없음). 기존 UNIQUE로 한 ISRC는 한 녹음에만 붙는다.
+- 앨범 수록곡 API에는 ISRC가 없어서, 수집 작업이 트랙 상세(`GET /tracks?ids=`, 50개씩)를 추가로 조회한다. market을 보내지 않아 Spotify가 트랙 ID를 다른 ID로 바꿔 주지 않으며, 응답 ID가 요청과 다르면 작업을 실패시킨다. 2026-09-28 실제 API로 이 응답에 `external_ids.isrc`가 있는 것을 확인했다.
+- 저장: 새 Spotify 트랙의 ISRC가 이미 활성 녹음에 있으면 새 녹음을 만들지 않고 그 녹음에 Spotify 트랙 ID와 앨범 수록 관계만 붙인다(`isrc_joined`). 제목·한국어 표기·크레딧·공식 영상은 바꾸지 않는다. ISRC가 보관된 녹음이나 먼저 커밋한 다른 작업에 잡혀 있으면 새 녹음은 ISRC 없이 만들고 영수증에 `isrc_conflict`로 남긴다. 기존 녹음을 재수집할 때는 ISRC가 비어 있고 다른 녹음에 없을 때만 추가한다.
+- 수집 시작: `scripts/start_spotify_collection.py`가 카탈로그 아티스트의 owner Spotify 계정 59개의 `collection_enabled`를 켜고(영수증·변경 이력) 계정마다 첫 `spotify_collect` 작업(`request_run=initial`)을 넣는다. revision 005가 없으면 거부하고, 재실행은 새 작업을 만들지 않는다. 2026-09-28 운영 DB 미리보기(읽기 전용): 계정 59, 켤 계정 59, 넣을 작업 59.
+- 운영 순서: 코드 배포 → `migrate_catalog.py --apply`/`--verify`(005) → `start_spotify_collection.py` 미리보기 → 승인 후 `--apply`. 작업은 배포된 worker가 `RUNTIME_CUTOVER_ENABLED`와 `AGENT_ENABLED`가 켜져 있을 때 처리한다. 계정당 앨범 10개씩 후속 작업이 이어지고 요청 간격은 기본 1초다.
+- 시장 기준 변경(2026-09-28): 수집이 `market=KR`일 때 일부 일본 발매가 로마자·영어 제목으로 왔다(LEWNE `空想線` → `Kuusousen`, `ノクタンブルー` → `Nocturne Blue`). 수집 중 저장된 트랙 2,385개를 `market=JP`로 다시 읽기 전용 조회하니 13개 제목이 달랐다(`Sincerely Yours` → `草々不一` 등). 원제 보존을 위해 수집 adapter의 앨범 목록·앨범·수록곡 조회를 JP 시장으로 바꿨다. 배포 전 작업은 KR로 계속 돌며, 재수집은 기존 앨범·녹음 제목을 덮어쓰지 않으므로 이미 저장된 제목은 별도 검수 정정이 필요하다.
+- 검증(2026-09-28, 로컬 임시 PostgreSQL·가짜 provider): ISRC 저장·다른 발매 합류·보관 녹음 충돌·형식 CHECK, 004→005 업그레이드와 옛 CHECK 복원 감지, 수집 시작 대상 선별·005 가드·재실행 멱등.

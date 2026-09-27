@@ -22,6 +22,12 @@ LOCK_ID = 731064921
 LATER_BASE_CONSTRAINTS = {
     ("artists", "artists_name_latin_ascii"): "003",
     ("songs", "songs_title_latin_ascii"): "003",
+    ("recording_external_ids", "recording_external_ids_platform_allowed"): "005",
+    ("recording_external_ids", "recording_external_ids_id_format"): "005",
+}
+# Revision-001 CHECK constraints that a later revision drops (replaced by the entries above).
+REMOVED_BASE_CONSTRAINTS = {
+    ("recording_external_ids", "recording_external_ids_platform_check1"): "005",
 }
 TYPE_NAMES = {
     "BIGINT": "bigint", "INTEGER": "integer", "SMALLINT": "smallint",
@@ -152,7 +158,7 @@ def base_schema_shape(shape: dict) -> dict:
         name: rows if name == "functions" else [
             row for row in rows
             if row[0] in base_tables
-            and not (name == "constraints" and (row[0], row[1]) in LATER_BASE_CONSTRAINTS)
+            and not (name == "constraints" and (row[0], row[1]) in LATER_BASE_CONSTRAINTS.keys() | REMOVED_BASE_CONSTRAINTS.keys())
         ]
         for name, rows in shape.items()
     }
@@ -165,6 +171,9 @@ def verify_later_constraints(conn, applied: set[str]) -> None:
     """)}
     for key, version in LATER_BASE_CONSTRAINTS.items():
         if (key in found) != (version in applied):
+            raise MigrationError("Later revision constraint differs: " + key[1])
+    for key, version in REMOVED_BASE_CONSTRAINTS.items():
+        if (key in found) == (version in applied):
             raise MigrationError("Later revision constraint differs: " + key[1])
 
 

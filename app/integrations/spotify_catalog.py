@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import re
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 
@@ -11,6 +12,18 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 SPOTIFY_ID = r'^[A-Za-z0-9]{22}$'
+ISRC = r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{7}$'
+# JP returns Japanese releases under their original titles; KR/US localize some of them to
+# romanized or English names (空想線 -> Kuusousen), which would break original-title storage.
+MARKET = 'JP'
+
+
+def normalize_isrc(value) -> str | None:
+    """Upper-case, hyphen-free ISRC, or None when the provider value is not a valid code."""
+    if not isinstance(value, str):
+        return None
+    text = value.strip().replace('-', '').upper()
+    return text if re.fullmatch(ISRC, text) else None
 
 
 class SpotifyFailure(Exception):
@@ -27,6 +40,7 @@ class SpotifyTrack(BaseModel):
     disc_number: int = Field(ge=1)
     track_number: int = Field(ge=1)
     duration_ms: int | None = Field(default=None, ge=0)
+    isrc: str | None = Field(default=None, pattern=ISRC)
     raw: dict
 
 
@@ -149,7 +163,7 @@ class SpotifyCatalogClient:
 
     async def albums_page(self, artist_id: str, *, offset: int) -> tuple[list[dict], bool]:
         data = await self.get(f'/artists/{artist_id}/albums', params={'include_groups': 'album,single,appears_on,compilation',
-                          'market': 'KR', 'limit': 10, 'offset': offset})
+                          'market': MARKET, 'limit': 10, 'offset': offset})
         items = data.get('items')
         if not isinstance(items, list) or any(not isinstance(item, dict) for item in items):
             raise SpotifyFailure('malformed_albums')
@@ -158,10 +172,10 @@ class SpotifyCatalogClient:
         return items, bool(data.get('next'))
 
     async def album(self, album_id: str) -> SpotifyAlbum:
-        raw = await self.get(f'/albums/{album_id}', params={'market': 'KR'})
+        raw = await self.get(f'/albums/{album_id}', params={'market': MARKET})
         tracks, offset = [], 0
         for _ in range(4):
-            page = await self.get(f'/albums/{album_id}/tracks', params={'market': 'KR', 'limit': 50, 'offset': offset})
+            page = await self.get(f'/albums/{album_id}/tracks', params={'market': MARKET, 'limit': 50, 'offset': offset})
             items = page.get('items')
             if not isinstance(items, list) or any(not isinstance(item, dict) for item in items):
                 raise SpotifyFailure('malformed_tracks')
@@ -177,3 +191,22 @@ class SpotifyCatalogClient:
             return album_from_api(raw, tracks)
         except (KeyError, TypeError, ValueError) as exc:
             raise SpotifyFailure('malformed_album') from None
+
+    async def isrcs(self, track_ids: list[str]) -> dict[str, str | None]:
+        """ISRC per requested track ID. The album-tracks endpoint omits external_ids.
+
+        No market is sent, so Spotify does not relink the tracks to other IDs; every
+        response must name exactly the requested IDs in order.
+        """
+        result = {}
+        unique = list(dict.fromkeys(track_ids))
+        for start in range(0, len(unique), 50):
+            chunk = unique[start:start + 50]
+            data = await self.get('/tracks', params={'ids': ','.join(chunk)})
+            items = data.get('tracks')
+            if (not isinstance(items, list) or len(items) != len(chunk)
+                    or any(not isinstance(item, dict) or item.get('id') != external for item, external in zip(items, chunk))):
+                raise SpotifyFailure('malformed_tracks')
+            for item in items:
+                result[item['id']] = normalize_isrc((item.get('external_ids') or {}).get('isrc'))
+        return result

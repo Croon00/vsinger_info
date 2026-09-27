@@ -375,7 +375,7 @@ def test_all_28_resource_types_and_linked_search(review, remote):
         "recording_external_ids": {
             "recording_id": ref("recordings"),
             "platform": "spotify",
-            "external_id": "abc",
+            "external_id": "abcdefghijklmnopqrstuv",
         },
         "album_tracks": {
             "album_id": ref("albums"),

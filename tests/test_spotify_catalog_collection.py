@@ -65,7 +65,8 @@ def request(account, **payload):
 @pytest.fixture
 def provider(monkeypatch):
     fake = SimpleNamespace(albums_page=AsyncMock(return_value=([{'id': ALBUM}], False)),
-                           album=AsyncMock(return_value=make_album()))
+                           album=AsyncMock(return_value=make_album()),
+                           isrcs=AsyncMock(return_value={}))
     monkeypatch.setattr(service, 'client', lambda: fake)
     return fake
 
@@ -405,3 +406,93 @@ def test_new_spotify_modules_have_no_legacy_or_excluded_dependency():
         tree = ast.parse(Path(file).read_text(encoding='utf-8'))
         assert not any(node.module and any(node.module == name or node.module.startswith(name+'.') for name in forbidden)
                        for node in ast.walk(tree) if isinstance(node,ast.ImportFrom))
+
+
+
+def test_adapter_isrcs_batches_without_market_and_rejects_relinked_ids():
+    ids = [f'{n:022d}' for n in range(51)]
+    calls = []
+    def respond(request):
+        if request.url.host == 'accounts.spotify.com':
+            return httpx.Response(200, json={'access_token': 'TOKEN'})
+        calls.append(dict(request.url.params))
+        chunk = request.url.params['ids'].split(',')
+        return httpx.Response(200, json={'tracks': [
+            {'id': i, 'external_ids': {'isrc': 'jp-u90-26-02729' if i == ids[0] else ('bad' if i == ids[1] else None)}}
+            for i in chunk]})
+    provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
+    result = asyncio.run(provider.isrcs(ids + ids[:2]))
+    assert [len(c['ids'].split(',')) for c in calls] == [50, 1] and all('market' not in c for c in calls)
+    assert result[ids[0]] == 'JPU902602729' and result[ids[1]] is None and len(result) == 51
+    def relinked(request):
+        if request.url.host == 'accounts.spotify.com':
+            return httpx.Response(200, json={'access_token': 'TOKEN'})
+        return httpx.Response(200, json={'tracks': [{'id': 'z' * 22, 'external_ids': {'isrc': 'JPU902602729'}}]})
+    provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(relinked), interval_seconds=0)
+    with pytest.raises(SpotifyFailure, match='malformed_tracks'):
+        asyncio.run(provider.isrcs([TRACK]))
+
+
+def test_isrc_is_stored_and_joins_another_release_of_the_same_recording(store, provider):
+    _, account = register(store)
+    provider.isrcs.return_value = {TRACK: 'JPU902602729', OTHER_TRACK: 'JPU902602729'}
+    enqueue(account)
+    assert run()['status'] == 'succeeded'
+    first = store.execute('SELECT id FROM recordings').fetchone()[0]
+    store.execute("UPDATE recordings SET title_ko='수동 제목' WHERE id=%s", (first,))
+    store.commit()
+    # A later compilation carries the same recording under another Spotify track ID.
+    provider.album.return_value = make_album(id=SECOND, tracks=[raw_track(id=OTHER_TRACK)])
+    provider.albums_page.return_value = ([{'id': SECOND}], False)
+    enqueue(account, request_run='second')
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM recordings').fetchone()[0] == 1
+    assert sorted(store.execute('SELECT recording_id,platform,external_id FROM recording_external_ids').fetchall()) == sorted([
+        (first, 'spotify', TRACK), (first, 'isrc', 'JPU902602729'), (first, 'spotify', OTHER_TRACK)])
+    assert store.execute('SELECT count(*) FROM album_tracks WHERE recording_id=%s', (first,)).fetchone()[0] == 2
+    assert store.execute('SELECT title_ko FROM recordings').fetchone()[0] == '수동 제목'
+    receipt = store.execute("SELECT result_summary FROM catalog_imports WHERE source_kind='batch_import' ORDER BY id DESC").fetchone()[0]
+    assert {'album_id': SECOND, 'track_id': OTHER_TRACK, 'status': 'isrc_joined', 'isrc': 'JPU902602729'} in receipt['actions']
+
+
+def test_isrc_held_by_archived_recording_is_recorded_not_moved(store, provider):
+    _, account = register(store)
+    old = row(store, 'recordings', title_native='Old')
+    row(store, 'recording_external_ids', recording_id=old, platform='isrc', external_id='JPU902602729')
+    store.execute('UPDATE recordings SET archived_at=clock_timestamp() WHERE id=%s', (old,))
+    store.commit()
+    provider.isrcs.return_value = {TRACK: 'JPU902602729'}
+    enqueue(account)
+    assert run()['status'] == 'succeeded'
+    assert store.execute("SELECT recording_id FROM recording_external_ids WHERE platform='isrc'").fetchall() == [(old,)]
+    receipt = store.execute("SELECT result_summary FROM catalog_imports WHERE source_kind='batch_import'").fetchone()[0]
+    assert any(a['status'] == 'isrc_conflict' for a in receipt['actions'])
+
+
+def test_isrc_format_is_enforced_by_the_catalog(store):
+    recording = row(store, 'recordings', title_native='R')
+    store.commit()
+    import psycopg
+    for platform, value in (('isrc', 'jpu902602729'), ('isrc', 'JP-U90-26-02729'), ('spotify', 'short'), ('youtube', 'x' * 22)):
+        with pytest.raises(psycopg.errors.CheckViolation):
+            store.execute('INSERT INTO recording_external_ids(recording_id,platform,external_id) VALUES (%s,%s,%s)',
+                          (recording, platform, value))
+        store.rollback()
+
+
+
+def test_adapter_reads_albums_in_the_japanese_market():
+    seen = []
+    def respond(request):
+        if request.url.host == 'accounts.spotify.com':
+            return httpx.Response(200, json={'access_token': 'TOKEN'})
+        seen.append((request.url.path, request.url.params.get('market')))
+        if request.url.path.endswith('/albums'):
+            return httpx.Response(200, json={'items': [{'id': ALBUM}], 'next': None})
+        if request.url.path.endswith('/tracks'):
+            return httpx.Response(200, json={'items': [raw_track()], 'next': None})
+        return httpx.Response(200, json=raw_album())
+    provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
+    asyncio.run(provider.albums_page(SINGER, offset=0))
+    asyncio.run(provider.album(ALBUM))
+    assert [market for _, market in seen] == ['JP', 'JP', 'JP']

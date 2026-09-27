@@ -100,7 +100,7 @@ def reject(conn, code, callback):
 def test_schema_contract_and_empty_initial_state(database):
     report = apply(database)
     assert report["applied"] and report["non_identity_row_count"] == 0
-    assert report["applied_versions"] == ["001", "002", "003", "004"]
+    assert report["applied_versions"] == ["001", "002", "003", "004", "005"]
     assert report["schema_version"] == "catalog-v2"
     assert not report["initial_data_imported"]
     assert len(migration.table_names(database)) == 46
@@ -139,7 +139,7 @@ def test_upgrade_from_001_preserves_catalog_rows(database):
     database.commit()
 
     report = apply(database)
-    assert report["applied_versions"] == ["002", "003", "004"]
+    assert report["applied_versions"] == ["002", "003", "004", "005"]
     assert database.execute(
         "SELECT platform_id,collection_enabled FROM external_accounts WHERE id=%s", (account,)
     ).fetchone() == ("123", True)
@@ -351,7 +351,7 @@ def test_upgrade_from_002_adds_latin_constraints_and_keeps_rows(database):
     song = row(database, "songs", title_native="Lemon", title_latin="Lemon")
     database.commit()
     report = apply(database)
-    assert report["applied_versions"] == ["003", "004"]
+    assert report["applied_versions"] == ["003", "004", "005"]
     assert database.execute("SELECT title_latin FROM songs WHERE id=%s", (song,)).fetchone()[0] == "Lemon"
     database.execute("ALTER TABLE songs DROP CONSTRAINT songs_title_latin_ascii")
     with pytest.raises(migration.MigrationError, match="songs_title_latin_ascii"):
@@ -437,3 +437,37 @@ def test_checksum_and_definition_drift_are_rejected(database):
     database.execute("ALTER TABLE songs ADD COLUMN accidental text")
     with pytest.raises(migration.MigrationError, match="Column contract"):
         migration.migrate(database)
+
+
+
+def test_upgrade_from_004_allows_isrc_and_keeps_spotify_rows(database):
+    migration.configure_transaction(database, read_only=False)
+    database.execute("""
+        CREATE TABLE public.catalog_schema_migrations (
+          version text PRIMARY KEY,
+          checksum text NOT NULL CHECK (checksum ~ '^[0-9a-f]{64}$'),
+          applied_at timestamptz NOT NULL DEFAULT clock_timestamp()
+        )
+    """)
+    for version in ("001", "002", "003", "004"):
+        path = next(p for v, p in migration.migration_files() if v == version)
+        database.execute(path.read_text(encoding="utf-8"), prepare=False)
+        database.execute("INSERT INTO catalog_schema_migrations(version,checksum) VALUES (%s,%s)",
+                         (version, migration.migration_checksums()[version]))
+    recording = row(database, "recordings", title_native="R")
+    row(database, "recording_external_ids", recording_id=recording, platform="spotify", external_id="t" * 22)
+    database.commit()
+    reject(database, "23514", lambda: row(database, "recording_external_ids", recording_id=recording,
+                                          platform="isrc", external_id="JPU902602729"))
+    report = apply(database)
+    assert report["applied_versions"] == ["005"]
+    assert migration.verify(database)["verified"] is True
+    row(database, "recording_external_ids", recording_id=recording, platform="isrc", external_id="JPU902602729")
+    assert database.execute("SELECT count(*) FROM recording_external_ids").fetchone()[0] == 2
+    reject(database, "23505", lambda: row(database, "recording_external_ids", recording_id=recording,
+                                          platform="isrc", external_id="JPU902602729"))
+    database.execute("DELETE FROM recording_external_ids WHERE platform='isrc'")
+    database.execute("""ALTER TABLE recording_external_ids ADD CONSTRAINT recording_external_ids_platform_check1
+                        CHECK (platform = 'spotify')""")
+    with pytest.raises(migration.MigrationError, match="recording_external_ids_platform_check1"):
+        migration.verify(database)

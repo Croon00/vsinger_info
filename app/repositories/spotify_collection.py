@@ -66,6 +66,60 @@ def _receipt(session, job, payload, value, actions):
              summary=json.dumps(body, ensure_ascii=False)))
 
 
+def _isrc_recording(session, isrc):
+    if not isrc:
+        return None
+    return session.execute(text('''SELECT x.recording_id FROM recording_external_ids x JOIN recordings r ON r.id=x.recording_id
+        WHERE x.platform='isrc' AND x.external_id=:isrc AND r.archived_at IS NULL'''), {'isrc': isrc}).scalar_one_or_none()
+
+
+def _insert_isrc(session, recording_id, isrc):
+    inserted = session.execute(text('''INSERT INTO recording_external_ids(recording_id,platform,external_id)
+        VALUES (:id,'isrc',:isrc) ON CONFLICT (platform,external_id) DO NOTHING RETURNING id'''),
+        dict(id=recording_id, isrc=isrc)).scalar_one_or_none()
+    return inserted is not None
+
+
+def _create_recording(session, album, track, current, current_scope, value, actions, created_tracks):
+    recording_id = session.execute(text('''INSERT INTO recordings(title_native,duration_ms)
+        VALUES (:title,:duration) RETURNING id'''),
+        dict(title=track.title, duration=track.duration_ms)).scalar_one()
+    session.execute(text("INSERT INTO recording_external_ids(recording_id,platform,external_id) VALUES (:id,'spotify',:external)"),
+                    dict(id=recording_id, external=track.id))
+    if track.isrc and not _insert_isrc(session, recording_id, track.isrc):
+        # An archived recording (or another artist's job that committed first) holds the
+        # ISRC. Keep the new recording without it and leave the pair for review.
+        actions.append(dict(album_id=album.id, track_id=track.id, status='isrc_conflict', isrc=track.isrc))
+    created_tracks.add(track.id)
+    current['tracks'][track.id] = {'id': recording_id, 'version': 1, 'archived_at': None, 'official_video_id': None}
+    track_credits = [artist for external in track.artist_ids for artist in current_scope['artists'].get(external, [])]
+    for position, artist in enumerate(dict.fromkeys(track_credits)):
+        session.execute(text('''INSERT INTO recording_artists(recording_id,artist_id,role,position)
+            VALUES (:recording,:artist,:role,:position)'''),
+            dict(recording=recording_id, artist=artist, role='primary' if position == 0 else 'featured',
+                 position=position))
+    match = value['youtube_matches'].get(track.id)
+    if match and match['status'] == 'matched':
+        found = session.execute(text("SELECT id,source_account_id,archived_at FROM videos WHERE platform='youtube' AND platform_video_id=:id FOR UPDATE"),
+                                {'id': match['video_id']}).mappings().one_or_none()
+        if not found:
+            found_id = session.execute(text('''INSERT INTO videos(platform,platform_video_id,source_account_id,title,availability)
+                VALUES ('youtube',:external,:account,:title,'public') RETURNING id'''),
+                dict(external=match['video_id'], account=match['account_id'], title=match['title'])).scalar_one()
+        elif found['archived_at'] or found['source_account_id'] not in (None, match['account_id']):
+            found_id = None
+        else:
+            found_id = found['id']
+        if found_id:
+            session.execute(text('UPDATE recordings SET official_video_id=:video WHERE id=:id'),
+                            dict(video=found_id, id=recording_id))
+            current['tracks'][track.id]['official_video_id'] = found_id
+        else:
+            match['status'] = 'existing_video_conflict'
+            actions.append(dict(album_id=album.id, track_id=track.id, status='existing_video_conflict'))
+    return recording_id
+
+
 def persist(session, job, payload, value):
     # Fences absent-row inserts and checks identity before anything is applied.
     session.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:id, 941204))'), {'id': payload.spotify_artist_id})
@@ -107,40 +161,23 @@ def persist(session, job, payload, value):
                 actions.append(dict(album_id=album.id, track_id=track.id, status='recording_version_conflict'))
                 continue
             if current_track is None:
-                recording_id = session.execute(text('''INSERT INTO recordings(title_native,duration_ms)
-                    VALUES (:title,:duration) RETURNING id'''),
-                    dict(title=track.title, duration=track.duration_ms)).scalar_one()
-                session.execute(text("INSERT INTO recording_external_ids(recording_id,platform,external_id) VALUES (:id,'spotify',:external)"),
-                                dict(id=recording_id, external=track.id))
-                created_tracks.add(track.id)
-                current['tracks'][track.id] = {'id': recording_id, 'version': 1, 'archived_at': None, 'official_video_id': None}
-                track_credits = [artist for external in track.artist_ids for artist in current_scope['artists'].get(external, [])]
-                for position, artist in enumerate(dict.fromkeys(track_credits)):
-                    session.execute(text('''INSERT INTO recording_artists(recording_id,artist_id,role,position)
-                        VALUES (:recording,:artist,:role,:position)'''),
-                        dict(recording=recording_id, artist=artist, role='primary' if position == 0 else 'featured',
-                             position=position))
-                match = value['youtube_matches'].get(track.id)
-                if match and match['status'] == 'matched':
-                    found = session.execute(text("SELECT id,source_account_id,archived_at FROM videos WHERE platform='youtube' AND platform_video_id=:id FOR UPDATE"),
-                                            {'id': match['video_id']}).mappings().one_or_none()
-                    if not found:
-                        found_id = session.execute(text('''INSERT INTO videos(platform,platform_video_id,source_account_id,title,availability)
-                            VALUES ('youtube',:external,:account,:title,'public') RETURNING id'''),
-                            dict(external=match['video_id'], account=match['account_id'], title=match['title'])).scalar_one()
-                    elif found['archived_at'] or found['source_account_id'] not in (None, match['account_id']):
-                        found_id = None
-                    else:
-                        found_id = found['id']
-                    if found_id:
-                        session.execute(text('UPDATE recordings SET official_video_id=:video WHERE id=:id'),
-                                        dict(video=found_id, id=recording_id))
-                        current['tracks'][track.id]['official_video_id'] = found_id
-                    else:
-                        match['status'] = 'existing_video_conflict'
-                        actions.append(dict(album_id=album.id, track_id=track.id, status='existing_video_conflict'))
+                shared = _isrc_recording(session, track.isrc)
+                if shared is not None:
+                    # Another release of a recording we already have: attach this Spotify
+                    # track ID to it and keep its title, credits and video untouched.
+                    session.execute(text("INSERT INTO recording_external_ids(recording_id,platform,external_id) VALUES (:id,'spotify',:external)"),
+                                    dict(id=shared, external=track.id))
+                    created_tracks.add(track.id)
+                    current['tracks'][track.id] = {'id': shared, 'version': None, 'archived_at': None, 'official_video_id': None}
+                    actions.append(dict(album_id=album.id, track_id=track.id, status='isrc_joined', isrc=track.isrc))
+                    recording_id = shared
+                else:
+                    recording_id = _create_recording(session, album, track, current, current_scope, value, actions, created_tracks)
             else:
                 recording_id = current_track['id']
+                if track.isrc and _isrc_recording(session, track.isrc) is None:
+                    # Evidence only: an ISRC row never moves another recording's ISRC.
+                    _insert_isrc(session, recording_id, track.isrc)
             # A Spotify track can appear on more than one release, but a manually
             # occupied slot is never moved or replaced.
             slot = session.execute(text('''SELECT recording_id FROM album_tracks

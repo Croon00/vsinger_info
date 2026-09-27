@@ -1,0 +1,1695 @@
+{
+ "policy": "spotify-account-candidates-v1",
+ "items": [
+  {
+   "artist_id": 2,
+   "version": 4,
+   "name_native": "milet",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "45ft4DyTCEJfQwTBHXpdhM",
+   "spotify_name": "milet",
+   "evidence": {
+    "wikidata": [
+     "Q61989561"
+    ],
+    "overlap": [
+     "Anytime Anywhere",
+     "inside you - From THE FIRST TAKE",
+     "inside you"
+    ],
+    "followers": 1079957
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 3,
+   "version": 4,
+   "name_native": "LiSA",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0blbVefuxOGltDBa00dspv",
+   "spotify_name": "LiSA",
+   "evidence": {
+    "wikidata": [
+     "Q333333"
+    ],
+    "overlap": [
+     "紅蓮華",
+     "crossing field",
+     "ADAMAS",
+     "明け星",
+     "Catch the Moment"
+    ],
+    "followers": 3886015
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5L1lO4eRHmJ7a0Q6csE5cT",
+     "name": "LISA",
+     "overlap": []
+    },
+    {
+     "spotify_id": "6wsBlNHFREdDuOmCyELXz3",
+     "name": "LISA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 4,
+   "version": 4,
+   "name_native": "ReoNa",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "2SIBY7Jwq1kYng12Zguo3C",
+   "spotify_name": "ReoNa",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "ANIMA（ReoNa ONE-MAN Concert 2023「ピルグリム」～3.6 day 逃げて逢おうね～）",
+     "ANIMA",
+     "ないない"
+    ],
+    "followers": 421114
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 5,
+   "version": 4,
+   "name_native": "ヨルシカ",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "4UK2Lzi6fBfUi9rpDt6cik",
+   "spotify_name": "ヨルシカ",
+   "evidence": {
+    "wikidata": [
+     "Q55525789"
+    ],
+    "overlap": [
+     "盗作",
+     "エルマ",
+     "だから僕は音楽を辞めた",
+     "負け犬にアンコールはいらない",
+     "あぶく"
+    ],
+    "followers": 3746776
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 6,
+   "version": 4,
+   "name_native": "ロクデナシ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "4kpQdAU7yPjqtiJsFcBTBb",
+   "spotify_name": "Rokudenashi",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "ユリイカ",
+     "スピカ",
+     "愛が灯る",
+     "ただ声一つ"
+    ],
+    "followers": 557854
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 7,
+   "version": 6,
+   "name_native": "やなぎなぎ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "15MlyDyZofFYpLb5MrLKVo",
+   "spotify_name": "yanaginagi",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "アクアテラリウム",
+     "春擬き",
+     "ユキトキ"
+    ],
+    "followers": 187518
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 8,
+   "version": 4,
+   "name_native": "supercell",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "4Mc3zbnQx4wRb0tYg7A8sG",
+   "spotify_name": "supercell",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "拍手喝采歌合 （8 tracks）",
+     "The Bravery",
+     "My Dearest",
+     "拍手喝采歌合",
+     "さよならメモリーズ"
+    ],
+    "followers": 482346,
+    "web": [
+     "https://ja.wikipedia.org/wiki/%E5%90%9B%E3%81%AE%E7%9F%A5%E3%82%89%E3%81%AA%E3%81%84%E7%89%A9%E8%AA%9E",
+     "https://www.ryo-supercell.com/"
+    ],
+    "web_note": "君の知らない物語, My Dearest 등 supercell 공식 디스코그래피와 정확히 일치하는 그룹 프로필"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5YYzTXJRIrNf97pbfqDNgV",
+     "name": "supercell",
+     "overlap": []
+    },
+    {
+     "spotify_id": "3GqxLTGLkWChbZcHcCqvwN",
+     "name": "supercell",
+     "overlap": []
+    },
+    {
+     "spotify_id": "5Ud2lekREUXjinNlIGjJIX",
+     "name": "ryo (supercell)",
+     "overlap": [
+      "ワールドイズマイン - かぐや&月見ヤチヨ ver. - CPK! Remix",
+      "メルト - かぐや ver. - CPK! Remix",
+      "ワールドイズマイン - Anime ver. - CPK! Remix"
+     ]
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 9,
+   "version": 4,
+   "name_native": "fhána",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "5COrwcYLHQePdWt9V12iqv",
+   "spotify_name": "fhána",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "青空のラプソディ 【アニメ盤】",
+     "青空のラプソディ 【アーティスト盤】",
+     "青空のラプソディ"
+    ],
+    "followers": 112846
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 10,
+   "version": 4,
+   "name_native": "tayori",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "0XqIQi5z2qmlxlcUwlJPe2",
+   "spotify_name": "tayori",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 61818,
+    "web": [
+     "https://www.tunecore.co.jp/artists/tayori_tri?lang=en",
+     "https://open.spotify.com/artist/0XqIQi5z2qmlxlcUwlJPe2",
+     "https://tayori-official.com/contents/128075",
+     "https://ja.wikipedia.org/wiki/Tayori_(音楽ユニット)"
+    ],
+    "web_note": "TuneCore Japan 아티스트 페이지 URL이 유튜브 채널명 tayori_tri와 일치하고 대표곡 風のたより가 candidate A와 정확히 일치함. 독일 아티스트인 candidate B는 무관."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5WOHjqt4CEdz3q336ne9pS",
+     "name": "Tayori",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 12,
+   "version": 4,
+   "name_native": "HACHI",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "2ksMoRs5T9ErEe5H7gxv7C",
+   "spotify_name": "HACHI",
+   "evidence": {
+    "wikidata": [
+     "Q134538774"
+    ],
+    "overlap": [
+     "Birthday Acoustic Live",
+     "Rainy proof (Acoustic ver.)",
+     "Twilight Line",
+     "ばいばい、テディベア",
+     "八月の蛍"
+    ],
+    "followers": 61511
+   },
+   "alternatives": [
+    {
+     "spotify_id": "6ptdMFoqgQZRoccAYK9Opd",
+     "name": "hachi",
+     "overlap": []
+    },
+    {
+     "spotify_id": "1XEOEli8R7pMCYRMOhry5I",
+     "name": "Hachi",
+     "overlap": [
+      "Rainy proof (feat. BOOGEY VOXX)"
+     ]
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 14,
+   "version": 3,
+   "name_native": "LITA",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "7a8HjYl08NU5Pems4rziwY",
+   "spotify_name": "KMNZ LITA",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 4526,
+    "web": [
+     "https://open.spotify.com/artist/0bQlzgvOy0WtMtPhpiQ9ds",
+     "https://genius.com/artists/Kmnz-lita"
+    ],
+    "web_note": "Spotify 'LITA'는 2003년생 이바라키현 출신 인디 아티스트(소개글·Instagram·X 링크)로 KMNZ 리타와 무관. KMNZ 그룹 프로필도 확인되지 않음"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 15,
+   "version": 4,
+   "name_native": "TINA",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "4Qamyt82PzhtZ04u51z216",
+   "spotify_name": "KMNZ TINA",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 7286,
+    "web": [
+     "https://ja.wikipedia.org/wiki/KMNZ"
+    ],
+    "web_note": "후보(72HxMCdKQmPgS3r5OtC01L)는 앨범/곡 목록이 전혀 다른 동명이인 J-pop 가수, KMNZ 그룹 프로필로만 활동"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 16,
+   "version": 4,
+   "name_native": "NERO",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "3h7IEpR1MU3cZwcjnQowk6",
+   "spotify_name": "KMNZ NERO",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 814884,
+    "web": [
+     "https://www.tunecore.co.jp/artists?id=1035837",
+     "https://open.spotify.com/artist/3h7IEpR1MU3cZwcjnQowk6",
+     "https://music.apple.com/us/artist/kmnz-nero/1841054045",
+     "http://hachiojip.net/?p=1919"
+    ],
+    "web_note": "TuneCore Japan의 KMNZ NERO 공식 페이지가 이 Spotify ID를 직접 링크함(2025년 솔로 싱글 LUMINOUS ALIVE). 기존 5개 후보는 모두 동명의 무관한 아티스트."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "6YU46EAAs1wUPfSPVXu5ZA",
+     "name": "Nero",
+     "overlap": []
+    },
+    {
+     "spotify_id": "5vNCTAcSy3wT4ReHEAzquI",
+     "name": "nero",
+     "overlap": []
+    },
+    {
+     "spotify_id": "4ReYf2pJohFcwUOI20lBXA",
+     "name": "NERO",
+     "overlap": []
+    },
+    {
+     "spotify_id": "3m2Pa2bO0KvYWeDEBvMwdF",
+     "name": "NERO",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 18,
+   "version": 4,
+   "name_native": "ヨミ",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 5,
+    "web": [
+     "https://open.spotify.com/artist/0FMBfzP2kK1RajdetEVL5c",
+     "https://wmg.jp/vesperbell/profile/",
+     "https://wmg.jp/vesperbell/discography/32213/"
+    ],
+    "web_note": "VESPERBELL 그룹 프로필(0FMBfzP2kK1RajdetEVL5c)로만 발매. 'ヨミ'(2DPrI9l0v44IaviXgdfIK3)는 클래식록 커버를 올리는 무관한 동명 아티스트"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 19,
+   "version": 3,
+   "name_native": "カスカ",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "web": [
+     "https://wmg.jp/vesperbell/profile/",
+     "https://natalie.mu/music/artist/135283"
+    ],
+    "web_note": "후보 없음, 카스카는 VESPERBELL 그룹 프로필로만 발매"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 20,
+   "version": 4,
+   "name_native": "wouca",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "6PiB3BTC7LaFO7PkMP7j5d",
+   "spotify_name": "wouca",
+   "evidence": {
+    "wikidata": [
+     "Q138020547"
+    ],
+    "overlap": [
+     "loosey",
+     "音を浮かべて",
+     "Romantica"
+    ],
+    "followers": 486
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 21,
+   "version": 4,
+   "name_native": "Cil",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0AwaSSpQjZRvrgpbL6GaVA",
+   "spotify_name": "Cil",
+   "evidence": {
+    "wikidata": [
+     "Q137999056"
+    ],
+    "overlap": [],
+    "followers": 187
+   },
+   "alternatives": [
+    {
+     "spotify_id": "1bBo1QjmPP5CfMiEsxmZxU",
+     "name": "Cil",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 23,
+   "version": 4,
+   "name_native": "CULUA",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "3sQqFA3jHUjGGUoUvwX7B2",
+   "spotify_name": "CULUA",
+   "evidence": {
+    "wikidata": [
+     "Q137706695"
+    ],
+    "overlap": [
+     "KALMIA",
+     "ハレバレ",
+     "ベビ・デビ"
+    ],
+    "followers": 2959
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 25,
+   "version": 5,
+   "name_native": "MEDA",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0HaY7K7tZoUcEfqhFvLvEh",
+   "spotify_name": "MEDA",
+   "evidence": {
+    "wikidata": [
+     "Q137658830"
+    ],
+    "overlap": [
+     "覚醒.exe",
+     "散花",
+     "EMOVER FLOW",
+     "染脳",
+     "ROLLBACK"
+    ],
+    "followers": 1564
+   },
+   "alternatives": [
+    {
+     "spotify_id": "4B1emXLiBtbjjwGmLqVsHO",
+     "name": "Meda",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 26,
+   "version": 4,
+   "name_native": "羽緒",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "3ntQ8hnTlDEhxEkU9LsA74",
+   "spotify_name": "羽緒",
+   "evidence": {
+    "wikidata": [
+     "Q138011478"
+    ],
+    "overlap": [
+     "献華"
+    ],
+    "followers": 381
+   },
+   "alternatives": [
+    {
+     "spotify_id": "2uFDb7jKZjVjMTr0spAqNk",
+     "name": "Hao",
+     "overlap": [
+      "AI"
+     ]
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 27,
+   "version": 4,
+   "name_native": "深影",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "1BhADt8xrx84aVcmD5WHAt",
+   "spotify_name": "深影",
+   "evidence": {
+    "wikidata": [
+     "Q138020248"
+    ],
+    "overlap": [
+     "ロストメモリー",
+     "ゴーストレタッチ",
+     "透影"
+    ],
+    "followers": 483
+   },
+   "alternatives": [
+    {
+     "spotify_id": "7HJgTQTtV1bJxHEYyafMSM",
+     "name": "MIKAGE",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 28,
+   "version": 4,
+   "name_native": "妃玖",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "0zbH7OGsExOBMjiME8YhlE",
+   "spotify_name": "??",
+   "evidence": {
+    "wikidata": [
+     "Q138043024"
+    ],
+    "overlap": [],
+    "followers": 30
+   },
+   "alternatives": [
+    {
+     "spotify_id": "0zbH7OGsExOBMjiME8YhlE",
+     "name": "妃玖",
+     "overlap": []
+    },
+    {
+     "spotify_id": "268WDE9oekAu8IxKmdAp5Q",
+     "name": "KISAKI",
+     "overlap": []
+    },
+    {
+     "spotify_id": "3UiEZLi8PvA5aAwAdpt4ee",
+     "name": "KISAKI",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 29,
+   "version": 4,
+   "name_native": "IMI",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "6pvPIKW1vtF7ofEyW5ZDCH",
+   "spotify_name": "IMI",
+   "evidence": {
+    "wikidata": [
+     "Q137969307"
+    ],
+    "overlap": [
+     "DRIVE",
+     "Bad girl"
+    ],
+    "followers": 1156
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 30,
+   "version": 4,
+   "name_native": "LEWNE",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "4mQaUXeuWpMaCJcSc9Yipg",
+   "spotify_name": "LEWNE",
+   "evidence": {
+    "wikidata": [
+     "Q138005154"
+    ],
+    "overlap": [],
+    "followers": 282
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 31,
+   "version": 4,
+   "name_native": "MEMESIA",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "1xXfRsVgtbXNotMq55iIdn",
+   "spotify_name": "MEMESIA",
+   "evidence": {
+    "wikidata": [
+     "Q137998981"
+    ],
+    "overlap": [],
+    "followers": 255
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 32,
+   "version": 4,
+   "name_native": "CONA",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0jUFnD5KcEM1nauhX1ndRv",
+   "spotify_name": "CONA",
+   "evidence": {
+    "wikidata": [
+     "Q137983200"
+    ],
+    "overlap": [],
+    "followers": 1356
+   },
+   "alternatives": [
+    {
+     "spotify_id": "1LoAeYntVLMNNcYFowNO7c",
+     "name": "CONA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 33,
+   "version": 4,
+   "name_native": "ヨノ",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0qDc5D2PPjI9EcBlsK1tr9",
+   "spotify_name": "ヨノ",
+   "evidence": {
+    "wikidata": [
+     "Q137984663"
+    ],
+    "overlap": [
+     "拝啓、はじまりの色"
+    ],
+    "followers": 1536
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5cx2GnUJVJ0NVukUc9OHmL",
+     "name": "Yono",
+     "overlap": []
+    },
+    {
+     "spotify_id": "7qaz7YlUZ0IzlYba5S0ZtF",
+     "name": "Yono",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 34,
+   "version": 4,
+   "name_native": "XIDEN",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "4YVzWzQHKm3FMIOsVrtdCe",
+   "spotify_name": "XIDEN",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Don't Call It a Night!!",
+     "No Reset",
+     "Day Opener",
+     "accompany",
+     "宿命"
+    ],
+    "followers": 831
+   },
+   "alternatives": [
+    {
+     "spotify_id": "2yFHx7xSzVPRwsCDdcZNRF",
+     "name": "Xiden",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 35,
+   "version": 4,
+   "name_native": "Diα",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "4abkh93aigF6G4xEYn9qf0",
+   "spotify_name": "Diα",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "ティニタス"
+    ],
+    "followers": 256
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 36,
+   "version": 4,
+   "name_native": "焔魔るり",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "0Zi9wJdijrYbYTgjtJO9wV",
+   "spotify_name": "焔魔るり",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Hope Song",
+     "Calling",
+     "シズムリウム",
+     "Fury"
+    ],
+    "followers": 1090,
+    "web": [
+     "https://www.tunecore.co.jp/artists/Ruri-Enma",
+     "https://www.wikidata.org/wiki/Q138030788",
+     "https://open.spotify.com/artist/0Zi9wJdijrYbYTgjtJO9wV"
+    ],
+    "web_note": "공식 TuneCore 페이지가 링크하고 최신 발매곡이 있는 0Zi9wJdijrYbYTgjtJO9wV(焔魔るり)를 메인으로 채택. Wikidata에 등록된 'Ruri Enma'(7lzvCwcm1xxj5yN3cCMpU7)는 발매곡 없는 구/보조 프로필임."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5js7iJVwdH2xFCXkKkTJfS",
+     "name": "焔魔 るり",
+     "overlap": []
+    },
+    {
+     "spotify_id": "7lzvCwcm1xxj5yN3cCMpU7",
+     "name": "Ruri Enma",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 37,
+   "version": 5,
+   "name_native": "瀬戸乃とと",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "6JJ4NCqgc0rkumAEdEDRlY",
+   "spotify_name": "瀬戸乃とと",
+   "evidence": {
+    "wikidata": [
+     "Q138030872"
+    ],
+    "overlap": [],
+    "followers": 756
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 38,
+   "version": 4,
+   "name_native": "水瀬凪",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "30SxKPIMzC04RgSkkpyPLO",
+   "spotify_name": "水瀬 凪",
+   "evidence": {
+    "wikidata": [
+     "Q138028390"
+    ],
+    "overlap": [
+     "アオハル進化論"
+    ],
+    "followers": 466
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 40,
+   "version": 3,
+   "name_native": "MOCO",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 14,
+    "web": [
+     "https://open.spotify.com/artist/50RqMnXRE3TzoxvP2YcmGs",
+     "https://youtu.be/7kTUgS414QE"
+    ],
+    "web_note": "'moco'(팔로워 14)는 발라드 위주로 HONK THE HORN 발매곡과 불일치하는 무관 아티스트. MOCO/HONK THE HORN 공식 프로필은 확인되지 않음"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 41,
+   "version": 3,
+   "name_native": "BAMBI",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 611511,
+    "web": [
+     "https://en.wikipedia.org/wiki/Bambi_(rapper)",
+     "https://prtimes.jp/main/html/rd/p/000000423.000021973.html"
+    ],
+    "web_note": "후보(5ic8bWWvZHWf0dDBi9ThNk)는 폴란드 래퍼 bambi(Michalina Włodarczyk), 무관한 동명 아티스트로 기각. HONK THE HORN 그룹 프로필로만 발매"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 42,
+   "version": 3,
+   "name_native": "SAKUYA",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 9,
+    "web": [
+     "https://x.com/NUROJUNK_SAKUYA",
+     "https://www.moguravr.com/nurojunk-debut-en/",
+     "https://www.moguravr.com/nurojunk-debut/",
+     "https://open.spotify.com/artist/0oYtTSw2rWJIeDAs08wNVF"
+    ],
+    "web_note": "후보(팔로워 9명, かぐや姫 신화 테마 앨범)는 NUROJUNK나 VTuber SAKUYA와의 연결점이 전혀 없는 무관한 소규모 아티스트로 판단됨. 공식 Spotify 프로필 자체가 검색되지 않음."
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 43,
+   "version": 3,
+   "name_native": "KAGURA",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 129,
+    "web": [
+     "https://open.spotify.com/artist/0946oKG2f5DP7eThhSx6Hm",
+     "https://open.spotify.com/artist/764yfWMKOdh5dmBZBvgNOr",
+     "https://x.com/NJ_KAGURA"
+    ],
+    "web_note": "두 후보 모두 NUROJUNK 공식 자료와 연결되지 않는 무관 아티스트. NUROJUNK Spotify 프로필은 확인되지 않음"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "0946oKG2f5DP7eThhSx6Hm",
+     "name": "kagurA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 46,
+   "version": 6,
+   "name_native": "花譜",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "2c32JruIkUyfdycHmhIph4",
+   "spotify_name": "花譜",
+   "evidence": {
+    "wikidata": [
+     "Q63142036"
+    ],
+    "overlap": [],
+    "followers": 213792
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 47,
+   "version": 6,
+   "name_native": "理芽",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "1rFELoNfdLOYWPwtrBN6zS",
+   "spotify_name": "理芽",
+   "evidence": {
+    "wikidata": [
+     "Q105086270"
+    ],
+    "overlap": [
+     "食虫植物"
+    ],
+    "followers": 109694
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 48,
+   "version": 6,
+   "name_native": "春猿火",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "39fp9WgXJxPo1pYxt96w6l",
+   "spotify_name": "春猿火",
+   "evidence": {
+    "wikidata": [
+     "Q107295400",
+     "Q107295400"
+    ],
+    "overlap": [],
+    "followers": 44381
+   },
+   "alternatives": [
+    {
+     "spotify_id": "2mcT2RQEUcsR1hf4biLmdf",
+     "name": "Harusaruhi",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 49,
+   "version": 6,
+   "name_native": "ヰ世界情緒",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "0ZTvnZCr6Njbsmn9Xx4Y0U",
+   "spotify_name": "ヰ世界情緒",
+   "evidence": {
+    "wikidata": [
+     "Q107352036",
+     "Q107352036"
+    ],
+    "overlap": [
+     "シリウスの心臓"
+    ],
+    "followers": 76903
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 50,
+   "version": 6,
+   "name_native": "幸祜",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "1oM8EdalXNF4uSK5k2dzLh",
+   "spotify_name": "幸祜",
+   "evidence": {
+    "wikidata": [
+     "Q108109938"
+    ],
+    "overlap": [],
+    "followers": 41585
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 51,
+   "version": 4,
+   "name_native": "CIEL",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "3br9le9sNFSVAVBDTjdOn4",
+   "spotify_name": "CIEL",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 25887,
+    "web": [
+     "https://open.spotify.com/artist/3br9le9sNFSVAVBDTjdOn4",
+     "https://kamitsubaki.jp/artist/ciel/"
+    ],
+    "web_note": "Spotify 프로필 소개문에 KAMITSUBAKI STUDIO 및 映画大好きポンポさん 주제가 스토리 명시, 공식 확인. 다른 후보(1XoDTD5juiCujbnkcrUeBG)는 무관한 동명 가수"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "1XoDTD5juiCujbnkcrUeBG",
+     "name": "Ciel",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 52,
+   "version": 4,
+   "name_native": "明透",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "71e65rSv8Dh3bfWNPQ1V1Q",
+   "spotify_name": "明透",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 62627,
+    "web": [
+     "https://open.spotify.com/artist/71e65rSv8Dh3bfWNPQ1V1Q",
+     "https://ja.wikipedia.org/wiki/明透",
+     "https://kamitsubaki.jp/discography/asu/2266/",
+     "https://kamitsubaki.fandom.com/wiki/Asu",
+     "https://genius.com/Asu-jpn-soragoto-lyrics"
+    ],
+    "web_note": "Spotify 페이지가 X 계정 @ASU_virtual을 공식 링크로 걸고 있고, 대표곡(ソラゴト 등)이 카미츠바키 디스코그래피 공식곡과 일치함."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "52D0sgUj9AsmfuAQIFQELN",
+     "name": "asu",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 53,
+   "version": 4,
+   "name_native": "Sooda",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "4iJFO6ebSQscPCdLvo1j7P",
+   "spotify_name": "Sooda",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 2019,
+    "web": [
+     "https://open.spotify.com/artist/4iJFO6ebSQscPCdLvo1j7P",
+     "https://music.apple.com/jp/artist/sooda/1661768875",
+     "https://buzz-ticket.com/posts/4657"
+    ],
+    "web_note": "곡목(ガラス, 人生ゲーム, メモリーズ, Bansoukou)이 Sooda 솔로 발매와 일치. 空爽(6H4XGWG4fh3jeq8PaJQOel)는 CIEL과의 유닛 프로필"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 54,
+   "version": 4,
+   "name_native": "VALIS",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "4WrbpHc8hLKQZkBGX8k1ay",
+   "spotify_name": "VALIS",
+   "evidence": {
+    "wikidata": [
+     "Q107743120"
+    ],
+    "overlap": [],
+    "followers": 17598
+   },
+   "alternatives": [
+    {
+     "spotify_id": "1GX8oYY231Tzp3K3tCsREF",
+     "name": "VALIS",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 55,
+   "version": 4,
+   "name_native": "佳鏡院",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "1ydUxA0KMdyroinaACZFsu",
+   "spotify_name": "佳鏡院",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 2429,
+    "web": [
+     "https://kamitsubaki.jp/artist/sinseiki/",
+     "https://prtimes.jp/main/html/rd/p/000000196.000106737.html",
+     "https://open.spotify.com/artist/1ydUxA0KMdyroinaACZFsu"
+    ],
+    "web_note": "夢の揺籠, 宇宙逃避行 등 공식 발매곡과 정확히 일치, 心世紀 소속 확인됨"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 56,
+   "version": 4,
+   "name_native": "御莉姫",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "0Ur3wB7R1lkydYPdwATVpe",
+   "spotify_name": "御莉姫",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 3203,
+    "web": [
+     "https://open.spotify.com/artist/0Ur3wB7R1lkydYPdwATVpe",
+     "https://kamitsubaki.jp/artist/sinseiki/",
+     "https://www.uta-net.com/movie/391330/",
+     "https://note.com/raulu/n/ncef7c8131fd1"
+    ],
+    "web_note": "Spotify 전곡(桜心中, Masquerade Kill 등)이 心世紀 소속 御莉姫의 공식 발매곡과 일치하며 관련 아티스트에 心世紀가 표시됨."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "0Rp1e90LcNbMSV3bRtW1nj",
+     "name": "orihime",
+     "overlap": []
+    },
+    {
+     "spotify_id": "7ySENusXcd7DsmcFcKpi7h",
+     "name": "Orihime",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 57,
+   "version": 4,
+   "name_native": "硝子宮",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "71B1IRtrf1zRRSUPOsxOLu",
+   "spotify_name": "硝子宮",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 1953,
+    "web": [
+     "https://open.spotify.com/artist/71B1IRtrf1zRRSUPOsxOLu",
+     "https://kamitsubaki.jp/artist/tsumitobatsu/",
+     "https://www.uta-net.com/song/365756/"
+    ],
+    "web_note": "앨범(さよなら楽園, ガラスのパズル 등)이 硝子宮 공식 발매와 일치, 心世紀 소속 확인"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 58,
+   "version": 4,
+   "name_native": "美古途",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "7C4nOWywcn1EFDXdNUEpqQ",
+   "spotify_name": "美古途",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 2133,
+    "web": [
+     "https://kamitsubaki.jp/artist/tsumitobatsu/",
+     "https://prtimes.jp/main/html/rd/p/000000209.000106737.html",
+     "https://open.spotify.com/artist/1ydUxA0KMdyroinaACZFsu"
+    ],
+    "web_note": "セルフィッシュ, SURVIVAL 등 공식 발매곡과 일치, 佳鏡院 Spotify 페이지의 Fans also like에도 연결되어 罪十罰 소속 교차 확인"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "2gYepYqksN8JhZMVjjuc2o",
+     "name": "Mikoto",
+     "overlap": []
+    },
+    {
+     "spotify_id": "53YgXUuDPv1sZ0AI4Jsfrg",
+     "name": "mikoto",
+     "overlap": []
+    },
+    {
+     "spotify_id": "5xRk8Bt5mDXgBMgId63kWq",
+     "name": "MIKOTO",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 59,
+   "version": 4,
+   "name_native": "夕凪機",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "1Rw5MiDkuaO2nYYyXJdCAC",
+   "spotify_name": "YUNAGI",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 2590,
+    "web": [
+     "https://open.spotify.com/artist/1Rw5MiDkuaO2nYYyXJdCAC",
+     "https://open.spotify.com/artist/0DiLMcWEBw0ibunNvLZkR3",
+     "https://prtimes.jp/main/html/rd/p/000000198.000106737.html",
+     "https://kamitsubaki.jp/artist/tsumitobatsu/",
+     "https://www.youtube.com/@yunagi_grp"
+    ],
+    "web_note": "솔로 앨범 5곡(アバウト 등) 제목이 정확히 일치하고, 그룹 罪十罰 Spotify 프로필에서도 'YUNAGI'로 연결되어 있어 본인 소유 프로필로 확인됨."
+   },
+   "alternatives": [
+    {
+     "spotify_id": "587ka93vqLBCo7lRhLkoyn",
+     "name": "YUNAGI",
+     "overlap": []
+    },
+    {
+     "spotify_id": "2BqnXkF2ZqLYVtwOj1da6b",
+     "name": "Yunagi",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 60,
+   "version": 4,
+   "name_native": "氷夏至",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "0exKtocmqjFP5CETzBs93c",
+   "spotify_name": "HINAGESHI",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 2164,
+    "web": [
+     "https://open.spotify.com/artist/0exKtocmqjFP5CETzBs93c",
+     "https://kamitsubaki.jp/discography/tsumitobatsu/7194/",
+     "https://www.uta-net.com/song/365755/"
+    ],
+    "web_note": "곡목(ジャンク, シネマティック, ホンキートンキーラブ, sweet/sour)이 氷夏至 공식 곡과 일치. 罪十罰(0DiLMcWEBw0ibunNvLZkR3)은 그룹 프로필"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 63,
+   "version": 4,
+   "name_native": "琶舞",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "24Kb45jgtRm0gZeBgRdZkT",
+   "spotify_name": "琶舞",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 17454,
+    "web": [
+     "https://kamitsubaki.jp/artist/bema/",
+     "https://www.moguravr.com/kamitsubaki-studio-bema/"
+    ],
+    "web_note": "Alt Skin, 戯れ, 捕食者 등 KAMITSUBAKI 공식 발매곡과 정확히 일치"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "24Kb45jgtRm0gZeBgRdZkT",
+     "name": "琶舞",
+     "overlap": []
+    },
+    {
+     "spotify_id": "7M5yoXROBfgAGouZefnhhN",
+     "name": "BEMA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 66,
+   "version": 4,
+   "name_native": "存流",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "52I9qA4Wh7DflQ92nnTBMs",
+   "spotify_name": "存流",
+   "evidence": {
+    "wikidata": [
+     "Q118288833"
+    ],
+    "overlap": [],
+    "followers": 25433
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 69,
+   "version": 4,
+   "name_native": "松永依織",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "45dVC4Rxrd11QWb3LhHiU1",
+   "spotify_name": "松永依織",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 3997,
+    "web": [
+     "https://open.spotify.com/artist/45dVC4Rxrd11QWb3LhHiU1",
+     "https://virtualyoutuber.fandom.com/wiki/Matsunaga_Iori",
+     "https://youtu.be/fBRX4PtX4_Q",
+     "https://youtu.be/KQXh-G1MER8"
+    ],
+    "web_note": "Spotify 페이지가 X 계정 @iori_m_RIOT를 직접 링크하고, 앨범 트랙(ダリダリ, ぐうたらいふ)이 공식 유튜브 MV와 일치함."
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 70,
+   "version": 4,
+   "name_native": "朝倉杏子",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "4hqNumXEcICUOsyFHaTtKx",
+   "spotify_name": "朝倉杏子",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 433,
+    "web": [
+     "https://open.spotify.com/artist/4hqNumXEcICUOsyFHaTtKx",
+     "https://riot-music.com/artist/anko-asakura/",
+     "https://bravegroup.co.jp/news/10075/"
+    ],
+    "web_note": "곡목이 RIOT MUSIC 공식 발매와 일치, Spotify의 X 링크가 anko_a_RIOT와 동일"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 71,
+   "version": 4,
+   "name_native": "皇美緒奈",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "5RQNGif0Z6o6pXtbBKabsl",
+   "spotify_name": "皇 美緒奈",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Bouquet"
+    ],
+    "followers": 724
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 72,
+   "version": 4,
+   "name_native": "伊月知世",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "1eRinPV14BduK9NAwUGIhA",
+   "spotify_name": "伊月知世",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 105,
+    "web": [
+     "https://riot-music.com/artist/chise-itsuki/",
+     "https://www.mapion.co.jp/news/release/000000631.000044525/"
+    ],
+    "web_note": "레트로스펙티카, OUR UNIVERSE가 RIOT MUSIC 공식 1st 오리지널 곡 발매 목록과 정확히 일치"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 73,
+   "version": 4,
+   "name_native": "白河しらせ",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "4qA6YdeHJPZJXozhxOJcnV",
+   "spotify_name": "白河しらせ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 285,
+    "web": [
+     "https://open.spotify.com/artist/4qA6YdeHJPZJXozhxOJcnV",
+     "https://riot-music.com/artist/shirase-shirakawa/",
+     "https://twitter.com/shirase_s_BW"
+    ],
+    "web_note": "Spotify 페이지의 X 링크가 공식 계정 @shirase_s_BW와 정확히 일치하고, 소개글·앨범명이 RIOT MUSIC 공식 페이지와 동일함."
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 74,
+   "version": 4,
+   "name_native": "時庭らんぜ",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "3OKysqkhJRck1B952o6Xva",
+   "spotify_name": "時庭らんぜ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 139,
+    "web": [
+     "https://riot-music.com/artist/ranze-tokiniwa/",
+     "https://prtimes.jp/main/html/rd/p/000000236.000044525.html"
+    ],
+    "web_note": "RIOT MUSIC Blitz Wing 멤버 개인 프로필. Dreamscape/OUR UNIVERSE는 蜜乃木ジル과의 공동 발매"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 75,
+   "version": 4,
+   "name_native": "ミナミイズミ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "1bYGyPHVN7LlgCGy97p8aa",
+   "spotify_name": "ミナミイズミ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Break through"
+    ],
+    "followers": 631
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 76,
+   "version": 4,
+   "name_native": "朱名",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "5n1VO8fZjr9WKP4crQVrN9",
+   "spotify_name": "朱名",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 164,
+    "web": [
+     "https://riot-music.com/artist/shuna/",
+     "https://bravegroup.co.jp/news/11836/"
+    ],
+    "web_note": "朱月の季節이 RIOT MUSIC 공식 1st 오리지널 곡 발매 발표와 정확히 일치"
+   },
+   "alternatives": [
+    {
+     "spotify_id": "64J6RbAALhdvYKcFPIjrOb",
+     "name": "SHUNA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 77,
+   "version": 6,
+   "name_native": "メーメントヴァニタス",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "3ukpYhEAZCdyI5lhT0VsNM",
+   "spotify_name": "メーメントヴァニタス",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 340,
+    "web": [
+     "https://open.spotify.com/artist/3ukpYhEAZCdyI5lhT0VsNM",
+     "https://twitter.com/memento_v_MGS",
+     "https://riot-music.com/artist/mementovanitas/",
+     "https://dengekionline.com/article/202506/46081"
+    ],
+    "web_note": "Spotify 페이지의 X 링크가 twitter.com/memento_v_MGS로 정확히 일치하고 소개 문구도 동일 인물을 가리켜 확인됨."
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 78,
+   "version": 7,
+   "name_native": "電信柱ちゃん",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "web": [
+     "https://www.moguravr.com/mugensho-records-new-artists-debut/",
+     "https://prtimes.jp/main/html/rd/p/000000654.000044525.html"
+    ],
+    "web_note": "2026년 6월 1일 데뷔한 신인으로 Spotify 프로필·발매곡이 아직 없음"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 79,
+   "version": 6,
+   "name_native": "宮島ルシェル",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 1,
+    "web": [
+     "https://alive-project.com/en/streamer-magazine/article/16571/"
+    ],
+    "web_note": "2026년 6월 데뷔한 신인, 아직 발매곡 없음. 후보(3ENwYVoa8Sv8tVeSC2pEF0)는 무관한 한국어 발라드 가수로 기각"
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 80,
+   "version": 7,
+   "name_native": "傘屋くぐる",
+   "decision": "skip",
+   "basis": "web_not_found",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {
+    "web": [
+     "https://www.youtube.com/@KUGURUKASAYA/about",
+     "https://www.moguravr.com/mugensho-records-new-artists-debut/",
+     "https://alive-project.com/en/streamer-magazine/article/16571/",
+     "https://www.haveagood-holiday.com/en/articles/riot-music-mugensho-record-3-artists-debut"
+    ],
+    "web_note": "2026년 6월 1일 데뷔한 신인 버추얼 아티스트로, 유튜브 소개란과 여러 검색에서도 Spotify 프로필 링크를 찾지 못해 아직 미등록으로 판단됨."
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 81,
+   "version": 5,
+   "name_native": "蜜乃木ジル",
+   "decision": "accept",
+   "basis": "web_verified",
+   "relationship": "owner",
+   "spotify_id": "2PvirPqSEFAtDTfV9FxQ5q",
+   "spotify_name": "蜜乃木ジル",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 121,
+    "web": [
+     "https://riot-music.com/artist/jill-mitsunoki/",
+     "https://vtuberlabo.com/?p=4637"
+    ],
+    "web_note": "RIOT MUSIC Blitz Wing 멤버 개인 프로필, 極彩的ミラージュ는 솔로곡. 공식 사이트상 현재 활동 종료"
+   },
+   "alternatives": [],
+   "note": null
+  }
+ ],
+ "summary": {
+  "accept": 57,
+  "review": 0,
+  "skip": 9
+ },
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "exported_at": "2026-09-27T16:45:47Z"
+}

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 
 # 003/004 only add constraints and new tables, so code runs before and after they are applied.
-SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "003", "004")}
+SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "003", "004"), ("001", "002", "003", "004", "005")}
 
 
 class CatalogIdentityError(RuntimeError):

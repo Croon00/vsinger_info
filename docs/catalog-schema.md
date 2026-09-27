@@ -731,8 +731,8 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 | --- | --- | --- | --- | --- |
 | `id` | INTEGER PK | 필수·자동 증가 | 이 테이블 행의 고유 번호. 새 번호는 DB가 발급하며 기존 DB 번호를 그대로 재사용하지 않음 | 1 |
 | `recording_id` | INTEGER FK | 필수 | recordings.id | 700 |
-| `platform` | TEXT | 필수 | 1차 spotify. 추가 플랫폼은 허용 목록 확장 | spotify |
-| `external_id` | TEXT | 필수 | 플랫폼의 트랙 고유 ID | 검수한 Spotify 트랙 ID |
+| `platform` | TEXT | 필수 | spotify(트랙 ID), isrc(국제 녹음 코드, revision 005). 추가 플랫폼은 허용 목록 확장 | spotify |
+| `external_id` | TEXT | 필수 | spotify는 22자 트랙 ID, isrc는 하이픈 없는 대문자 12자. `(platform, external_id)` UNIQUE라 한 ISRC는 한 녹음에만 붙음 | 검수한 Spotify 트랙 ID, JPU902602729 |
 | `created_at` | TIMESTAMPTZ | 필수·자동 | 새 DB에 이 행이 처음 등록된 시각. 공연/방송/원문 수집 시각과 별개 | 서버 현재 시각 |
 | `updated_at` | TIMESTAMPTZ | 필수·자동 | 행이 마지막 변경된 시각. 서비스가 수정 때 갱신 | 서버 현재 시각 |
 
