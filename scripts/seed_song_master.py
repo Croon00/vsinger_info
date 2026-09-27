@@ -14,9 +14,11 @@ recorded in catalog_changes under one catalog_imports receipt, rows changed sinc
 abort the whole run, and a second apply of the same file is a no-op. Performances are
 not touched; link them afterwards with scripts/link_performances_from_match_keys.py.
 
-Rules: one external work maps to one song. When keys of different artists resolve to
-the same work (an original and a well-known version), each artist keeps its own song and
-the work ID goes to the song whose artist is credited on the work, else the most sung.
+Rules: one external work maps to one song, whoever the setlist credits (writer vs singer,
+a well-known cover): keys of different artists resolving to one work become one song
+credited to all of them, work-credited artists first. Works in the manual ``split_works``
+are the user-approved exceptions that keep one song per artist; the work ID then goes to
+the song whose artist is credited on the work, else the most sung.
 Existing songs only get ``title_latin`` when it is empty. New artists are hidden from the
 catalog (show_in_catalog=false) and have no Korean name when the native name is Latin.
 """
@@ -27,6 +29,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import shutil
 import sys
 import unicodedata
 import uuid
@@ -84,12 +87,14 @@ def load_state(conn) -> dict:
     artists = {r["id"]: r for r in rows(conn, """
         SELECT id, slug, name_native, name_ko, name_latin FROM artists WHERE archived_at IS NULL""")}
     spellings = defaultdict(set)
+    aliases = defaultdict(list)
     for a in artists.values():
         for value in (a["name_native"], a["name_ko"], a["name_latin"]):
             if value:
                 spellings[a["id"]].add(normalize_text(value))
     for r in rows(conn, "SELECT artist_id, alias FROM artist_aliases"):
         spellings[r["artist_id"]].add(normalize_text(r["alias"]))
+        aliases[r["artist_id"]].append(r["alias"])
     songs = {}
     for r in rows(conn, """
         SELECT s.id, s.version, s.title_native, s.title_latin,
@@ -105,20 +110,103 @@ def load_state(conn) -> dict:
                 for r in rows(conn, "SELECT provider, external_id, song_id FROM song_external_ids")}
     identity = rows(conn, "SELECT id::text AS id FROM catalog_instance").fetchone()["id"]
     return {"catalog_instance_id": identity, "artists": artists,
-            "spellings": {k: set(v) for k, v in spellings.items()},
+            "spellings": {k: set(v) for k, v in spellings.items()}, "aliases": dict(aliases),
             "songs": songs, "keys": keys, "external": external}
 
 
-def load_inputs(report_dir: Path) -> dict:
+def load_inputs(report_dir: Path, manual_path: Path = MANUAL) -> dict:
     report_path = sorted(report_dir.glob("candidates-*.json"))[-1]
     research = []
     for path in sorted(report_dir.glob("artist-research-output-*.json")):
         research += json.loads(path.read_text(encoding="utf-8-sig"))
-    refs = json.loads((report_dir / "artist-research-refs.json").read_text(encoding="utf-8"))
-    review = json.loads((report_dir / "review-output.json").read_text(encoding="utf-8-sig"))["items"]
+    refs_path, review_path = report_dir / "artist-research-refs.json", report_dir / "review-output.json"
+    refs = json.loads(refs_path.read_text(encoding="utf-8")) if refs_path.exists() else []
+    review = json.loads(review_path.read_text(encoding="utf-8-sig"))["items"] if review_path.exists() else []
     return {"report_name": report_path.name, "report": json.loads(report_path.read_text(encoding="utf-8")),
             "research": research, "research_refs": refs, "review": review,
-            "manual": json.loads(MANUAL.read_text(encoding="utf-8"))}
+            "manual": json.loads(manual_path.read_text(encoding="utf-8"))}
+
+
+def round_paths(number: int) -> dict[str, Path]:
+    """Round 1 keeps its original locations; later rounds get their own input dir and files."""
+    if number == 1:
+        return {"report_dir": REPORT_DIR, "decisions": DECISIONS, "manual": MANUAL}
+    return {"report_dir": REPORT_DIR / f"round-{number}",
+            "decisions": DECISIONS.with_name(f"song-master-decisions-{number}.json"),
+            "manual": MANUAL.with_name(f"song-master-manual-{number}.json")}
+
+
+def brief(candidate: dict) -> dict:
+    """Candidate as shown to a reviewer."""
+    return {"provider": candidate["provider"], "external_id": candidate["external_id"], "url": candidate.get("url"),
+            "title": candidate["title"],
+            "names": [n["value"] if isinstance(n, dict) else n for n in candidate.get("names") or []],
+            "credits": [f"{a['name']} ({a['role']})" for a in candidate.get("artists") or []],
+            "performers": [a["name"] for a in candidate.get("performers") or []],
+            "title_exact": candidate["title_exact"], "artist_exact": candidate["artist_exact"]}
+
+
+def prepare(state: dict, report: dict, manual: dict, *, prefix: str, chunks: int) -> dict[str, object]:
+    """Pure: research and review inputs for one round (written next to the round's report).
+
+    New-artist groups join setlist spellings that resolve to the same credited provider
+    artist (e.g. 荒井由実 / 松任谷由実). Held and manually decided keys are not reviewed.
+    """
+    parent: dict[str, str] = {}
+
+    def find(node: str) -> str:
+        parent.setdefault(node, node)
+        while parent[node] != node:
+            parent[node] = parent[parent[node]]
+            node = parent[node]
+        return node
+
+    skip = {k["key_id"] for k in manual.get("keys", [])} | {k["key_id"] for k in manual.get("hold_keys", [])}
+    pending = [i for i in report["items"] if i["kind"] == "key" and i["ref"] not in skip
+               and state["keys"].get(i["ref"], {}).get("status") == "pending"]
+    need = [i for i in pending if i["status"] == "auto" and not i["our_artist_ids"] and i["artist"]
+            and not strong(i).get("existing_song_ids")]
+    credits: dict[str, dict] = {}
+    for item in need:
+        c, node = strong(item), "s:" + loose(item["artist"])
+        find(node)
+        matched = {loose(v) for v in c.get("matched_artists") or []}
+        for a in (c.get("artists") or []) + (c.get("performers") or []):
+            # Credits without a provider artist ID (free-text names) cannot join groups.
+            if a.get("external_id") and matched & {loose(v) for v in [a["name"], *(a.get("aliases") or [])]}:
+                credit = f"{c['provider']}:{a['external_id']}"
+                credits[credit] = {"provider": c["provider"], "artist_external_id": a["external_id"],
+                                   "name": a["name"], "aliases": a.get("aliases") or []}
+                parent[find(node)] = find(credit)
+    groups: dict[str, dict] = defaultdict(lambda: {"spellings": set(), "credits": set(), "songs": [], "count": 0})
+    for item in need:
+        group = groups[find("s:" + loose(item["artist"]))]
+        group["spellings"].add(item["artist"])
+        group["songs"].append((item["count"], item["title"]))
+        group["count"] += item["count"]
+    for credit in credits:
+        if find(credit) in groups:
+            groups[find(credit)]["credits"].add(credit)
+    refs = []
+    for n, group in enumerate(sorted(groups.values(), key=lambda g: (-g["count"], sorted(g["spellings"]))), 1):
+        refs.append({"ref": f"{prefix}{n:03d}", "setlist_spellings": sorted(group["spellings"]),
+                     "provider_credits": [credits[c] for c in sorted(group["credits"])],
+                     "example_songs": [t for _, t in sorted(group["songs"], key=lambda s: (-s[0], s[1]))[:3]]})
+    size = -(-len(refs) // chunks) if refs else 0
+    files: dict[str, object] = {"artist-research-refs.json": refs}
+    for n in range(chunks):
+        if refs[n * size:(n + 1) * size]:
+            files[f"artist-research-input-{n + 1}.json"] = refs[n * size:(n + 1) * size]
+    files["existing-slugs.json"] = sorted(a["slug"] for a in state["artists"].values())
+    files["review-input.json"] = {
+        "our_artists": [{"id": a["id"], "name_native": a["name_native"], "name_ko": a["name_ko"], "name_latin": a["name_latin"],
+                         "aliases": sorted(state["aliases"].get(a["id"], []))}
+                        for a in sorted(state["artists"].values(), key=lambda a: a["id"])],
+        "items": [{"item": f"key:{i['ref']}", "kind": "key", "title": i["title"], "artist": i["artist"],
+                   "performances": i["count"], "candidates": [brief(c) for c in i["candidates"]],
+                   "key_id": i["ref"], "our_artist_ids": i["our_artist_ids"]}
+                  for i in sorted((i for i in pending if i["status"] == "review"), key=lambda i: -i["count"])]}
+    return files
 
 
 def strong(item: dict) -> dict:
@@ -155,12 +243,71 @@ def clean_artist(record: dict, extra_aliases, *, taken_slugs: set[str]) -> dict:
             "aliases": aliases, "confidence": record.get("confidence"), "sources": record.get("sources") or []}
 
 
+def credit_key(credit: dict):
+    return ("id", credit["artist_id"]) if "artist_id" in credit else ("ref", credit["artist_ref"])
+
+
+def merge_new_songs(new_songs: list[dict], key_plans: list[dict], manual_merges: list[dict]) -> list[dict]:
+    """Collapse new songs that are one song found through different provider entries.
+
+    Manual ``merge_keys`` join the songs holding the listed keys, credited from
+    ``artists_from_keys`` in order. Then, automatically, new songs with the same title
+    (loose) and at least one shared artist are one song -- the rule existing_matches uses
+    for existing songs. Artists with no shared credit stay apart (another artist's version).
+    """
+    by_ref = {s["ref"]: s for s in new_songs}
+    owner = {key_id: s["ref"] for s in new_songs for key_id in s["keys"]}
+
+    def absorb(target: dict, source: dict) -> None:
+        target["keys"] += source["keys"]
+        target["artists"] = list({credit_key(a): a for a in target["artists"] + source["artists"]}.values())
+        providers = {e["provider"] for e in target["external_ids"]}
+        target["external_ids"] += [e for e in source["external_ids"] if e["provider"] not in providers]
+        for field in ("title_latin", "title_ko", "language_code"):
+            target[field] = target[field] or source[field]
+        if target["external_ids"]:
+            target["same_work_as_other_artist"] = None
+        for key_id in source["keys"]:
+            owner[key_id] = target["ref"]
+        del by_ref[source["ref"]]
+
+    for m in manual_merges:
+        missing = [k for k in m["keys"] + m["artists_from_keys"] if k not in owner]
+        if missing:
+            raise ValueError(f"merge_keys: keys {missing} have no planned new song")
+        target = by_ref[owner[m["keys"][0]]]
+        credits = [a for k in m["artists_from_keys"] for a in by_ref[owner[k]]["artists"]]
+        for key_id in m["keys"][1:]:
+            if owner[key_id] != target["ref"]:
+                absorb(target, by_ref[owner[key_id]])
+        target["artists"] = list({credit_key(a): a for a in credits}.values())
+        target["basis"] = "user"
+    groups = defaultdict(list)
+    for song in by_ref.values():
+        groups[loose(song["title_native"])].append(song)
+    for songs in groups.values():
+        songs.sort(key=lambda s: (-len(s["external_ids"]), s["ref"]))
+        kept: list[dict] = []
+        for song in songs:
+            match = next((k for k in kept if {credit_key(a) for a in k["artists"]} & {credit_key(a) for a in song["artists"]}), None)
+            if match:
+                absorb(match, song)
+            else:
+                kept.append(song)
+    for plan_row in key_plans:
+        if plan_row["song_ref"]:
+            plan_row["song_ref"] = owner[plan_row["key_id"]]
+    return [s for s in new_songs if s["ref"] in by_ref]
+
+
 def plan(state: dict, inputs: dict) -> dict:
     """Pure: turn report + research + review + manual decisions into a decision file."""
     report, manual = inputs["report"], inputs["manual"]
     songs, keys, spellings = state["songs"], state["keys"], state["spellings"]
     skipped: list[dict] = []
     claims = dict(state["external"])  # (provider, id) -> existing song id, grows as we attach
+    # User-approved exceptions to "one work, one song" (kept apart per artist).
+    split_works = {(w["provider"], w["external_id"]) for w in manual.get("split_works", [])}
 
     def song_spellings(song_id: int) -> set[str]:
         return set().union(*(spellings.get(a, set()) for a in songs[song_id]["artist_ids"])) if songs[song_id]["artist_ids"] else set()
@@ -216,8 +363,11 @@ def plan(state: dict, inputs: dict) -> dict:
 
     # ---- artists for new songs
     research = {r["ref"]: r for r in inputs["research"]}
+    same_as = {}
     for override in manual.get("artist_overrides", []):
-        if override["ref"] in research:
+        if override.get("same_as"):
+            same_as[override["ref"]] = override["same_as"]  # one person researched under two refs
+        elif override["ref"] in research:
             research[override["ref"]] = {**research[override["ref"]],
                                          **{k: v for k, v in override.items() if k not in ("ref", "reason")}}
     ref_by_spelling = {}
@@ -240,6 +390,7 @@ def plan(state: dict, inputs: dict) -> dict:
             new_artists[ref] = clean_artist({**reviewer_artist, "ref": ref}, [raw] if raw else [], taken_slugs=taken)
             return ("ref", ref)
         ref = ref_by_spelling.get(loose(raw))
+        ref = same_as.get(ref, ref)
         record = research.get(ref)
         if record is None:
             return None
@@ -249,6 +400,21 @@ def plan(state: dict, inputs: dict) -> dict:
         if ref not in new_artists:
             new_artists[ref] = clean_artist(record, [], taken_slugs=taken)
         return ("ref", ref)
+
+    def credited_artists(spec: dict):
+        """Manual credit: an existing artist id or a researched ref."""
+        if "artist_id" in spec:
+            if spec["artist_id"] not in state["artists"]:
+                raise ValueError(f"manual credit: artist {spec['artist_id']} not found")
+            return ("id", spec["artist_id"])
+        record = research.get(spec["research_ref"])
+        if record is None:
+            raise ValueError(f"manual credit: research ref {spec['research_ref']} not found")
+        if record.get("existing_artist_id") in state["artists"]:
+            return ("id", record["existing_artist_id"])
+        if spec["research_ref"] not in new_artists:
+            new_artists[spec["research_ref"]] = clean_artist(record, [], taken_slugs=taken)
+        return ("ref", spec["research_ref"])
 
     # ---- keys
     key_plans: list[dict] = []
@@ -273,6 +439,8 @@ def plan(state: dict, inputs: dict) -> dict:
                                "decided_by": decided_by, "count": count})
 
     manual_keys = {m["key_id"]: m for m in manual.get("keys", [])}
+    # User/parent decision: credit these keys' new songs to several artists (joint names like A×B).
+    key_credits = {m["key_id"]: m["artists"] for m in manual.get("key_artists", [])}
     for item in (i for i in items if i["kind"] == "key" and i["ref"] not in manual_keys):
         if item["status"] not in ("auto", "review"):
             continue
@@ -303,7 +471,22 @@ def plan(state: dict, inputs: dict) -> dict:
             reviewer_artist = decision.get("new_artist")
             artist_ids = [a for a in decision.get("artist_ids") or [] if a in state["artists"]]
         external_map = {**claims}
-        matches = existing_matches(candidate, song_index, external_map, target_spellings=target)
+        # Compare against every artist this key already resolves to (reviewer ids, a researched
+        # spelling that is an existing artist, manual credits), not only the pilot's own match.
+        known = set(artist_ids)
+        record = research.get(same_as.get(ref_by_spelling.get(loose(item["artist"])), ref_by_spelling.get(loose(item["artist"]))))
+        if record and record.get("existing_artist_id") in state["artists"]:
+            known.add(record["existing_artist_id"])
+        for spec in key_credits.get(item["ref"], []):
+            credit = research.get(spec.get("research_ref")) or {}
+            known.update(x for x in (spec.get("artist_id"), credit.get("existing_artist_id")) if x in state["artists"])
+        target |= set().union(*(spellings.get(a, set()) for a in known)) if known else set()
+        matches = existing_matches(candidate, song_index, external_map, target_spellings=target, split_works=split_works)
+        if not matches and known:
+            # Same title and an already-resolved artist of that existing song: the same song,
+            # even when the provider credits the artist only as vocalist.
+            titles = {loose(candidate["title"]), loose(item["title"])}
+            matches = sorted(sid for sid, s in songs.items() if loose(s["title_native"]) in titles and known & set(s["artist_ids"]))
         if len(matches) == 1:
             link(key, matches[0], basis, decided_by, candidate)
             attach(matches[0], candidate, "key_" + basis)
@@ -311,7 +494,9 @@ def plan(state: dict, inputs: dict) -> dict:
         if len(matches) > 1:
             skipped.append({"key_id": item["ref"], "reason": f"several existing songs match: {matches}"})
             continue
-        if artist_ids:
+        if item["ref"] in key_credits:
+            artists = [credited_artists(spec) for spec in key_credits[item["ref"]]]
+        elif artist_ids:
             artists = [("id", a) for a in artist_ids]
         else:
             found = artist_for(item["artist"], reviewer_artist)
@@ -341,8 +526,27 @@ def plan(state: dict, inputs: dict) -> dict:
         work = (p["candidate"]["provider"], p["candidate"]["external_id"]) if p["candidate"]["provider"] else ("manual", p["key"]["id"])
         groups[work][tuple(sorted(p["artists"]))].append(p)
     new_songs = []
+    merges = {(m["provider"], m["external_id"]): m for m in manual.get("merge_works", [])}
     for work, by_artists in groups.items():
+        if work in merges:
+            # User decision: one song for every key of this work, credited in the given key order.
+            plans_by_key = {p["key"]["id"]: (artists, p) for artists, plans in by_artists.items() for p in plans}
+            order = merges[work]["artists_from_keys"]
+            if set(order) - set(plans_by_key):
+                raise ValueError(f"merge_works {work}: keys {sorted(set(order) - set(plans_by_key))} are not planned")
+            merged = tuple(dict.fromkeys(a for key_id in order for a in plans_by_key[key_id][0]))
+            by_artists = {merged: [p for plans in by_artists.values() for p in plans]}
         credited = None
+        if work[0] != "manual" and len(by_artists) > 1 and work not in split_works:
+            # Policy (user, 2026-09-27): one work is one song whoever the setlist credits.
+            # Credits: artists named on the work first, then by how often each was sung.
+            def credited_first(item):
+                c = item[1][0]["candidate"]
+                names = {loose(a["name"]) for a in c["artists"] if a["role"] in WORK_CREDIT_ROLES}
+                return (not any(loose(p["key"]["artist_key"]) in names for p in item[1]), -sum(p["count"] for p in item[1]))
+            ordered = sorted(by_artists.items(), key=credited_first)
+            merged = tuple(dict.fromkeys(a for artists, _ in ordered for a in artists))
+            by_artists = {merged: [p for _, plans in ordered for p in plans]}
         if work[0] != "manual" and len(by_artists) > 1:
             def work_credit(plans):
                 c = plans[0]["candidate"]
@@ -372,6 +576,7 @@ def plan(state: dict, inputs: dict) -> dict:
                                   "artist_key": key["artist_key"], "song_id": None, "song_ref": ref, "basis": p["basis"],
                                   "decided_by": p["decided_by"],
                                   "external": [c["provider"], c["external_id"]] if c["provider"] else None})
+    new_songs = merge_new_songs(new_songs, key_plans, manual.get("merge_keys", []))
     used_refs = {a["artist_ref"] for s in new_songs for a in s["artists"] if "artist_ref" in a}
     artists_out = []
     for ref in sorted(used_refs):
@@ -573,23 +778,52 @@ def apply(conn, decisions: dict, *, write: bool) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
+    prep = sub.add_parser("prepare", help="Write research/review inputs for a round (read-only DB access)")
+    prep.add_argument("--report", type=Path, help="Pilot report to copy into the round dir (default: latest)")
+    prep.add_argument("--chunks", type=int, default=6, help="Artist research input files (default 6)")
     sub.add_parser("export", help="Write the decision file (read-only DB access)")
     run = sub.add_parser("apply", help="Dry-run the decision file; --apply writes it")
     run.add_argument("--apply", action="store_true")
-    parser.add_argument("--file", type=Path, default=DECISIONS)
-    parser.add_argument("--report-dir", type=Path, default=REPORT_DIR)
+    parser.add_argument("--round", type=int, default=1, help="Seed round; 2+ use round-N inputs and files")
+    parser.add_argument("--file", type=Path, help="Decision file (default: the round's)")
+    parser.add_argument("--report-dir", type=Path, help="Input dir (default: the round's)")
     args = parser.parse_args()
+    if args.round < 1:
+        parser.error("--round must be at least 1")
+    paths = round_paths(args.round)
+    report_dir, decision_file = args.report_dir or paths["report_dir"], args.file or paths["decisions"]
     writing = args.command == "apply" and args.apply
+    if args.command == "prepare":
+        if args.round == 1:
+            parser.error("round 1 inputs already exist; prepare is for --round 2 and later")
+        report_dir.mkdir(parents=True, exist_ok=True)
+        source = args.report or sorted(REPORT_DIR.glob("candidates-*.json"))[-1]
+        target = report_dir / source.name
+        if not target.exists():
+            shutil.copyfile(source, target)
     with psycopg.connect(migrate_catalog.load_connection(), connect_timeout=20) as conn:
         migrate_catalog.configure_transaction(conn, read_only=not writing)
-        if args.command == "export":
-            decisions = plan(load_state(conn), load_inputs(args.report_dir))
+        if args.command == "prepare":
+            inputs = load_inputs(report_dir, paths["manual"])
+            files = prepare(load_state(conn), inputs["report"], inputs["manual"],
+                            prefix=chr(ord("A") + args.round - 1), chunks=args.chunks)
             conn.rollback()
-            decisions["exported_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-            args.file.write_text(json.dumps(decisions, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-            print(json.dumps({"file": str(args.file), **decisions["summary"]}, ensure_ascii=False, indent=2))
+            for name, content in files.items():
+                (report_dir / name).write_text(json.dumps(content, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            print(json.dumps({"dir": str(report_dir), "report": inputs["report_name"],
+                              "artist_groups": len(files["artist-research-refs.json"]),
+                              "review_items": len(files["review-input.json"]["items"]),
+                              "files": sorted(files)}, ensure_ascii=False, indent=2))
             return 0
-        decisions = json.loads(args.file.read_text(encoding="utf-8"))
+        if args.command == "export":
+            decisions = plan(load_state(conn), load_inputs(report_dir, paths["manual"]))
+            conn.rollback()
+            decisions["round"] = args.round
+            decisions["exported_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+            decision_file.write_text(json.dumps(decisions, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            print(json.dumps({"file": str(decision_file), **decisions["summary"]}, ensure_ascii=False, indent=2))
+            return 0
+        decisions = json.loads(decision_file.read_text(encoding="utf-8"))
         if decisions.get("policy") != POLICY:
             raise SystemExit("Unexpected decision file policy")
         result = apply(conn, decisions, write=writing)

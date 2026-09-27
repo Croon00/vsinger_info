@@ -1,0 +1,12 @@
+{
+  "policy": "catalog-entity-merge-v1",
+  "note": "User decisions (2026-09-27). Apply with scripts/merge_catalog_entities.py after the round-2 song-master seed.",
+  "artists": [
+    {"source": 685, "target": 592,
+     "reason": "電ポルP is koyori's producer name; VocaDB lists one artist (308, koyori). User: merge koyori and 電ポルP"}
+  ],
+  "songs": [
+    {"source": 1370, "target": 1369,
+     "reason": "Rain by 秦基博 is 大江千里's Rain (same MusicBrainz work b86800d4). User policy: one work, one song; round 1 had split it"}
+  ]
+}

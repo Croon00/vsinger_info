@@ -170,13 +170,16 @@ def lookup(target: Target, *, vocadb=None, utaitedb=None, musicbrainz=None) -> d
 
 
 def existing_matches(candidate: dict, songs: list[dict], external: dict[tuple[str, str], int],
-                     *, target_spellings: set[str] | None = None) -> list[int]:
+                     *, target_spellings: set[str] | None = None,
+                     split_works: frozenset[tuple[str, str]] | set[tuple[str, str]] = frozenset()) -> list[int]:
     """Existing song ids a candidate already corresponds to.
 
-    A stored external ID wins when that song shares an artist with the target. When it
-    does not, the target is another artist's version of the same work (kept as its own
-    song, e.g. 僕が死のうと思ったのは by 中島美嘉 and by amazarashi), so only songs matching
-    title and target artist count. Without a stored ID: same title plus overlapping credit.
+    A stored external ID is the song: one work is one song whoever the setlist credits
+    (writer vs singer, a well-known cover). Works listed in ``split_works`` are the
+    user-approved exceptions kept apart per artist (e.g. 僕が死のうと思ったのは by
+    中島美嘉 and by amazarashi): there the stored ID wins only when that song shares an
+    artist with the target, else only songs matching title and target artist count.
+    Without a stored ID: same title plus overlapping credit.
     """
     names = _loose_set([candidate["title"]] + [n["value"] for n in candidate["names"]])
     credit = []
@@ -190,6 +193,7 @@ def existing_matches(candidate: dict, songs: list[dict], external: dict[tuple[st
     if stored is None:
         return sorted(s["id"] for s in by_title)
     owner = next((s for s in songs if s["id"] == stored), None)
-    if owner is None or _loose_set(owner["artist_spellings"]) & wanted:
+    work = (candidate["provider"], candidate["external_id"])
+    if owner is None or work not in split_works or _loose_set(owner["artist_spellings"]) & wanted:
         return [stored]
     return sorted(s["id"] for s in by_title if s["id"] != stored and _loose_set(s["artist_spellings"]) & wanted)

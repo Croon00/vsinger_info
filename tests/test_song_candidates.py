@@ -116,7 +116,7 @@ def test_existing_song_found_by_stored_id_then_by_title_and_artist():
     assert existing_matches(candidate, [songs[1]], {}) == []
 
 
-def test_stored_work_of_another_artist_does_not_absorb_a_separate_version():
+def test_stored_work_is_one_song_except_user_split_works():
     work = CatalogWork(provider="musicbrainz_work", external_id=WORK, title="僕が死のうと思ったのは", url="u",
                        names=[], artists=[CatalogArtist(name="秋田ひろむ", role="composer")])
     target = key("僕が死のうと思ったのは", "中島美嘉")
@@ -124,9 +124,13 @@ def test_stored_work_of_another_artist_does_not_absorb_a_separate_version():
     songs = [{"id": 208, "title_key": "僕が死のうと思ったのは", "artist_spellings": {"amazarashi"}},
              {"id": 10, "title_key": "僕が死のうと思ったのは", "artist_spellings": {"中島美嘉"}}]
     stored = {("musicbrainz_work", WORK): 208}
-    assert existing_matches(candidate, songs, stored, target_spellings={"中島美嘉"}) == [10]
-    assert existing_matches(candidate, songs, stored, target_spellings={"amazarashi"}) == [208]
-    assert existing_matches(candidate, songs[:1], stored, target_spellings={"中島美嘉"}) == []
+    # Default: the stored work is the song, whoever the setlist credits.
+    assert existing_matches(candidate, songs, stored, target_spellings={"中島美嘉"}) == [208]
+    # User-approved exception: versions stay apart per artist.
+    split = {("musicbrainz_work", WORK)}
+    assert existing_matches(candidate, songs, stored, target_spellings={"中島美嘉"}, split_works=split) == [10]
+    assert existing_matches(candidate, songs, stored, target_spellings={"amazarashi"}, split_works=split) == [208]
+    assert existing_matches(candidate, songs[:1], stored, target_spellings={"中島美嘉"}, split_works=split) == []
 
 
 

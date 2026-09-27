@@ -1,0 +1,80 @@
+{
+  "policy": "song-master-seed-manual-v1",
+  "note": "Round 2 (keys ranked 301-1000 in the round-1 order, pilot candidates-20260927T071104Z). User-directed decisions (2026-09-27) applied on top of the pilot report and the first-pass review.",
+  "existing_song_external": [
+    {"song_id": 1088, "provider": "utaitedb", "external_id": "14998",
+     "note": "一番の宝物 / LiSA: one work, one song (user policy 2026-09-27); round 1 had kept it apart from karuta's original entry"}
+  ],
+  "split_works": [
+    {"provider": "musicbrainz_work", "external_id": "b3919faf-7f88-40a5-aef6-006ef103e275",
+     "note": "僕が死のうと思ったのは: the 中島美嘉 and amazarashi versions are usually told apart (user); the only exception to one work, one song"}
+  ],
+  "review_overrides": [
+    {"item": "key:18386", "decision": "create", "provider": "vocadb", "external_id": "813248", "artist_ids": [689], "new_artist": null,
+     "reason": "ウイスキーが、お好きでしょ was released by SAYURI (石川さゆり's alias). The reviewer copied the 水の証 ID (utaitedb 38977); the only candidate is vocadb 813248"},
+    {"item": "key:16150", "decision": "leave_pending", "reason": "you / 癒月: the reading of 癒月 is unconfirmed, so no Korean/Latin name can be given without guessing"},
+    {"item": "key:17459", "decision": "leave_pending", "reason": "にんげんっていいな: joint credit of two unresearched performers (中嶋/中島義実, ヤング・フレッシュ); kanji unconfirmed"},
+    {"item": "key:25207", "new_artist": {"name_native": "ラクス・クライン（田中理恵）", "name_ko": "라크스 클라인(타나카 리에)", "name_latin": "Lacus Clyne (Rie Tanaka)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "lacus-clyne-rie-tanaka", "aliases": [], "confidence": "medium", "sources": ["https://utaitedb.net/S/38977"]},
+     "reason": "Character credits follow the catalog convention (ランカ・リー（中島愛）, 涼宮ハルヒ（平野綾）): one artist per character credit, not the voice actor alone"},
+    {"item": "key:13720", "new_artist": {"name_native": "ラクス・クライン（田中理恵）", "name_ko": "라크스 클라인(타나카 리에)", "name_latin": "Lacus Clyne (Rie Tanaka)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "lacus-clyne-rie-tanaka", "aliases": [], "confidence": "medium", "sources": ["https://musicbrainz.org/work/0aa945a5-a0ee-30d6-a148-161e9b077bf6"]},
+     "reason": "Same character credit as key:25207 (one artist)"},
+    {"item": "key:25795", "new_artist": {"name_native": "阿良々木月火（井口裕香）", "name_ko": "아라라기 츠키히(이구치 유카)", "name_latin": "Tsukihi Araragi (Yuka Iguchi)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "tsukihi-araragi-yuka-iguchi", "aliases": [], "confidence": "medium", "sources": []},
+     "reason": "Character credit convention"},
+    {"item": "key:14592", "new_artist": {"name_native": "月村手毬（小鹿なお）", "name_ko": "츠키무라 테마리(코지카 나오)", "name_latin": "Temari Tsukimura (Nao Kojika)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "temari-tsukimura-nao-kojika", "aliases": [], "confidence": "medium", "sources": ["https://vocadb.net/S/761843"]},
+     "reason": "Character credit convention (学園アイドルマスター)"},
+    {"item": "key:14593", "new_artist": {"name_native": "月村手毬（小鹿なお）", "name_ko": "츠키무라 테마리(코지카 나오)", "name_latin": "Temari Tsukimura (Nao Kojika)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "temari-tsukimura-nao-kojika", "aliases": [], "confidence": "medium", "sources": ["https://vocadb.net/S/761843"]},
+     "reason": "Same character credit as key:14592 (one artist, one song)"},
+    {"item": "key:17582", "new_artist": {"name_native": "ハチワレ（田中誠人）", "name_ko": "하치와레(타나카 마사토)", "name_latin": "Hachiware (Masato Tanaka)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "hachiware-masato-tanaka", "aliases": [], "confidence": "medium", "sources": []},
+     "reason": "Character credit convention (ちいかわ)"},
+    {"item": "key:20558", "new_artist": {"name_native": "mona（夏川椎菜）", "name_ko": "모나(나츠카와 시이나)", "name_latin": "mona (Shiina Natsukawa)",
+     "entity_kind": "solo", "is_virtual": false, "slug": "mona-shiina-natsukawa", "aliases": [], "confidence": "medium", "sources": []},
+     "reason": "Character credit convention (HoneyWorks 告白実行委員会)"},
+    {"item": "key:19056", "new_artist": {"name_native": "B小町", "name_ko": "B코마치", "name_latin": "B Komachi",
+     "entity_kind": "group", "is_virtual": false, "slug": "b-komachi", "aliases": [], "confidence": "medium", "sources": []},
+     "reason": "The setlist credits the fictional idol unit B小町 ([推しの子]); keep the unit as written instead of one member credit"}
+  ],
+  "artist_overrides": [
+    {"ref": "B031", "same_as": "B008", "reason": "ryo and ryo(supercell) are the same producer (メルト, ワールドイズマイン); one artist"},
+    {"ref": "B052", "name_native": "Da-iCE", "aliases": ["Da‐iCE"], "reason": "Official name uses an ASCII hyphen; the research copied a U+2010 hyphen"}
+  ],
+  "key_artists": [
+    {"key_id": 16106, "artists": [{"artist_id": 123}, {"research_ref": "B012"}],
+     "note": "WINDING ROAD / 絢香×コブクロ: credit 絢香 (existing) and コブクロ (researched) instead of a joint-name artist"},
+    {"key_id": 14632, "artists": [{"research_ref": "B165"}],
+     "note": "magnet / minato(流星P): minato = 流星P = 湊貴大 (B165); the reviewer proposed a second artist for the same person"}
+  ],
+  "merge_keys": [
+    {"keys": [22456, 22454], "artists_from_keys": [22456],
+     "note": "初めての恋が終わる時: ryo(supercell) is supercell's producer; one supercell song as in the catalog (メルト 940, ワールドイズマイン 1015)"},
+    {"keys": [20550, 20558], "artists_from_keys": [20550, 20558],
+     "note": "ファンサ: one release credited to HoneyWorks (producer) and mona（夏川椎菜） (vocal), same as おとなの掟 (user decision)"},
+    {"keys": [21563, 21562], "artists_from_keys": [21563, 21562],
+     "note": "ルパン三世のテーマ: 大野雄二 (composer) and ピート・マック・ジュニア (the vocal version's singer) are one song"},
+    {"keys": [14592, 14593, 14590], "artists_from_keys": [14592],
+     "note": "Luna say maybe: 月村手毬（小鹿なお）'s song; 初星学園 is the game's label credit, not another version"}
+  ],
+  "keys": [
+    {"key_id": 24681, "song_id": 991, "note": "曖昧劣情Lover / 電ポルP: same song as 991 (koyori); koyori (592) and 電ポルP (685) are one person stored twice"},
+    {"key_id": 20000, "song_id": 1308, "note": "ドーナツホール / 米津玄師: ハチ (638) is 米津玄師 (98)'s Vocaloid name; same song as 1308"},
+    {"key_id": 21175, "song_id": 940, "note": "メルト / ryo(supercell): supercell song 940"},
+    {"key_id": 21173, "song_id": 940, "note": "メルト / ryo: supercell song 940"},
+    {"key_id": 21765, "song_id": 1015, "note": "ワールドイズマイン / ryo: supercell song 1015"},
+    {"key_id": 21767, "song_id": 1015, "note": "ワールドイズマイン / ryo(supercell): supercell song 1015"}
+  ],
+  "hold_keys": [
+    {"key_id": 14169, "note": "Round 1 review: leave pending (Hope Song / 焔魔るり)"},
+    {"key_id": 14203, "note": "Round 1 review: leave pending (I LOVE YOU / クリス・ハート)"},
+    {"key_id": 15924, "note": "Round 1 review: leave pending (U / millennium parade × Belle)"}
+  ],
+  "merge_works": [
+    {"provider": "musicbrainz_work", "external_id": "99c9adca-a465-473f-999c-e623c7e399a2",
+     "artists_from_keys": [16600, 16603],
+     "note": "おとなの掟 stays ONE song (user): Doughnuts Hole released it, 椎名林檎 wrote and self-covered it"}
+  ]
+}
