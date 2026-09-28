@@ -202,9 +202,16 @@ def parse_live_detail(url: str, html: str) -> PublicLive | None:
         venue = venue_match.group(1) if venue_match else None
     summary = "" if riot_article else doc.meta.get("description", "")
     if not summary:
-        summary = visible[visible.find(title) + len(title):][:1800] if title in visible else visible[:1800]
+        # Z-aN repeats site-wide recommendations before the event body. Start at
+        # the event title closest to its date label so unrelated artists cannot
+        # become participants through the recommendation carousel.
+        body_start = date_match.start() if date_match else 0
+        title_start = visible.rfind(title, 0, body_start) if body_start else -1
+        if title_start >= 0:
+            body_start = title_start
+        summary = visible[body_start:body_start + 1800]
     # A Z-aN detail page can include both a venue and a stream ticket.
-    context = f"{summary} {visible[:3000]}".lower()
+    context = summary.lower()
     onsite = bool(venue or re.search(r"会場|행사장|現地|venue", context))
     streaming = bool(re.search(r"配信|스트리밍|streaming|온라인", context))
     event_format = "hybrid" if onsite and streaming else "onsite" if onsite else "online"

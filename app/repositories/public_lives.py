@@ -121,6 +121,10 @@ def save_public_live(event: PublicLive, artist_ids: list[int]) -> bool:
                 INSERT INTO concert_artists (concert_id,artist_id,position)
                 VALUES (%s,%s,%s) ON CONFLICT (concert_id,artist_id) DO NOTHING
             """, (concert_id, artist_id, position))
+        conn.exec_driver_sql("""
+            DELETE FROM concert_artists
+            WHERE concert_id=%s AND artist_id <> ALL(%s::integer[])
+        """, (concert_id, artist_ids))
         if event.ticket_url:
             ticket = conn.exec_driver_sql("""
                 SELECT id FROM concert_ticket_windows

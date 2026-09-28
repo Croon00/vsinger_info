@@ -76,3 +76,19 @@ def test_channel_owner_and_explicit_guest_match_without_unrelated_artist():
     """)
     assert event is not None
     assert artist_ids_for_event(rows, "virtual_kaf", event) == [1, 2]
+
+
+def test_detail_recommendations_do_not_create_false_participants():
+    rows = [
+        {"id": 1, "name_native": "HACHI", "name_ko": None, "name_latin": None, "aliases": []},
+        {"id": 2, "name_native": "水瀬凪", "name_ko": None, "name_latin": None, "aliases": []},
+    ]
+    event = parse_live_detail("https://www.zan-live.com/ko/live/detail/10950", """
+      <meta property="og:title" content="るりとなぎ - 冬のうたまつり -">
+      <p>るりとなぎ - 冬のうたまつり - - Z-aN おすすめイベント HACHI 4th LIVE</p>
+      <p>るりとなぎ - 冬のうたまつり - RK Music 開催日 2026年11月29日</p>
+      <p>■出演者 焔魔るり / 水瀬凪</p>
+    """)
+    assert event is not None
+    assert "HACHI" not in event.excerpt
+    assert artist_ids_for_event(rows, "rkmusic", event) == [2]
