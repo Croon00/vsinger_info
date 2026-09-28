@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from app.db.catalog_session import catalog_runtime_session
 from app.integrations.live_site_pages import PublicLive
@@ -71,12 +71,13 @@ def save_public_live(event: PublicLive, artist_ids: list[int]) -> bool:
     }
     content = json.dumps(facts, ensure_ascii=False, sort_keys=True)
     digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    status = "completed" if event.event_date < datetime.now(timezone(timedelta(hours=9))).date() else "scheduled"
     with catalog_runtime_session() as session:
         conn = session.connection()
         # Handles multiple Railway replicas and repeated channel appearances.
         conn.exec_driver_sql("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (event.source_url,))
         current = conn.exec_driver_sql("""
-            SELECT c.id, d.content_hash, d.source_metadata->>'collector' AS collector FROM concerts c
+            SELECT c.id, c.status, d.content_hash, d.source_metadata->>'collector' AS collector FROM concerts c
             JOIN source_documents d ON d.id = c.source_document_id
             WHERE d.source_url = %s AND c.archived_at IS NULL
             ORDER BY c.id LIMIT 1
@@ -101,21 +102,23 @@ def save_public_live(event: PublicLive, artist_ids: list[int]) -> bool:
         )
         if unchanged:
             concert_id = current["id"]
+            if current["status"] != status:
+                conn.exec_driver_sql("UPDATE concerts SET status=%s WHERE id=%s", (status, concert_id))
         elif current:
             concert_id = current["id"]
             conn.exec_driver_sql("""
                 UPDATE concerts SET title=%s, event_format=%s, event_date=%s,
                     starts_at=%s, timezone_name=%s, time_precision=%s, venue=%s,
-                    source_document_id=%s
+                    source_document_id=%s, status=%s
                 WHERE id=%s
-            """, (*values, concert_id))
+            """, (*values, status, concert_id))
         else:
             concert_id = conn.exec_driver_sql("""
                 INSERT INTO concerts
                   (title,event_format,event_date,starts_at,timezone_name,time_precision,venue,
                    source_document_id,status)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'scheduled') RETURNING id
-            """, values).mappings().one()["id"]
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id
+            """, (*values, status)).mappings().one()["id"]
         for position, artist_id in enumerate(artist_ids):
             conn.exec_driver_sql("""
                 INSERT INTO concert_artists (concert_id,artist_id,position)

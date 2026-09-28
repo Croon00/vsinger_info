@@ -31,6 +31,7 @@ RIOT_INFO_PAGES = {
 _ZAN_DETAIL = re.compile(r"^/(?:ko|ja|en)/live/detail/(\d+)/?$")
 _ZAIKO_DETAIL = re.compile(r"^/(?:[a-z-]+/)?(?:e|item)/[A-Za-z0-9_-]+/?$")
 _RIOT_ARTICLE = re.compile(r"^/(?:mugensho-record/)?info/(?:20\d{2}/\d{2}/\d{2}/)?\d+/?$")
+_RIOT_INFO_PAGE = re.compile(r"^/(?:mugensho-record/)?info/page/([1-9]\d*)/?$")
 _KOREAN_DATE = re.compile(r"(20\d{2})\s*년\s*(\d{1,2})\s*월\s*(\d{1,2})\s*일")
 _JAPANESE_DATE = re.compile(r"(20\d{2})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日")
 _NUMERIC_DATE = re.compile(r"(20\d{2})[./-](\d{1,2})[./-](\d{1,2})")
@@ -123,7 +124,26 @@ def event_links(channel_url: str, html: str) -> list[str]:
             found[candidate] = None
         elif host == "riot-music.com" and _RIOT_ARTICLE.fullmatch(parsed.path):
             found[candidate] = None
-    return list(found)[:24]
+    return list(found)[:120]
+
+
+def archive_page_links(index_url: str, html: str) -> list[str]:
+    """Follow only pagination belonging to the same official RIOT info section."""
+    parsed_index = urlparse(index_url)
+    if parsed_index.hostname != "riot-music.com":
+        return []
+    section = "/mugensho-record/info/" if parsed_index.path.startswith("/mugensho-record/") else "/info/"
+    found: dict[str, None] = {}
+    for href, _ in _document(html).links:
+        candidate = urljoin(index_url, href).split("?", 1)[0].split("#", 1)[0]
+        parsed = urlparse(candidate)
+        match = _RIOT_INFO_PAGE.fullmatch(parsed.path)
+        if parsed.scheme != "https" or parsed.hostname != parsed_index.hostname or not match:
+            continue
+        if not parsed.path.startswith(section) or int(match.group(1)) > 10:
+            continue
+        found[candidate] = None
+    return list(found)
 
 
 def _schema_event(doc: _Document) -> dict | None:

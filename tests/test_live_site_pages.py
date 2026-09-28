@@ -1,6 +1,6 @@
 from datetime import date, datetime, timedelta, timezone
 
-from app.integrations.live_site_pages import event_links, parse_live_detail
+from app.integrations.live_site_pages import archive_page_links, event_links, parse_live_detail
 from app.repositories.public_lives import artist_ids_for_event
 
 
@@ -15,6 +15,28 @@ def test_channel_links_ignore_global_recommendations_and_duplicates():
     """
     assert event_links("https://www.zan-live.com/ko/channel/rkmusic", html) == [
         "https://www.zan-live.com/ko/live/detail/10960"
+    ]
+
+
+def test_channel_links_include_history_beyond_first_24():
+    html = '<h2>최신 이벤트</h2>' + ''.join(
+        f'<a href="/ko/live/detail/{number}">past live</a>' for number in range(1, 41)
+    )
+    links = event_links("https://www.zan-live.com/ko/channel/rkmusic", html)
+    assert len(links) == 40
+    assert links[-1].endswith("/40")
+
+
+def test_riot_archive_pages_stay_within_official_section():
+    html = """
+      <a href="/info/page/2/">2</a>
+      <a href="https://riot-music.com/info/page/3/">3</a>
+      <a href="/mugensho-record/info/page/4/">other section</a>
+      <a href="https://example.org/info/page/5/">other host</a>
+    """
+    assert archive_page_links("https://riot-music.com/info/", html) == [
+        "https://riot-music.com/info/page/2/",
+        "https://riot-music.com/info/page/3/",
     ]
 
 

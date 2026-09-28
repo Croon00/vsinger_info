@@ -39,7 +39,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 ### 공개 라이브 일정
 
-`python -m app.runtime`은 `LIVE_SITE_MONITOR_ENABLED=true`일 때 시작 직후와 이후 24시간마다 RK Music·카미츠바키 Z-aN 채널, RIOT MUSIC ZAIKO 채널 및 공식 공지를 확인한다. 공식 공연 상세에서 날짜와 아티스트를 확인한 일정만 통합 `DATABASE_URL`의 `concerts`에 저장한다. 달력은 생일과 공연을 함께 표시하며, 공연 제목을 선택하면 상세 화면에서 공식 사이트를 열 수 있다. 같은 원문 URL은 중복 등록하지 않는다. 로컬에서 수집만 한 번 실행하려면 `python -m app.agents.live_site_monitor`를 사용한다.
+`python -m app.runtime`은 `LIVE_SITE_MONITOR_ENABLED=true`일 때 시작 직후와 이후 24시간마다 RK Music·카미츠바키 Z-aN 채널, RIOT MUSIC ZAIKO 채널 및 공식 공지를 확인한다. 공식 채널에 남아 있는 과거 공연도 수집하고 RIOT 공식 공지의 이전 목록 페이지도 확인한다. 날짜와 아티스트를 확인한 일정만 통합 `DATABASE_URL`의 `concerts`에 저장하며 지난 공연은 `completed`로 표시한다. 달력은 생일과 공연을 함께 표시하며, 공연 제목을 선택하면 상세 화면에서 공식 사이트를 열 수 있다. 같은 원문 URL은 중복 등록하지 않는다. 로컬에서 수집만 한 번 실행하려면 `python -m app.agents.live_site_monitor`를 사용한다.
 
 사이트 접근이 거부되거나 robots.txt가 허용하지 않으면 해당 소스를 건너뛴다. ZAIKO는 자동 요청에 403을 반환할 수 있어 RIOT 공식 공지도 보조적으로 확인하지만 일부 일정은 누락될 수 있다. 티켓 구매나 응모는 수행하지 않는다.
 

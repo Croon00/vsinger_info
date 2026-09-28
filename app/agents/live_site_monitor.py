@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timedelta, timezone
 
 import httpx
 from sqlalchemy.exc import SQLAlchemyError
@@ -12,7 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.db.catalog_session import catalog_url
 from app.integrations.live_site_pages import (
     USER_AGENT, RIOT_INFO_PAGES, ZAIKO_CHANNEL, ZAN_CHANNELS, PublicSiteReader,
-    event_links, parse_live_detail,
+    archive_page_links, event_links, parse_live_detail,
 )
 from app.repositories.public_lives import artist_ids_for_event, catalog_artist_rows, save_public_live
 
@@ -34,21 +33,29 @@ async def poll_live_sites() -> dict[str, int]:
         reader = PublicSiteReader(client)
         discovered: dict[str, set[str]] = {}
         for channel, page_url in sources.items():
-            try:
-                page = await reader.get(page_url)
-                counters["sources"] += 1
-                links = event_links(page_url, page)
-            except (httpx.HTTPError, PermissionError, ValueError):
-                logger.exception("Live channel read failed: %s", channel)
-                counters["failed"] += 1
-                continue
-            for url in links:
-                discovered.setdefault(url, set()).add(channel)
+            pending = [page_url]
+            seen_pages: set[str] = set()
+            while pending and len(seen_pages) < 10:
+                current_url = pending.pop(0)
+                if current_url in seen_pages:
+                    continue
+                seen_pages.add(current_url)
+                try:
+                    page = await reader.get(current_url)
+                    counters["sources"] += 1
+                    links = event_links(current_url, page)
+                except (httpx.HTTPError, PermissionError, ValueError):
+                    logger.exception("Live channel read failed: %s", current_url)
+                    counters["failed"] += 1
+                    continue
+                for url in links:
+                    discovered.setdefault(url, set()).add(channel)
+                pending.extend(url for url in archive_page_links(current_url, page) if url not in seen_pages)
         for url, channels in discovered.items():
             try:
                 detail = parse_live_detail(url, await reader.get(url))
                 counters["details"] += 1
-                if detail is None or detail.event_date < datetime.now(timezone(timedelta(hours=9))).date():
+                if detail is None:
                     continue
                 artist_ids = list(dict.fromkeys(
                     artist_id for channel in channels
