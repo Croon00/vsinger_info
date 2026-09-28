@@ -590,13 +590,7 @@ async function openEvent(event: CalendarEvent) {
                                     :is="event.kind === 'birthday' ? Cake : CalendarIcon"
                                     data-icon="inline-start"
                                   />
-                                  <span class="calendar-event-name">
-                                    {{
-                                      event.kind === 'birthday'
-                                        ? event.title
-                                        : event.title
-                                    }}
-                                  </span>
+                                  <span class="calendar-event-name">{{ event.title }}</span>
                                 </Badge>
                               </Button>
                             </template>

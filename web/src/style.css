@@ -1881,14 +1881,20 @@ a:focus-visible {
   font-size: 12px;
   color: var(--muted-foreground);
 }
+/* Fixed layout keeps long event titles from widening the seven day columns. */
+.month-grid {
+  table-layout: fixed;
+}
 .month-grid [data-slot='calendar-grid-row'] {
   width: 100%;
+  min-width: 0;
 }
 .month-grid [data-slot='calendar-head-cell'] {
   padding: 0 0 12px;
 }
 .month-cell {
   min-width: 0;
+  overflow: hidden;
   height: 104px;
   padding: 6px 3px;
   border-top: 1px solid var(--border);

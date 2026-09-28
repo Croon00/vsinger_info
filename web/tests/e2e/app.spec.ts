@@ -382,6 +382,23 @@ test('calendar changes month, filters birthdays, and opens concerts', async ({
   await expect(page.locator('.month-grid')).toBeVisible()
 })
 
+test('long event titles keep all seven calendar columns visible', async ({ page }) => {
+  await visit(page, '/calendar?month=2026-09-01')
+  const title = page.locator('.month-cell .calendar-event-name').first()
+  await expect(title).toBeVisible()
+  // Official live titles can be much longer than an artist name and must be clipped per cell.
+  await title.evaluate((element) => {
+    element.textContent = 'RK Music presents 2026 Autumn Online Special Live '.repeat(4)
+  })
+  const viewport = (await page.locator('.calendar-swipe-viewport').boundingBox())!
+  const grid = (await page.locator('.month-grid').boundingBox())!
+  expect(grid.width).toBeLessThanOrEqual(viewport.width + 1)
+  const cells = page.locator('.month-grid tbody tr').first().locator('.month-cell')
+  await expect(cells).toHaveCount(7)
+  const last = (await cells.nth(6).boundingBox())!
+  expect(last.x + last.width).toBeLessThanOrEqual(viewport.x + viewport.width + 1)
+})
+
 test('translated calendar view control keeps toggling without runtime errors', async ({
   page,
   isMobile,
