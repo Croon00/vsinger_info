@@ -1,0 +1,6 @@
+{
+  "policy": "deleted-artist-restore-v1",
+  "artist_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "show_in_catalog": false,
+  "reason": "2026-09-28 다른 관리자가 카탈로그 도구 밖에서 삭제한 아티스트 10명(Aimer, milet, LiSA, ReoNa, ヨルシカ, ロクデナシ, やなぎなぎ, supercell, fhána, tayori)을 삭제 전 Neon 브랜치(2026-09-28 11:28 UTC 무렵 상태)에서 복구. 카탈로그 표시는 끔."
+}
