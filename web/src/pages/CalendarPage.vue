@@ -594,7 +594,7 @@ async function openEvent(event: CalendarEvent) {
                                     {{
                                       event.kind === 'birthday'
                                         ? event.title
-                                        : `${artist(event.artist_id)?.name ?? ''} 공연`
+                                        : event.title
                                     }}
                                   </span>
                                 </Badge>
@@ -615,7 +615,7 @@ async function openEvent(event: CalendarEvent) {
                                   {{
                                     event.kind === 'birthday'
                                       ? `${artist(event.artist_id)?.name ?? ''} 생일`
-                                      : artist(event.artist_id)?.name
+                                      : event.title
                                   }}
                                 </span>
                               </Badge>

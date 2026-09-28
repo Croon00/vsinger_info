@@ -150,7 +150,7 @@ async function restoreFocus(event: Event) {
               <ArtistAvatar v-if="data.artist" :artist="data.artist" />
               <div>
                 <h3>{{ data.artist?.name }}</h3>
-                <p>OFFLINE LIVE</p>
+                <p>{{ data.concert.event_format === 'online' ? 'ONLINE LIVE' : 'LIVE EVENT' }}</p>
               </div>
             </div>
             <dl class="concert-facts">

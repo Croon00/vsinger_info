@@ -37,6 +37,12 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 현재 사용자 조회 `/api`, X poller·Discord URL sender, 독립 YouTube·Spotify worker는 단일 `DATABASE_URL`의 신규 DB를 사용한다. 구 SQL 연결 함수는 차단되어 있다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행한다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용한다.
 
+### 공개 라이브 일정
+
+`python -m app.runtime`은 `LIVE_SITE_MONITOR_ENABLED=true`일 때 시작 직후와 이후 24시간마다 RK Music·카미츠바키 Z-aN 채널, RIOT MUSIC ZAIKO 채널 및 공식 공지를 확인한다. 공식 공연 상세에서 날짜와 아티스트를 확인한 일정만 통합 `DATABASE_URL`의 `concerts`에 저장한다. 달력은 생일과 공연을 함께 표시하며, 공연 제목을 선택하면 상세 화면에서 공식 사이트를 열 수 있다. 같은 원문 URL은 중복 등록하지 않는다. 로컬에서 수집만 한 번 실행하려면 `python -m app.agents.live_site_monitor`를 사용한다.
+
+사이트 접근이 거부되거나 robots.txt가 허용하지 않으면 해당 소스를 건너뛴다. ZAIKO는 자동 요청에 403을 반환할 수 있어 RIOT 공식 공지도 보조적으로 확인하지만 일부 일정은 누락될 수 있다. 티켓 구매나 응모는 수행하지 않는다.
+
 선택한 runtime 상태의 신규 DB 이전은 [운영 DB 이전 기록](docs/backend-cutover-2026-09-23.md)대로 완료했다. X·Discord, 독립 YouTube, 등록된 Spotify 계정, 설정 통합의 로컬 검증과 별개로, X provider 오류 확인·Discord 활성화·실제 운영 검증은 남아 있다. 최신 완료 조건은 [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md)을 따른다.
 
 ## 새 DB 관리자
@@ -48,7 +54,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | 명령/디렉터리 | 역할 |
 | --- | --- |
 | `uvicorn app.main:app --reload` | API만 실행. Discord 로그인과 주기 수집 loop는 시작하지 않음 |
-| `python -m app.runtime` | API 실행. `RUNTIME_CUTOVER_ENABLED=true`에서 Discord 봇을, 여기에 `AGENT_ENABLED=true`이면 수집 loop도 실행 |
+| `python -m app.runtime` | API와 공개 라이브 일정 감시 실행. `RUNTIME_CUTOVER_ENABLED=true`에서 Discord 봇을, 여기에 `AGENT_ENABLED=true`이면 기존 수집 loop도 실행 |
 | `web/` | 새 사용자 조회 화면. 기본 통합 `/api`, 별도 mock 모드 |
 | `admin-web/` / `python scripts/run_admin.py` | 새 카탈로그 로컬 관리자. 빌드 후 127.0.0.1:8010, 초기 데이터는 명시적 검수·반영 |
 | `web.bak/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |

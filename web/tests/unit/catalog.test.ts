@@ -36,13 +36,13 @@ describe('calendar boundaries', () => {
     for (const input of ['0000-01-01', '2026-13-01', '2026-02-30', ['2026-09-01']])
       expect(monthKey(input)).toBe(`${todayKey().slice(0, 7)}-01`)
   })
-  it('excludes online events and preserves member birthdays', () => {
+  it('includes online events and preserves member birthdays', () => {
     const events = calendarEvents(
       artists,
       [{ ...concerts[0], id: 9999, event_format: 'online' }, concerts[1]],
       2027,
     )
-    expect(events.filter((e) => e.kind === 'concert')).toHaveLength(1)
+    expect(events.filter((e) => e.kind === 'concert')).toHaveLength(2)
     expect(
       events
         .filter((e) => e.artist_id === 11 && e.kind === 'birthday')

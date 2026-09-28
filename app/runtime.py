@@ -7,6 +7,7 @@ import os
 import uvicorn
 
 from app.agents.scheduler import agent_loop
+from app.agents.live_site_monitor import live_site_loop
 from app.api.main import app
 from app.bots.discord_bot import start_discord_bot
 from app.core.config import settings
@@ -25,6 +26,8 @@ async def main() -> None:
     """API를 실행하고 전환 승인 뒤에만 Discord/수집 runtime을 시작합니다."""
     logging.basicConfig(level=logging.INFO)
     tasks = [_serve_api()]
+    if settings.live_site_monitor_enabled:
+        tasks.append(live_site_loop())
 
     if settings.runtime_cutover_enabled:
         tasks.append(start_discord_bot())

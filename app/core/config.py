@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     agent_enabled: bool = False
     agent_run_on_start: bool = False
     runtime_cutover_enabled: bool = False
+    live_site_monitor_enabled: bool = True
     cors_allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     x_provider: Literal["auto", "twscrape", "x_api"] = "auto"
     x_bearer_token: str | None = None

@@ -62,7 +62,7 @@ export function calendarEvents(
   const events: CalendarEvent[] = concerts
     .filter(
       (c) =>
-        ['onsite', 'hybrid'].includes(c.event_format) && Number.isFinite(Date.parse(c.starts_at)),
+        ['onsite', 'hybrid', 'online'].includes(c.event_format) && Number.isFinite(Date.parse(c.starts_at)),
     )
     .map((c) => ({
       id: `concert-${c.id}`,
