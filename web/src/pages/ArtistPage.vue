@@ -371,7 +371,13 @@ function returnToList() {
                       <span class="track-number">{{ String(index + 1).padStart(2, '0') }}</span>
                       <div>
                         <h3>{{ displayName(track.title, track.title_ko) }}</h3>
-                        <p>{{ displayName(data.artist.name, data.artist.display_name) }}</p>
+                        <p>
+                          {{
+                            track.artists?.length
+                              ? track.artists.map((a) => displayName(a.name, a.name_ko)).join(' · ')
+                              : displayName(data.artist.name, data.artist.display_name)
+                          }}
+                        </p>
                       </div>
                       <span class="track-duration">{{ track.duration }}</span>
                       <Button

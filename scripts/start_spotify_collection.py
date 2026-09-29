@@ -1,12 +1,14 @@
 """Enable Spotify collection for catalog-visible artists and enqueue their first jobs.
 
 Targets are active Spotify accounts linked as ``owner`` to an active ``show_in_catalog``
-artist. The preview (default) only reads. ``--apply`` refuses unless catalog revision 005
-(ISRC) is applied, then in ONE transaction sets ``collection_enabled=true`` on the targets
+artist. The preview (default) only reads. ``--apply`` refuses unless catalog revision 006
+(provider track credits, which needs 005 ISRC) is applied, then in ONE transaction sets ``collection_enabled=true`` on the targets
 that are still disabled (catalog_imports receipt + one catalog_changes row each) and
 enqueues one ``spotify_collect`` job per target (``request_run`` from ``--run``, default ``initial``; album offset 0,
 no YouTube matching) through the normal job repository, so account validation and the
-idempotency key are the worker's own. Re-running enqueues nothing new.
+idempotency key are the worker's own. Re-running enqueues nothing new. ``--limit N`` starts
+only the first N accounts that have no job for this run yet, so one run can be spread over
+several days to stay under the Spotify app quota.
 
 The deployed worker picks the jobs up only when RUNTIME_CUTOVER_ENABLED and AGENT_ENABLED
 are set there; this script does not start any collection itself.
@@ -56,7 +58,7 @@ def request(target: dict, run_label: str = "initial") -> JobRequest:
                       payload={"spotify_artist_id": target["platform_id"], "request_run": run_label, **PAYLOAD})
 
 
-def run(session, *, write: bool, run_label: str = "initial") -> dict:
+def run(session, *, write: bool, run_label: str = "initial", limit: int | None = None) -> dict:
     identity = session.execute(text("SELECT id::text, schema_version FROM catalog_instance")).one()
     revisions = {r[0] for r in session.execute(text("SELECT version FROM catalog_schema_migrations"))}
     if identity[1] != "catalog-v2":
@@ -67,14 +69,19 @@ def run(session, *, write: bool, run_label: str = "initial") -> dict:
     keys = {t["account_id"]: request(t, run_label).key() for t in rows}
     queued = {r[0] for r in session.execute(text("""SELECT external_account_id FROM worker_jobs
         WHERE job_type='spotify_collect' AND idempotency_key = ANY(:keys)"""), {"keys": list(keys.values())})}
+    # ``--limit`` spreads one run over several days: only the first N accounts (by id)
+    # without a job for this run are started; already queued ones are left as they are.
+    fresh = [t for t in rows if t["account_id"] not in queued]
+    chosen = {t["account_id"] for t in (fresh if limit is None else fresh[:limit])}
+    rows = [t for t in rows if t["account_id"] in queued or t["account_id"] in chosen]
     disabled = [t for t in rows if not t["collection_enabled"]]
     summary = {"accounts": len(rows), "to_enable": len(disabled), "already_enabled": len(rows) - len(disabled),
-               "jobs_to_enqueue": sum(t["account_id"] not in queued for t in rows),
-               "jobs_already_queued": len(queued), "revision_005": "005" in revisions}
+               "jobs_to_enqueue": len(chosen), "accounts_left_for_later": len(fresh) - len(chosen),
+               "jobs_already_queued": len(queued), "revision_006": "006" in revisions}
     if not write:
         return {"status": "preview", **summary, "artists": [t["artist"] for t in rows]}
-    if "005" not in revisions:
-        raise RuntimeError("Apply catalog revision 005 (ISRC) before starting Spotify collection")
+    if "006" not in revisions:
+        raise RuntimeError("Apply catalog revision 006 (provider credits) before starting Spotify collection")
     changes = []
     for t in disabled:
         after = session.execute(text("""UPDATE external_accounts SET collection_enabled=true
@@ -106,6 +113,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--run", default="initial", help="request_run label; a new label re-collects every account")
+    parser.add_argument("--limit", type=int, help="start at most N accounts that have no job for this run yet")
     args = parser.parse_args()
     url = migrate_catalog.load_connection().replace("postgresql://", "postgresql+psycopg://", 1).replace(
         "postgres://", "postgresql+psycopg://", 1)
@@ -113,7 +121,7 @@ def main() -> int:
     try:
         with Session(engine) as session:
             session.execute(text("SET TRANSACTION READ ONLY" if not args.apply else "SET LOCAL lock_timeout='10s'"))
-            result = run(session, write=args.apply, run_label=args.run)
+            result = run(session, write=args.apply, run_label=args.run, limit=args.limit)
             if args.apply:
                 session.commit()
             else:

@@ -53,7 +53,8 @@ def snapshot(session, album_ids, track_ids):
 
 def _receipt(session, job, payload, value, actions):
     body = dict(provider='spotify', account_id=job.external_account_id, artist_id=payload.spotify_artist_id,
-                offset=payload.album_offset, next=value['has_next'], actions=actions,
+                offset=payload.album_offset, group=payload.album_group, next=value['has_next'],
+                next_group=value.get('next_group'), listing=value.get('listing'), actions=actions,
                 album_ids=payload.album_ids, extra_album_ids=value.get('extra_album_ids', []),
                 albums=[album.model_dump(mode='json') for album in value['albums']],
                 skipped_uncredited=value['skipped_uncredited'],
@@ -87,6 +88,26 @@ def _insert_isrc(session, recording_id, isrc):
         VALUES (:id,'isrc',:isrc) ON CONFLICT (platform,external_id) DO NOTHING RETURNING id'''),
         dict(id=recording_id, isrc=isrc)).scalar_one_or_none()
     return inserted is not None
+
+
+def _provider_credits(session, track):
+    """Spotify's own artist credits for one stored Spotify track ID, written once.
+
+    These are provider evidence, kept as Spotify lists them (unregistered artists
+    included), so a release can show who performs each track without creating artists.
+    """
+    if not track.artist_ids or not session.info.get('provider_credits_ready'):
+        return False
+    present = session.execute(text('''SELECT 1 FROM recording_provider_credits
+        WHERE platform='spotify' AND track_id=:id LIMIT 1'''), {'id': track.id}).scalar_one_or_none()
+    if present:
+        return False
+    names = list(track.artist_names) + list(track.artist_ids[len(track.artist_names):])
+    for position, (external, name) in enumerate(list(zip(track.artist_ids, names))[:100]):
+        session.execute(text('''INSERT INTO recording_provider_credits(platform,track_id,position,provider_artist_id,name)
+            VALUES ('spotify',:track,:position,:artist,:name) ON CONFLICT (platform,track_id,position) DO NOTHING'''),
+            dict(track=track.id, position=position, artist=external, name=name))
+    return True
 
 
 def _create_recording(session, album, track, current, current_scope, value, actions, created_tracks):
@@ -137,6 +158,9 @@ def persist(session, job, payload, value):
         raise worker_jobs.JobConflict('Registered account relationships changed during collection')
     current = snapshot(session, [album.id for album in value['albums']],
                        list({track.id for album in value['albums'] for track in album.tracks}))
+    # Code may be deployed before revision 006; credits are then skipped, not failed.
+    session.info['provider_credits_ready'] = session.execute(
+        text("SELECT to_regclass('public.recording_provider_credits') IS NOT NULL")).scalar_one()
     actions = []
     created_tracks = set()
     for album in value['albums']:
@@ -148,8 +172,11 @@ def persist(session, job, payload, value):
         credits = [artist for external in album.artist_ids for artist in current_scope['artists'].get(external, [])]
         if existing:
             # An existing release may have manual title, translated text, track
-            # exclusions and artist ordering. Recollecting only records evidence.
-            actions.append(dict(album_id=album.id, status='review_candidate'))
+            # exclusions and artist ordering. Recollecting only records evidence:
+            # provider credits for its already stored Spotify track IDs.
+            filled = [track.id for track in album.tracks
+                      if current['tracks'][track.id] is not None and _provider_credits(session, track)]
+            actions.append(dict(album_id=album.id, status='review_candidate', credited_tracks=len(filled)))
             continue
         album_type = album.album_type if album.album_type in ('single','album','compilation') else 'other'
         album_id = session.execute(text('''INSERT INTO albums(spotify_album_id,title_native,album_type,
@@ -187,6 +214,7 @@ def persist(session, job, payload, value):
                 if track.isrc and _isrc_recording(session, track.isrc) is None:
                     # Evidence only: an ISRC row never moves another recording's ISRC.
                     _insert_isrc(session, recording_id, track.isrc)
+            _provider_credits(session, track)
             # A Spotify track can appear on more than one release, but a manually
             # occupied slot is never moved or replaced.
             slot = session.execute(text('''SELECT recording_id FROM album_tracks
@@ -212,5 +240,10 @@ def persist(session, job, payload, value):
             raise worker_jobs.JobConflict('Spotify album page limit reached')
         next_payload = payload.model_dump()
         next_payload['album_offset'] = next_offset
+        worker_jobs.enqueue(session, JobRequest(job_type='spotify_collect', external_account_id=job.external_account_id,
+                                                 payload=next_payload, max_attempts=job.max_attempts))
+    elif value.get('next_group'):
+        next_payload = payload.model_dump()
+        next_payload.update(album_group=value['next_group'], album_offset=0)
         worker_jobs.enqueue(session, JobRequest(job_type='spotify_collect', external_account_id=job.external_account_id,
                                                  payload=next_payload, max_attempts=job.max_attempts))

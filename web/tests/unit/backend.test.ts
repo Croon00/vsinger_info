@@ -157,13 +157,18 @@ describe('real API requests', () => {
       expect(path).toBe('/api/albums/15')
       return json({ id: '15', name: 'Release', album_type: 'ep', total_tracks: 1,
         tracks: [{ id: '21', recording_id: 37, song_id: 987, has_lyrics: true,
-          name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000 }] })
+          name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000,
+          artists: [{ artist_id: 42, name: 'Singer', name_ko: '가수' }, { artist_id: null, name: 'Guest' }] }] })
     })
     vi.stubGlobal('fetch', fetcher)
     const { backendApi } = await import('@/api/backend')
     const album = await backendApi.album('15', 42)
     expect(album.album_type).toBe('ep')
     expect(album.tracks[0]).toMatchObject({ id: '21', song_id: 987, lyrics_id: 37, has_lyrics: true, duration: '02:03' })
+    expect(album.tracks[0].artists).toEqual([
+      { id: 42, name: 'Singer', name_ko: '가수' },
+      { id: undefined, name: 'Guest', name_ko: '' },
+    ])
     expect(fetcher).toHaveBeenCalledTimes(1)
   })
   it('distinguishes missing Spotify linkage, authentication and HTML fallback', async () => {

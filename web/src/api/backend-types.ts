@@ -64,6 +64,7 @@ export interface BackendAlbum {
     duration_ms?: number | null
     track_number: number
     disc_number: number
+    artists?: { artist_id?: number | null; name: string; name_ko?: string | null }[]
   }[]
 }
 export interface BackendLyricsSummary {

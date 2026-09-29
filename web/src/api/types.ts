@@ -72,6 +72,8 @@ export interface Track {
   title_ko: string
   duration: string
   has_lyrics: boolean
+  // Track performers; empty means the album artist is shown.
+  artists?: { id?: number; name: string; name_ko: string }[]
 }
 export interface Album {
   id: string

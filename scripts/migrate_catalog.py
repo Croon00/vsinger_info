@@ -84,6 +84,7 @@ COLUMN_CONTRACTS = (
     ("001", "columns.json"),
     ("002", "runtime-columns.json"),
     ("004", "song-identity-columns.json"),
+    ("006", "provider-credit-columns.json"),
 )
 
 
@@ -241,11 +242,13 @@ def verify(conn, *, require_empty: bool = False) -> dict:
     if require_empty and (any(counts.values()) or identity[0][2] is not None or identity[0][3] is not None):
         raise MigrationError("Expected catalog with no initial data")
     runtime_count = len(expected_columns(upto="002")) - len(expected_columns(include_runtime=False))
-    song_identity_count = len(expected_columns()) - len(expected_columns(upto="003"))
+    song_identity_count = len(expected_columns(upto="005")) - len(expected_columns(upto="003"))
+    provider_credit_count = len(expected_columns()) - len(expected_columns(upto="005"))
     return {
         "catalog_tables": len(expected_columns(include_runtime=False)),
         "runtime_tables": runtime_count,
         "song_identity_tables": song_identity_count,
+        "provider_credit_tables": provider_credit_count,
         "migration_tables": 1,
         "catalog_instance_id": str(identity[0][0]),
         "schema_version": identity[0][1],

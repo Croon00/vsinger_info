@@ -195,9 +195,39 @@ class CatalogReadRepository:
         {"artist":artist_id,"key":key})
 
     def tracks(self, album_id):
-        return self.rows("""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
+        """Album tracks with who performs each one.
+
+        Spotify's own track credits (revision 006) come first, so a track on an artist's
+        album that the artist does not perform (a guest track, another person's remix) is
+        shown under its real performers. A credit whose Spotify ID is a registered owner
+        account shows that catalog artist's names. A recording joined by ISRC holds several
+        Spotify track IDs; the credits of its earliest stored one are used. Without
+        provider credits (before 006 or before backfill) the registered recording credits
+        are used, and an empty list means the track has no known performer.
+        """
+        registered = """SELECT jsonb_agg(jsonb_build_object('artist_id',a.id,'name',a.name_native,'name_ko',a.name_ko)
+          ORDER BY ra.position,ra.id) FROM recording_artists ra
+          JOIN artists a ON a.id=ra.artist_id AND a.archived_at IS NULL AND a.show_in_catalog
+          WHERE ra.recording_id=r.id"""
+        present = self.rows("SELECT to_regclass('public.recording_provider_credits') IS NOT NULL present")[0]["present"]
+        artists = f"COALESCE(({registered}),'[]'::jsonb)"
+        if present:
+            artists = f"""COALESCE((SELECT jsonb_agg(jsonb_build_object('artist_id',owner.id,
+              'name',COALESCE(owner.name_native,c.name),'name_ko',owner.name_ko) ORDER BY c.position)
+              FROM recording_provider_credits c
+              LEFT JOIN LATERAL (SELECT ar.id,ar.name_native,ar.name_ko FROM external_accounts ea
+                JOIN artist_external_accounts e ON e.account_id=ea.id AND e.relationship='owner'
+                JOIN artists ar ON ar.id=e.artist_id AND ar.archived_at IS NULL AND ar.show_in_catalog
+                WHERE ea.platform='spotify' AND ea.platform_id=c.provider_artist_id AND ea.archived_at IS NULL
+                ORDER BY ar.id LIMIT 1) owner ON true
+              WHERE c.platform='spotify' AND c.track_id=(SELECT x.external_id FROM recording_external_ids x
+                WHERE x.recording_id=r.id AND x.platform='spotify' AND EXISTS (SELECT 1 FROM recording_provider_credits pc
+                  WHERE pc.platform='spotify' AND pc.track_id=x.external_id) ORDER BY x.id LIMIT 1)),
+              ({registered}),'[]'::jsonb)"""
+        return self.rows(f"""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
         r.duration_ms,t.disc_number,t.track_number,
-        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics
+        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics,
+        {artists} artists
         FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
         WHERE t.album_id=:id ORDER BY t.disc_number,t.track_number,t.id""",{"id":album_id})
 

@@ -232,6 +232,11 @@ export const backendApi = {
           title_ko: t.name_ko ?? '',
           duration: t.duration_ms ? formatTime(t.duration_ms / 1000) : '',
           has_lyrics: t.has_lyrics,
+          artists: (t.artists ?? []).map((a) => ({
+            id: a.artist_id ?? undefined,
+            name: a.name,
+            name_ko: a.name_ko ?? '',
+          })),
         }
       }),
     }

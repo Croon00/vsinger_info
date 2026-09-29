@@ -1,7 +1,7 @@
 """Delete the Spotify collection made with market=KR so it can be re-collected in JP.
 
 Scope: every album with a ``spotify_album_id`` and every recording that has a Spotify track
-ID, together with their tracks, credits and external IDs (cascade). The preview (default)
+ID, together with their tracks, credits, provider credits and external IDs (cascade). The preview (default)
 only reads. ``--apply`` refuses if anything in scope carries work a person or a later step
 added — a song link, a Korean title, an official video, lyrics, or a catalog_changes
 history row — or if a recording in scope sits on a non-Spotify album. It deletes in ONE
@@ -64,11 +64,16 @@ def run(conn, *, write: bool) -> dict:
         return {"status": "preview", **summary}
     if any(blockers.values()):
         raise RuntimeError(f"Refusing to delete rows that carry later work: {blockers}")
+    # Revision 006 credits cascade with their Spotify track IDs; keep them in the history row.
+    credits = ("" if conn.execute("SELECT to_regclass('public.recording_provider_credits') AS t").fetchone()["t"] is None
+               else """ || jsonb_build_object('provider_credits',
+            (SELECT jsonb_agg(to_jsonb(c) - 'id' ORDER BY c.track_id, c.position) FROM recording_provider_credits c
+             JOIN recording_external_ids x ON x.platform=c.platform AND x.external_id=c.track_id WHERE x.recording_id=r.id))""")
     before = conn.execute("""SELECT 'albums' AS entity_type, a.id AS entity_id, to_jsonb(a) AS data FROM albums a
             WHERE a.id IN (SELECT id FROM albums WHERE spotify_album_id IS NOT NULL)
         UNION ALL SELECT 'recordings', r.id, to_jsonb(r) || jsonb_build_object('external_ids',
             (SELECT jsonb_agg(jsonb_build_object('platform', x.platform, 'external_id', x.external_id))
-             FROM recording_external_ids x WHERE x.recording_id=r.id)) FROM recordings r
+             FROM recording_external_ids x WHERE x.recording_id=r.id))""" + credits + """ FROM recordings r
             WHERE r.id IN (SELECT recording_id FROM recording_external_ids WHERE platform='spotify')""").fetchall()
     digest = hashlib.sha256(json.dumps({"policy": POLICY, "counts": counts}, sort_keys=True).encode()).hexdigest()
     deleted_albums = conn.execute("DELETE FROM albums WHERE id IN (SELECT id FROM albums WHERE spotify_album_id IS NOT NULL)").rowcount

@@ -332,3 +332,14 @@
 - 사고: 2026-09-28 11:28~16:11 UTC 사이 카탈로그 도구 밖에서 아티스트 id 1–10(Aimer, milet, LiSA, ReoNa, ヨルシカ, ロクデナシ, やなぎなぎ, supercell, fhána, tayori)이 삭제됐다. 외부 계정 30개와 연결, 곡 명의 114, 가창 명의 25, 아카이브 명의 4, 공연 명의 2, 앨범 명의 60, 녹음 명의 652, 수집 상태 18, 원문 기록 20, 작업 기록도 함께 지워졌고 `catalog_changes`에는 기록이 없다. 다른 관리자의 작업으로 본다.
 - 복구(import 731): Free 플랜 기록 창(6시간) 안의 Neon 브랜치(11:28 UTC 무렵 상태)를 읽기 전용으로 읽어 `scripts/restore_deleted_artists.py`와 `migrations/catalog/artist-restores-1.json`으로 원래 id 그대로 되살렸다. 사용자 결정으로 10명 모두 `show_in_catalog=false`. 작업 기록(`worker_jobs`)은 되살리지 않았다. 브랜치와 비교해 복구 행이 모두 같고(수집기가 이미 갱신한 X 수집 상태 1행 제외), 명의 없는 곡은 병합으로 보관된 `Rain`(1370)뿐이다. 외부 계정의 수집 설정은 삭제 전 그대로 복구했고(YouTube 10·Spotify 10·X 6 켜짐), 복구된 계정에는 알림 경로가 없다.
 - 수집 끔(import 732): 사용자 결정으로 `scripts/set_account_collection.py --artists 1,...,10 --off`가 10명의 외부 계정 26개(켜져 있던 것 전부)의 `collection_enabled`를 false로 바꿨다. 30개 모두 꺼짐, 대기 작업 없음. 이 계정들은 다른 아티스트와 공유되지 않는다.
+
+
+### 3단계 트랙별 명의와 종류별 목록 (2026-09-29, 미배포)
+
+- 현상 1: 본인 명의 앨범은 전곡을 저장하고 조회 API가 트랙별 명의를 주지 않아, 등록 아티스트가 부르지 않은 트랙도 그 아티스트 곡처럼 보였다(`HARMONICS`의 `未来図`는 カスカ·LIZ, 4·5번은 다른 사람의 리믹스).
+- 보완 1: revision 006 `recording_provider_credits`에 Spotify 트랙 명의를 원문 그대로 저장한다. 조회 API 앨범 수록곡에 트랙별 `artists`를 붙이고, 아티스트 화면은 이를 표시한다. 기존 앨범은 재수집 때 명의만 채운다(제목·수록 불변).
+- 현상 2: 네 종류를 한 번에 조회한 앨범 목록이 `total=38`인데 offset 30에서 빈 페이지·`next` 없음으로 끝나 참여 앨범(`スペクトル`, 202pPdFXsFGmmet7JMF0ZD)이 빠졌다. `artist:HACHI` 검색 보완도 앨범 10·트랙 5에서 끝나 잡지 못했다.
+- 보완 2: 종류별로 따로 끝까지 넘기고, `total`보다 적게 끝나면 영수증 `listing.shortfall`로 남긴다. 점검 스크립트가 `listing_shortfalls`와 `provider_credits`(명의가 채워진 Spotify 트랙 비율)를 보여 준다.
+- 수집 시작 스크립트는 revision 006을 요구하고 `--limit N`으로 계정을 나눠 시작한다. 2026-09-28 quota 소진을 반복하지 않도록 재수집(`--run jp-2`)은 며칠에 나눠 돌린다.
+- 운영 순서: 코드 배포 → `migrate_catalog.py --apply`/`--verify`(006) → `start_spotify_collection.py --run jp-2 --limit N` 미리보기 → 승인 후 `--apply`. 곡명 검색(`track:"곡명"`)은 재수집 뒤 남은 `shortfall`을 보고 정한다.
+- 검증(2026-09-30, 로컬 임시 PostgreSQL·가짜 Spotify 응답): Python 테스트 422개를 네 묶음으로 나눠 통과, 프론트 vitest 30개와 `vue-tsc` 빌드 통과. 실데이터 수집·006 적용은 하지 않았다.

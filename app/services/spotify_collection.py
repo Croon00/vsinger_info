@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 
 from app.core.config import settings
-from app.integrations.spotify_catalog import SpotifyCatalogClient, SpotifyFailure
+from app.integrations.spotify_catalog import ALBUM_GROUPS, SpotifyCatalogClient, SpotifyFailure
 from app.integrations.youtube_catalog import YouTubeClient, YouTubeFailure, purpose
 from app.repositories import spotify_collection as repository
 
@@ -80,14 +80,25 @@ async def collect(job, payload):
     if scope['source_id'] != payload.spotify_artist_id:
         raise PermanentJobError('Registered Spotify ID changed')
     provider = client()
+    listing, next_group = None, None
     try:
         if payload.album_ids:
             # Follow-up for albums found by the search pass; the listing is already done.
             summaries, has_next, extras = [{'id': external} for external in payload.album_ids], False, []
         else:
-            summaries, has_next = await provider.albums_page(payload.spotify_artist_id, offset=payload.album_offset)
+            summaries, has_next, total = await provider.albums_page(
+                payload.spotify_artist_id, offset=payload.album_offset, group=payload.album_group)
+            listing = dict(group=payload.album_group, offset=payload.album_offset, items=len(summaries), total=total)
             extras = []
             if not has_next:
+                # The listing can end early without saying so (empty page, no ``next``,
+                # offset + items < total). Record it so the audit shows what was missed.
+                through = payload.album_offset + len(summaries)
+                if total is not None and through < total:
+                    listing['shortfall'] = total - through
+                position = ALBUM_GROUPS.index(payload.album_group)
+                next_group = ALBUM_GROUPS[position + 1] if position + 1 < len(ALBUM_GROUPS) else None
+            if not has_next and next_group is None:
                 # /artists/{id}/albums omits releases, so the last listing page also runs the
                 # search pass and queues credited albums that are not stored yet.
                 listed = {summary.get('id') for summary in summaries}
@@ -131,7 +142,8 @@ async def collect(job, payload):
     except SpotifyFailure as exc:
         _translate(exc)
     return dict(scope=scope, albums=albums, skipped_uncredited=skipped, skipped_other_tracks=skipped_tracks,
-                has_next=has_next, extra_album_ids=extras, snapshot=snapshot, youtube_matches=matches)
+                has_next=has_next, next_group=next_group, listing=listing,
+                extra_album_ids=extras, snapshot=snapshot, youtube_matches=matches)
 
 
 def handlers():

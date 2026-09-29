@@ -35,8 +35,8 @@ def test_start_enables_catalog_owner_accounts_and_enqueues_once(database):
             preview = start.run(session, write=False)
             assert (preview["accounts"], preview["to_enable"], preview["jobs_to_enqueue"]) == (1, 1, 1)
             session.rollback()
-            session.execute(text("DELETE FROM catalog_schema_migrations WHERE version='005'"))
-            with pytest.raises(RuntimeError, match="revision 005"):
+            session.execute(text("DELETE FROM catalog_schema_migrations WHERE version='006'"))
+            with pytest.raises(RuntimeError, match="revision 006"):
                 start.run(session, write=True)
             session.rollback()
             result = start.run(session, write=True)
@@ -45,7 +45,7 @@ def test_start_enables_catalog_owner_accounts_and_enqueues_once(database):
             enabled = dict(session.execute(text("SELECT platform_id, collection_enabled FROM external_accounts")).all())
             assert enabled == {"a" * 22: True, "b" * 22: False, "c" * 22: False}
             job = session.execute(text("SELECT external_account_id, payload, status FROM worker_jobs")).one()
-            assert (job[0], job[1]["spotify_artist_id"], job[1]["album_offset"], job[2]) == (wanted, "a" * 22, 0, "pending")
+            assert (job[0], job[1]["spotify_artist_id"], job[1]["album_offset"], job[1]["album_group"], job[2]) == (wanted, "a" * 22, 0, "album", "pending")
             assert session.execute(text("SELECT count(*) FROM catalog_changes WHERE entity_type='external_accounts'")).scalar() == 1
             again = start.run(session, write=True)
             session.commit()
