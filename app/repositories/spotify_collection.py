@@ -69,10 +69,22 @@ def _receipt(session, job, payload, value, actions):
              summary=json.dumps(body, ensure_ascii=False)))
 
 
-def stored_album_ids(session, album_ids):
+def complete_album_ids(session, album_ids):
+    """Stored albums the search pass need not queue again.
+
+    An album stored before per-track provider credits existed stays incomplete until
+    every Spotify track on it has credits; queuing it again lets the album job fill them.
+    """
     if not album_ids:
         return set()
-    return {r[0] for r in session.execute(text('SELECT spotify_album_id FROM albums WHERE spotify_album_id IN :ids')
+    credits_ready = session.execute(
+        text("SELECT to_regclass('public.recording_provider_credits') IS NOT NULL")).scalar_one()
+    missing_credit = '''AND NOT EXISTS (SELECT 1 FROM album_tracks t
+            JOIN recording_external_ids x ON x.recording_id=t.recording_id AND x.platform='spotify'
+            WHERE t.album_id=a.id AND NOT EXISTS (SELECT 1 FROM recording_provider_credits c
+                WHERE c.platform='spotify' AND c.track_id=x.external_id))''' if credits_ready else ''
+    return {r[0] for r in session.execute(text(f'''SELECT a.spotify_album_id FROM albums a
+        WHERE a.spotify_album_id IN :ids {missing_credit}''')
                                           .bindparams(bindparam('ids', expanding=True)), {'ids': tuple(album_ids)})}
 
 

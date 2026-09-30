@@ -549,6 +549,27 @@ def test_search_pass_queues_credited_albums_missing_from_the_listing(store, prov
     assert store.execute("SELECT count(*) FROM worker_jobs WHERE jsonb_array_length(payload->'album_ids') > 0").fetchone()[0] == 1
 
 
+def test_search_pass_requeues_a_stored_album_missing_provider_credits(store, provider):
+    # 羽緒 case: an album only the search pass finds was stored before migration 006.
+    _, account = register(store)
+    provider.albums_page.return_value = ([], False, None)
+    provider.credited_albums.return_value = [ALBUM]
+    enqueue(account)
+    assert set(drain()) == {'succeeded'}
+    store.execute('DELETE FROM recording_provider_credits')
+    store.commit()
+    enqueue(account, request_run='backfill')
+    assert set(drain()) == {'succeeded'}
+    assert store.execute("SELECT count(*) FROM recording_provider_credits WHERE track_id=%s", (TRACK,)).fetchone()[0] > 0
+    assert store.execute('SELECT count(*) FROM albums').fetchone()[0] == 1
+    follow_ups = "SELECT count(*) FROM worker_jobs WHERE jsonb_array_length(payload->'album_ids') > 0"
+    assert store.execute(follow_ups).fetchone()[0] == 2
+    # Once credited, the album is complete and a later run does not queue it again.
+    enqueue(account, request_run='again')
+    assert set(drain()) == {'succeeded'}
+    assert store.execute(follow_ups).fetchone()[0] == 2
+
+
 def test_empty_listing_is_filled_by_the_search_pass(store, provider):
     _, account = register(store)
     provider.albums_page.return_value = ([], False, None)

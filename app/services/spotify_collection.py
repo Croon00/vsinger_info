@@ -100,12 +100,13 @@ async def collect(job, payload):
                 next_group = ALBUM_GROUPS[position + 1] if position + 1 < len(ALBUM_GROUPS) else None
             if not has_next and next_group is None:
                 # /artists/{id}/albums omits releases, so the last listing page also runs the
-                # search pass and queues credited albums that are not stored yet.
+                # search pass and queues credited albums that are not stored yet, or stored
+                # with tracks still missing their Spotify credits.
                 listed = {summary.get('id') for summary in summaries}
                 found = [external for external in await provider.credited_albums(payload.spotify_artist_id)
                          if external not in listed]
-                stored = await db_call(repository.stored_album_ids, found)
-                extras = [external for external in found if external not in stored]
+                complete = await db_call(repository.complete_album_ids, found)
+                extras = [external for external in found if external not in complete]
         if has_next and payload.album_offset >= 1000:
             raise PermanentJobError('Spotify album page limit reached')
         unique = dict.fromkeys(summary.get('id') for summary in summaries)

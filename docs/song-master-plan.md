@@ -334,12 +334,17 @@
 - 수집 끔(import 732): 사용자 결정으로 `scripts/set_account_collection.py --artists 1,...,10 --off`가 10명의 외부 계정 26개(켜져 있던 것 전부)의 `collection_enabled`를 false로 바꿨다. 30개 모두 꺼짐, 대기 작업 없음. 이 계정들은 다른 아티스트와 공유되지 않는다.
 
 
-### 3단계 트랙별 명의와 종류별 목록 (2026-09-29, 미배포)
+### 3단계 트랙별 명의와 종류별 목록 (2026-09-29 배포, 1차 재수집)
 
-- 현상 1: 본인 명의 앨범은 전곡을 저장하고 조회 API가 트랙별 명의를 주지 않아, 등록 아티스트가 부르지 않은 트랙도 그 아티스트 곡처럼 보였다(`HARMONICS`의 `未来図`는 カスカ·LIZ, 4·5번은 다른 사람의 리믹스).
+- 현상 1: 본인 명의 앨범은 전곡을 저장하고 조회 API가 트랙별 명의를 주지 않아, 등록 아티스트가 부르지 않은 트랙도 그 아티스트 곡처럼 보였다(`HARMONICS`의 `未来図`는 カスカ·LIZ 곡(Spotify 명의는 그룹 KMNZ·VESPERBELL), 4·5번은 다른 사람의 리믹스).
 - 보완 1: revision 006 `recording_provider_credits`에 Spotify 트랙 명의를 원문 그대로 저장한다. 조회 API 앨범 수록곡에 트랙별 `artists`를 붙이고, 아티스트 화면은 이를 표시한다. 기존 앨범은 재수집 때 명의만 채운다(제목·수록 불변).
 - 현상 2: 네 종류를 한 번에 조회한 앨범 목록이 `total=38`인데 offset 30에서 빈 페이지·`next` 없음으로 끝나 참여 앨범(`スペクトル`, 202pPdFXsFGmmet7JMF0ZD)이 빠졌다. `artist:HACHI` 검색 보완도 앨범 10·트랙 5에서 끝나 잡지 못했다.
 - 보완 2: 종류별로 따로 끝까지 넘기고, `total`보다 적게 끝나면 영수증 `listing.shortfall`로 남긴다. 점검 스크립트가 `listing_shortfalls`와 `provider_credits`(명의가 채워진 Spotify 트랙 비율)를 보여 준다.
 - 수집 시작 스크립트는 revision 006을 요구하고 `--limit N`으로 계정을 나눠 시작한다. 2026-09-28 quota 소진을 반복하지 않도록 재수집(`--run jp-2`)은 며칠에 나눠 돌린다.
 - 운영 순서: 코드 배포 → `migrate_catalog.py --apply`/`--verify`(006) → `start_spotify_collection.py --run jp-2 --limit N` 미리보기 → 승인 후 `--apply`. 곡명 검색(`track:"곡명"`)은 재수집 뒤 남은 `shortfall`을 보고 정한다.
 - 검증(2026-09-30, 로컬 임시 PostgreSQL·가짜 Spotify 응답): Python 테스트 422개를 네 묶음으로 나눠 통과, 프론트 vitest 30개와 `vue-tsc` 빌드 통과. 실데이터 수집·006 적용은 하지 않았다.
+- 운영 반영(2026-09-29): 배포(`265562d`)·006 `--verify` 후 `--run jp-2 --limit 15`로 1차 15개 계정(NEUN, HACHI, LITA, TINA, NERO, wouca, Cil, CULUA, MEDA, 羽緒, 深影, 妃玖, IMI, LEWNE, MEMESIA)을 시작했다. 작업 63개 성공(18:30–18:41 UTC), 오류·429 0. 새 앨범 5개(`スペクトル`과 참여 앨범·컴필레이션 4개, 크레딧 트랙만 저장). 명의가 채워진 Spotify 트랙 189개, 중복 명의 0.
+- 1차 확인(2026-09-30, 운영 DB 읽기 전용): `スペクトル` 2곡이 HACHI 녹음 명의·Spotify 명의(MIMiNARI, HACHI)와 함께 저장됐다. `HARMONICS`의 1·4·5번은 HACHI 녹음 명의가 없고 Spotify 명의로 표시된다. `未来図`의 Spotify 명의는 멤버가 아니라 그룹 프로필 `KMNZ, VESPERBELL`이다. `shortfall`은 HACHI 싱글 26 중 1, 참여 앨범 7 중 1이다.
+- 현상 3: 검색 보완은 이미 저장된 앨범을 다시 넣지 않아, 앨범 목록에 없고 검색으로만 찾은 기존 앨범은 006 명의를 받지 못했다(羽緒 0/4, 妃玖 0/3, 深影 1/5, LITA 2/3 트랙).
+- 보완 3: 검색 보완은 저장된 앨범이라도 명의가 없는 Spotify 트랙이 하나라도 있으면 후속 작업으로 다시 넣는다(`complete_album_ids`). 명의가 모두 채워지면 다시 넣지 않는다. 배포 후 남은 34개 계정과 1차의 4개 계정(羽緒, 妃玖, 深影, LITA)을 `jp-3` 등 새 run으로 돌린다.
+- 검증(2026-09-30, 로컬 임시 PostgreSQL·가짜 Spotify 응답): Spotify·작업 큐·조회 API 테스트 7개 파일 92개 통과(새 테스트: 명의 없는 저장 앨범 재수집 후 채움, 이후 재큐 없음).
