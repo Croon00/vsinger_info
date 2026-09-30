@@ -60,6 +60,7 @@ def parse_setlist(content: str) -> list[dict]:
         title = line[match.end():].strip()
         title = re.sub(r'^[~〜～\-–—]\s*(?:\d{1,2}:)?[0-5]?\d:[0-5]\d\s*', '', title)
         title = title.strip(' \t-–—|｜:：.')
+        title = re.sub(r'^[#＃♯]\s*[0-9０-９]{1,3}\s+(?=\S)', '', title)  # numbered list: "＃10 二息歩行 / DECO*27"
         title = re.sub(r'^(?:#\s*)?(?:제\s*)?\d+\s*(?:곡목?|曲目?)?\s*(?:[.．:：\-—)]\s*)+', '', title)
         quoted = re.search(r'[「『"](.+?)[」』"]', title)
         if quoted:

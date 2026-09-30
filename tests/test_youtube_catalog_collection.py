@@ -300,6 +300,8 @@ def test_rules_and_url_boundary():
     assert [r['start_seconds'] for r in rows] == [30, 80]
     assert rows[1]['title'] == 'Song'
     assert parse_setlist('01:20 - 02:30 1曲目:「Quoted Song」 99.5点')[0]['title'] == 'Quoted Song'
+    numbered = parse_setlist('00:10 ＃1 晩餐歌 / tuki\n05:00 #12 うみたがり / MARETU\n09:00 55\n12:00 #KMNZ')
+    assert [r['title'] for r in numbered] == ['晩餐歌 / tuki', 'うみたがり / MARETU', '55', '#KMNZ']
     req = service.url_request(account_id=1, channel_id=CHANNEL, url='https://youtu.be/abcdefghijk')
     assert req.parsed_payload().youtube_video_id == 'abcdefghijk'
     with pytest.raises(ValueError):

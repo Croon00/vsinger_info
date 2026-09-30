@@ -41,6 +41,15 @@ def test_lookup_keys_offer_splits_only_without_artist():
     assert lookup_keys("/ Artist", None) == [("/ artist", "")]
 
 
+def test_lookup_keys_drop_setlist_numbering():
+    assert lookup_keys("＃10 二息歩行 / DECO*27", None) == [
+        ("#10 二息歩行 / deco*27", ""), ("二息歩行 / deco*27", ""), ("#10 二息歩行", "deco*27"), ("二息歩行", "deco*27")]
+    assert lookup_keys("#3 夜明けと蛍", "n-buna") == [("#3 夜明けと蛍", "n-buna"), ("夜明けと蛍", "n-buna")]
+    assert lookup_keys("55", "Official髭男dism") == [("55", "official髭男dism")]      # a number title stays
+    assert lookup_keys("20 fragments", None) == [("20 fragments", "")]              # no hash: part of the title
+    assert lookup_keys("#KMNZ", None) == [("#kmnz", "")]
+
+
 def test_resolve_key_prefers_exact_and_refuses_ambiguous_splits():
     exact, split = ("w/x/y", ""), ("w/x", "y")
     assert resolve_key([exact, split], {exact: 1, split: 2}) == exact
