@@ -30,15 +30,18 @@
 | `namuwiki_title_ko.py` | 곡 마스터 6단계 나무위키 확인. `fetch`는 후보 입력의 원제(없으면 `원제(아티스트)`) 문서를 약 3초에 1회 조회해 cache, `artists`는 곡 문서가 없는 곡의 아티스트 문서 조회, `extract`는 cache에서 읽기용 발췌 생성. 모두 Git 제외 `db-migration/reports/title-ko/round-N/`에 쓰고 DB는 건드리지 않음. 읽은 결과(`namu-found-*.json`)는 `title_ko_candidates.py export`가 합침 |
 | `spotify_account_candidates.py` | 곡 마스터 2단계 Spotify 계정 후보. `research`는 카탈로그 표시 아티스트 중 Spotify 링크가 없는 행을 DB 읽기 전용으로 모아 Wikidata(YouTube 채널 ID→P1902)와 Spotify 이름 검색·앨범/인기곡 제목 대조로 후보 생성(응답은 Git 제외 `db-migration/reports/spotify-accounts/cache/`), `export`는 웹 확인 결과(`research-*.json`)·수동 파일(`spotify-account-manual-1.json`)을 합쳐 `migrations/catalog/spotify-account-decisions-1.json`과 `review.md` 생성, `review-import`는 수정한 `review.md`와 승인 기록. `apply`는 dry-run, `apply --apply`는 `accept`만 `external_accounts`(수집 비활성)와 owner 링크로 한 transaction에 기록, 재실행 no-op |
 | `start_spotify_collection.py` | 곡 마스터 3단계 수집 시작. 카탈로그 표시 아티스트의 owner Spotify 계정을 미리보기(기본, 읽기 전용)하고, `--apply`는 revision 006 적용을 확인한 뒤 비활성 계정의 `collection_enabled`를 켜고(영수증·변경 이력) 계정마다 첫 `spotify_collect` 작업을 job repository로 등록. `--run`은 재수집 라벨, `--limit N`은 이번 라벨의 작업이 없는 계정 중 앞의 N개만 시작(quota 분산), `--artist-id ID`(반복 가능)는 해당 카탈로그 아티스트의 계정만 대상으로 함. 재실행은 새 작업을 만들지 않음. 실제 수집은 배포된 worker가 처리 |
-| `restore_deleted_artists.py` | 카탈로그 도구 밖에서 삭제된 아티스트를 삭제 전 Neon 브랜치에서 원래 id로 복구. 브랜치 연결 문자열은 `RESTORE_SOURCE_DATABASE_URL`(읽기 전용으로만 사용), 인자는 결정 파일(`migrations/catalog/artist-restores-N.json`). 아티스트·외부 계정·연결·별칭·그룹·명의 표·수집 상태·원문 기록 중 운영에 없는 행만 넣고, `worker_jobs`는 넣지 않음. 기본 읽기 전용 dry-run, `--apply`는 한 transaction과 `correction` 영수증. 운영에 남은 아티스트나 부모 행이 없는 행이 있으면 거부, 재실행은 no-op |
+| `link_recordings_to_songs.py` | 곡 마스터 5단계(Spotify ISRC). `export`는 녹음 ISRC로 MusicBrainz 녹음(25개씩)·work(20개씩)를 찾고(DB 읽기 전용, cache는 `db-migration/reports/recording-songs/musicbrainz.json`), 새 곡이 될 묶음은 MB 녹음 조회로 커버 여부를 확인해 `migrations/catalog/recording-song-links-N.json`과 검수 파일 `review-N.md`를 만듦. 저장된 work → 그 곡, 제목 + 같은 가수·MB 작곡가 → 그 곡(+work ID), 커버 표기 + 같은 제목 1곡 → 그 곡, 후보 없음 → 새 곡(커버만 있는 묶음·숨긴 아티스트·MC 제외). `review-import`는 편집본 반영(파일에 없는 행 제외), `apply`는 dry-run, `apply --apply`는 새 곡·명의·work ID·`recordings.song_id`를 한 transaction·영수증·변경 이력으로 저장. 녹음 제목·명의·ISRC는 바꾸지 않음, 재실행 no-op |
 | `set_account_collection.py` | 지정한 아티스트에 연결된 외부 계정 전부의 수집(`collection_enabled`)을 켜거나 끔. `--artists 1,2 --on|--off`. 기본 읽기 전용 dry-run, `--apply`는 한 transaction과 `manual` 영수증, 행마다 이전·이후 값을 catalog_changes에 남김. 이미 원하는 상태면 no-op |
-| `purge_spotify_collection.py` | KR 시장 Spotify 수집분 삭제. 미리보기(기본, 읽기 전용)는 삭제 대상 수와 거부 사유를, `--apply`는 Spotify 앨범·녹음(수록·크레딧·외부 ID 포함)을 한 transaction으로 지우고 이전 값을 `catalog_changes`에 남김. 곡 연결·한국어 제목·공식 영상·가사·변경 이력이 있으면 거부 |
 | `audit_spotify_collection.py` | Spotify 수집 결과 읽기 전용 점검(작업 결과, 합계, 검토 필요 기록, 녹음 0 계정, 제목 일치가 없는 계정). 상세는 Git 제외 `db-migration/reports/spotify-collection/audit.json` |
+| `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영. [프로필 이미지 저장](../docs/avatar-storage.md) |
 
+## 보존된 구 DB 도구
 
+이전 DB(`app.core.db`) 기준으로 만든 도구다. 연결 진입점에서 차단되며 정상 worker가 호출하지 않는다.
 
+| 도구 | 역할 |
+| --- | --- |
 | `export_admin_contract.py` | 관리자 리소스에서 JSON 가져오기 계약 생성 |
-| `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영 |
 | `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |
 | `import_vsinger_profiles.py` | `data/seeds/` 프로필 반영 |
 | `register_missing_youtube_channels.py` | 시드의 누락 채널 등록 |
@@ -51,6 +54,6 @@
 | `refresh_jpop_playlist_tj.py` | TJ 노래방 대조 자료 갱신 |
 | `cache_x_profile_images.py` | X 프로필 이미지 수집·캐시 |
 
-실행 전 각 도구의 dry-run/apply 기본값과 사용할 DB를 확인한다. 정상 실행은 단일 `DATABASE_URL`의 신규 DB만 사용한다. 이전 조사 도구에만 `LEGACY_DATABASE_URL`을 별도로 준다. 보존된 구 수집·번역 스크립트는 연결 진입점에서 차단되며 정상 worker가 호출하지 않는다. [백엔드 구조](../docs/backend-architecture.md)를 따른다.
+실행 전 각 도구의 dry-run/apply 기본값과 사용할 DB를 확인한다. 정상 실행은 단일 `DATABASE_URL`의 신규 DB만 사용한다. 이전 조사 도구에만 `LEGACY_DATABASE_URL`을 별도로 준다. [백엔드 구조](../docs/backend-architecture.md)를 따른다.
 
 프론트 화면 점검·성능 측정 스크립트는 `web/scripts/`에서 유지한다. 일회성 데이터 조사 스크립트와 출력은 `.tmp/`에, 보존할 원본은 `db-migration/archive/`에 둔다.
