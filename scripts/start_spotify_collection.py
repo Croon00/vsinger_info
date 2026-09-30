@@ -8,7 +8,8 @@ enqueues one ``spotify_collect`` job per target (``request_run`` from ``--run``,
 no YouTube matching) through the normal job repository, so account validation and the
 idempotency key are the worker's own. Re-running enqueues nothing new. ``--limit N`` starts
 only the first N accounts that have no job for this run yet, so one run can be spread over
-several days to stay under the Spotify app quota.
+several days to stay under the Spotify app quota. ``--artist-id ID`` (repeatable) narrows the
+targets to the accounts of those catalog artists, for re-collecting a few accounts under a new run.
 
 The deployed worker picks the jobs up only when RUNTIME_CUTOVER_ENABLED and AGENT_ENABLED
 are set there; this script does not start any collection itself.
@@ -45,7 +46,8 @@ _spec.loader.exec_module(migrate_catalog)
 
 def targets(session) -> list[dict]:
     return [dict(r) for r in session.execute(text("""
-        SELECT e.id AS account_id, e.platform_id, e.collection_enabled, e.version, min(a.name_native) AS artist
+        SELECT e.id AS account_id, e.platform_id, e.collection_enabled, e.version, min(a.name_native) AS artist,
+               array_agg(a.id ORDER BY a.id) AS artist_ids
         FROM external_accounts e
         JOIN artist_external_accounts ae ON ae.account_id=e.id AND ae.relationship='owner'
         JOIN artists a ON a.id=ae.artist_id AND a.show_in_catalog AND a.archived_at IS NULL
@@ -58,7 +60,8 @@ def request(target: dict, run_label: str = "initial") -> JobRequest:
                       payload={"spotify_artist_id": target["platform_id"], "request_run": run_label, **PAYLOAD})
 
 
-def run(session, *, write: bool, run_label: str = "initial", limit: int | None = None) -> dict:
+def run(session, *, write: bool, run_label: str = "initial", limit: int | None = None,
+        artist_ids: list[int] | None = None) -> dict:
     identity = session.execute(text("SELECT id::text, schema_version FROM catalog_instance")).one()
     revisions = {r[0] for r in session.execute(text("SELECT version FROM catalog_schema_migrations"))}
     if identity[1] != "catalog-v2":
@@ -66,6 +69,14 @@ def run(session, *, write: bool, run_label: str = "initial", limit: int | None =
     if write:
         session.execute(text("SELECT pg_advisory_xact_lock(731064925)"))
     rows = targets(session)
+    if artist_ids:
+        # ``--artist-id`` narrows the run to the accounts of these catalog artists
+        # (e.g. re-collecting a few accounts after a fix); unknown ids are refused.
+        wanted = set(artist_ids)
+        missing = wanted - {a for t in rows for a in t["artist_ids"]}
+        if missing:
+            raise RuntimeError(f"Not catalog-visible Spotify owner artists: {sorted(missing)}")
+        rows = [t for t in rows if wanted & set(t["artist_ids"])]
     keys = {t["account_id"]: request(t, run_label).key() for t in rows}
     queued = {r[0] for r in session.execute(text("""SELECT external_account_id FROM worker_jobs
         WHERE job_type='spotify_collect' AND idempotency_key = ANY(:keys)"""), {"keys": list(keys.values())})}
@@ -114,6 +125,8 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--run", default="initial", help="request_run label; a new label re-collects every account")
     parser.add_argument("--limit", type=int, help="start at most N accounts that have no job for this run yet")
+    parser.add_argument("--artist-id", type=int, action="append", dest="artist_ids",
+                        help="only the accounts of this catalog artist id (repeatable)")
     args = parser.parse_args()
     url = migrate_catalog.load_connection().replace("postgresql://", "postgresql+psycopg://", 1).replace(
         "postgres://", "postgresql+psycopg://", 1)
@@ -121,7 +134,7 @@ def main() -> int:
     try:
         with Session(engine) as session:
             session.execute(text("SET TRANSACTION READ ONLY" if not args.apply else "SET LOCAL lock_timeout='10s'"))
-            result = run(session, write=args.apply, run_label=args.run, limit=args.limit)
+            result = run(session, write=args.apply, run_label=args.run, limit=args.limit, artist_ids=args.artist_ids)
             if args.apply:
                 session.commit()
             else:

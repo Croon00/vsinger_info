@@ -53,3 +53,26 @@ def test_start_enables_catalog_owner_accounts_and_enqueues_once(database):
             assert session.execute(text("SELECT count(*) FROM worker_jobs")).scalar() == 1
     finally:
         engine.dispose()
+
+
+
+def test_artist_filter_starts_only_those_accounts_under_a_new_run(database):
+    apply_schema(database)
+    first = account(database, "d" * 22)
+    account(database, "e" * 22)
+    database.commit()
+    artist = database.execute("SELECT artist_id FROM artist_external_accounts WHERE account_id=%s", (first,)).fetchone()[0]
+    info = database.info
+    engine = create_engine(f"postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}")
+    try:
+        with Session(engine) as session:
+            with pytest.raises(RuntimeError, match="Not catalog-visible"):
+                start.run(session, write=False, artist_ids=[artist, 999999])
+            session.rollback()
+            result = start.run(session, write=True, run_label="fix", artist_ids=[artist])
+            session.commit()
+            assert (result["accounts"], result["jobs_to_enqueue"], result["accounts_left_for_later"]) == (1, 1, 0)
+            jobs = session.execute(text("SELECT external_account_id, payload->>'request_run' FROM worker_jobs")).all()
+            assert jobs == [(first, "fix")]
+    finally:
+        engine.dispose()
