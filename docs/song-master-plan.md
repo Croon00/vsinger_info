@@ -372,3 +372,16 @@
 - 검수 파일은 Git 제외 `db-migration/reports/recording-songs/review-1.md`(1번 기존 곡 연결, 2번 새 곡, 3번 검수 필요)다. `결정` 칸에 `song:<id>`, `new`, `new:<ref>`, `-`를 쓰고, 새 곡은 제목 칸을 고칠 수 있다. `review-import` → `apply` → `apply --apply` 순서이며 검수 파일에 없는 행은 적용하지 않는다.
 - 운영 적용(2026-09-30): 사용자가 수정 없이 승인했다. `review-import`(변경 0) 뒤 dry-run이 같은 manifest였고, `apply --apply`로 import 1017에 한 transaction 커밋했다. `catalog_changes`는 recordings update 1,442, songs create 886, songs update(work ID 추가) 74이며 재실행은 `already_committed`다. 읽기 전용 확인: 녹음 2,470개 중 1,442개가 곡에 연결됐고, 명의 없는 새 곡과 보관·병합된 곡을 가리키는 녹음은 0이다. `song_external_ids`의 musicbrainz_work는 1,250개가 됐다. 검수 286개(커버 원곡 없음 239, 제목만 같음 47)는 연결하지 않았다. 일회성이던 KR 수집분 삭제 스크립트(`purge_spotify_collection.py`)는 곡이 연결된 녹음이 생겨 더 쓸 수 없어 2026-09-30 삭제했다.
 - 로컬 임시 PostgreSQL·가짜 MB 응답: `tests/test_link_recordings_to_songs.py` 7개 통과(버전 표기, 규칙별 판정, 검수 반영·적용·재실행·변경 행 거부, 조회 batch·cache, 커버 조회, MC·커버 묶음, 다른 가수 라이브 합치기).
+
+## 7단계 새 곡으로 원문 키 확정 (2026-09-30, 적용)
+
+- `scripts/confirm_match_keys_from_songs.py export --import-id 1017`(운영 DB 읽기 전용): 녹음 연결로 만든 새 곡 886곡을 후보로, pending 키 12,427개 중 곡 제목·별칭과 원곡자가 같은 키를 찾았다. 비교는 `loose`(공백·물결·대시 변형 무시, `松永 依織` = `松永依織`)이고 원곡자는 원어 이름·별칭을 먼저 쓴다(라틴 이름 `Hachi`로 ハチ를 고르지 않음). 원곡자 칸이 빈 키는 `곡명 / 원곡자` 분리로 비교한다. 새 곡과 기존 곡이 함께 맞는 키는 검수로 보낸다(이번에는 0개).
+- 결과: 키 223개(정확 217, 분리 6) → 곡 197곡. 가창 연결을 흉내 내 보면 미연결 가창 932건이 연결된다. 키마다 연결될 가창이 1건 이상이다. 예: `Hope Song / 焔魔るり` 33건, `シズムリウム / 焔魔るり` 27건, `花に落ちる / ヨノ` 26건.
+- dry-run: `would_commit`(manifest `8d556846…`). 검수 파일은 Git 제외 `db-migration/reports/match-key-confirmations/review-1.md`다.
+- 같은 규칙을 모든 곡에 적용하면(필터 없음) 키 450개, 가창 1,463건이다. 추가 227개(가창 531건)는 기존 곡의 표기 변형이다(`secret base〜君がくれたもの〜` ↔ `～`, `水樹 奈々` ↔ `水樹奈々`, `やさしさに包まれたなら / 荒井由実` → 松任谷由実 별칭). 사용자 결정으로 기존 곡까지 포함해 다시 내보냈다(필터 없음, 키 450개 → 곡 381곡, 정확 443·분리 7, 검수 0, dry-run `would_commit`).
+- 물결표 변형은 수집 오류가 아니라 원문 입력 차이다. 운영 가창 원문에 WAVE DASH `〜`(U+301C) 302건, 전각 물결 `～`(U+FF5E) 683건, ASCII `~` 195건이 여러 방송에 걸쳐 있다. 곡 제목도 세 가지가 섞여 있다(5·7·1곡). 원문과 키는 그대로 두고 비교할 때만 접는다.
+- 원문 키 backfill은 2026-09-27 이후 다시 돌리지 않아, 그 뒤 수집된 원문의 새 키 247개가 아직 없다(dry-run). backfill을 먼저 적용하면 확정 후보가 늘 수 있다.
+- 로컬 임시 PostgreSQL: `tests/test_confirm_match_keys_from_songs.py` 2개 통과(정확·공백 차이·라틴 이름 우선순위·분리 키, import 범위와 기존 곡 충돌, 가창 흉내, 검수 반영·적용·재실행·변경 키 거부).
+- 운영 적용(2026-09-30): 사용자가 수정 없이 승인했다(`review-import` 변경 0). `apply --apply`로 키 450개를 확정했다(import 1018, `catalog_changes` 450행, 재실행 `already_committed`). 이어서 `link_performances_from_match_keys.py` dry-run이 예상과 같은 1,463건이었고, `--apply`로 38단위 모두 커밋했다. 직후 dry-run의 links는 0이다. 읽기 전용 확인: 가창 74,856건 중 연결 51,431건(68.7%), 보관·병합된 곡을 가리키는 가창 0, 확정 키와 변경 이력 불일치 0. 녹음 연결로 만든 새 곡 중 197곡에 가창이 붙었다. 키는 confirmed 3,354, pending 11,977이다.
+- 원문 키 재집계와 2차 확정(2026-09-30): `backfill_song_match_keys.py --apply`로 9/27 이후 수집분의 새 키 247개와 갱신 20개를 커밋했다(재실행 0). 새 키 중 90개는 이미 수집 경로에서 곡이 연결된 가창이라 바로 confirmed(existing_link)가 됐고 157개가 pending이다. `confirm_match_keys_from_songs.py --round 2`(필터 없음)는 1개(`島のうた (セイレーンver.) / セイレーン`, 분리 비교)만 맞아 확정했고(import 1058), 가창 1건을 연결했다. 가창 74,856건 중 연결 51,432건(68.7%), 키 confirmed 3,444·pending 12,134.
+- 새 pending 157개 중 120개는 곡명 앞에 `＃10 二息歩行 / DECO*27`처럼 순번이 붙어 있다. 규칙 파서가 번호 매긴 세트리스트의 순번을 곡명에 남긴 것이다. 순번을 떼고 비교하면 45개가 기존 곡과 정확히 맞는다(읽기 전용 측정). 파서 수정과 조회 규칙 보완은 아직 하지 않았다.
