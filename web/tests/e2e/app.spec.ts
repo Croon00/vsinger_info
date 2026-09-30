@@ -171,15 +171,19 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   page,
 }) => {
   await visit(page, '/artists/2?tab=originals')
-  await page.locator('.album-card').filter({ hasText: 'EAT THE PAST' }).click()
-  await expect(page.locator('.track-section h2')).toHaveText('EAT THE PAST')
-  await expect(page.locator('.album-card').filter({ hasText: 'EAT THE PAST' })).toHaveAttribute(
-    'data-state',
-    'on',
-  )
+  const release = page.locator('a.release-card').filter({ hasText: 'EAT THE PAST' })
+  await expect(release).toHaveAttribute('href', /[?&]album=kaf-eat(?:&|$)/)
+  await release.click()
+  await expect(page).toHaveURL(/[?&]album=kaf-eat(?:&|$)/)
+  await expect(page.getByRole('dialog')).toContainText('EAT THE PAST')
+  await page.reload({ waitUntil: 'domcontentloaded' })
+  await expect(page.getByRole('dialog')).toContainText('EAT THE PAST')
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).not.toBeVisible()
+  await expect(page).not.toHaveURL(/album=/)
   await visit(page, '/artists/1')
   while (!(await page.locator('a.live-card').count())) {
-    await page.getByRole('button', { name: '라이브 더 보기' }).click()
+    await page.getByRole('button', { name: '더보기', exact: true }).click()
   }
   const archive = page.locator('a.live-card').first()
   await archive.focus()
@@ -187,19 +191,23 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await page.keyboard.press('Tab')
   await expect(archive.locator('.live-play')).toHaveCSS('opacity', '1')
   await page.getByRole('tab', { name: '발매곡' }).click()
-  const lyrics = page.getByRole('button', { name: '가사', exact: true }).first()
+  await page.locator('a.release-card').filter({ hasText: 'Midnight blue' }).click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toContainText('Midnight blue')
+  const lyrics = dialog.getByRole('button', { name: '가사', exact: true }).first()
   await lyrics.click()
-  await expect(page.getByRole('dialog')).toBeVisible()
-  await expect(
-    page.getByRole('dialog').getByRole('button', { name: '닫기', exact: true }),
-  ).toBeVisible()
-  await expect(page.getByRole('dialog')).toContainText('Weekend milk')
-  await page.getByRole('dialog').getByRole('button', { name: '발음', exact: true }).click()
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('button', { name: '닫기', exact: true })).toBeVisible()
+  await expect(dialog).toContainText('Weekend milk')
+  await dialog.getByRole('button', { name: '발음', exact: true }).click()
   await expect(page.locator('.lyric-pronunciation').first()).toBeVisible()
+  // Back closes the lyrics layer first, then the release detail.
   await page.goBack()
-  await expect(page.getByRole('dialog')).not.toBeVisible()
-  await expect(page.getByRole('tab', { name: '발매곡' })).toHaveAttribute('data-state', 'active')
+  await expect(dialog).toContainText('Twilight Line')
   await expect(lyrics).toBeFocused()
+  await page.goBack()
+  await expect(dialog).not.toBeVisible()
+  await expect(page.getByRole('tab', { name: '발매곡' })).toHaveAttribute('data-state', 'active')
   await page.getByRole('tab', { name: '공연 정보' }).click()
   await page.locator('.concert-row').first().click()
   await expect(page.getByRole('dialog')).toContainText('티켓')

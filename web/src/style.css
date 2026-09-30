@@ -720,32 +720,6 @@ a:focus-visible {
   font-feature-settings: 'palt' 1;
   letter-spacing: 0.01em;
 }
-.album-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-  width: 100%;
-}
-.album-card {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  justify-content: flex-start;
-  height: auto;
-  white-space: normal;
-  text-align: left;
-  min-width: 0;
-  padding: 8px;
-}
-.album-card img,
-.album-cover-fallback {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--radius);
-  object-fit: cover;
-  border: 1px solid var(--border);
-}
 .album-cover-fallback {
   display: flex;
   flex-direction: column;
@@ -756,53 +730,6 @@ a:focus-visible {
   color: var(--muted-foreground);
   font-family: var(--font-sans);
   font-size: 12px;
-}
-.album-card h3 {
-  font-size: 14px;
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-.album-card p {
-  font-size: 11px;
-  margin-top: 5px;
-  color: var(--muted-foreground);
-}
-.album-card p span {
-  padding: 0 4px;
-}
-.track-section {
-  min-width: 0;
-}
-.track-row {
-  padding: 14px 0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid var(--border);
-}
-.track-row > div {
-  flex: 1;
-  min-width: 0;
-}
-.track-row h3 {
-  font-size: 14px;
-}
-.track-row p {
-  font-size: 11px;
-  color: var(--muted-foreground);
-  margin-top: 5px;
-}
-.track-number,
-.track-duration {
-  color: var(--muted-foreground);
-  font-size: 12px;
-  font-variant-numeric: tabular-nums;
-}
-.track-number {
-  width: 24px;
-}
-.track-duration {
-  margin-left: auto;
 }
 .concert-list {
   display: flex;
@@ -1478,15 +1405,6 @@ a:focus-visible {
     gap: 14px;
   }
 
-  .track-row {
-    gap: 12px;
-  }
-  .track-row h3 {
-    font-size: 12px;
-  }
-  .track-duration {
-    display: none;
-  }
   .concert-row {
     padding: 18px 14px;
     gap: 14px;
@@ -1629,36 +1547,149 @@ a:focus-visible {
   font-size: 12px;
   text-align: center;
 }
-.discography-layout {
-  display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
-  align-items: start;
-  gap: 40px;
+/* Artist releases tab: filter, latest-release hero, cover grid, detail overlay. */
+.artist-discography {
+  --release-tint-amount: 10%;
 }
-.album-card > img,
-.album-card > .album-cover-fallback {
-  width: 88px;
-  height: 88px;
+.dark .artist-discography {
+  --release-tint-amount: 16%;
+}
+.release-filters {
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.release-cover {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+/* Cards carry the Item padding; the negative margin keeps covers on the content edge. */
+.release-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 4px;
+  width: auto;
+  margin: 0 -12px;
+}
+.release-card[data-slot='item'] {
+  height: 100%;
+  align-content: flex-start;
+}
+.release-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+}
+.release-title,
+.release-track-title {
+  font-feature-settings: 'palt' 1;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+}
+.release-hero[data-slot='card'] {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  grid-template-areas:
+    'cover header'
+    'cover actions';
+  align-content: center;
+  gap: 16px 28px;
+  margin-bottom: 28px;
+  padding: 20px;
+}
+.release-hero[data-slot='card'][data-preview] {
+  grid-template-columns: 176px minmax(0, 1fr) minmax(0, 1.1fr);
+  grid-template-areas:
+    'cover header tracks'
+    'cover actions tracks';
+}
+.release-hero[data-slot='card'][data-tinted] {
+  background: color-mix(in srgb, var(--release-tint) var(--release-tint-amount), var(--card));
+}
+.release-hero-cover {
+  grid-area: cover;
+  cursor: pointer;
+}
+.release-hero [data-slot='card-header'] {
+  grid-area: header;
+  align-self: end;
+  padding: 0;
+}
+.release-hero [data-slot='card-content'] {
+  grid-area: tracks;
+  align-self: center;
+  min-width: 0;
+  padding: 0;
+}
+.release-hero [data-slot='card-footer'] {
+  grid-area: actions;
+  align-self: start;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+}
+.release-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.release-disc-title {
+  margin: 0 12px 4px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-weight: 500;
+}
+.release-track-number {
+  width: 20px;
+  flex-shrink: 0;
+  text-align: right;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.release-overlay-header {
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  text-align: left;
+}
+.release-overlay-cover {
+  width: 136px;
   flex-shrink: 0;
 }
-.album-copy {
+.release-overlay-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
 }
-.album-copy p {
-  line-height: 1.6;
+.release-overlay-kind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted-foreground);
+  font-size: 12px;
 }
-.album-card:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: var(--radius);
+.release-overlay-link {
+  align-self: flex-start;
+  margin-top: 6px;
 }
 .settings-page > [data-slot='card'] {
   max-width: 640px;
 }
-@media (min-width: 769px) and (max-width: 1200px) {
-  .discography-layout {
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: 24px;
+@media (max-width: 1023px) {
+  .release-hero[data-slot='card'][data-preview] {
+    grid-template-columns: 176px minmax(0, 1fr);
+    grid-template-areas:
+      'cover header'
+      'cover actions';
+  }
+  .release-hero [data-slot='card-content'] {
+    display: none;
   }
 }
 @media (max-width: 768px) {
@@ -1708,31 +1739,22 @@ a:focus-visible {
   .explore-toolbar {
     row-gap: 20px;
   }
-  .discography-layout {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
+  .release-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 2px;
   }
-  .album-grid {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 6px;
-    gap: 16px;
+  .release-hero[data-slot='card'],
+  .release-hero[data-slot='card'][data-preview] {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px 16px;
+    margin-bottom: 20px;
+    padding: 14px;
   }
-  .album-card {
-    flex-direction: row;
-    align-items: center;
-    width: 220px;
-    flex-shrink: 0;
-    padding: 8px;
-    gap: 10px;
+  .release-overlay-header {
+    gap: 14px;
   }
-  .album-card > img,
-  .album-card > .album-cover-fallback {
-    width: 72px;
-    height: 72px;
-  }
-  .album-card h3 {
-    font-size: 12px;
+  .release-overlay-cover {
+    width: 88px;
   }
 }
 

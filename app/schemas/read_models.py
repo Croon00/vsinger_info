@@ -137,6 +137,9 @@ class CatalogAlbumRead(BaseModel):
     image_url: str | None = None
     spotify_url: str | None = None
     total_tracks: int
+    # Only on /artists/{id}/albums: True when that artist is an album-level credit,
+    # False when the artist is credited on tracks only (appears on). None on /albums/{id}.
+    is_primary: bool | None = None
     tracks: list[CatalogTrackRead] = Field(default_factory=list)
 
 class CatalogLyricsRead(BaseModel):

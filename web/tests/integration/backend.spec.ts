@@ -178,6 +178,16 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
               album_type: 'single',
               release_date: '2020-04',
               total_tracks: 1,
+              is_primary: true,
+              spotify_url: 'https://open.spotify.com/album/realrelease',
+            },
+            {
+              id: '16',
+              name: 'Guest compilation',
+              album_type: 'compilation',
+              release_date: '2019-01-01',
+              total_tracks: 2,
+              is_primary: false,
             },
           ]
         : { detail: 'Needs Spotify match' }
@@ -188,6 +198,7 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         album_type: 'single',
         release_date: '2020-04',
         total_tracks: 1,
+        spotify_url: 'https://open.spotify.com/album/realrelease',
         tracks: [
           {
             id: '21',
@@ -196,6 +207,35 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
             disc_number: 1,
             track_number: 1,
             duration_ms: 123000,
+            artists: [{ artist_id: 42, name: 'HACHI' }],
+          },
+        ],
+      }
+    else if (url.pathname === '/api/albums/16')
+      data = {
+        id: '16',
+        name: 'Guest compilation',
+        album_type: 'compilation',
+        release_date: '2019-01-01',
+        total_tracks: 2,
+        tracks: [
+          {
+            id: '31',
+            recording_id: 51, has_lyrics: false,
+            name: 'Other song',
+            disc_number: 1,
+            track_number: 1,
+            duration_ms: 200000,
+            artists: [{ artist_id: null, name: 'Other' }],
+          },
+          {
+            id: '32',
+            recording_id: 52, has_lyrics: false,
+            name: 'Guest song',
+            disc_number: 2,
+            track_number: 1,
+            duration_ms: 180000,
+            artists: [{ artist_id: 42, name: 'HACHI' }, { artist_id: null, name: 'Other' }],
           },
         ],
       }
@@ -274,10 +314,39 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   await expect(page.locator('h1')).toHaveText('HACHI')
   spotifyReady = true
   await page.getByRole('button', { name: '다시 시도' }).click()
-  await expect(page.locator('.track-row')).toContainText('Real song')
-  await expect(page.locator('.track-section')).toContainText('2020년 4월')
-  await page.getByRole('button', { name: '가사', exact: true }).click()
-  await expect(page.getByRole('dialog')).toContainText('Contract fixture text')
+  const hero = page.locator('.release-hero')
+  await expect(hero).toContainText('Real release')
+  await expect(hero).toContainText('싱글 · 2020년 4월 · 2:03')
+  await expect(hero.getByRole('link', { name: 'Spotify에서 열기' })).toHaveAttribute(
+    'href',
+    'https://open.spotify.com/album/realrelease',
+  )
+  const chips = page.locator('.release-filters [data-slot="toggle-group-item"]')
+  await expect(chips).toHaveText(['전체 2', '싱글 1', '참여 1'])
+  await chips.filter({ hasText: '참여' }).click()
+  await expect(page).toHaveURL(/[?&]group=appears(?:&|$)/)
+  await expect(hero).toHaveCount(0)
+  const cards = page.locator('a.release-card')
+  await expect(cards).toHaveCount(1)
+  await expect(cards).toContainText('2019 · 참여 컴필레이션')
+  await cards.click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toContainText('Guest compilation')
+  await expect(dialog).toContainText(/컴필레이션\s*참여/)
+  await expect(dialog).not.toContainText('2곡')
+  await expect(dialog.getByText('Disc 2')).toBeVisible()
+  await expect(dialog.locator('[data-slot="item"][data-variant="muted"]')).toHaveText(
+    /Guest song/,
+  )
+  await expect(dialog.getByRole('button', { name: '가사', exact: true })).toHaveCount(0)
+  await page.keyboard.press('Escape')
+  await expect(dialog).not.toBeVisible()
+  await chips.filter({ hasText: '전체' }).click()
+  await expect(page).not.toHaveURL(/group=/)
+  await hero.getByRole('button', { name: '자세히' }).click()
+  await expect(dialog).toContainText('Real song')
+  await dialog.getByRole('button', { name: '가사', exact: true }).click()
+  await expect(dialog).toContainText('Contract fixture text')
   expect(calls).toContain('/api/recordings/37/lyrics')
   await page.goto('/search?q=Band')
   await expect(page.locator('.performance-result')).toHaveCount(1)

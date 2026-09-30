@@ -116,8 +116,10 @@ def test_registered_artist_release_and_track_reach_real_api(store, provider, mon
         listing = api.get(f'/api/artists/{artist}/albums')
         assert listing.status_code == 200, listing.text
         assert listing.json()[0]['name'] == 'Original Album'
+        assert listing.json()[0]['is_primary'] is True
         detail = api.get(f'/api/albums/{album[0]}')
         assert detail.status_code == 200, detail.text
+        assert detail.json()['is_primary'] is None
         assert detail.json()['tracks'][0]['name'] == 'Original Track'
         assert detail.json()['tracks'][0]['song_id'] is None
     assert provider.albums_page.await_count == 1
@@ -148,7 +150,9 @@ def test_featured_track_release_is_visible_to_registered_source_artist(store, pr
     engine = create_engine(f'postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}')
     try:
         with Session(engine) as session:
-            assert len(CatalogRead(session).albums(artist)) == 1
+            listed = CatalogRead(session).albums(artist)
+            assert len(listed) == 1
+            assert listed[0]['is_primary'] is False
     finally:
         engine.dispose()
 

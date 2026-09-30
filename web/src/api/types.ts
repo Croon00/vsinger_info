@@ -71,8 +71,11 @@ export interface Track {
   title: string
   title_ko: string
   duration: string
+  duration_ms?: number
+  disc_number?: number
+  track_number?: number
   has_lyrics: boolean
-  // Track performers; empty means the album artist is shown.
+  // Track performers; empty means no known performer.
   artists?: { id?: number; name: string; name_ko: string }[]
 }
 export interface Album {
@@ -83,6 +86,8 @@ export interface Album {
   release_date: string
   image_url: string
   total_tracks?: number
+  // Artist listings only: false when the artist is credited on tracks only (appears on).
+  is_primary?: boolean
   tracks_loaded?: boolean
   tracks: Track[]
   source_url: string

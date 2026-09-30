@@ -179,11 +179,15 @@ class CatalogReadRepository:
         {"artist":artist_id,"start":start,"end":end,"key":key},offset,limit,"COALESCE(q.starts_at,q.event_date::timestamp AT TIME ZONE 'Asia/Seoul') NULLS LAST,q.id")
 
     def albums(self, artist_id=None, key=None):
+        # is_primary: the listed artist is an album-level credit (own release) rather than
+        # only a track credit (appears on). NULL when no artist scopes the read.
         return self.rows("""SELECT a.id::text id,a.title_native name,a.title_ko name_ko,a.album_type,
         concat_ws('-',a.release_year::text,lpad(a.release_month::text,2,'0'),lpad(a.release_day::text,2,'0')) release_date,
         a.cover_image_url image_url,
         CASE WHEN a.spotify_album_id IS NOT NULL THEN 'https://open.spotify.com/album/'||a.spotify_album_id END spotify_url,
-        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks
+        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks,
+        CASE WHEN CAST(:artist AS integer) IS NULL THEN NULL
+          ELSE EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist) END is_primary
         FROM albums a WHERE a.archived_at IS NULL
         AND (CAST(:key AS integer) IS NULL OR a.id=:key)
         AND (CAST(:artist AS integer) IS NULL

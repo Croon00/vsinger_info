@@ -109,6 +109,8 @@ def test_normalized_catalog_reads_and_attribution(store):
         assert set(events["items"][0]["artist_ids"])=={a,guest}
         assert service.concert(concert)["city"]=="Tokyo"
         assert service.albums(a)[0]["id"]==str(album)
+        assert service.albums(a)[0]["is_primary"] is True
+        assert service.album(album)["is_primary"] is None
         assert service.album(album)["release_date"]=="2026-09"
         assert service.album(album)["tracks"][0]["recording_id"]==recording
         assert service.album(album)["tracks"][0]["has_lyrics"] is True
