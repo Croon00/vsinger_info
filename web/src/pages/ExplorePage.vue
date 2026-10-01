@@ -56,13 +56,15 @@ watch(
 const agencies = computed(() =>
   [...new Set((data.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
 )
+const hasIndependentArtists = computed(() => (data.value ?? []).some((a) => !a.agency))
 const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
 const favoritesForSort = new Set(favoriteIds.value)
 const filtered = computed(() => {
   return (data.value ?? [])
     .filter(
       (a) =>
-        (agency.value === 'all' || a.agency === agency.value) &&
+        (agency.value === 'all' ||
+          (agency.value === 'independent' ? !a.agency : a.agency === agency.value)) &&
         [a.name, a.display_name, a.roman, ...(a.aliases ?? [])].some((s) =>
           normalize(s).includes(normalize(query.value)),
         ),
@@ -88,6 +90,7 @@ const filtered = computed(() => {
         <SelectContent>
           <SelectGroup>
             <SelectItem value="all">소속사 전체</SelectItem>
+            <SelectItem v-if="hasIndependentArtists" value="independent">개인세</SelectItem>
             <SelectItem v-for="name in agencies" :key="name" :value="name">
               {{ name }}
             </SelectItem>
