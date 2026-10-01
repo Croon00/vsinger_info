@@ -209,6 +209,21 @@ def fail_x_account(
              "error": error[:2000], "max_backoff": max_backoff_seconds})
 
 
+def pause_x_account_for_provider(
+    session: Session, *, account_id: int, worker_id: str, retry_after_seconds: int,
+) -> None:
+    """Release the lease without treating a shared provider limit as an account failure."""
+    session.execute(text("""
+        UPDATE collection_states
+        SET status='idle', next_poll_at=clock_timestamp() +
+              (:delay * interval '1 second'),
+            lease_owner=NULL, lease_expires_at=NULL, last_error='provider_unavailable'
+        WHERE external_account_id=:account_id AND status='polling' AND lease_owner=:worker_id
+          AND lease_expires_at > clock_timestamp()
+    """), {"account_id": account_id, "worker_id": worker_id,
+             "delay": max(30, retry_after_seconds)})
+
+
 def claim_deliveries(
     session: Session,
     *,

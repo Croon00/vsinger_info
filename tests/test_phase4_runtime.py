@@ -13,6 +13,7 @@ from app.services import notification_delivery, x_collection
 from app.services.notification_delivery import deliver_pending_once
 from app.services.delivery_errors import DeliveryRetryableError
 from app.services.x_collection import collect_x_once
+from app.integrations.x_client import XProviderUnavailable
 from test_catalog_migration import apply, database, local_server, row
 
 
@@ -136,6 +137,25 @@ def test_collection_failure_preserves_cursor_and_schedules_retry(runtime_store):
     """, (account,)).fetchone()
     assert result.failures == 1
     assert state == ("90", "backoff", 1, True)
+
+
+def test_shared_provider_limit_pauses_collection_without_failing_each_account(runtime_store):
+    db = runtime_store
+    first = seed_x_account(db, platform_id="42", handle="first")
+    seed_x_account(db, platform_id="43", handle="second")
+    calls = []
+
+    async def unavailable(platform_id, since_id):
+        calls.append(platform_id)
+        raise XProviderUnavailable(600)
+
+    result = asyncio.run(collect_x_once(fetch_pages=unavailable, account_limit=2))
+    assert calls == ["42"]
+    assert result.accounts == 1 and result.failures == 0
+    assert result.provider_wait_seconds == 600
+    assert db.execute("""SELECT status,consecutive_failures,last_seen_external_id,
+        next_poll_at > clock_timestamp() FROM collection_states WHERE external_account_id=%s""",
+        (first,)).fetchone() == ("idle", 0, None, True)
 
 
 class OfflineSender:

@@ -82,3 +82,31 @@ def test_pagination_limit_fails_before_cursor_can_advance(monkeypatch) -> None:
         assert "cursor was not advanced" in str(exc)
     else:
         raise AssertionError("bounded pagination must fail when more pages remain")
+
+
+def test_twscrape_pool_limit_reports_shared_retry_delay(monkeypatch) -> None:
+    from datetime import timedelta
+    from twscrape import NoAccountError
+
+    monkeypatch.setattr(x_client.settings, "x_provider", "twscrape")
+
+    async def unavailable(*args, **kwargs):
+        raise NoAccountError("No account available for queue UserTweets")
+        yield
+
+    class Pool:
+        async def get_all(self):
+            return [SimpleNamespace(active=True, locks={
+                "UserTweets": datetime.now(timezone.utc) + timedelta(minutes=10)
+            })]
+
+    async def api():
+        return SimpleNamespace(user_tweets=unavailable, pool=Pool())
+
+    monkeypatch.setattr(x_client, "_get_twscrape_api", api)
+    try:
+        asyncio.run(x_client.fetch_post_pages("42"))
+    except x_client.XProviderUnavailable as exc:
+        assert 590 <= exc.retry_after_seconds <= 601
+    else:
+        raise AssertionError("twscrape pool limit must pause all X targets")
