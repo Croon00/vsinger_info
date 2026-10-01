@@ -1,0 +1,11 @@
+{
+  "recording_provider_credits": [
+    {"name": "id", "type": "INTEGER", "nullable": false},
+    {"name": "platform", "type": "TEXT", "nullable": false},
+    {"name": "track_id", "type": "TEXT", "nullable": false},
+    {"name": "position", "type": "SMALLINT", "nullable": false},
+    {"name": "provider_artist_id", "type": "TEXT", "nullable": false},
+    {"name": "name", "type": "TEXT", "nullable": false},
+    {"name": "created_at", "type": "TIMESTAMPTZ", "nullable": false}
+  ]
+}

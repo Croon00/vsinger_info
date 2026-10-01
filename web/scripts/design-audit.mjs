@@ -94,7 +94,7 @@ try {
           .filter(
             (el) =>
               el.checkVisibility({ checkVisibilityCSS: true }) &&
-              !el.closest('[inert], .album-grid'),
+              !el.closest('[inert], .release-filters'),
           )
           .filter((el) => {
             const r = el.getBoundingClientRect()

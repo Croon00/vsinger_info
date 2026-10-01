@@ -32,8 +32,8 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /search?q=... | 원어/한국어/영문 곡명, 아카이브 대표·가창 아티스트 이름·별칭, 원곡 아티스트 이름·별칭, 미매칭 원문 OR 검색. 날짜 내림차순+아카이브+ordinal+ID |
 | GET /concerts | 보관/취소 제외 공연. artist_id, start(포함), end(제외) 선택 필터 |
 | GET /concerts/{id} | 공연·도시·장소·출처 링크·첫 티켓 정보 |
-| GET /artists/{id}/albums | DB에 등록된 참여 앨범. 발매 연월일 내림차순+ID |
-| GET /albums/{id} | 앨범과 디스크/트랙 순 수록 녹음, 가사 존재 여부 |
+| GET /artists/{id}/albums | 앨범 명의(album_artists) 또는 수록 녹음의 가창 명의(recording_artists)로 연결된 앨범. 발매 연월일 내림차순+ID. `is_primary`는 해당 아티스트가 앨범 명의에 있으면 true, 트랙 명의로만 연결된 참여 발매면 false |
+| GET /albums/{id} | 앨범과 디스크/트랙 순 수록 녹음, 가사 존재 여부. 아티스트 기준이 없으므로 `is_primary`는 null |
 | GET /recordings/{id}/lyrics | 해당 녹음의 저장된 가사·번역·독음과 출처 URL |
 
 기존 `/spotify/artists/.../discography` 및 `/spotify/albums/...` 소비는 새 앨범 경로로 교체했다. 사용자 웹은 기존 songs 가사 조회를 호출하지 않는다. 구 Spotify·songs router는 정상 app에서 마운트하지 않는다.

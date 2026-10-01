@@ -126,3 +126,8 @@ Playwright는 설치된 Chrome을 사용하며 다른 경로는 CHROME_PATH로 �
 ## 2026-09-26 아티스트 상세 통계·발매곡 표기
 
 프론트 통계 단위 테스트 5개, 타입 검사, mock 빌드, 통계 E2E PC·모바일 8개, DB 없는 통계 응답 계약 테스트 1개 통과. 통합 PostgreSQL fixture 테스트는 이 실행 환경에서 `pg_ctl` restricted-token 오류로 서버를 시작하지 못해 검증되지 않았다.
+
+
+## 2026-09-30 아티스트 상세 발매곡 탭 개편
+
+백엔드 `/artists/{id}/albums`에 `is_primary`를 추가했다. 임시 로컬 PostgreSQL fixture로 `test_new_catalog_read.py`·`test_spotify_catalog_collection.py` 51개 통과(본인 앨범 true, 트랙 명의만 있는 참여 앨범 false, 단일 앨범 조회 null). 프론트는 단위 테스트 41개(발매 분류·문구·길이·디스크·명의 비교), 실제 모드 빌드(vue-tsc 포함), 실제 계약 HTTP fixture PC·모바일(필터·`group` query·참여 상세·Disc 구분·참여 곡 강조·가사) 통과. 목업 e2e 전체 실행에서 46개 중 42개 통과, 실패 2건(PC·모바일)은 실제 버튼 이름 `더보기`와 다른 옛 선택자 `라이브 더 보기` 때문이었다. 선택자를 고친 두 테스트는 PC·모바일에서 통과했다(발매 카드→팝업·새로고침·Escape, 가사→뒤로가기 시 앨범 팝업과 가사 버튼 포커스 복귀 포함). 통합 테스트 `search filters ignore missing artist credits and keep navigation clickable`은 변경 전 HEAD 사본에서도 같은 pointer-events 단언으로 실패하는 기존 실패라 이번 범위에서 고치지 않았다. 운영 DB를 읽는 실제 화면 확인은 하지 않았다.

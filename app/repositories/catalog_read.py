@@ -179,11 +179,15 @@ class CatalogReadRepository:
         {"artist":artist_id,"start":start,"end":end,"key":key},offset,limit,"COALESCE(q.starts_at,q.event_date::timestamp AT TIME ZONE 'Asia/Seoul') NULLS LAST,q.id")
 
     def albums(self, artist_id=None, key=None):
+        # is_primary: the listed artist is an album-level credit (own release) rather than
+        # only a track credit (appears on). NULL when no artist scopes the read.
         return self.rows("""SELECT a.id::text id,a.title_native name,a.title_ko name_ko,a.album_type,
         concat_ws('-',a.release_year::text,lpad(a.release_month::text,2,'0'),lpad(a.release_day::text,2,'0')) release_date,
         a.cover_image_url image_url,
         CASE WHEN a.spotify_album_id IS NOT NULL THEN 'https://open.spotify.com/album/'||a.spotify_album_id END spotify_url,
-        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks
+        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks,
+        CASE WHEN CAST(:artist AS integer) IS NULL THEN NULL
+          ELSE EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist) END is_primary
         FROM albums a WHERE a.archived_at IS NULL
         AND (CAST(:key AS integer) IS NULL OR a.id=:key)
         AND (CAST(:artist AS integer) IS NULL
@@ -195,9 +199,39 @@ class CatalogReadRepository:
         {"artist":artist_id,"key":key})
 
     def tracks(self, album_id):
-        return self.rows("""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
+        """Album tracks with who performs each one.
+
+        Spotify's own track credits (revision 006) come first, so a track on an artist's
+        album that the artist does not perform (a guest track, another person's remix) is
+        shown under its real performers. A credit whose Spotify ID is a registered owner
+        account shows that catalog artist's names. A recording joined by ISRC holds several
+        Spotify track IDs; the credits of its earliest stored one are used. Without
+        provider credits (before 006 or before backfill) the registered recording credits
+        are used, and an empty list means the track has no known performer.
+        """
+        registered = """SELECT jsonb_agg(jsonb_build_object('artist_id',a.id,'name',a.name_native,'name_ko',a.name_ko)
+          ORDER BY ra.position,ra.id) FROM recording_artists ra
+          JOIN artists a ON a.id=ra.artist_id AND a.archived_at IS NULL AND a.show_in_catalog
+          WHERE ra.recording_id=r.id"""
+        present = self.rows("SELECT to_regclass('public.recording_provider_credits') IS NOT NULL present")[0]["present"]
+        artists = f"COALESCE(({registered}),'[]'::jsonb)"
+        if present:
+            artists = f"""COALESCE((SELECT jsonb_agg(jsonb_build_object('artist_id',owner.id,
+              'name',COALESCE(owner.name_native,c.name),'name_ko',owner.name_ko) ORDER BY c.position)
+              FROM recording_provider_credits c
+              LEFT JOIN LATERAL (SELECT ar.id,ar.name_native,ar.name_ko FROM external_accounts ea
+                JOIN artist_external_accounts e ON e.account_id=ea.id AND e.relationship='owner'
+                JOIN artists ar ON ar.id=e.artist_id AND ar.archived_at IS NULL AND ar.show_in_catalog
+                WHERE ea.platform='spotify' AND ea.platform_id=c.provider_artist_id AND ea.archived_at IS NULL
+                ORDER BY ar.id LIMIT 1) owner ON true
+              WHERE c.platform='spotify' AND c.track_id=(SELECT x.external_id FROM recording_external_ids x
+                WHERE x.recording_id=r.id AND x.platform='spotify' AND EXISTS (SELECT 1 FROM recording_provider_credits pc
+                  WHERE pc.platform='spotify' AND pc.track_id=x.external_id) ORDER BY x.id LIMIT 1)),
+              ({registered}),'[]'::jsonb)"""
+        return self.rows(f"""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
         r.duration_ms,t.disc_number,t.track_number,
-        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics
+        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics,
+        {artists} artists
         FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
         WHERE t.album_id=:id ORDER BY t.disc_number,t.track_number,t.id""",{"id":album_id})
 

@@ -231,6 +231,7 @@ export const albums: Album[] = [
     image_url: '/images/albums/midnight-blue.jpg',
     source_url: 'https://linkco.re/t3pG1pgu',
     is_sample: false,
+    is_primary: true,
     tracks: [
       'Weekend milk',
       'ばいばい、テディベア',
@@ -249,6 +250,7 @@ export const albums: Album[] = [
     image_url: '/images/albums/kaf-butte.png',
     source_url: 'https://kamitsubaki.jp/artist/kaf/',
     is_sample: false,
+    is_primary: true,
     tracks: [{ id: 210, title: '撃って', title_ko: '쏴', duration: '—', has_lyrics: true }],
   },
   {
@@ -260,6 +262,7 @@ export const albums: Album[] = [
     image_url: '/images/albums/kaf-eat.jpg',
     source_url: 'https://kamitsubaki.jp/artist/kaf/',
     is_sample: false,
+    is_primary: true,
     tracks: [{ id: 211, title: 'EAT THE PAST', title_ko: '', duration: '—', has_lyrics: true }],
   },
   {
@@ -271,6 +274,7 @@ export const albums: Album[] = [
     image_url: '/images/albums/kaf-my-life.jpg',
     source_url: 'https://kamitsubaki.jp/artist/kaf/',
     is_sample: false,
+    is_primary: true,
     tracks: [{ id: 212, title: 'My Life', title_ko: '', duration: '—', has_lyrics: true }],
   },
 ]

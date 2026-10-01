@@ -35,8 +35,8 @@ def test_start_enables_catalog_owner_accounts_and_enqueues_once(database):
             preview = start.run(session, write=False)
             assert (preview["accounts"], preview["to_enable"], preview["jobs_to_enqueue"]) == (1, 1, 1)
             session.rollback()
-            session.execute(text("DELETE FROM catalog_schema_migrations WHERE version='005'"))
-            with pytest.raises(RuntimeError, match="revision 005"):
+            session.execute(text("DELETE FROM catalog_schema_migrations WHERE version='006'"))
+            with pytest.raises(RuntimeError, match="revision 006"):
                 start.run(session, write=True)
             session.rollback()
             result = start.run(session, write=True)
@@ -45,11 +45,34 @@ def test_start_enables_catalog_owner_accounts_and_enqueues_once(database):
             enabled = dict(session.execute(text("SELECT platform_id, collection_enabled FROM external_accounts")).all())
             assert enabled == {"a" * 22: True, "b" * 22: False, "c" * 22: False}
             job = session.execute(text("SELECT external_account_id, payload, status FROM worker_jobs")).one()
-            assert (job[0], job[1]["spotify_artist_id"], job[1]["album_offset"], job[2]) == (wanted, "a" * 22, 0, "pending")
+            assert (job[0], job[1]["spotify_artist_id"], job[1]["album_offset"], job[1]["album_group"], job[2]) == (wanted, "a" * 22, 0, "album", "pending")
             assert session.execute(text("SELECT count(*) FROM catalog_changes WHERE entity_type='external_accounts'")).scalar() == 1
             again = start.run(session, write=True)
             session.commit()
             assert (again["to_enable"], again["jobs_already_queued"], again["job_ids"]) == (0, 1, result["job_ids"])
             assert session.execute(text("SELECT count(*) FROM worker_jobs")).scalar() == 1
+    finally:
+        engine.dispose()
+
+
+
+def test_artist_filter_starts_only_those_accounts_under_a_new_run(database):
+    apply_schema(database)
+    first = account(database, "d" * 22)
+    account(database, "e" * 22)
+    database.commit()
+    artist = database.execute("SELECT artist_id FROM artist_external_accounts WHERE account_id=%s", (first,)).fetchone()[0]
+    info = database.info
+    engine = create_engine(f"postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}")
+    try:
+        with Session(engine) as session:
+            with pytest.raises(RuntimeError, match="Not catalog-visible"):
+                start.run(session, write=False, artist_ids=[artist, 999999])
+            session.rollback()
+            result = start.run(session, write=True, run_label="fix", artist_ids=[artist])
+            session.commit()
+            assert (result["accounts"], result["jobs_to_enqueue"], result["accounts_left_for_later"]) == (1, 1, 0)
+            jobs = session.execute(text("SELECT external_account_id, payload->>'request_run' FROM worker_jobs")).all()
+            assert jobs == [(first, "fix")]
     finally:
         engine.dispose()

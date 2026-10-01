@@ -1,0 +1,8620 @@
+{
+ "policy": "match-key-song-confirm-v1",
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "summary": {
+  "pending_keys": 12427,
+  "confirm": 450,
+  "review": 0,
+  "confirm_by_basis": {
+   "exact": 443,
+   "split": 7
+  },
+  "songs": 381,
+  "would_link_performances": 1463,
+  "candidate_songs": 2153
+ },
+ "confirm": [
+  {
+   "key_id": 14169,
+   "key_version": 1,
+   "title_key": "hope song",
+   "artist_key": "焔魔るり",
+   "raw_title": "Hope Song",
+   "raw_artist": "焔魔るり",
+   "occurrences": 33,
+   "basis": "exact",
+   "song_id": 2044,
+   "song": {
+    "song_id": 2044,
+    "title": "Hope Song",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 33
+  },
+  {
+   "key_id": 19183,
+   "key_version": 1,
+   "title_key": "シズムリウム",
+   "artist_key": "焔魔るり",
+   "raw_title": "シズムリウム",
+   "raw_artist": "焔魔るり",
+   "occurrences": 27,
+   "basis": "exact",
+   "song_id": 2042,
+   "song": {
+    "song_id": 2042,
+    "title": "シズムリウム",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 27
+  },
+  {
+   "key_id": 26476,
+   "key_version": 1,
+   "title_key": "花に落ちる",
+   "artist_key": "ヨノ",
+   "raw_title": "花に落ちる",
+   "raw_artist": "ヨノ",
+   "occurrences": 26,
+   "basis": "exact",
+   "song_id": 2035,
+   "song": {
+    "song_id": 2035,
+    "title": "花に落ちる",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 26
+  },
+  {
+   "key_id": 22252,
+   "key_version": 1,
+   "title_key": "僕は僕の速さで",
+   "artist_key": "ヨノ",
+   "raw_title": "僕は僕の速さで",
+   "raw_artist": "ヨノ",
+   "occurrences": 25,
+   "basis": "exact",
+   "song_id": 2030,
+   "song": {
+    "song_id": 2030,
+    "title": "僕は僕の速さで",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 25
+  },
+  {
+   "key_id": 13632,
+   "key_version": 1,
+   "title_key": "engelslied",
+   "artist_key": "neun",
+   "raw_title": "Engelslied",
+   "raw_artist": "NEUN",
+   "occurrences": 24,
+   "basis": "exact",
+   "song_id": 1998,
+   "song": {
+    "song_id": 1998,
+    "title": "Engelslied",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 24
+  },
+  {
+   "key_id": 17158,
+   "key_version": 1,
+   "title_key": "その刹那、焔につき。",
+   "artist_key": "焔魔るり",
+   "raw_title": "その刹那、焔につき。",
+   "raw_artist": "焔魔るり",
+   "occurrences": 23,
+   "basis": "exact",
+   "song_id": 2049,
+   "song": {
+    "song_id": 2049,
+    "title": "その刹那、焔につき。",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 23
+  },
+  {
+   "key_id": 25005,
+   "key_version": 1,
+   "title_key": "棘宵",
+   "artist_key": "焔魔るり",
+   "raw_title": "棘宵",
+   "raw_artist": "焔魔るり",
+   "occurrences": 22,
+   "basis": "exact",
+   "song_id": 2043,
+   "song": {
+    "song_id": 2043,
+    "title": "棘宵",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 22
+  },
+  {
+   "key_id": 16162,
+   "key_version": 1,
+   "title_key": "you're notes",
+   "artist_key": "ヨノ",
+   "raw_title": "You're Notes",
+   "raw_artist": "ヨノ",
+   "occurrences": 20,
+   "basis": "exact",
+   "song_id": 2036,
+   "song": {
+    "song_id": 2036,
+    "title": "You're Notes",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 20
+  },
+  {
+   "key_id": 14433,
+   "key_version": 1,
+   "title_key": "last beat",
+   "artist_key": "焔魔るり",
+   "raw_title": "Last beat",
+   "raw_artist": "焔魔るり",
+   "occurrences": 18,
+   "basis": "exact",
+   "song_id": 2041,
+   "song": {
+    "song_id": 2041,
+    "title": "Last beat",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 18
+  },
+  {
+   "key_id": 20427,
+   "key_version": 1,
+   "title_key": "ヒノコ",
+   "artist_key": "焔魔るり",
+   "raw_title": "ヒノコ",
+   "raw_artist": "焔魔るり",
+   "occurrences": 18,
+   "basis": "exact",
+   "song_id": 2051,
+   "song": {
+    "song_id": 2051,
+    "title": "ヒノコ",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 18
+  },
+  {
+   "key_id": 27365,
+   "key_version": 1,
+   "title_key": "響く音の、その先で",
+   "artist_key": "ヨノ",
+   "raw_title": "響く音の、その先で",
+   "raw_artist": "ヨノ",
+   "occurrences": 18,
+   "basis": "exact",
+   "song_id": 2039,
+   "song": {
+    "song_id": 2039,
+    "title": "響く音の、その先で",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 18
+  },
+  {
+   "key_id": 16865,
+   "key_version": 1,
+   "title_key": "ぐるぐる",
+   "artist_key": "ミナミイズミ",
+   "raw_title": "ぐるぐる",
+   "raw_artist": "ミナミイズミ",
+   "occurrences": 17,
+   "basis": "exact",
+   "song_id": 2823,
+   "song": {
+    "song_id": 2823,
+    "title": "ぐるぐる",
+    "artists": [
+     "ミナミイズミ"
+    ]
+   },
+   "would_link": 17
+  },
+  {
+   "key_id": 26227,
+   "key_version": 1,
+   "title_key": "結晶",
+   "artist_key": "ミナミイズミ",
+   "raw_title": "結晶",
+   "raw_artist": "ミナミイズミ",
+   "occurrences": 16,
+   "basis": "exact",
+   "song_id": 2825,
+   "song": {
+    "song_id": 2825,
+    "title": "結晶",
+    "artists": [
+     "ミナミイズミ"
+    ]
+   },
+   "would_link": 16
+  },
+  {
+   "key_id": 23643,
+   "key_version": 1,
+   "title_key": "届かないと思った虹の赤にこの手届くように",
+   "artist_key": "焔魔るり",
+   "raw_title": "届かないと思った虹の赤にこの手届くように",
+   "raw_artist": "焔魔るり",
+   "occurrences": 15,
+   "basis": "exact",
+   "song_id": 2050,
+   "song": {
+    "song_id": 2050,
+    "title": "届かないと思った虹の赤にこの手届くように",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 15
+  },
+  {
+   "key_id": 14076,
+   "key_version": 1,
+   "title_key": "heiliges requiem",
+   "artist_key": "neun",
+   "raw_title": "Heiliges Requiem",
+   "raw_artist": "NEUN",
+   "occurrences": 14,
+   "basis": "exact",
+   "song_id": 1999,
+   "song": {
+    "song_id": 1999,
+    "title": "Heiliges Requiem",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 14
+  },
+  {
+   "key_id": 15435,
+   "key_version": 1,
+   "title_key": "secret base〜君がくれたもの〜",
+   "artist_key": "zone",
+   "raw_title": "secret base〜君がくれたもの〜",
+   "raw_artist": "ZONE",
+   "occurrences": 14,
+   "basis": "exact",
+   "song_id": 1065,
+   "song": {
+    "song_id": 1065,
+    "title": "secret base ～君がくれたもの～",
+    "artists": [
+     "ZONE"
+    ]
+   },
+   "would_link": 14
+  },
+  {
+   "key_id": 25237,
+   "key_version": 1,
+   "title_key": "水色ファンファーレ",
+   "artist_key": "白河しらせ",
+   "raw_title": "水色ファンファーレ",
+   "raw_artist": "白河しらせ",
+   "occurrences": 14,
+   "basis": "exact",
+   "song_id": 2760,
+   "song": {
+    "song_id": 2760,
+    "title": "水色ファンファーレ",
+    "artists": [
+     "白河しらせ"
+    ]
+   },
+   "would_link": 14
+  },
+  {
+   "key_id": 18676,
+   "key_version": 1,
+   "title_key": "カメレオンアクター",
+   "artist_key": "焔魔るり",
+   "raw_title": "カメレオンアクター",
+   "raw_artist": "焔魔るり",
+   "occurrences": 13,
+   "basis": "exact",
+   "song_id": 2052,
+   "song": {
+    "song_id": 2052,
+    "title": "カメレオンアクター",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 13
+  },
+  {
+   "key_id": 24185,
+   "key_version": 1,
+   "title_key": "愛を紡ぐ。",
+   "artist_key": "ヨノ",
+   "raw_title": "愛を紡ぐ。",
+   "raw_artist": "ヨノ",
+   "occurrences": 12,
+   "basis": "exact",
+   "song_id": 2034,
+   "song": {
+    "song_id": 2034,
+    "title": "愛を紡ぐ。",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 12
+  },
+  {
+   "key_id": 25453,
+   "key_version": 1,
+   "title_key": "渡月橋 ~君 想ふ~",
+   "artist_key": "倉木麻衣",
+   "raw_title": "渡月橋 ～君 想ふ～",
+   "raw_artist": "倉木麻衣",
+   "occurrences": 12,
+   "basis": "exact",
+   "song_id": 1255,
+   "song": {
+    "song_id": 1255,
+    "title": "渡月橋 〜君 想ふ〜",
+    "artists": [
+     "倉木麻衣"
+    ]
+   },
+   "would_link": 12
+  },
+  {
+   "key_id": 23239,
+   "key_version": 1,
+   "title_key": "夢の中で愛して",
+   "artist_key": "ヨノ",
+   "raw_title": "夢の中で愛して",
+   "raw_artist": "ヨノ",
+   "occurrences": 10,
+   "basis": "exact",
+   "song_id": 2038,
+   "song": {
+    "song_id": 2038,
+    "title": "夢の中で愛して",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 10
+  },
+  {
+   "key_id": 15309,
+   "key_version": 1,
+   "title_key": "red eyes",
+   "artist_key": "焔魔るり",
+   "raw_title": "RED EYES",
+   "raw_artist": "焔魔るり",
+   "occurrences": 9,
+   "basis": "exact",
+   "song_id": 2056,
+   "song": {
+    "song_id": 2056,
+    "title": "RED EYES",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 9
+  },
+  {
+   "key_id": 24550,
+   "key_version": 1,
+   "title_key": "春よ、 来い",
+   "artist_key": "松任谷由実",
+   "raw_title": "春よ、 来い",
+   "raw_artist": "松任谷由実",
+   "occurrences": 9,
+   "basis": "exact",
+   "song_id": 1492,
+   "song": {
+    "song_id": 1492,
+    "title": "春よ、来い",
+    "artists": [
+     "松任谷由実"
+    ]
+   },
+   "would_link": 9
+  },
+  {
+   "key_id": 24871,
+   "key_version": 1,
+   "title_key": "未来予想図 ii",
+   "artist_key": "dreams come true",
+   "raw_title": "未来予想図 II",
+   "raw_artist": "DREAMS COME TRUE",
+   "occurrences": 9,
+   "basis": "exact",
+   "song_id": 1842,
+   "song": {
+    "song_id": 1842,
+    "title": "未来予想図Ⅱ",
+    "artists": [
+     "DREAMS COME TRUE"
+    ]
+   },
+   "would_link": 9
+  },
+  {
+   "key_id": 26078,
+   "key_version": 1,
+   "title_key": "空に沈む。",
+   "artist_key": "ヨノ",
+   "raw_title": "空に沈む。",
+   "raw_artist": "ヨノ",
+   "occurrences": 9,
+   "basis": "exact",
+   "song_id": 2031,
+   "song": {
+    "song_id": 2031,
+    "title": "空に沈む。",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 9
+  },
+  {
+   "key_id": 14394,
+   "key_version": 1,
+   "title_key": "kiss hug",
+   "artist_key": "aiko",
+   "raw_title": "Kiss Hug",
+   "raw_artist": "aiko",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 1041,
+   "song": {
+    "song_id": 1041,
+    "title": "KissHug",
+    "artists": [
+     "aiko"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 15386,
+   "key_version": 1,
+   "title_key": "runway",
+   "artist_key": "xiden",
+   "raw_title": "RUNWAY",
+   "raw_artist": "XIDEN",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2448,
+   "song": {
+    "song_id": 2448,
+    "title": "RUNWAY",
+    "artists": [
+     "XIDEN"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 16051,
+   "key_version": 1,
+   "title_key": "weekend milk",
+   "artist_key": "hachi",
+   "raw_title": "Weekend milk",
+   "raw_artist": "HACHI",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2868,
+   "song": {
+    "song_id": 2868,
+    "title": "Weekend milk",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 17894,
+   "key_version": 1,
+   "title_key": "やさしさに包まれたなら",
+   "artist_key": "荒井由実",
+   "raw_title": "やさしさに包まれたなら",
+   "raw_artist": "荒井由実",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 1343,
+   "song": {
+    "song_id": 1343,
+    "title": "やさしさに包まれたなら",
+    "artists": [
+     "松任谷由実"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 19377,
+   "key_version": 1,
+   "title_key": "スキスキ絶頂症",
+   "artist_key": "電ポルp",
+   "raw_title": "スキスキ絶頂症",
+   "raw_artist": "電ポルP",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 1880,
+   "song": {
+    "song_id": 1880,
+    "title": "スキスキ絶頂症",
+    "artists": [
+     "koyori"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 20166,
+   "key_version": 1,
+   "title_key": "ハッピー・ジャムジャム",
+   "artist_key": "m・s・j",
+   "raw_title": "ハッピー・ジャムジャム",
+   "raw_artist": "M・S・J",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 942,
+   "song": {
+    "song_id": 942,
+    "title": "ハッピー・ジャムジャム",
+    "artists": [
+     "M・S・J"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 20280,
+   "key_version": 1,
+   "title_key": "バスタイムプラネタリウム",
+   "artist_key": "hachi",
+   "raw_title": "バスタイムプラネタリウム",
+   "raw_artist": "HACHI",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2867,
+   "song": {
+    "song_id": 2867,
+    "title": "バスタイムプラネタリウム",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 20490,
+   "key_version": 1,
+   "title_key": "ビー玉",
+   "artist_key": "hachi",
+   "raw_title": "ビー玉",
+   "raw_artist": "HACHI",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2859,
+   "song": {
+    "song_id": 2859,
+    "title": "ビー玉",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 20888,
+   "key_version": 1,
+   "title_key": "ボイジャー",
+   "artist_key": "水瀬 凪",
+   "raw_title": "ボイジャー",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2059,
+   "song": {
+    "song_id": 2059,
+    "title": "ボイジャー",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 23081,
+   "key_version": 1,
+   "title_key": "夏灯篭",
+   "artist_key": "hachi",
+   "raw_title": "夏灯篭",
+   "raw_artist": "HACHI",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2870,
+   "song": {
+    "song_id": 2870,
+    "title": "夏灯篭",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 23227,
+   "key_version": 1,
+   "title_key": "夜迷い言",
+   "artist_key": "hachi",
+   "raw_title": "夜迷い言",
+   "raw_artist": "HACHI",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2869,
+   "song": {
+    "song_id": 2869,
+    "title": "夜迷い言",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 23236,
+   "key_version": 1,
+   "title_key": "夢に溺れる。",
+   "artist_key": "ヨノ",
+   "raw_title": "夢に溺れる。",
+   "raw_artist": "ヨノ",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2033,
+   "song": {
+    "song_id": 2033,
+    "title": "夢に溺れる。",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 25797,
+   "key_version": 1,
+   "title_key": "白金ディスコ",
+   "artist_key": "阿良々木月火(井口裕香)",
+   "raw_title": "白金ディスコ",
+   "raw_artist": "阿良々木月火(井口裕香)",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 1708,
+   "song": {
+    "song_id": 1708,
+    "title": "白金ディスコ",
+    "artists": [
+     "阿良々木月火（井口裕香）"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 26539,
+   "key_version": 1,
+   "title_key": "花女",
+   "artist_key": "花譜",
+   "raw_title": "花女",
+   "raw_artist": "花譜",
+   "occurrences": 8,
+   "basis": "exact",
+   "song_id": 2198,
+   "song": {
+    "song_id": 2198,
+    "title": "花女",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 8
+  },
+  {
+   "key_id": 13003,
+   "key_version": 1,
+   "title_key": "awaken now",
+   "artist_key": "松永 依織",
+   "raw_title": "Awaken Now",
+   "raw_artist": "松永 依織",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2796,
+   "song": {
+    "song_id": 2796,
+    "title": "Awaken Now",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 13279,
+   "key_version": 1,
+   "title_key": "chemistream",
+   "artist_key": "meda",
+   "raw_title": "CHEMISTREAM",
+   "raw_artist": "MEDA",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2427,
+   "song": {
+    "song_id": 2427,
+    "title": "CHEMISTREAM",
+    "artists": [
+     "MEDA"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 13525,
+   "key_version": 1,
+   "title_key": "divas eid",
+   "artist_key": "neun",
+   "raw_title": "Divas Eid",
+   "raw_artist": "NEUN",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2000,
+   "song": {
+    "song_id": 2000,
+    "title": "Divas Eid",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 13647,
+   "key_version": 1,
+   "title_key": "eternal blaze",
+   "artist_key": "水樹 奈々",
+   "raw_title": "ETERNAL BLAZE",
+   "raw_artist": "水樹 奈々",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1567,
+   "song": {
+    "song_id": 1567,
+    "title": "ETERNAL BLAZE",
+    "artists": [
+     "水樹奈々"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 13793,
+   "key_version": 1,
+   "title_key": "fragment",
+   "artist_key": "hachi",
+   "raw_title": "fragment",
+   "raw_artist": "HACHI",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2848,
+   "song": {
+    "song_id": 2848,
+    "title": "fragment",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 14911,
+   "key_version": 1,
+   "title_key": "nova",
+   "artist_key": "xiden",
+   "raw_title": "NOVA",
+   "raw_artist": "XIDEN",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2447,
+   "song": {
+    "song_id": 2447,
+    "title": "NOVA",
+    "artists": [
+     "XIDEN"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 15720,
+   "key_version": 1,
+   "title_key": "swallowtail butterfly 〜あいのうた〜",
+   "artist_key": "yen town band",
+   "raw_title": "Swallowtail Butterfly 〜あいのうた〜",
+   "raw_artist": "YEN TOWN BAND",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1481,
+   "song": {
+    "song_id": 1481,
+    "title": "Swallowtail Butterfly〜あいのうた〜",
+    "artists": [
+     "YEN TOWN BAND"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 16608,
+   "key_version": 1,
+   "title_key": "おなじ話",
+   "artist_key": "ハンバート ハンバート",
+   "raw_title": "おなじ話",
+   "raw_artist": "ハンバート ハンバート",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1045,
+   "song": {
+    "song_id": 1045,
+    "title": "おなじ話",
+    "artists": [
+     "ハンバートハンバート"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 17300,
+   "key_version": 1,
+   "title_key": "ちゅ、多様性。",
+   "artist_key": "あの",
+   "raw_title": "ちゅ、多様性。",
+   "raw_artist": "あの",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1446,
+   "song": {
+    "song_id": 1446,
+    "title": "ちゅ、多様性。",
+    "artists": [
+     "ano"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 20081,
+   "key_version": 1,
+   "title_key": "ノスタルジー・ステップ",
+   "artist_key": "水瀬 凪",
+   "raw_title": "ノスタルジー・ステップ",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2054,
+   "song": {
+    "song_id": 2054,
+    "title": "ノスタルジー・ステップ",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 20152,
+   "key_version": 1,
+   "title_key": "ハッピーシンセサイザ",
+   "artist_key": "easy pop",
+   "raw_title": "ハッピーシンセサイザ",
+   "raw_artist": "Easy Pop",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1407,
+   "song": {
+    "song_id": 1407,
+    "title": "ハッピーシンセサイザ",
+    "artists": [
+     "EasyPop"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 20603,
+   "key_version": 1,
+   "title_key": "フクロウ〜フクロウが知らせる客が来たと〜",
+   "artist_key": "kokia",
+   "raw_title": "フクロウ〜フクロウが知らせる客が来たと〜",
+   "raw_artist": "KOKIA",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1060,
+   "song": {
+    "song_id": 1060,
+    "title": "フクロウ～フクロウが知らせる客が来たと～",
+    "artists": [
+     "KOKIA"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 21628,
+   "key_version": 1,
+   "title_key": "レトロスペクティカ",
+   "artist_key": "伊月知世",
+   "raw_title": "レトロスペクティカ",
+   "raw_artist": "伊月知世",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2821,
+   "song": {
+    "song_id": 2821,
+    "title": "レトロスペクティカ",
+    "artists": [
+     "伊月知世"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 23056,
+   "key_version": 1,
+   "title_key": "夏の透明",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "夏の透明",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2459,
+   "song": {
+    "song_id": 2459,
+    "title": "夏の透明",
+    "artists": [
+     "buzzG",
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 23284,
+   "key_version": 1,
+   "title_key": "夢霞",
+   "artist_key": "羽緒",
+   "raw_title": "夢霞",
+   "raw_artist": "羽緒",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2024,
+   "song": {
+    "song_id": 2024,
+    "title": "夢霞",
+    "artists": [
+     "羽緒"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 24257,
+   "key_version": 1,
+   "title_key": "手紙 ~拝啓 十五の君へ~",
+   "artist_key": "アンジェラ・アキ",
+   "raw_title": "手紙 ～拝啓 十五の君へ～",
+   "raw_artist": "アンジェラ・アキ",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 1107,
+   "song": {
+    "song_id": 1107,
+    "title": "手紙～拝啓十五の君へ～",
+    "artists": [
+     "アンジェラ・アキ"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 25639,
+   "key_version": 1,
+   "title_key": "独りんぼエンヴィー",
+   "artist_key": "koyori",
+   "raw_title": "独りんぼエンヴィー",
+   "raw_artist": "koyori",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 945,
+   "song": {
+    "song_id": 945,
+    "title": "独りんぼエンヴィー",
+    "artists": [
+     "koyori"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 26982,
+   "key_version": 1,
+   "title_key": "遊泳",
+   "artist_key": "wouca",
+   "raw_title": "遊泳",
+   "raw_artist": "wouca",
+   "occurrences": 7,
+   "basis": "exact",
+   "song_id": 2012,
+   "song": {
+    "song_id": 2012,
+    "title": "遊泳",
+    "artists": [
+     "wouca"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 14594,
+   "key_version": 1,
+   "title_key": "luna say maybe",
+   "artist_key": "月村手毬(小鹿なお)",
+   "raw_title": "Luna say maybe",
+   "raw_artist": "月村手毬(小鹿なお)",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1921,
+   "song": {
+    "song_id": 1921,
+    "title": "Luna say maybe",
+    "artists": [
+     "月村手毬（小鹿なお）"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 14606,
+   "key_version": 1,
+   "title_key": "m",
+   "artist_key": "プリンセス プリンセス",
+   "raw_title": "M",
+   "raw_artist": "プリンセス プリンセス",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1422,
+   "song": {
+    "song_id": 1422,
+    "title": "M",
+    "artists": [
+     "PRINCESS PRINCESS"
+    ]
+   },
+   "would_link": 7
+  },
+  {
+   "key_id": 14630,
+   "key_version": 1,
+   "title_key": "magnet",
+   "artist_key": "minato",
+   "raw_title": "magnet",
+   "raw_artist": "minato",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1760,
+   "song": {
+    "song_id": 1760,
+    "title": "magnet",
+    "artists": [
+     "湊貴大"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 14782,
+   "key_version": 1,
+   "title_key": "more than blue",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "More than Blue",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2458,
+   "song": {
+    "song_id": 2458,
+    "title": "More than Blue",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 15311,
+   "key_version": 1,
+   "title_key": "red line",
+   "artist_key": "imi",
+   "raw_title": "RED LINE",
+   "raw_artist": "IMI",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2432,
+   "song": {
+    "song_id": 2432,
+    "title": "RED LINE",
+    "artists": [
+     "IMI"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 15423,
+   "key_version": 1,
+   "title_key": "secret base ~ 君がくれたもの ~",
+   "artist_key": "zone",
+   "raw_title": "secret base ~ 君がくれたもの ~",
+   "raw_artist": "ZONE",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1065,
+   "song": {
+    "song_id": 1065,
+    "title": "secret base ～君がくれたもの～",
+    "artists": [
+     "ZONE"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 16628,
+   "key_version": 1,
+   "title_key": "おもいびと",
+   "artist_key": "ヨノ",
+   "raw_title": "おもいびと",
+   "raw_artist": "ヨノ",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2003,
+   "song": {
+    "song_id": 2003,
+    "title": "おもいびと",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 18848,
+   "key_version": 1,
+   "title_key": "ギミー!レボリューション",
+   "artist_key": "内田 真礼",
+   "raw_title": "ギミー！レボリューション",
+   "raw_artist": "内田 真礼",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1822,
+   "song": {
+    "song_id": 1822,
+    "title": "ギミー! レボリューション",
+    "artists": [
+     "内田真礼"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 19614,
+   "key_version": 1,
+   "title_key": "ダイアモンドクレバス",
+   "artist_key": "シェリル・ノーム starring may'n",
+   "raw_title": "ダイアモンドクレバス",
+   "raw_artist": "シェリル・ノーム starring May'n",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 1222,
+   "song": {
+    "song_id": 1222,
+    "title": "ダイアモンド クレバス",
+    "artists": [
+     "シェリル・ノーム starring May'n"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 25141,
+   "key_version": 1,
+   "title_key": "残声",
+   "artist_key": "diα",
+   "raw_title": "残声",
+   "raw_artist": "Diα",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2450,
+   "song": {
+    "song_id": 2450,
+    "title": "残声",
+    "artists": [
+     "Diα"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 26546,
+   "key_version": 1,
+   "title_key": "花束",
+   "artist_key": "ヨノ",
+   "raw_title": "花束",
+   "raw_artist": "ヨノ",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2007,
+   "song": {
+    "song_id": 2007,
+    "title": "花束",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 26816,
+   "key_version": 1,
+   "title_key": "諦めることを諦めたい",
+   "artist_key": "ミナミイズミ",
+   "raw_title": "諦めることを諦めたい",
+   "raw_artist": "ミナミイズミ",
+   "occurrences": 6,
+   "basis": "exact",
+   "song_id": 2822,
+   "song": {
+    "song_id": 2822,
+    "title": "諦めることを諦めたい",
+    "artists": [
+     "ミナミイズミ"
+    ]
+   },
+   "would_link": 6
+  },
+  {
+   "key_id": 13145,
+   "key_version": 1,
+   "title_key": "booo!",
+   "artist_key": "tokotoko",
+   "raw_title": "Booo!",
+   "raw_artist": "TOKOTOKO",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 1982,
+   "song": {
+    "song_id": 1982,
+    "title": "Booo!",
+    "artists": [
+     "TOKOTOKO"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 13465,
+   "key_version": 1,
+   "title_key": "deep shadow",
+   "artist_key": "深影",
+   "raw_title": "DEEP SHADOW",
+   "raw_artist": "深影",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2430,
+   "song": {
+    "song_id": 2430,
+    "title": "DEEP SHADOW",
+    "artists": [
+     "深影"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 14165,
+   "key_version": 1,
+   "title_key": "honey♥come!!",
+   "artist_key": "小倉 唯",
+   "raw_title": "Honey♥Come!!",
+   "raw_artist": "小倉 唯",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 1862,
+   "song": {
+    "song_id": 1862,
+    "title": "Honey♥Come!!",
+    "artists": [
+     "小倉唯"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 14241,
+   "key_version": 1,
+   "title_key": "id-entity",
+   "artist_key": "meda",
+   "raw_title": "Id-Entity",
+   "raw_artist": "MEDA",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2428,
+   "song": {
+    "song_id": 2428,
+    "title": "Id-Entity",
+    "artists": [
+     "MEDA"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 14449,
+   "key_version": 1,
+   "title_key": "lazurite",
+   "artist_key": "水瀬 凪",
+   "raw_title": "Lazurite",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2064,
+   "song": {
+    "song_id": 2064,
+    "title": "Lazurite",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 14910,
+   "key_version": 1,
+   "title_key": "notes of color",
+   "artist_key": "ヨノ",
+   "raw_title": "Notes of Color",
+   "raw_artist": "ヨノ",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2032,
+   "song": {
+    "song_id": 2032,
+    "title": "Notes of Color",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 15488,
+   "key_version": 1,
+   "title_key": "signal",
+   "artist_key": "diα",
+   "raw_title": "SIGNAL",
+   "raw_artist": "Diα",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2449,
+   "song": {
+    "song_id": 2449,
+    "title": "SIGNAL",
+    "artists": [
+     "Diα"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 16441,
+   "key_version": 1,
+   "title_key": "いつから僕は息をして",
+   "artist_key": "ヨノ",
+   "raw_title": "いつから僕は息をして",
+   "raw_artist": "ヨノ",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2006,
+   "song": {
+    "song_id": 2006,
+    "title": "いつから僕は息をして",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 16960,
+   "key_version": 1,
+   "title_key": "さくらんぼ",
+   "artist_key": "大塚 愛",
+   "raw_title": "さくらんぼ",
+   "raw_artist": "大塚 愛",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 1012,
+   "song": {
+    "song_id": 1012,
+    "title": "さくらんぼ",
+    "artists": [
+     "大塚愛"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 20083,
+   "key_version": 1,
+   "title_key": "ノスタルジー・ステップ",
+   "artist_key": "水瀬凪",
+   "raw_title": "ノスタルジー・ステップ",
+   "raw_artist": "水瀬凪",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2054,
+   "song": {
+    "song_id": 2054,
+    "title": "ノスタルジー・ステップ",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 22147,
+   "key_version": 1,
+   "title_key": "会いたくて会いたくて",
+   "artist_key": "西野カナ",
+   "raw_title": "会いたくて会いたくて",
+   "raw_artist": "西野カナ",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 1782,
+   "song": {
+    "song_id": 1782,
+    "title": "会いたくて会いたくて",
+    "artists": [
+     "西野カナ"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 23796,
+   "key_version": 1,
+   "title_key": "心の残響",
+   "artist_key": "ミナミイズミ",
+   "raw_title": "心の残響",
+   "raw_artist": "ミナミイズミ",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2824,
+   "song": {
+    "song_id": 2824,
+    "title": "心の残響",
+    "artists": [
+     "ミナミイズミ"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 24804,
+   "key_version": 1,
+   "title_key": "月華歌",
+   "artist_key": "羽緒",
+   "raw_title": "月華歌",
+   "raw_artist": "羽緒",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2025,
+   "song": {
+    "song_id": 2025,
+    "title": "月華歌",
+    "artists": [
+     "羽緒"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 25577,
+   "key_version": 1,
+   "title_key": "熱愛フローズン",
+   "artist_key": "valis",
+   "raw_title": "熱愛フローズン",
+   "raw_artist": "VALIS",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2217,
+   "song": {
+    "song_id": 2217,
+    "title": "熱愛フローズン",
+    "artists": [
+     "Giga",
+     "VALIS"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 25865,
+   "key_version": 1,
+   "title_key": "真赤な誓い",
+   "artist_key": "福山 芳樹",
+   "raw_title": "真赤な誓い",
+   "raw_artist": "福山 芳樹",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 1062,
+   "song": {
+    "song_id": 1062,
+    "title": "真赤な誓い",
+    "artists": [
+     "福山芳樹"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 25975,
+   "key_version": 1,
+   "title_key": "神様はいつでも",
+   "artist_key": "cona",
+   "raw_title": "神様はいつでも",
+   "raw_artist": "CONA",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2441,
+   "song": {
+    "song_id": 2441,
+    "title": "神様はいつでも",
+    "artists": [
+     "CONA"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 26961,
+   "key_version": 1,
+   "title_key": "透命",
+   "artist_key": "neun",
+   "raw_title": "透命",
+   "raw_artist": "NEUN",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2001,
+   "song": {
+    "song_id": 2001,
+    "title": "透命",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 26991,
+   "key_version": 1,
+   "title_key": "過去を喰らう",
+   "artist_key": "花譜",
+   "raw_title": "過去を喰らう",
+   "raw_artist": "花譜",
+   "occurrences": 5,
+   "basis": "exact",
+   "song_id": 2213,
+   "song": {
+    "song_id": 2213,
+    "title": "過去を喰らう",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 5
+  },
+  {
+   "key_id": 13161,
+   "key_version": 1,
+   "title_key": "brave new world",
+   "artist_key": "焔魔るり",
+   "raw_title": "Brave new world",
+   "raw_artist": "焔魔るり",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2046,
+   "song": {
+    "song_id": 2046,
+    "title": "Brave new world",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13367,
+   "key_version": 1,
+   "title_key": "crystallize",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Crystallize",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2453,
+   "song": {
+    "song_id": 2453,
+    "title": "Crystallize",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13447,
+   "key_version": 1,
+   "title_key": "dear song",
+   "artist_key": "lewne",
+   "raw_title": "Dear Song",
+   "raw_artist": "LEWNE",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2438,
+   "song": {
+    "song_id": 2438,
+    "title": "Dear Song",
+    "artists": [
+     "LEWNE"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13467,
+   "key_version": 1,
+   "title_key": "deep sleep sheep",
+   "artist_key": "hachi",
+   "raw_title": "Deep Sleep Sheep",
+   "raw_artist": "HACHI",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2858,
+   "song": {
+    "song_id": 2858,
+    "title": "Deep Sleep Sheep",
+    "artists": [
+     "ササノマリイ",
+     "HACHI"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13701,
+   "key_version": 1,
+   "title_key": "fancy baby doll",
+   "artist_key": "田村 ゆかり",
+   "raw_title": "fancy baby doll",
+   "raw_artist": "田村 ゆかり",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1660,
+   "song": {
+    "song_id": 1660,
+    "title": "fancy baby doll",
+    "artists": [
+     "田村ゆかり"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13776,
+   "key_version": 1,
+   "title_key": "fly by",
+   "artist_key": "水瀬 凪",
+   "raw_title": "Fly By",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2063,
+   "song": {
+    "song_id": 2063,
+    "title": "Fly By",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 14226,
+   "key_version": 1,
+   "title_key": "i'm diamond",
+   "artist_key": "imi",
+   "raw_title": "I'm Diamond",
+   "raw_artist": "IMI",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2433,
+   "song": {
+    "song_id": 2433,
+    "title": "I'm Diamond",
+    "artists": [
+     "IMI"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 14273,
+   "key_version": 1,
+   "title_key": "interstellar",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "interstellar",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2463,
+   "song": {
+    "song_id": 2463,
+    "title": "interstellar",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 14481,
+   "key_version": 1,
+   "title_key": "level off",
+   "artist_key": "hachi",
+   "raw_title": "Level off",
+   "raw_artist": "HACHI",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2861,
+   "song": {
+    "song_id": 2861,
+    "title": "Level off",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 15726,
+   "key_version": 1,
+   "title_key": "swallowtail butterfly〜あいのうた〜",
+   "artist_key": "yen town band",
+   "raw_title": "Swallowtail Butterfly〜あいのうた〜",
+   "raw_artist": "YEN TOWN BAND",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1481,
+   "song": {
+    "song_id": 1481,
+    "title": "Swallowtail Butterfly〜あいのうた〜",
+    "artists": [
+     "YEN TOWN BAND"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 16952,
+   "key_version": 1,
+   "title_key": "さくら (独唱)",
+   "artist_key": "森山直太朗",
+   "raw_title": "さくら (独唱)",
+   "raw_artist": "森山直太朗",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1868,
+   "song": {
+    "song_id": 1868,
+    "title": "さくら(独唱)",
+    "artists": [
+     "森山直太朗"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 17350,
+   "key_version": 1,
+   "title_key": "となりのトトロ",
+   "artist_key": "井上 あずみ",
+   "raw_title": "となりのトトロ",
+   "raw_artist": "井上 あずみ",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1576,
+   "song": {
+    "song_id": 1576,
+    "title": "となりのトトロ",
+    "artists": [
+     "井上あずみ"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 17811,
+   "key_version": 1,
+   "title_key": "めざせポケモンマスター",
+   "artist_key": "松本 梨香",
+   "raw_title": "めざせポケモンマスター",
+   "raw_artist": "松本 梨香",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 938,
+   "song": {
+    "song_id": 938,
+    "title": "めざせポケモンマスター",
+    "artists": [
+     "松本梨香"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 19578,
+   "key_version": 1,
+   "title_key": "タッチ",
+   "artist_key": "岩崎 良美",
+   "raw_title": "タッチ",
+   "raw_artist": "岩崎 良美",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1147,
+   "song": {
+    "song_id": 1147,
+    "title": "タッチ",
+    "artists": [
+     "岩崎良美"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 20126,
+   "key_version": 1,
+   "title_key": "ハイドレンジア",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "ハイドレンジア",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2272,
+   "song": {
+    "song_id": 2272,
+    "title": "ハイドレンジア",
+    "artists": [
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 20962,
+   "key_version": 1,
+   "title_key": "マジ恋ぷれりゅーど♡loveアンセム",
+   "artist_key": "朝倉杏子",
+   "raw_title": "マジ恋ぷれりゅーど♡LOVEアンセム",
+   "raw_artist": "朝倉杏子",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2816,
+   "song": {
+    "song_id": 2816,
+    "title": "マジ恋ぷれりゅーど♡LOVEアンセム",
+    "artists": [
+     "朝倉杏子"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 21704,
+   "key_version": 1,
+   "title_key": "ロマンスの神様",
+   "artist_key": "広瀬 香美",
+   "raw_title": "ロマンスの神様",
+   "raw_artist": "広瀬 香美",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1433,
+   "song": {
+    "song_id": 1433,
+    "title": "ロマンスの神様",
+    "artists": [
+     "広瀬香美"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 21891,
+   "key_version": 1,
+   "title_key": "不可解",
+   "artist_key": "花譜",
+   "raw_title": "不可解",
+   "raw_artist": "花譜",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2516,
+   "song": {
+    "song_id": 2516,
+    "title": "不可解",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 22309,
+   "key_version": 1,
+   "title_key": "光の向こうへ",
+   "artist_key": "hachi",
+   "raw_title": "光の向こうへ",
+   "raw_artist": "HACHI",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2857,
+   "song": {
+    "song_id": 2857,
+    "title": "光の向こうへ",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 22737,
+   "key_version": 1,
+   "title_key": "君がくれた夏",
+   "artist_key": "家入 レオ",
+   "raw_title": "君がくれた夏",
+   "raw_artist": "家入 レオ",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1143,
+   "song": {
+    "song_id": 1143,
+    "title": "君がくれた夏",
+    "artists": [
+     "家入レオ"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 23558,
+   "key_version": 1,
+   "title_key": "対象について",
+   "artist_key": "neun",
+   "raw_title": "対象について",
+   "raw_artist": "NEUN",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1997,
+   "song": {
+    "song_id": 1997,
+    "title": "対象について",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 23636,
+   "key_version": 1,
+   "title_key": "少年時代",
+   "artist_key": "井上 陽水",
+   "raw_title": "少年時代",
+   "raw_artist": "井上 陽水",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1511,
+   "song": {
+    "song_id": 1511,
+    "title": "少年時代",
+    "artists": [
+     "井上陽水"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 23967,
+   "key_version": 1,
+   "title_key": "恋",
+   "artist_key": "星野 源",
+   "raw_title": "恋",
+   "raw_artist": "星野 源",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1007,
+   "song": {
+    "song_id": 1007,
+    "title": "恋",
+    "artists": [
+     "星野源"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 24261,
+   "key_version": 1,
+   "title_key": "手紙~拝啓 十五の君へ~",
+   "artist_key": "アンジェラ・アキ",
+   "raw_title": "手紙~拝啓 十五の君へ~",
+   "raw_artist": "アンジェラ・アキ",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1107,
+   "song": {
+    "song_id": 1107,
+    "title": "手紙～拝啓十五の君へ～",
+    "artists": [
+     "アンジェラ・アキ"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 24515,
+   "key_version": 1,
+   "title_key": "星空の誓い",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "星空の誓い",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2396,
+   "song": {
+    "song_id": 2396,
+    "title": "星空の誓い",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 24752,
+   "key_version": 1,
+   "title_key": "月のしずく",
+   "artist_key": "柴咲コウ",
+   "raw_title": "月のしずく",
+   "raw_artist": "柴咲コウ",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1897,
+   "song": {
+    "song_id": 1897,
+    "title": "月のしずく",
+    "artists": [
+     "RUI"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 25376,
+   "key_version": 1,
+   "title_key": "涙そうそう",
+   "artist_key": "夏川 りみ",
+   "raw_title": "涙そうそう",
+   "raw_artist": "夏川 りみ",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1150,
+   "song": {
+    "song_id": 1150,
+    "title": "涙そうそう",
+    "artists": [
+     "夏川りみ"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 25660,
+   "key_version": 1,
+   "title_key": "猟奇的なキスを私にして",
+   "artist_key": "ゲスの極み乙女。",
+   "raw_title": "猟奇的なキスを私にして",
+   "raw_artist": "ゲスの極み乙女。",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 1616,
+   "song": {
+    "song_id": 1616,
+    "title": "猟奇的なキスを私にして",
+    "artists": [
+     "ゲスの極み乙女。"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 26605,
+   "key_version": 1,
+   "title_key": "荒野のシンデレラ",
+   "artist_key": "水瀬 凪",
+   "raw_title": "荒野のシンデレラ",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 4,
+   "basis": "exact",
+   "song_id": 2061,
+   "song": {
+    "song_id": 2061,
+    "title": "荒野のシンデレラ",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 4
+  },
+  {
+   "key_id": 13004,
+   "key_version": 1,
+   "title_key": "awaken now",
+   "artist_key": "松永依織",
+   "raw_title": "Awaken Now",
+   "raw_artist": "松永依織",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2796,
+   "song": {
+    "song_id": 2796,
+    "title": "Awaken Now",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 13025,
+   "key_version": 1,
+   "title_key": "baby sweet berry love",
+   "artist_key": "小倉唯",
+   "raw_title": "Baby Sweet Berry Love",
+   "raw_artist": "小倉唯",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1981,
+   "song": {
+    "song_id": 1981,
+    "title": "Baby Sweet Berry Love",
+    "artists": [
+     "小倉唯"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 13118,
+   "key_version": 1,
+   "title_key": "blazing out",
+   "artist_key": "松永 依織",
+   "raw_title": "Blazing Out",
+   "raw_artist": "松永 依織",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2795,
+   "song": {
+    "song_id": 2795,
+    "title": "Blazing Out",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 13815,
+   "key_version": 1,
+   "title_key": "funeral",
+   "artist_key": "neun",
+   "raw_title": "Funeral",
+   "raw_artist": "NEUN",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2002,
+   "song": {
+    "song_id": 2002,
+    "title": "Funeral",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14152,
+   "key_version": 1,
+   "title_key": "homura",
+   "artist_key": "妃玖",
+   "raw_title": "HOMURA",
+   "raw_artist": "妃玖",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2027,
+   "song": {
+    "song_id": 2027,
+    "title": "HOMURA",
+    "artists": [
+     "妃玖"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14348,
+   "key_version": 1,
+   "title_key": "just be friends",
+   "artist_key": "dixieflatline",
+   "raw_title": "Just Be Friends",
+   "raw_artist": "DixieFlatline",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1191,
+   "song": {
+    "song_id": 1191,
+    "title": "Just Be Friends",
+    "artists": [
+     "Dixie Flatline"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14501,
+   "key_version": 1,
+   "title_key": "little glow",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Little glow",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2461,
+   "song": {
+    "song_id": 2461,
+    "title": "Little glow",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14509,
+   "key_version": 1,
+   "title_key": "lonely girl",
+   "artist_key": "hachi",
+   "raw_title": "Lonely Girl",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2058,
+   "song": {
+    "song_id": 2058,
+    "title": "Lonely Girl",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14559,
+   "key_version": 1,
+   "title_key": "love&roll",
+   "artist_key": "supercell",
+   "raw_title": "LOVE＆ROLL",
+   "raw_artist": "supercell",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1479,
+   "song": {
+    "song_id": 1479,
+    "title": "LOVE & ROLL",
+    "artists": [
+     "supercell"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14817,
+   "key_version": 1,
+   "title_key": "murmur",
+   "artist_key": "焔魔るり",
+   "raw_title": "Murmur",
+   "raw_artist": "焔魔るり",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2048,
+   "song": {
+    "song_id": 2048,
+    "title": "Murmur",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 14987,
+   "key_version": 1,
+   "title_key": "outsider",
+   "artist_key": "imi",
+   "raw_title": "OUTSIDER",
+   "raw_artist": "IMI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2431,
+   "song": {
+    "song_id": 2431,
+    "title": "OUTSIDER",
+    "artists": [
+     "IMI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 15153,
+   "key_version": 1,
+   "title_key": "pulse",
+   "artist_key": "妃玖",
+   "raw_title": "PULSE",
+   "raw_artist": "妃玖",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2026,
+   "song": {
+    "song_id": 2026,
+    "title": "PULSE",
+    "artists": [
+     "niki",
+     "妃玖"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 15197,
+   "key_version": 1,
+   "title_key": "rain",
+   "artist_key": "秦 基博",
+   "raw_title": "Rain",
+   "raw_artist": "秦 基博",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1369,
+   "song": {
+    "song_id": 1369,
+    "title": "Rain",
+    "artists": [
+     "大江千里",
+     "秦基博"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 15747,
+   "key_version": 1,
+   "title_key": "swimeam!!",
+   "artist_key": "ヨノ",
+   "raw_title": "Swimeam!!",
+   "raw_artist": "ヨノ",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2004,
+   "song": {
+    "song_id": 2004,
+    "title": "Swimeam!!",
+    "artists": [
+     "ヨノ"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 16447,
+   "key_version": 1,
+   "title_key": "いつまでも",
+   "artist_key": "hachi",
+   "raw_title": "いつまでも",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2860,
+   "song": {
+    "song_id": 2860,
+    "title": "いつまでも",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 16451,
+   "key_version": 1,
+   "title_key": "いつも何度でも",
+   "artist_key": "木村 弓",
+   "raw_title": "いつも何度でも",
+   "raw_artist": "木村 弓",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1067,
+   "song": {
+    "song_id": 1067,
+    "title": "いつも何度でも",
+    "artists": [
+     "木村弓"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 16976,
+   "key_version": 1,
+   "title_key": "さよならfrequency",
+   "artist_key": "hachi",
+   "raw_title": "さよならfrequency",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2853,
+   "song": {
+    "song_id": 2853,
+    "title": "さよならfrequency",
+    "artists": [
+     "春野",
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 16987,
+   "key_version": 1,
+   "title_key": "さよならの夏 ~ コクリコ坂から ~",
+   "artist_key": "手嶌葵",
+   "raw_title": "さよならの夏 ~ コクリコ坂から ~",
+   "raw_artist": "手嶌葵",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1323,
+   "song": {
+    "song_id": 1323,
+    "title": "さよならの夏〜コクリコ坂から〜",
+    "artists": [
+     "手嶌葵"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 17572,
+   "key_version": 1,
+   "title_key": "ひだまりのよる",
+   "artist_key": "時庭らんぜ",
+   "raw_title": "ひだまりのよる",
+   "raw_artist": "時庭らんぜ",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2418,
+   "song": {
+    "song_id": 2418,
+    "title": "ひだまりのよる",
+    "artists": [
+     "時庭らんぜ"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 17755,
+   "key_version": 1,
+   "title_key": "まなざし",
+   "artist_key": "hachi",
+   "raw_title": "まなざし",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2854,
+   "song": {
+    "song_id": 2854,
+    "title": "まなざし",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 17984,
+   "key_version": 1,
+   "title_key": "わたしの線香",
+   "artist_key": "花譜",
+   "raw_title": "わたしの線香",
+   "raw_artist": "花譜",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2536,
+   "song": {
+    "song_id": 2536,
+    "title": "わたしの線香",
+    "artists": [
+     "羽生まゐご",
+     "花譜"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 18000,
+   "key_version": 1,
+   "title_key": "アイ",
+   "artist_key": "秦 基博",
+   "raw_title": "アイ",
+   "raw_artist": "秦 基博",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1100,
+   "song": {
+    "song_id": 1100,
+    "title": "アイ",
+    "artists": [
+     "秦基博"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 18097,
+   "key_version": 1,
+   "title_key": "アオトキ",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "アオトキ",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2456,
+   "song": {
+    "song_id": 2456,
+    "title": "アオトキ",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 18960,
+   "key_version": 1,
+   "title_key": "ゲシュタルト",
+   "artist_key": "花譜",
+   "raw_title": "ゲシュタルト",
+   "raw_artist": "花譜",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2226,
+   "song": {
+    "song_id": 2226,
+    "title": "ゲシュタルト",
+    "artists": [
+     "花譜"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 19524,
+   "key_version": 1,
+   "title_key": "セントエルモの火",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "セントエルモの火",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2387,
+   "song": {
+    "song_id": 2387,
+    "title": "セントエルモの火",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 19525,
+   "key_version": 1,
+   "title_key": "セントエルモの火",
+   "artist_key": "皇美緒奈",
+   "raw_title": "セントエルモの火",
+   "raw_artist": "皇美緒奈",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2387,
+   "song": {
+    "song_id": 2387,
+    "title": "セントエルモの火",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 19549,
+   "key_version": 1,
+   "title_key": "ソラゴト",
+   "artist_key": "明透",
+   "raw_title": "ソラゴト",
+   "raw_artist": "明透",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2324,
+   "song": {
+    "song_id": 2324,
+    "title": "ソラゴト",
+    "artists": [
+     "Police Piccadilly",
+     "明透"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 20681,
+   "key_version": 1,
+   "title_key": "ブルーダイバー",
+   "artist_key": "neun",
+   "raw_title": "ブルーダイバー",
+   "raw_artist": "NEUN",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1995,
+   "song": {
+    "song_id": 1995,
+    "title": "ブルーダイバー",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 20889,
+   "key_version": 1,
+   "title_key": "ボイジャー",
+   "artist_key": "水瀬凪",
+   "raw_title": "ボイジャー",
+   "raw_artist": "水瀬凪",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2059,
+   "song": {
+    "song_id": 2059,
+    "title": "ボイジャー",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 21893,
+   "key_version": 1,
+   "title_key": "不可逆サバイバル",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "不可逆サバイバル",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2454,
+   "song": {
+    "song_id": 2454,
+    "title": "不可逆サバイバル",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 22210,
+   "key_version": 1,
+   "title_key": "傀儡華",
+   "artist_key": "羽緒",
+   "raw_title": "傀儡華",
+   "raw_artist": "羽緒",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2023,
+   "song": {
+    "song_id": 2023,
+    "title": "傀儡華",
+    "artists": [
+     "羽緒"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 22609,
+   "key_version": 1,
+   "title_key": "午前零時逃避行",
+   "artist_key": "水瀬 凪",
+   "raw_title": "午前零時逃避行",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2053,
+   "song": {
+    "song_id": 2053,
+    "title": "午前零時逃避行",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 22828,
+   "key_version": 1,
+   "title_key": "君をのせて",
+   "artist_key": "井上 あずみ",
+   "raw_title": "君をのせて",
+   "raw_artist": "井上 あずみ",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 990,
+   "song": {
+    "song_id": 990,
+    "title": "君をのせて",
+    "artists": [
+     "井上あずみ"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 22850,
+   "key_version": 1,
+   "title_key": "呪り-inori-",
+   "artist_key": "焔魔るり",
+   "raw_title": "呪り-inori-",
+   "raw_artist": "焔魔るり",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2047,
+   "song": {
+    "song_id": 2047,
+    "title": "呪り-inori-",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 23224,
+   "key_version": 1,
+   "title_key": "夜行バスにて",
+   "artist_key": "花譜",
+   "raw_title": "夜行バスにて",
+   "raw_artist": "花譜",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2513,
+   "song": {
+    "song_id": 2513,
+    "title": "夜行バスにて",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 23567,
+   "key_version": 1,
+   "title_key": "小さきもの",
+   "artist_key": "林 明日香",
+   "raw_title": "小さきもの",
+   "raw_artist": "林 明日香",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1029,
+   "song": {
+    "song_id": 1029,
+    "title": "小さきもの",
+    "artists": [
+     "林明日香"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 23626,
+   "key_version": 1,
+   "title_key": "少年よ我に帰れ",
+   "artist_key": "やくしまるえつこ",
+   "raw_title": "少年よ我に帰れ",
+   "raw_artist": "やくしまるえつこ",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1838,
+   "song": {
+    "song_id": 1838,
+    "title": "少年よ我に帰れ",
+    "artists": [
+     "やくしまるえつこ"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 23845,
+   "key_version": 1,
+   "title_key": "心臓と絡繰",
+   "artist_key": "花譜",
+   "raw_title": "心臓と絡繰",
+   "raw_artist": "花譜",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2511,
+   "song": {
+    "song_id": 2511,
+    "title": "心臓と絡繰",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 24237,
+   "key_version": 1,
+   "title_key": "我儘コンフリクト",
+   "artist_key": "松永 依織",
+   "raw_title": "我儘コンフリクト",
+   "raw_artist": "松永 依織",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2809,
+   "song": {
+    "song_id": 2809,
+    "title": "我儘コンフリクト",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 24978,
+   "key_version": 1,
+   "title_key": "桜のあと(all quartets lead to the?)",
+   "artist_key": "unison square garden",
+   "raw_title": "桜のあと(all quartets lead to the?)",
+   "raw_artist": "UNISON SQUARE GARDEN",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1439,
+   "song": {
+    "song_id": 1439,
+    "title": "桜のあと (all quartets lead to the?)",
+    "artists": [
+     "UNISON SQUARE GARDEN"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 24996,
+   "key_version": 1,
+   "title_key": "桜色舞うころ",
+   "artist_key": "中島 美嘉",
+   "raw_title": "桜色舞うころ",
+   "raw_artist": "中島 美嘉",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1390,
+   "song": {
+    "song_id": 1390,
+    "title": "桜色舞うころ",
+    "artists": [
+     "中島美嘉"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 25239,
+   "key_version": 1,
+   "title_key": "氷の上に立つように",
+   "artist_key": "小松 未歩",
+   "raw_title": "氷の上に立つように",
+   "raw_artist": "小松 未歩",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1748,
+   "song": {
+    "song_id": 1748,
+    "title": "氷の上に立つように",
+    "artists": [
+     "小松未歩"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 25373,
+   "key_version": 1,
+   "title_key": "涙することは疎か、息も出来ない。",
+   "artist_key": "hachi",
+   "raw_title": "涙することは疎か、息も出来ない。",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2871,
+   "song": {
+    "song_id": 2871,
+    "title": "涙することは疎か、息も出来ない。",
+    "artists": [
+     "みきとP",
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 25410,
+   "key_version": 1,
+   "title_key": "深海のリトルクライ",
+   "artist_key": "sasakure . uk",
+   "raw_title": "深海のリトルクライ",
+   "raw_artist": "sasakure . UK",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1792,
+   "song": {
+    "song_id": 1792,
+    "title": "深海のリトルクライ",
+    "artists": [
+     "sasakure.UK"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 25454,
+   "key_version": 1,
+   "title_key": "渡月橋 ~君想ふ~",
+   "artist_key": "倉木 麻衣",
+   "raw_title": "渡月橋 ~君想ふ~",
+   "raw_artist": "倉木 麻衣",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1255,
+   "song": {
+    "song_id": 1255,
+    "title": "渡月橋 〜君 想ふ〜",
+    "artists": [
+     "倉木麻衣"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 25896,
+   "key_version": 1,
+   "title_key": "瞬き",
+   "artist_key": "backnumber",
+   "raw_title": "瞬き",
+   "raw_artist": "backnumber",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 943,
+   "song": {
+    "song_id": 943,
+    "title": "瞬き",
+    "artists": [
+     "back number"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26060,
+   "key_version": 1,
+   "title_key": "空が待ってる",
+   "artist_key": "hachi",
+   "raw_title": "空が待ってる",
+   "raw_artist": "HACHI",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 2862,
+   "song": {
+    "song_id": 2862,
+    "title": "空が待ってる",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26108,
+   "key_version": 1,
+   "title_key": "空色デイズ",
+   "artist_key": "中川 翔子",
+   "raw_title": "空色デイズ",
+   "raw_artist": "中川 翔子",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1096,
+   "song": {
+    "song_id": 1096,
+    "title": "空色デイズ",
+    "artists": [
+     "中川翔子"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26524,
+   "key_version": 1,
+   "title_key": "花ハ踊レヤいろはにほ",
+   "artist_key": "チーム\"ハナヤマタ\"",
+   "raw_title": "花ハ踊レヤいろはにほ",
+   "raw_artist": "チーム\"ハナヤマタ\"",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1565,
+   "song": {
+    "song_id": 1565,
+    "title": "花ハ踊レヤいろはにほ",
+    "artists": [
+     "チーム“ハナヤマタ”"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26525,
+   "key_version": 1,
+   "title_key": "花ハ踊レヤいろはにほ",
+   "artist_key": "チーム“ハナヤマタ”",
+   "raw_title": "花ハ踊レヤいろはにほ",
+   "raw_artist": "チーム“ハナヤマタ”",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1565,
+   "song": {
+    "song_id": 1565,
+    "title": "花ハ踊レヤいろはにほ",
+    "artists": [
+     "チーム“ハナヤマタ”"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26576,
+   "key_version": 1,
+   "title_key": "花霞",
+   "artist_key": "neun",
+   "raw_title": "花霞",
+   "raw_artist": "NEUN",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1996,
+   "song": {
+    "song_id": 1996,
+    "title": "花霞",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 26819,
+   "key_version": 1,
+   "title_key": "謎",
+   "artist_key": "小松 未歩",
+   "raw_title": "謎",
+   "raw_artist": "小松 未歩",
+   "occurrences": 3,
+   "basis": "exact",
+   "song_id": 1442,
+   "song": {
+    "song_id": 1442,
+    "title": "謎",
+    "artists": [
+     "小松未歩"
+    ]
+   },
+   "would_link": 3
+  },
+  {
+   "key_id": 12428,
+   "key_version": 1,
+   "title_key": "(恋は) 百年戦争",
+   "artist_key": "相対性理論",
+   "raw_title": "(恋は) 百年戦争",
+   "raw_artist": "相対性理論",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1975,
+   "song": {
+    "song_id": 1975,
+    "title": "(恋は)百年戦争",
+    "artists": [
+     "相対性理論"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 12572,
+   "key_version": 1,
+   "title_key": "1925",
+   "artist_key": "t-pocket",
+   "raw_title": "1925",
+   "raw_artist": "T-POCKET",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1014,
+   "song": {
+    "song_id": 1014,
+    "title": "1925",
+    "artists": [
+     "T-POCKET"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 12609,
+   "key_version": 1,
+   "title_key": "20",
+   "artist_key": "hachi",
+   "raw_title": "20",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2872,
+   "song": {
+    "song_id": 2872,
+    "title": "20",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13051,
+   "key_version": 1,
+   "title_key": "be the one",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "Be The One",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2390,
+   "song": {
+    "song_id": 2390,
+    "title": "Be The One",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13072,
+   "key_version": 1,
+   "title_key": "before anyone else",
+   "artist_key": "hachi",
+   "raw_title": "Before anyone else",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2836,
+   "song": {
+    "song_id": 2836,
+    "title": "Before anyone else",
+    "artists": [
+     "niki",
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13079,
+   "key_version": 1,
+   "title_key": "believe",
+   "artist_key": "玉置 成実",
+   "raw_title": "Believe",
+   "raw_artist": "玉置 成実",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1913,
+   "song": {
+    "song_id": 1913,
+    "title": "Believe",
+    "artists": [
+     "玉置成実"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13197,
+   "key_version": 1,
+   "title_key": "butter-fly",
+   "artist_key": "和田 光司",
+   "raw_title": "Butter-Fly",
+   "raw_artist": "和田 光司",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1112,
+   "song": {
+    "song_id": 1112,
+    "title": "Butter-Fly",
+    "artists": [
+     "和田光司"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13303,
+   "key_version": 1,
+   "title_key": "clear",
+   "artist_key": "坂本 真綾",
+   "raw_title": "CLEAR",
+   "raw_artist": "坂本 真綾",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1333,
+   "song": {
+    "song_id": 1333,
+    "title": "CLEAR",
+    "artists": [
+     "坂本真綾"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13510,
+   "key_version": 1,
+   "title_key": "dialogue of revolution",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "Dialogue of Revolution",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2391,
+   "song": {
+    "song_id": 2391,
+    "title": "Dialogue of Revolution",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13528,
+   "key_version": 1,
+   "title_key": "dive",
+   "artist_key": "hachi",
+   "raw_title": "DIVE",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2843,
+   "song": {
+    "song_id": 2843,
+    "title": "DIVE",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13586,
+   "key_version": 1,
+   "title_key": "dusk",
+   "artist_key": "hachi",
+   "raw_title": "Dusk",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2842,
+   "song": {
+    "song_id": 2842,
+    "title": "Dusk",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13706,
+   "key_version": 1,
+   "title_key": "fantastic future",
+   "artist_key": "田村 ゆかり",
+   "raw_title": "Fantastic Future",
+   "raw_artist": "田村 ゆかり",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1624,
+   "song": {
+    "song_id": 1624,
+    "title": "Fantastic future",
+    "artists": [
+     "田村ゆかり"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13891,
+   "key_version": 1,
+   "title_key": "glamorous sky",
+   "artist_key": "中島 美嘉",
+   "raw_title": "GLAMOROUS SKY",
+   "raw_artist": "中島 美嘉",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 950,
+   "song": {
+    "song_id": 950,
+    "title": "GLAMOROUS SKY",
+    "artists": [
+     "中島美嘉"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13981,
+   "key_version": 1,
+   "title_key": "goodbye, azure",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Goodbye, Azure",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2460,
+   "song": {
+    "song_id": 2460,
+    "title": "Goodbye, Azure",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 13996,
+   "key_version": 1,
+   "title_key": "greyword",
+   "artist_key": "hachi",
+   "raw_title": "Greyword",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2855,
+   "song": {
+    "song_id": 2855,
+    "title": "Greyword",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14155,
+   "key_version": 1,
+   "title_key": "honey bees",
+   "artist_key": "hachi",
+   "raw_title": "HONEY BEES",
+   "raw_artist": "HACHI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2856,
+   "song": {
+    "song_id": 2856,
+    "title": "HONEY BEES",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14170,
+   "key_version": 1,
+   "title_key": "hopesong",
+   "artist_key": "焔魔るり",
+   "raw_title": "HopeSong",
+   "raw_artist": "焔魔るり",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2044,
+   "song": {
+    "song_id": 2044,
+    "title": "Hope Song",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14445,
+   "key_version": 1,
+   "title_key": "laststardust",
+   "artist_key": "aimer",
+   "raw_title": "LASTSTARDUST",
+   "raw_artist": "Aimer",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1292,
+   "song": {
+    "song_id": 1292,
+    "title": "LAST STARDUST",
+    "artists": [
+     "Aimer"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14657,
+   "key_version": 1,
+   "title_key": "masterpiece",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Masterpiece",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2452,
+   "song": {
+    "song_id": 2452,
+    "title": "Masterpiece",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14778,
+   "key_version": 1,
+   "title_key": "moonlit bloom",
+   "artist_key": "白河しらせ",
+   "raw_title": "Moonlit Bloom",
+   "raw_artist": "白河しらせ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2761,
+   "song": {
+    "song_id": 2761,
+    "title": "Moonlit Bloom",
+    "artists": [
+     "白河しらせ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14854,
+   "key_version": 1,
+   "title_key": "neuromance",
+   "artist_key": "理芽",
+   "raw_title": "NEUROMANCE",
+   "raw_artist": "理芽",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2099,
+   "song": {
+    "song_id": 2099,
+    "title": "NEUROMANCE",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14871,
+   "key_version": 1,
+   "title_key": "nightdancer",
+   "artist_key": "imase",
+   "raw_title": "NIGHTDANCER",
+   "raw_artist": "imase",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1302,
+   "song": {
+    "song_id": 1302,
+    "title": "NIGHT DANCER",
+    "artists": [
+     "imase"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14931,
+   "key_version": 1,
+   "title_key": "ok!",
+   "artist_key": "松本 梨香",
+   "raw_title": "OK!",
+   "raw_artist": "松本 梨香",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 984,
+   "song": {
+    "song_id": 984,
+    "title": "OK!",
+    "artists": [
+     "松本梨香"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14951,
+   "key_version": 1,
+   "title_key": "one more time, one more chance",
+   "artist_key": "山崎 まさよし",
+   "raw_title": "One more time, One more chance",
+   "raw_artist": "山崎 まさよし",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1082,
+   "song": {
+    "song_id": 1082,
+    "title": "One more time，One more chance",
+    "artists": [
+     "山崎まさよし"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15098,
+   "key_version": 1,
+   "title_key": "pop star",
+   "artist_key": "ken hirai",
+   "raw_title": "POP STAR",
+   "raw_artist": "Ken Hirai",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1662,
+   "song": {
+    "song_id": 1662,
+    "title": "POP STAR",
+    "artists": [
+     "平井堅"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15099,
+   "key_version": 2,
+   "title_key": "pop star",
+   "artist_key": "平井 堅",
+   "raw_title": "POP STAR",
+   "raw_artist": "平井 堅",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1662,
+   "song": {
+    "song_id": 1662,
+    "title": "POP STAR",
+    "artists": [
+     "平井堅"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15104,
+   "key_version": 1,
+   "title_key": "pop virus",
+   "artist_key": "星野 源",
+   "raw_title": "Pop Virus",
+   "raw_artist": "星野 源",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1599,
+   "song": {
+    "song_id": 1599,
+    "title": "Pop Virus",
+    "artists": [
+     "星野源"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15193,
+   "key_version": 1,
+   "title_key": "rain",
+   "artist_key": "大江 千里",
+   "raw_title": "Rain",
+   "raw_artist": "大江 千里",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1369,
+   "song": {
+    "song_id": 1369,
+    "title": "Rain",
+    "artists": [
+     "大江千里",
+     "秦基博"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15287,
+   "key_version": 1,
+   "title_key": "real emotion",
+   "artist_key": "倖田 來未",
+   "raw_title": "real Emotion",
+   "raw_artist": "倖田 來未",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1808,
+   "song": {
+    "song_id": 1808,
+    "title": "real Emotion",
+    "artists": [
+     "倖田來未"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 15490,
+   "key_version": 1,
+   "title_key": "silent siren",
+   "artist_key": "imi",
+   "raw_title": "Silent Siren",
+   "raw_artist": "IMI",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2434,
+   "song": {
+    "song_id": 2434,
+    "title": "Silent Siren",
+    "artists": [
+     "IMI"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 16832,
+   "key_version": 1,
+   "title_key": "きらり",
+   "artist_key": "藤井 風",
+   "raw_title": "きらり",
+   "raw_artist": "藤井 風",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1272,
+   "song": {
+    "song_id": 1272,
+    "title": "きらり",
+    "artists": [
+     "藤井風"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 16970,
+   "key_version": 1,
+   "title_key": "さみしいひと",
+   "artist_key": "理芽",
+   "raw_title": "さみしいひと",
+   "raw_artist": "理芽",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2106,
+   "song": {
+    "song_id": 2106,
+    "title": "さみしいひと",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17125,
+   "key_version": 1,
+   "title_key": "ずうっといっしょ!",
+   "artist_key": "キタニ タツヤ",
+   "raw_title": "ずうっといっしょ！",
+   "raw_artist": "キタニ タツヤ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1193,
+   "song": {
+    "song_id": 1193,
+    "title": "ずうっといっしょ！",
+    "artists": [
+     "キタニタツヤ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17354,
+   "key_version": 1,
+   "title_key": "とめどなき白情",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "とめどなき白情",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2277,
+   "song": {
+    "song_id": 2277,
+    "title": "とめどなき白情",
+    "artists": [
+     "はるまきごはん",
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17522,
+   "key_version": 1,
+   "title_key": "はじめての チュウ",
+   "artist_key": "あんしんパパ",
+   "raw_title": "はじめての チュウ",
+   "raw_artist": "あんしんパパ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1462,
+   "song": {
+    "song_id": 1462,
+    "title": "はじめてのチュウ",
+    "artists": [
+     "あんしんパパ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17742,
+   "key_version": 1,
+   "title_key": "まちがいさがし",
+   "artist_key": "菅田 将暉",
+   "raw_title": "まちがいさがし",
+   "raw_artist": "菅田 将暉",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1482,
+   "song": {
+    "song_id": 1482,
+    "title": "まちがいさがし",
+    "artists": [
+     "菅田将暉"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17748,
+   "key_version": 1,
+   "title_key": "まつり",
+   "artist_key": "藤井 風",
+   "raw_title": "まつり",
+   "raw_artist": "藤井 風",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1870,
+   "song": {
+    "song_id": 1870,
+    "title": "まつり",
+    "artists": [
+     "藤井風"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17852,
+   "key_version": 1,
+   "title_key": "もう恋なんてしない",
+   "artist_key": "槇原 敬之",
+   "raw_title": "もう恋なんてしない",
+   "raw_artist": "槇原 敬之",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1447,
+   "song": {
+    "song_id": 1447,
+    "title": "もう恋なんてしない",
+    "artists": [
+     "槇原敬之"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 17970,
+   "key_version": 1,
+   "title_key": "わたしのアイス",
+   "artist_key": "時庭らんぜ",
+   "raw_title": "わたしのアイス",
+   "raw_artist": "時庭らんぜ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2419,
+   "song": {
+    "song_id": 2419,
+    "title": "わたしのアイス",
+    "artists": [
+     "時庭らんぜ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 18052,
+   "key_version": 1,
+   "title_key": "アイマイモコ",
+   "artist_key": "水瀬 いのり",
+   "raw_title": "アイマイモコ",
+   "raw_artist": "水瀬 いのり",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1281,
+   "song": {
+    "song_id": 1281,
+    "title": "アイマイモコ",
+    "artists": [
+     "水瀬いのり"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 18184,
+   "key_version": 1,
+   "title_key": "アプリコットブロッサムマジック",
+   "artist_key": "朝倉 杏子",
+   "raw_title": "アプリコットブロッサムマジック",
+   "raw_artist": "朝倉 杏子",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2407,
+   "song": {
+    "song_id": 2407,
+    "title": "アプリコットブロッサムマジック",
+    "artists": [
+     "朝倉杏子"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 18185,
+   "key_version": 1,
+   "title_key": "アプリコットブロッサムマジック",
+   "artist_key": "朝倉杏子",
+   "raw_title": "アプリコットブロッサムマジック",
+   "raw_artist": "朝倉杏子",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2407,
+   "song": {
+    "song_id": 2407,
+    "title": "アプリコットブロッサムマジック",
+    "artists": [
+     "朝倉杏子"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 18343,
+   "key_version": 1,
+   "title_key": "イラティクオシー",
+   "artist_key": "伊月知世",
+   "raw_title": "イラティクオシー",
+   "raw_artist": "伊月知世",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2820,
+   "song": {
+    "song_id": 2820,
+    "title": "イラティクオシー",
+    "artists": [
+     "伊月知世"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 18518,
+   "key_version": 1,
+   "title_key": "エンドロール",
+   "artist_key": "夏代 孝明",
+   "raw_title": "エンドロール",
+   "raw_artist": "夏代 孝明",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1669,
+   "song": {
+    "song_id": 1669,
+    "title": "エンドロール",
+    "artists": [
+     "夏代孝明"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 19522,
+   "key_version": 1,
+   "title_key": "セントエルモの火",
+   "artist_key": "miona sumeragi",
+   "raw_title": "セントエルモの火",
+   "raw_artist": "Miona Sumeragi",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2387,
+   "song": {
+    "song_id": 2387,
+    "title": "セントエルモの火",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 19718,
+   "key_version": 2,
+   "title_key": "チュルリラ・チュルリラ・ダッダッダ!",
+   "artist_key": "和田たけあき",
+   "raw_title": "チュルリラ・チュルリラ・ダッダッダ!",
+   "raw_artist": "和田たけあき",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1824,
+   "song": {
+    "song_id": 1824,
+    "title": "チュルリラ・チュルリラ・ダッダッダ！",
+    "artists": [
+     "和田たけあき"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 19893,
+   "key_version": 1,
+   "title_key": "トライアングラー",
+   "artist_key": "坂本 真綾",
+   "raw_title": "トライアングラー",
+   "raw_artist": "坂本 真綾",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1502,
+   "song": {
+    "song_id": 1502,
+    "title": "トライアングラー",
+    "artists": [
+     "坂本真綾"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 20075,
+   "key_version": 1,
+   "title_key": "ノクタンブルー",
+   "artist_key": "lewne",
+   "raw_title": "ノクタンブルー",
+   "raw_artist": "LEWNE",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2436,
+   "song": {
+    "song_id": 2436,
+    "title": "ノクタンブルー",
+    "artists": [
+     "LEWNE"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 20648,
+   "key_version": 1,
+   "title_key": "フレンズ",
+   "artist_key": "rebecca",
+   "raw_title": "フレンズ",
+   "raw_artist": "REBECCA",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1430,
+   "song": {
+    "song_id": 1430,
+    "title": "フレンズ",
+    "artists": [
+     "レベッカ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 20723,
+   "key_version": 1,
+   "title_key": "プラスティック・ラブ",
+   "artist_key": "竹内 まりや",
+   "raw_title": "プラスティック・ラブ",
+   "raw_artist": "竹内 まりや",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1673,
+   "song": {
+    "song_id": 1673,
+    "title": "プラスティック・ラブ",
+    "artists": [
+     "竹内まりや"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 20756,
+   "key_version": 1,
+   "title_key": "プリズムシェイク",
+   "artist_key": "松永 依織",
+   "raw_title": "プリズムシェイク",
+   "raw_artist": "松永 依織",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2813,
+   "song": {
+    "song_id": 2813,
+    "title": "プリズムシェイク",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 21121,
+   "key_version": 1,
+   "title_key": "メトロノーム",
+   "artist_key": "米津 玄師",
+   "raw_title": "メトロノーム",
+   "raw_artist": "米津 玄師",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1275,
+   "song": {
+    "song_id": 1275,
+    "title": "メトロノーム",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 21550,
+   "key_version": 1,
+   "title_key": "ルカルカ★ナイトフィーバー",
+   "artist_key": "sam",
+   "raw_title": "ルカルカ★ナイトフィーバー",
+   "raw_artist": "SAM",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1554,
+   "song": {
+    "song_id": 1554,
+    "title": "ルカルカ★ナイトフィーバー",
+    "artists": [
+     "samfree"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 21625,
+   "key_version": 1,
+   "title_key": "レディーレ",
+   "artist_key": "須田景凪",
+   "raw_title": "レディーレ",
+   "raw_artist": "須田景凪",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1834,
+   "song": {
+    "song_id": 1834,
+    "title": "レディーレ",
+    "artists": [
+     "須田景凪"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 21746,
+   "key_version": 1,
+   "title_key": "ワンダラスト",
+   "artist_key": "水瀬 凪",
+   "raw_title": "ワンダラスト",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2065,
+   "song": {
+    "song_id": 2065,
+    "title": "ワンダラスト",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 21796,
+   "key_version": 1,
+   "title_key": "ヴィーナスとジーザス",
+   "artist_key": "やくしまる えつこ",
+   "raw_title": "ヴィーナスとジーザス",
+   "raw_artist": "やくしまる えつこ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1949,
+   "song": {
+    "song_id": 1949,
+    "title": "ヴィーナスとジーザス",
+    "artists": [
+     "やくしまるえつこ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 22205,
+   "key_version": 1,
+   "title_key": "偶像ナイトメア",
+   "artist_key": "valis",
+   "raw_title": "偶像ナイトメア",
+   "raw_artist": "VALIS",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2560,
+   "song": {
+    "song_id": 2560,
+    "title": "偶像ナイトメア",
+    "artists": [
+     "みきとP",
+     "VALIS"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 22901,
+   "key_version": 1,
+   "title_key": "嘘",
+   "artist_key": "sid",
+   "raw_title": "嘘",
+   "raw_artist": "SID",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1330,
+   "song": {
+    "song_id": 1330,
+    "title": "嘘",
+    "artists": [
+     "シド"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 23603,
+   "key_version": 1,
+   "title_key": "少しの自信があったら、",
+   "artist_key": "culua",
+   "raw_title": "少しの自信があったら、",
+   "raw_artist": "CULUA",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2017,
+   "song": {
+    "song_id": 2017,
+    "title": "少しの自信があったら、",
+    "artists": [
+     "CULUA"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 23753,
+   "key_version": 1,
+   "title_key": "彼は誰時の走り方",
+   "artist_key": "松永 依織",
+   "raw_title": "彼は誰時の走り方",
+   "raw_artist": "松永 依織",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2812,
+   "song": {
+    "song_id": 2812,
+    "title": "彼は誰時の走り方",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 23883,
+   "key_version": 1,
+   "title_key": "忘れてしまえ",
+   "artist_key": "花譜",
+   "raw_title": "忘れてしまえ",
+   "raw_artist": "花譜",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2510,
+   "song": {
+    "song_id": 2510,
+    "title": "忘れてしまえ",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24144,
+   "key_version": 1,
+   "title_key": "愛のうた",
+   "artist_key": "倖田 來未",
+   "raw_title": "愛のうた",
+   "raw_artist": "倖田 來未",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1590,
+   "song": {
+    "song_id": 1590,
+    "title": "愛のうた",
+    "artists": [
+     "倖田來未"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24263,
+   "key_version": 1,
+   "title_key": "手紙〜拝啓 十五の君へ〜",
+   "artist_key": "アンジェラ・アキ",
+   "raw_title": "手紙〜拝啓 十五の君へ〜",
+   "raw_artist": "アンジェラ・アキ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1107,
+   "song": {
+    "song_id": 1107,
+    "title": "手紙～拝啓十五の君へ～",
+    "artists": [
+     "アンジェラ・アキ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24264,
+   "key_version": 1,
+   "title_key": "手紙〜拝啓十五の君へ〜",
+   "artist_key": "アンジェラ・アキ",
+   "raw_title": "手紙〜拝啓十五の君へ〜",
+   "raw_artist": "アンジェラ・アキ",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1107,
+   "song": {
+    "song_id": 1107,
+    "title": "手紙～拝啓十五の君へ～",
+    "artists": [
+     "アンジェラ・アキ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24678,
+   "key_version": 1,
+   "title_key": "曖昧劣情lover",
+   "artist_key": "koyori",
+   "raw_title": "曖昧劣情Lover",
+   "raw_artist": "koyori",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 991,
+   "song": {
+    "song_id": 991,
+    "title": "曖昧劣情Lover",
+    "artists": [
+     "koyori"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24713,
+   "key_version": 1,
+   "title_key": "最後の雨",
+   "artist_key": "中西 保志",
+   "raw_title": "最後の雨",
+   "raw_artist": "中西 保志",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1416,
+   "song": {
+    "song_id": 1416,
+    "title": "最後の雨",
+    "artists": [
+     "中西保志"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 24833,
+   "key_version": 1,
+   "title_key": "朝ごはんの歌",
+   "artist_key": "手嶌 葵",
+   "raw_title": "朝ごはんの歌",
+   "raw_artist": "手嶌 葵",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1898,
+   "song": {
+    "song_id": 1898,
+    "title": "朝ごはんの歌",
+    "artists": [
+     "手嶌葵"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25017,
+   "key_version": 1,
+   "title_key": "極彩的ミラージュ",
+   "artist_key": "蜜乃木ジル",
+   "raw_title": "極彩的ミラージュ",
+   "raw_artist": "蜜乃木ジル",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2416,
+   "song": {
+    "song_id": 2416,
+    "title": "極彩的ミラージュ",
+    "artists": [
+     "蜜乃木ジル"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25120,
+   "key_version": 1,
+   "title_key": "死ぬのがいいわ",
+   "artist_key": "藤井 風",
+   "raw_title": "死ぬのがいいわ",
+   "raw_artist": "藤井 風",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1899,
+   "song": {
+    "song_id": 1899,
+    "title": "死ぬのがいいわ",
+    "artists": [
+     "藤井風"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25205,
+   "key_version": 1,
+   "title_key": "水の証",
+   "artist_key": "ラクス・クライン (田中 理恵)",
+   "raw_title": "水の証",
+   "raw_artist": "ラクス・クライン (田中 理恵)",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1706,
+   "song": {
+    "song_id": 1706,
+    "title": "水の証",
+    "artists": [
+     "ラクス・クライン（田中理恵）"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25414,
+   "key_version": 2,
+   "title_key": "深海のリトルクライ",
+   "artist_key": "sasakure. uk",
+   "raw_title": "深海のリトルクライ",
+   "raw_artist": "Sasakure. UK",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1792,
+   "song": {
+    "song_id": 1792,
+    "title": "深海のリトルクライ",
+    "artists": [
+     "sasakure.UK"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25452,
+   "key_version": 1,
+   "title_key": "渡月橋 ~ 君想ふ~",
+   "artist_key": "倉木 麻衣",
+   "raw_title": "渡月橋 ~ 君想ふ~",
+   "raw_artist": "倉木 麻衣",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1255,
+   "song": {
+    "song_id": 1255,
+    "title": "渡月橋 〜君 想ふ〜",
+    "artists": [
+     "倉木麻衣"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25581,
+   "key_version": 1,
+   "title_key": "燈",
+   "artist_key": "崎山 蒼志",
+   "raw_title": "燈",
+   "raw_artist": "崎山 蒼志",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1351,
+   "song": {
+    "song_id": 1351,
+    "title": "燈",
+    "artists": [
+     "崎山蒼志"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25625,
+   "key_version": 1,
+   "title_key": "狂えない",
+   "artist_key": "理芽",
+   "raw_title": "狂えない",
+   "raw_artist": "理芽",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2078,
+   "song": {
+    "song_id": 2078,
+    "title": "狂えない",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25794,
+   "key_version": 1,
+   "title_key": "白金ディスコ",
+   "artist_key": "阿良々木月火 (井口裕香)",
+   "raw_title": "白金ディスコ",
+   "raw_artist": "阿良々木月火 (井口裕香)",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1708,
+   "song": {
+    "song_id": 1708,
+    "title": "白金ディスコ",
+    "artists": [
+     "阿良々木月火（井口裕香）"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25835,
+   "key_version": 1,
+   "title_key": "真夏の果実",
+   "artist_key": "southern all stars",
+   "raw_title": "真夏の果実",
+   "raw_artist": "Southern All Stars",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1021,
+   "song": {
+    "song_id": 1021,
+    "title": "真夏の果実",
+    "artists": [
+     "サザンオールスターズ"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 25847,
+   "key_version": 1,
+   "title_key": "真夜中のドア~stay with me",
+   "artist_key": "松原みき",
+   "raw_title": "真夜中のドア~Stay With Me",
+   "raw_artist": "松原みき",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1844,
+   "song": {
+    "song_id": 1844,
+    "title": "真夜中のドア〜Stay With Me",
+    "artists": [
+     "松原みき"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 26102,
+   "key_version": 1,
+   "title_key": "空想線",
+   "artist_key": "lewne",
+   "raw_title": "空想線",
+   "raw_artist": "LEWNE",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2437,
+   "song": {
+    "song_id": 2437,
+    "title": "空想線",
+    "artists": [
+     "LEWNE"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 26876,
+   "key_version": 1,
+   "title_key": "走り出したら",
+   "artist_key": "朝倉杏子",
+   "raw_title": "走り出したら",
+   "raw_artist": "朝倉杏子",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 2817,
+   "song": {
+    "song_id": 2817,
+    "title": "走り出したら",
+    "artists": [
+     "朝倉杏子"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 27567,
+   "key_version": 1,
+   "title_key": "黒毛和牛上塩タン焼680円",
+   "artist_key": "大塚 愛",
+   "raw_title": "黒毛和牛上塩タン焼680円",
+   "raw_artist": "大塚 愛",
+   "occurrences": 2,
+   "basis": "exact",
+   "song_id": 1044,
+   "song": {
+    "song_id": 1044,
+    "title": "黒毛和牛上塩タン焼680円",
+    "artists": [
+     "大塚愛"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 12457,
+   "key_version": 1,
+   "title_key": "- error",
+   "artist_key": "niki",
+   "raw_title": "- ERROR",
+   "raw_artist": "Niki",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1042,
+   "song": {
+    "song_id": 1042,
+    "title": "-ERROR",
+    "artists": [
+     "niki"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 12868,
+   "key_version": 1,
+   "title_key": "advance",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "ADVANCE",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2389,
+   "song": {
+    "song_id": 2389,
+    "title": "ADVANCE",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 12950,
+   "key_version": 1,
+   "title_key": "anytimeanywhere",
+   "artist_key": "milet",
+   "raw_title": "AnytimeAnywhere",
+   "raw_artist": "milet",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1355,
+   "song": {
+    "song_id": 1355,
+    "title": "Anytime Anywhere",
+    "artists": [
+     "milet"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13002,
+   "key_version": 1,
+   "title_key": "awaken now",
+   "artist_key": "iori matsunaga",
+   "raw_title": "Awaken Now",
+   "raw_artist": "Iori Matsunaga",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2796,
+   "song": {
+    "song_id": 2796,
+    "title": "Awaken Now",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13049,
+   "key_version": 1,
+   "title_key": "be the one",
+   "artist_key": "miona sumeragi",
+   "raw_title": "Be The One",
+   "raw_artist": "Miona Sumeragi",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2390,
+   "song": {
+    "song_id": 2390,
+    "title": "Be The One",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13088,
+   "key_version": 1,
+   "title_key": "bestfriend",
+   "artist_key": "kiroro",
+   "raw_title": "bestfriend",
+   "raw_artist": "Kiroro",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1474,
+   "song": {
+    "song_id": 1474,
+    "title": "Best Friend",
+    "artists": [
+     "Kiroro"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13117,
+   "key_version": 1,
+   "title_key": "blazing out",
+   "artist_key": "iori matsunaga",
+   "raw_title": "Blazing Out",
+   "raw_artist": "Iori Matsunaga",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2795,
+   "song": {
+    "song_id": 2795,
+    "title": "Blazing Out",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13119,
+   "key_version": 1,
+   "title_key": "blazing out",
+   "artist_key": "松永依織",
+   "raw_title": "Blazing Out",
+   "raw_artist": "松永依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2795,
+   "song": {
+    "song_id": 2795,
+    "title": "Blazing Out",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13151,
+   "key_version": 1,
+   "title_key": "bow and arrow",
+   "artist_key": "米津 玄師",
+   "raw_title": "BOW AND ARROW",
+   "raw_artist": "米津 玄師",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1758,
+   "song": {
+    "song_id": 1758,
+    "title": "BOW AND ARROW",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13196,
+   "key_version": 1,
+   "title_key": "butter-fly",
+   "artist_key": "koji wada",
+   "raw_title": "Butter-Fly",
+   "raw_artist": "Koji Wada",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1112,
+   "song": {
+    "song_id": 1112,
+    "title": "Butter-Fly",
+    "artists": [
+     "和田光司"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13249,
+   "key_version": 1,
+   "title_key": "catch you catch me",
+   "artist_key": "gumi",
+   "raw_title": "Catch You Catch Me",
+   "raw_artist": "GUMI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1915,
+   "song": {
+    "song_id": 1915,
+    "title": "Catch You Catch Me",
+    "artists": [
+     "グミ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13351,
+   "key_version": 1,
+   "title_key": "crazy rock girl",
+   "artist_key": "松永 依織",
+   "raw_title": "Crazy Rock Girl",
+   "raw_artist": "松永 依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2794,
+   "song": {
+    "song_id": 2794,
+    "title": "Crazy Rock Girl",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13352,
+   "key_version": 1,
+   "title_key": "crossed identity",
+   "artist_key": "iori matsunaga",
+   "raw_title": "Crossed Identity",
+   "raw_artist": "Iori Matsunaga",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2808,
+   "song": {
+    "song_id": 2808,
+    "title": "Crossed Identity",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13353,
+   "key_version": 1,
+   "title_key": "crossed identity",
+   "artist_key": "松永 依織",
+   "raw_title": "Crossed Identity",
+   "raw_artist": "松永 依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2808,
+   "song": {
+    "song_id": 2808,
+    "title": "Crossed Identity",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13354,
+   "key_version": 1,
+   "title_key": "crossed identity",
+   "artist_key": "松永依織",
+   "raw_title": "Crossed Identity",
+   "raw_artist": "松永依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2808,
+   "song": {
+    "song_id": 2808,
+    "title": "Crossed Identity",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13361,
+   "key_version": 1,
+   "title_key": "cry baby",
+   "artist_key": "official higedan dism",
+   "raw_title": "Cry baby",
+   "raw_artist": "Official Higedan dism",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1023,
+   "song": {
+    "song_id": 1023,
+    "title": "Cry Baby",
+    "artists": [
+     "Official髭男dism"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13420,
+   "key_version": 1,
+   "title_key": "daydream",
+   "artist_key": "春猿火",
+   "raw_title": "daydream",
+   "raw_artist": "春猿火",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2573,
+   "song": {
+    "song_id": 2573,
+    "title": "daydream",
+    "artists": [
+     "春猿火"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13455,
+   "key_version": 1,
+   "title_key": "dearsong",
+   "artist_key": "lewne",
+   "raw_title": "Dearsong",
+   "raw_artist": "LEWNE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2438,
+   "song": {
+    "song_id": 2438,
+    "title": "Dear Song",
+    "artists": [
+     "LEWNE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13521,
+   "key_version": 1,
+   "title_key": "discotheque",
+   "artist_key": "水樹 奈々",
+   "raw_title": "DISCOTHEQUE",
+   "raw_artist": "水樹 奈々",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1916,
+   "song": {
+    "song_id": 1916,
+    "title": "DISCOTHEQUE",
+    "artists": [
+     "水樹奈々"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13623,
+   "key_version": 1,
+   "title_key": "endless story",
+   "artist_key": "yuna ito",
+   "raw_title": "ENDLESS STORY",
+   "raw_artist": "Yuna Ito",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1759,
+   "song": {
+    "song_id": 1759,
+    "title": "ENDLESS STORY",
+    "artists": [
+     "伊藤由奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13624,
+   "key_version": 1,
+   "title_key": "endless story",
+   "artist_key": "伊藤 由奈",
+   "raw_title": "ENDLESS STORY",
+   "raw_artist": "伊藤 由奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1759,
+   "song": {
+    "song_id": 1759,
+    "title": "ENDLESS STORY",
+    "artists": [
+     "伊藤由奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13719,
+   "key_version": 1,
+   "title_key": "fields of hope",
+   "artist_key": "ラクス・クライン (田中理恵)",
+   "raw_title": "Fields of hope",
+   "raw_artist": "ラクス・クライン (田中理恵)",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1715,
+   "song": {
+    "song_id": 1715,
+    "title": "Fields of hope",
+    "artists": [
+     "ラクス・クライン（田中理恵）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13734,
+   "key_version": 1,
+   "title_key": "find the way",
+   "artist_key": "中島 美嘉",
+   "raw_title": "FIND THE WAY",
+   "raw_artist": "中島 美嘉",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1569,
+   "song": {
+    "song_id": 1569,
+    "title": "FIND THE WAY",
+    "artists": [
+     "中島美嘉"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13809,
+   "key_version": 1,
+   "title_key": "from y to y",
+   "artist_key": "jimmythumb-p",
+   "raw_title": "from Y to Y",
+   "raw_artist": "JimmyThumb-P",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1201,
+   "song": {
+    "song_id": 1201,
+    "title": "from Y to Y",
+    "artists": [
+     "ジミーサムP"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13814,
+   "key_version": 1,
+   "title_key": "fromy toy",
+   "artist_key": "ジミーサムp",
+   "raw_title": "fromY toY",
+   "raw_artist": "ジミーサムP",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1201,
+   "song": {
+    "song_id": 1201,
+    "title": "from Y to Y",
+    "artists": [
+     "ジミーサムP"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13816,
+   "key_version": 1,
+   "title_key": "funeral - neun",
+   "artist_key": "",
+   "raw_title": "Funeral - NEUN",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2002,
+   "song": {
+    "song_id": 2002,
+    "title": "Funeral",
+    "artists": [
+     "NEUN"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13979,
+   "key_version": 1,
+   "title_key": "goodbye goodnight",
+   "artist_key": "lewne",
+   "raw_title": "Goodbye Goodnight",
+   "raw_artist": "LEWNE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2435,
+   "song": {
+    "song_id": 2435,
+    "title": "Goodbye Goodnight",
+    "artists": [
+     "LEWNE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 13984,
+   "key_version": 1,
+   "title_key": "goodbye,azure",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Goodbye,Azure",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2460,
+   "song": {
+    "song_id": 2460,
+    "title": "Goodbye, Azure",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14009,
+   "key_version": 1,
+   "title_key": "hacking to the gate",
+   "artist_key": "いとう かなこ",
+   "raw_title": "Hacking to the Gate",
+   "raw_artist": "いとう かなこ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1860,
+   "song": {
+    "song_id": 1860,
+    "title": "Hacking to the Gate",
+    "artists": [
+     "いとうかなこ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14093,
+   "key_version": 1,
+   "title_key": "hello ~ paradise kiss ~",
+   "artist_key": "yui",
+   "raw_title": "HELLO ~ Paradise Kiss ~",
+   "raw_artist": "YUI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1139,
+   "song": {
+    "song_id": 1139,
+    "title": "HELLO ～Paradise Kiss～",
+    "artists": [
+     "YUI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14095,
+   "key_version": 1,
+   "title_key": "hello 〜paradise kiss〜",
+   "artist_key": "yui",
+   "raw_title": "HELLO 〜Paradise Kiss〜",
+   "raw_artist": "YUI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1139,
+   "song": {
+    "song_id": 1139,
+    "title": "HELLO ～Paradise Kiss～",
+    "artists": [
+     "YUI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14123,
+   "key_version": 1,
+   "title_key": "hello~paradise kiss~",
+   "artist_key": "yui",
+   "raw_title": "HELLO～Paradise Kiss～",
+   "raw_artist": "YUI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1139,
+   "song": {
+    "song_id": 1139,
+    "title": "HELLO ～Paradise Kiss～",
+    "artists": [
+     "YUI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14127,
+   "key_version": 1,
+   "title_key": "hence forth",
+   "artist_key": "orangestar",
+   "raw_title": "Hence forth",
+   "raw_artist": "Orangestar",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1070,
+   "song": {
+    "song_id": 1070,
+    "title": "Henceforth",
+    "artists": [
+     "Orangestar"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14212,
+   "key_version": 1,
+   "title_key": "i promise you",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "I Promise You",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2394,
+   "song": {
+    "song_id": 2394,
+    "title": "I Promise You",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14254,
+   "key_version": 1,
+   "title_key": "illumina",
+   "artist_key": "明透",
+   "raw_title": "illumina",
+   "raw_artist": "明透",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2313,
+   "song": {
+    "song_id": 2313,
+    "title": "illumina",
+    "artists": [
+     "明透"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14298,
+   "key_version": 1,
+   "title_key": "ivy",
+   "artist_key": "hachi",
+   "raw_title": "ivy",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2831,
+   "song": {
+    "song_id": 2831,
+    "title": "ivy",
+    "artists": [
+     "keeno",
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14326,
+   "key_version": 1,
+   "title_key": "jane doe/宇多田ヒカル",
+   "artist_key": "",
+   "raw_title": "JANE DOE/宇多田ヒカル",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 28,
+   "song": {
+    "song_id": 28,
+    "title": "JANE DOE",
+    "artists": [
+     "米津玄師",
+     "宇多田ヒカル"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14424,
+   "key_version": 1,
+   "title_key": "lady",
+   "artist_key": "米津 玄師",
+   "raw_title": "LADY",
+   "raw_artist": "米津 玄師",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1919,
+   "song": {
+    "song_id": 1919,
+    "title": "LADY",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14492,
+   "key_version": 1,
+   "title_key": "lift up",
+   "artist_key": "春猿火",
+   "raw_title": "Lift Up",
+   "raw_artist": "春猿火",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2616,
+   "song": {
+    "song_id": 2616,
+    "title": "Lift Up",
+    "artists": [
+     "春猿火"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14499,
+   "key_version": 1,
+   "title_key": "lit",
+   "artist_key": "幸祜",
+   "raw_title": "LIT",
+   "raw_artist": "幸祜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2656,
+   "song": {
+    "song_id": 2656,
+    "title": "LIT",
+    "artists": [
+     "幸祜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14520,
+   "key_version": 1,
+   "title_key": "loser",
+   "artist_key": "米津 玄師",
+   "raw_title": "LOSER",
+   "raw_artist": "米津 玄師",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1322,
+   "song": {
+    "song_id": 1322,
+    "title": "LOSER",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14584,
+   "key_version": 1,
+   "title_key": "lulu.",
+   "artist_key": "mrs.green apple",
+   "raw_title": "lulu.",
+   "raw_artist": "Mrs.GREEN APPLE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1661,
+   "song": {
+    "song_id": 1661,
+    "title": "lulu.",
+    "artists": [
+     "Mrs. GREEN APPLE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14591,
+   "key_version": 1,
+   "title_key": "luna say maybe",
+   "artist_key": "月村手毬 (cv.小鹿なお)",
+   "raw_title": "Luna say maybe",
+   "raw_artist": "月村手毬 (cv.小鹿なお)",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1921,
+   "song": {
+    "song_id": 1921,
+    "title": "Luna say maybe",
+    "artists": [
+     "月村手毬（小鹿なお）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14607,
+   "key_version": 1,
+   "title_key": "m",
+   "artist_key": "プリンセスプリンセス",
+   "raw_title": "M",
+   "raw_artist": "プリンセスプリンセス",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1422,
+   "song": {
+    "song_id": 1422,
+    "title": "M",
+    "artists": [
+     "PRINCESS PRINCESS"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14760,
+   "key_version": 1,
+   "title_key": "mock,mock",
+   "artist_key": "ミナミイズミ",
+   "raw_title": "Mock,mock",
+   "raw_artist": "ミナミイズミ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2414,
+   "song": {
+    "song_id": 2414,
+    "title": "Mock,mock",
+    "artists": [
+     "ミナミイズミ",
+     "朱名",
+     "メーメントヴァニタス"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 14818,
+   "key_version": 1,
+   "title_key": "murmur/焔魔るり",
+   "artist_key": "",
+   "raw_title": "Murmur/焔魔るり",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2048,
+   "song": {
+    "song_id": 2048,
+    "title": "Murmur",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 2
+  },
+  {
+   "key_id": 14950,
+   "key_version": 1,
+   "title_key": "one more time, one more chance",
+   "artist_key": "masayoshi yamazaki",
+   "raw_title": "One more time, One more Chance",
+   "raw_artist": "Masayoshi Yamazaki",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1082,
+   "song": {
+    "song_id": 1082,
+    "title": "One more time，One more chance",
+    "artists": [
+     "山崎まさよし"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15023,
+   "key_version": 1,
+   "title_key": "pale blue dot",
+   "artist_key": "hachi",
+   "raw_title": "Pale Blue Dot",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2851,
+   "song": {
+    "song_id": 2851,
+    "title": "Pale Blue Dot",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15030,
+   "key_version": 1,
+   "title_key": "paper moon",
+   "artist_key": "tommy heavenly6",
+   "raw_title": "PAPER MOON",
+   "raw_artist": "Tommy heavenly6",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1690,
+   "song": {
+    "song_id": 1690,
+    "title": "PAPERMOON",
+    "artists": [
+     "Tommy heavenly6"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15058,
+   "key_version": 1,
+   "title_key": "phantom - koko",
+   "artist_key": "",
+   "raw_title": "Phantom - KOKO",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2667,
+   "song": {
+    "song_id": 2667,
+    "title": "Phantom",
+    "artists": [
+     "幸祜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15084,
+   "key_version": 1,
+   "title_key": "plazma",
+   "artist_key": "kenshi yonezu",
+   "raw_title": "Plazma",
+   "raw_artist": "Kenshi Yonezu",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1368,
+   "song": {
+    "song_id": 1368,
+    "title": "Plazma",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15085,
+   "key_version": 1,
+   "title_key": "plazma",
+   "artist_key": "米津 玄師",
+   "raw_title": "Plazma",
+   "raw_artist": "米津 玄師",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1368,
+   "song": {
+    "song_id": 1368,
+    "title": "Plazma",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15103,
+   "key_version": 1,
+   "title_key": "pop virus",
+   "artist_key": "gen hoshino",
+   "raw_title": "Pop Virus",
+   "raw_artist": "Gen Hoshino",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1599,
+   "song": {
+    "song_id": 1599,
+    "title": "Pop Virus",
+    "artists": [
+     "星野源"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15127,
+   "key_version": 1,
+   "title_key": "precious",
+   "artist_key": "伊藤 由奈",
+   "raw_title": "Precious",
+   "raw_artist": "伊藤 由奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 964,
+   "song": {
+    "song_id": 964,
+    "title": "Precious",
+    "artists": [
+     "伊藤由奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15181,
+   "key_version": 1,
+   "title_key": "quiz",
+   "artist_key": "花譜",
+   "raw_title": "quiz",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2268,
+   "song": {
+    "song_id": 2268,
+    "title": "quiz",
+    "artists": [
+     "カンザキイオリ",
+     "花譜",
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15259,
+   "key_version": 1,
+   "title_key": "re:heroines",
+   "artist_key": "花譜",
+   "raw_title": "Re:HEROINES",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2512,
+   "song": {
+    "song_id": 2512,
+    "title": "Re:HEROINES",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15305,
+   "key_version": 1,
+   "title_key": "rebellion",
+   "artist_key": "瀬戸乃とと",
+   "raw_title": "Rebellion",
+   "raw_artist": "瀬戸乃とと",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2464,
+   "song": {
+    "song_id": 2464,
+    "title": "Rebellion",
+    "artists": [
+     "瀬戸乃とと"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15316,
+   "key_version": 1,
+   "title_key": "redeyes",
+   "artist_key": "焔魔るり",
+   "raw_title": "REDEYES",
+   "raw_artist": "焔魔るり",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2056,
+   "song": {
+    "song_id": 2056,
+    "title": "RED EYES",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15321,
+   "key_version": 1,
+   "title_key": "relicta",
+   "artist_key": "皇美緒奈",
+   "raw_title": "Relicta",
+   "raw_artist": "皇美緒奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2392,
+   "song": {
+    "song_id": 2392,
+    "title": "Relicta",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15442,
+   "key_version": 1,
+   "title_key": "secretbase〜君がくれたもの〜",
+   "artist_key": "zone",
+   "raw_title": "secretbase〜君がくれたもの〜",
+   "raw_artist": "ZONE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1065,
+   "song": {
+    "song_id": 1065,
+    "title": "secret base ～君がくれたもの～",
+    "artists": [
+     "ZONE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15643,
+   "key_version": 1,
+   "title_key": "staytune",
+   "artist_key": "suchmos",
+   "raw_title": "STAYTUNE",
+   "raw_artist": "Suchmos",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1866,
+   "song": {
+    "song_id": 1866,
+    "title": "STAY TUNE",
+    "artists": [
+     "Suchmos"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15648,
+   "key_version": 1,
+   "title_key": "stellar stellar",
+   "artist_key": "星街 すいせい",
+   "raw_title": "Stellar Stellar",
+   "raw_artist": "星街 すいせい",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1117,
+   "song": {
+    "song_id": 1117,
+    "title": "Stellar Stellar",
+    "artists": [
+     "星街すいせい"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15719,
+   "key_version": 1,
+   "title_key": "swallowtail butterfly ~あいのうた〜",
+   "artist_key": "yen town band",
+   "raw_title": "Swallowtail Butterfly ～あいのうた〜",
+   "raw_artist": "YEN TOWN BAND",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1481,
+   "song": {
+    "song_id": 1481,
+    "title": "Swallowtail Butterfly〜あいのうた〜",
+    "artists": [
+     "YEN TOWN BAND"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15724,
+   "key_version": 1,
+   "title_key": "swallowtail butterfly~あいのうた〜",
+   "artist_key": "yen town band",
+   "raw_title": "Swallowtail Butterfly～あいのうた〜",
+   "raw_artist": "YEN TOWN BAND",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1481,
+   "song": {
+    "song_id": 1481,
+    "title": "Swallowtail Butterfly〜あいのうた〜",
+    "artists": [
+     "YEN TOWN BAND"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15857,
+   "key_version": 1,
+   "title_key": "to be alive",
+   "artist_key": "hachi",
+   "raw_title": "To Be Alive",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2827,
+   "song": {
+    "song_id": 2827,
+    "title": "To Be Alive",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15865,
+   "key_version": 1,
+   "title_key": "together",
+   "artist_key": "あきよし ふみえ",
+   "raw_title": "Together",
+   "raw_artist": "あきよし ふみえ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1026,
+   "song": {
+    "song_id": 1026,
+    "title": "Together",
+    "artists": [
+     "あきよしふみえ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15884,
+   "key_version": 1,
+   "title_key": "transparent",
+   "artist_key": "miona sumeragi",
+   "raw_title": "Transparent",
+   "raw_artist": "Miona Sumeragi",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2395,
+   "song": {
+    "song_id": 2395,
+    "title": "Transparent",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 15971,
+   "key_version": 1,
+   "title_key": "v.i.p",
+   "artist_key": "sid",
+   "raw_title": "V.I.P",
+   "raw_artist": "Sid",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1396,
+   "song": {
+    "song_id": 1396,
+    "title": "V.I.P",
+    "artists": [
+     "シド"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16057,
+   "key_version": 1,
+   "title_key": "well",
+   "artist_key": "硝子宮",
+   "raw_title": "well",
+   "raw_artist": "硝子宮",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2361,
+   "song": {
+    "song_id": 2361,
+    "title": "well",
+    "artists": [
+     "硝子宮"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16487,
+   "key_version": 1,
+   "title_key": "いろはに咲きて",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "いろはに咲きて",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2271,
+   "song": {
+    "song_id": 2271,
+    "title": "いろはに咲きて",
+    "artists": [
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16830,
+   "key_version": 1,
+   "title_key": "きららかにうたえ",
+   "artist_key": "皇 美緒奈",
+   "raw_title": "きららかにうたえ",
+   "raw_artist": "皇 美緒奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2400,
+   "song": {
+    "song_id": 2400,
+    "title": "きららかにうたえ",
+    "artists": [
+     "皇美緒奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16863,
+   "key_version": 1,
+   "title_key": "ぐうたらいふ",
+   "artist_key": "松永依織",
+   "raw_title": "ぐうたらいふ",
+   "raw_artist": "松永依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2797,
+   "song": {
+    "song_id": 2797,
+    "title": "ぐうたらいふ",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16951,
+   "key_version": 1,
+   "title_key": "さくら (独唱)",
+   "artist_key": "森山 直太朗",
+   "raw_title": "さくら (独唱)",
+   "raw_artist": "森山 直太朗",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1868,
+   "song": {
+    "song_id": 1868,
+    "title": "さくら(独唱)",
+    "artists": [
+     "森山直太朗"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 16991,
+   "key_version": 1,
+   "title_key": "さよならの夏 ~コクリコ坂から~",
+   "artist_key": "手嶌 葵",
+   "raw_title": "さよならの夏 ~コクリコ坂から~",
+   "raw_artist": "手嶌 葵",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1323,
+   "song": {
+    "song_id": 1323,
+    "title": "さよならの夏〜コクリコ坂から〜",
+    "artists": [
+     "手嶌葵"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17151,
+   "key_version": 1,
+   "title_key": "そして花になる",
+   "artist_key": "花譜",
+   "raw_title": "そして花になる",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2517,
+   "song": {
+    "song_id": 2517,
+    "title": "そして花になる",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17208,
+   "key_version": 1,
+   "title_key": "たしかなこと",
+   "artist_key": "小田 和正",
+   "raw_title": "たしかなこと",
+   "raw_artist": "小田 和正",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1052,
+   "song": {
+    "song_id": 1052,
+    "title": "たしかなこと",
+    "artists": [
+     "小田和正"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17324,
+   "key_version": 1,
+   "title_key": "ときめきパステル",
+   "artist_key": "白河しらせ",
+   "raw_title": "ときめきパステル",
+   "raw_artist": "白河しらせ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2762,
+   "song": {
+    "song_id": 2762,
+    "title": "ときめきパステル",
+    "artists": [
+     "白河しらせ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17552,
+   "key_version": 1,
+   "title_key": "ひかげぼっこ",
+   "artist_key": "メーメントヴァニタス",
+   "raw_title": "ひかげぼっこ",
+   "raw_artist": "メーメントヴァニタス",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2826,
+   "song": {
+    "song_id": 2826,
+    "title": "ひかげぼっこ",
+    "artists": [
+     "メーメントヴァニタス"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17715,
+   "key_version": 1,
+   "title_key": "また あした",
+   "artist_key": "ふわりp",
+   "raw_title": "また あした",
+   "raw_artist": "ふわりP",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1134,
+   "song": {
+    "song_id": 1134,
+    "title": "またあした",
+    "artists": [
+     "ふわりP"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17887,
+   "key_version": 1,
+   "title_key": "やさしくしないで",
+   "artist_key": "理芽",
+   "raw_title": "やさしくしないで",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2112,
+   "song": {
+    "song_id": 2112,
+    "title": "やさしくしないで",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17892,
+   "key_version": 1,
+   "title_key": "やさしさに包まれたなら",
+   "artist_key": "松任谷 由実",
+   "raw_title": "やさしさに包まれたなら",
+   "raw_artist": "松任谷 由実",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1343,
+   "song": {
+    "song_id": 1343,
+    "title": "やさしさに包まれたなら",
+    "artists": [
+     "松任谷由実"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 17983,
+   "key_version": 1,
+   "title_key": "わたしの線香",
+   "artist_key": "羽生まゐご",
+   "raw_title": "わたしの線香",
+   "raw_artist": "羽生まゐご",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2536,
+   "song": {
+    "song_id": 2536,
+    "title": "わたしの線香",
+    "artists": [
+     "羽生まゐご",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18246,
+   "key_version": 1,
+   "title_key": "アンインストール",
+   "artist_key": "chiaki ishikawa",
+   "raw_title": "アンインストール",
+   "raw_artist": "Chiaki Ishikawa",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1932,
+   "song": {
+    "song_id": 1932,
+    "title": "アンインストール",
+    "artists": [
+     "石川智晶"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18247,
+   "key_version": 1,
+   "title_key": "アンインストール",
+   "artist_key": "石川 智晶",
+   "raw_title": "アンインストール",
+   "raw_artist": "石川 智晶",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1932,
+   "song": {
+    "song_id": 1932,
+    "title": "アンインストール",
+    "artists": [
+     "石川智晶"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18315,
+   "key_version": 1,
+   "title_key": "イケナイ太陽",
+   "artist_key": "orangerange",
+   "raw_title": "イケナイ太陽",
+   "raw_artist": "ORANGERANGE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1463,
+   "song": {
+    "song_id": 1463,
+    "title": "イケナイ太陽",
+    "artists": [
+     "ORANGE RANGE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18389,
+   "key_version": 1,
+   "title_key": "ウイスキーが、お好きでしょ",
+   "artist_key": "石川さゆり",
+   "raw_title": "ウイスキーが、お好きでしょ",
+   "raw_artist": "石川さゆり",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1603,
+   "song": {
+    "song_id": 1603,
+    "title": "ウイスキーが、お好きでしょ",
+    "artists": [
+     "石川さゆり"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18613,
+   "key_version": 1,
+   "title_key": "カクテルライツ",
+   "artist_key": "松永依織",
+   "raw_title": "カクテルライツ",
+   "raw_artist": "松永依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2810,
+   "song": {
+    "song_id": 2810,
+    "title": "カクテルライツ",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18633,
+   "key_version": 1,
+   "title_key": "カトラリー",
+   "artist_key": "神山羊",
+   "raw_title": "カトラリー",
+   "raw_artist": "神山羊",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1769,
+   "song": {
+    "song_id": 1769,
+    "title": "カトラリー",
+    "artists": [
+     "神山羊"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18674,
+   "key_version": 1,
+   "title_key": "カメレオンアクタ ー",
+   "artist_key": "焔魔るり",
+   "raw_title": "カメレオンアクタ ー",
+   "raw_artist": "焔魔るり",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2052,
+   "song": {
+    "song_id": 2052,
+    "title": "カメレオンアクター",
+    "artists": [
+     "焔魔るり"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18721,
+   "key_version": 1,
+   "title_key": "ガチャガチャきゅ~と・ふぃぎゅ@メイト",
+   "artist_key": "mosaic .wav",
+   "raw_title": "ガチャガチャきゅ～と・ふぃぎゅ@メイト",
+   "raw_artist": "MOSAIC .WAV",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1819,
+   "song": {
+    "song_id": 1819,
+    "title": "ガチャガチャきゅ～と・ふぃぎゅ@メイト",
+    "artists": [
+     "MOSAIC.WAV"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 18847,
+   "key_version": 1,
+   "title_key": "ギミー!レボリューション",
+   "artist_key": "maaya uchida",
+   "raw_title": "ギミー！レボリューション",
+   "raw_artist": "Maaya Uchida",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1822,
+   "song": {
+    "song_id": 1822,
+    "title": "ギミー! レボリューション",
+    "artists": [
+     "内田真礼"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19310,
+   "key_version": 1,
+   "title_key": "ジェミニ",
+   "artist_key": "dixieflatline",
+   "raw_title": "ジェミニ",
+   "raw_artist": "DixieFlatline",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1879,
+   "song": {
+    "song_id": 1879,
+    "title": "ジェミニ",
+    "artists": [
+     "Dixie Flatline"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19354,
+   "key_version": 1,
+   "title_key": "スイマー",
+   "artist_key": "花譜",
+   "raw_title": "スイマー",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2483,
+   "song": {
+    "song_id": 2483,
+    "title": "スイマー",
+    "artists": [
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19362,
+   "key_version": 1,
+   "title_key": "スウィングバイ",
+   "artist_key": "hachi",
+   "raw_title": "スウィングバイ",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2841,
+   "song": {
+    "song_id": 2841,
+    "title": "スウィングバイ",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19374,
+   "key_version": 1,
+   "title_key": "スキスキ絶頂症",
+   "artist_key": "koyori",
+   "raw_title": "スキスキ絶頂症",
+   "raw_artist": "koyori",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1880,
+   "song": {
+    "song_id": 1880,
+    "title": "スキスキ絶頂症",
+    "artists": [
+     "koyori"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19410,
+   "key_version": 1,
+   "title_key": "ストリーミングハート",
+   "artist_key": "deco* 27",
+   "raw_title": "ストリーミングハート",
+   "raw_artist": "DECO* 27",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1608,
+   "song": {
+    "song_id": 1608,
+    "title": "ストリーミングハート",
+    "artists": [
+     "DECO*27"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19414,
+   "key_version": 1,
+   "title_key": "ストロボメモリー",
+   "artist_key": "内田 真礼",
+   "raw_title": "ストロボメモリー",
+   "raw_artist": "内田 真礼",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1306,
+   "song": {
+    "song_id": 1306,
+    "title": "ストロボメモリー",
+    "artists": [
+     "内田真礼"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19419,
+   "key_version": 1,
+   "title_key": "ストーカーの唄 ~3丁目、貴方の家~",
+   "artist_key": "阿部真央",
+   "raw_title": "ストーカーの唄 ～3丁目、貴方の家～",
+   "raw_artist": "阿部真央",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 992,
+   "song": {
+    "song_id": 992,
+    "title": "ストーカーの唄～3丁目、貴方の家～",
+    "artists": [
+     "阿部真央"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19421,
+   "key_version": 1,
+   "title_key": "ストーカーの唄〜3丁目、貴方の家〜",
+   "artist_key": "阿部真央",
+   "raw_title": "ストーカーの唄〜3丁目、貴方の家〜",
+   "raw_artist": "阿部真央",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 992,
+   "song": {
+    "song_id": 992,
+    "title": "ストーカーの唄～3丁目、貴方の家～",
+    "artists": [
+     "阿部真央"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19458,
+   "key_version": 1,
+   "title_key": "スペクトロライト",
+   "artist_key": "culua",
+   "raw_title": "スペクトロライト",
+   "raw_artist": "CULUA",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2022,
+   "song": {
+    "song_id": 2022,
+    "title": "スペクトロライト",
+    "artists": [
+     "日食なつこ",
+     "CULUA"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19465,
+   "key_version": 1,
+   "title_key": "スロウリー",
+   "artist_key": "明透",
+   "raw_title": "スロウリー",
+   "raw_artist": "明透",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2317,
+   "song": {
+    "song_id": 2317,
+    "title": "スロウリー",
+    "artists": [
+     "Police Piccadilly",
+     "明透"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19648,
+   "key_version": 1,
+   "title_key": "ダンスホール",
+   "artist_key": "mrs .green apple",
+   "raw_title": "ダンスホール",
+   "raw_artist": "Mrs .GREEN APPLE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1728,
+   "song": {
+    "song_id": 1728,
+    "title": "ダンスホール",
+    "artists": [
+     "Mrs. GREEN APPLE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19717,
+   "key_version": 1,
+   "title_key": "チュルリラ・チュルリラ・ダッダッダ!",
+   "artist_key": "くらげp",
+   "raw_title": "チュルリラ・チュルリラ・ダッダッダ！",
+   "raw_artist": "くらげP",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1824,
+   "song": {
+    "song_id": 1824,
+    "title": "チュルリラ・チュルリラ・ダッダッダ！",
+    "artists": [
+     "和田たけあき"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 19811,
+   "key_version": 1,
+   "title_key": "ディメンション",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "ディメンション",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2090,
+   "song": {
+    "song_id": 2090,
+    "title": "ディメンション",
+    "artists": [
+     "柊マグネタイト",
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20147,
+   "key_version": 1,
+   "title_key": "ハッピーエンド",
+   "artist_key": "backnumber",
+   "raw_title": "ハッピーエンド",
+   "raw_artist": "backnumber",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1223,
+   "song": {
+    "song_id": 1223,
+    "title": "ハッピーエンド",
+    "artists": [
+     "back number"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20375,
+   "key_version": 1,
+   "title_key": "パンドラコール",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "パンドラコール",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2094,
+   "song": {
+    "song_id": 2094,
+    "title": "パンドラコール",
+    "artists": [
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20554,
+   "key_version": 1,
+   "title_key": "ファンサ",
+   "artist_key": "mona (夏川椎菜)",
+   "raw_title": "ファンサ",
+   "raw_artist": "mona (夏川椎菜)",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1483,
+   "song": {
+    "song_id": 1483,
+    "title": "ファンサ",
+    "artists": [
+     "HoneyWorks",
+     "mona（夏川椎菜）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20623,
+   "key_version": 1,
+   "title_key": "フラッグライン",
+   "artist_key": "水瀬 凪",
+   "raw_title": "フラッグライン",
+   "raw_artist": "水瀬 凪",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2062,
+   "song": {
+    "song_id": 2062,
+    "title": "フラッグライン",
+    "artists": [
+     "水瀬凪"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20645,
+   "key_version": 1,
+   "title_key": "フルスロットル!!!!!!",
+   "artist_key": "松永 依織",
+   "raw_title": "フルスロットル!!!!!!",
+   "raw_artist": "松永 依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2406,
+   "song": {
+    "song_id": 2406,
+    "title": "フルスロットル！！！！！！",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20646,
+   "key_version": 1,
+   "title_key": "フルスロットル!!!!!!",
+   "artist_key": "松永依織",
+   "raw_title": "フルスロットル！！！！！！",
+   "raw_artist": "松永依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2406,
+   "song": {
+    "song_id": 2406,
+    "title": "フルスロットル！！！！！！",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20682,
+   "key_version": 1,
+   "title_key": "ブルーナイトダーリン",
+   "artist_key": "明透",
+   "raw_title": "ブルーナイトダーリン",
+   "raw_artist": "明透",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2311,
+   "song": {
+    "song_id": 2311,
+    "title": "ブルーナイトダーリン",
+    "artists": [
+     "明透"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20715,
+   "key_version": 1,
+   "title_key": "プライド革命",
+   "artist_key": "chico with honey works",
+   "raw_title": "プライド革命",
+   "raw_artist": "CHiCO with Honey works",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1036,
+   "song": {
+    "song_id": 1036,
+    "title": "プライド革命",
+    "artists": [
+     "CHiCO with HoneyWorks"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20851,
+   "key_version": 1,
+   "title_key": "ホシキラ",
+   "artist_key": "ランカ・リー(中島愛)",
+   "raw_title": "ホシキラ",
+   "raw_artist": "ランカ・リー(中島愛)",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1831,
+   "song": {
+    "song_id": 1831,
+    "title": "ホシキラ",
+    "artists": [
+     "ランカ・リー（中島愛）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 20874,
+   "key_version": 1,
+   "title_key": "ホワイトブーケ",
+   "artist_key": "花譜",
+   "raw_title": "ホワイトブーケ",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2484,
+   "song": {
+    "song_id": 2484,
+    "title": "ホワイトブーケ",
+    "artists": [
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21000,
+   "key_version": 1,
+   "title_key": "マーシャル・マキシマイザー",
+   "artist_key": "hiiragi magnetite",
+   "raw_title": "マーシャル・マキシマイザー",
+   "raw_artist": "Hiiragi Magnetite",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1611,
+   "song": {
+    "song_id": 1611,
+    "title": "マーシャル・マキシマイザー",
+    "artists": [
+     "柊マグネタイト"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21019,
+   "key_version": 1,
+   "title_key": "ミックスナッツ",
+   "artist_key": "official higedan dism",
+   "raw_title": "ミックスナッツ",
+   "raw_artist": "Official Higedan dism",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1115,
+   "song": {
+    "song_id": 1115,
+    "title": "ミックスナッツ",
+    "artists": [
+     "Official髭男dism"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21054,
+   "key_version": 1,
+   "title_key": "ミラージュコード",
+   "artist_key": "幸祜",
+   "raw_title": "ミラージュコード",
+   "raw_artist": "幸祜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2612,
+   "song": {
+    "song_id": 2612,
+    "title": "ミラージュコード",
+    "artists": [
+     "幸祜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21150,
+   "key_version": 1,
+   "title_key": "メランコリーキッチン",
+   "artist_key": "米津 玄師",
+   "raw_title": "メランコリーキッチン",
+   "raw_artist": "米津 玄師",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1359,
+   "song": {
+    "song_id": 1359,
+    "title": "メランコリーキッチン",
+    "artists": [
+     "米津玄師"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21189,
+   "key_version": 1,
+   "title_key": "メロウ",
+   "artist_key": "須田 景凪",
+   "raw_title": "メロウ",
+   "raw_artist": "須田 景凪",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1832,
+   "song": {
+    "song_id": 1832,
+    "title": "メロウ",
+    "artists": [
+     "須田景凪"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21193,
+   "key_version": 1,
+   "title_key": "メロディー",
+   "artist_key": "玉置 浩二",
+   "raw_title": "メロディー",
+   "raw_artist": "玉置 浩二",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 949,
+   "song": {
+    "song_id": 949,
+    "title": "メロディー",
+    "artists": [
+     "玉置浩二"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21213,
+   "key_version": 1,
+   "title_key": "モエチャッカファイア",
+   "artist_key": "issey",
+   "raw_title": "モエチャッカファイア",
+   "raw_artist": "issey",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1408,
+   "song": {
+    "song_id": 1408,
+    "title": "モエチャッカファイア",
+    "artists": [
+     "弌誠"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21283,
+   "key_version": 1,
+   "title_key": "ユーエンミー",
+   "artist_key": "理芽",
+   "raw_title": "ユーエンミー",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2110,
+   "song": {
+    "song_id": 2110,
+    "title": "ユーエンミー",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21405,
+   "key_version": 1,
+   "title_key": "ラピスのお人形",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "ラピスのお人形",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2224,
+   "song": {
+    "song_id": 2224,
+    "title": "ラピスのお人形",
+    "artists": [
+     "はるまきごはん",
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21407,
+   "key_version": 1,
+   "title_key": "ラピスラズリ",
+   "artist_key": "藍井 エイル",
+   "raw_title": "ラピスラズリ",
+   "raw_artist": "藍井 エイル",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1674,
+   "song": {
+    "song_id": 1674,
+    "title": "ラピスラズリ",
+    "artists": [
+     "藍井エイル"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21566,
+   "key_version": 1,
+   "title_key": "ルフラン",
+   "artist_key": "理芽",
+   "raw_title": "ルフラン",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2072,
+   "song": {
+    "song_id": 2072,
+    "title": "ルフラン",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21576,
+   "key_version": 1,
+   "title_key": "ルージュの伝言",
+   "artist_key": "松任谷 由実",
+   "raw_title": "ルージュの伝言",
+   "raw_artist": "松任谷 由実",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1385,
+   "song": {
+    "song_id": 1385,
+    "title": "ルージュの伝言",
+    "artists": [
+     "松任谷由実"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21579,
+   "key_version": 1,
+   "title_key": "ルージュの伝言",
+   "artist_key": "荒井 由実",
+   "raw_title": "ルージュの伝言",
+   "raw_artist": "荒井 由実",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1385,
+   "song": {
+    "song_id": 1385,
+    "title": "ルージュの伝言",
+    "artists": [
+     "松任谷由実"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21784,
+   "key_version": 1,
+   "title_key": "ヴァンパイア",
+   "artist_key": "deco *27",
+   "raw_title": "ヴァンパイア",
+   "raw_artist": "DECO *27",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1288,
+   "song": {
+    "song_id": 1288,
+    "title": "ヴァンパイア",
+    "artists": [
+     "DECO*27"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21843,
+   "key_version": 1,
+   "title_key": "万有引力",
+   "artist_key": "hachi",
+   "raw_title": "万有引力",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2846,
+   "song": {
+    "song_id": 2846,
+    "title": "万有引力",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21845,
+   "key_version": 1,
+   "title_key": "万華鏡",
+   "artist_key": "hachi",
+   "raw_title": "万華鏡",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2850,
+   "song": {
+    "song_id": 2850,
+    "title": "万華鏡",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 21867,
+   "key_version": 1,
+   "title_key": "上を向いて歩こう",
+   "artist_key": "坂本 九",
+   "raw_title": "上を向いて歩こう",
+   "raw_artist": "坂本 九",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1781,
+   "song": {
+    "song_id": 1781,
+    "title": "上を向いて歩こう",
+    "artists": [
+     "坂本九"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22053,
+   "key_version": 1,
+   "title_key": "人生は夢だらけ",
+   "artist_key": "椎名 林檎",
+   "raw_title": "人生は夢だらけ",
+   "raw_artist": "椎名 林檎",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1644,
+   "song": {
+    "song_id": 1644,
+    "title": "人生は夢だらけ",
+    "artists": [
+     "椎名林檎"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22143,
+   "key_version": 1,
+   "title_key": "会いたくて 会いたくて",
+   "artist_key": "西野 カナ",
+   "raw_title": "会いたくて 会いたくて",
+   "raw_artist": "西野 カナ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1782,
+   "song": {
+    "song_id": 1782,
+    "title": "会いたくて会いたくて",
+    "artists": [
+     "西野カナ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22162,
+   "key_version": 1,
+   "title_key": "何なんw",
+   "artist_key": "藤井 風",
+   "raw_title": "何なんｗ",
+   "raw_artist": "藤井 風",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1835,
+   "song": {
+    "song_id": 1835,
+    "title": "何なんw",
+    "artists": [
+     "藤井風"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22240,
+   "key_version": 1,
+   "title_key": "僕のこと",
+   "artist_key": "mrs.greenapple",
+   "raw_title": "僕のこと",
+   "raw_artist": "Mrs.GreenApple",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1101,
+   "song": {
+    "song_id": 1101,
+    "title": "僕のこと",
+    "artists": [
+     "Mrs. GREEN APPLE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22270,
+   "key_version": 1,
+   "title_key": "儚くも永久のカナシ",
+   "artist_key": "uver world",
+   "raw_title": "儚くも永久のカナシ",
+   "raw_artist": "UVER world",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1586,
+   "song": {
+    "song_id": 1586,
+    "title": "儚くも永久のカナシ",
+    "artists": [
+     "UVERworld"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22371,
+   "key_version": 1,
+   "title_key": "六月は雨上がりの街を書く",
+   "artist_key": "yorushika",
+   "raw_title": "六月は雨上がりの街を書く",
+   "raw_artist": "Yorushika",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1469,
+   "song": {
+    "song_id": 1469,
+    "title": "六月は雨上がりの街を書く",
+    "artists": [
+     "ヨルシカ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22500,
+   "key_version": 1,
+   "title_key": "前 前 前 世",
+   "artist_key": "radwimps",
+   "raw_title": "前 前 前 世",
+   "raw_artist": "RADWIMPS",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1132,
+   "song": {
+    "song_id": 1132,
+    "title": "前前前世",
+    "artists": [
+     "RADWIMPS"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22757,
+   "key_version": 1,
+   "title_key": "君じゃなきゃダメみたい",
+   "artist_key": "大石 昌良",
+   "raw_title": "君じゃなきゃダメみたい",
+   "raw_artist": "大石 昌良",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1737,
+   "song": {
+    "song_id": 1737,
+    "title": "君じゃなきゃダメみたい",
+    "artists": [
+     "大石昌良"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22758,
+   "key_version": 1,
+   "title_key": "君じゃなきゃダメみたい",
+   "artist_key": "大石昌良",
+   "raw_title": "君じゃなきゃダメみたい",
+   "raw_artist": "大石昌良",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1737,
+   "song": {
+    "song_id": 1737,
+    "title": "君じゃなきゃダメみたい",
+    "artists": [
+     "大石昌良"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 22796,
+   "key_version": 1,
+   "title_key": "君の望み、君の願い",
+   "artist_key": "ciel",
+   "raw_title": "君の望み、君の願い",
+   "raw_artist": "CIEL",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2087,
+   "song": {
+    "song_id": 2087,
+    "title": "君の望み、君の願い",
+    "artists": [
+     "傘村トータ",
+     "CIEL",
+     "幸祜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23006,
+   "key_version": 1,
+   "title_key": "壊れかけのradio",
+   "artist_key": "德永英明",
+   "raw_title": "壊れかけのRadio",
+   "raw_artist": "德永英明",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1346,
+   "song": {
+    "song_id": 1346,
+    "title": "壊れかけのRadio",
+    "artists": [
+     "徳永英明"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23015,
+   "key_version": 1,
+   "title_key": "声帯学",
+   "artist_key": "春猿火",
+   "raw_title": "声帯学",
+   "raw_artist": "春猿火",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2576,
+   "song": {
+    "song_id": 2576,
+    "title": "声帯学",
+    "artists": [
+     "春猿火"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23091,
+   "key_version": 1,
+   "title_key": "夏色",
+   "artist_key": "yuzu",
+   "raw_title": "夏色",
+   "raw_artist": "Yuzu",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1347,
+   "song": {
+    "song_id": 1347,
+    "title": "夏色",
+    "artists": [
+     "ゆず"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23096,
+   "key_version": 1,
+   "title_key": "夏色えがおで1, 2, jump!",
+   "artist_key": "μ's",
+   "raw_title": "夏色えがおで1, 2, Jump!",
+   "raw_artist": "μ's",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1783,
+   "song": {
+    "song_id": 1783,
+    "title": "夏色えがおで1, 2, Jump!",
+    "artists": [
+     "μ's"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23125,
+   "key_version": 1,
+   "title_key": "夜が降り止む前に",
+   "artist_key": "花譜",
+   "raw_title": "夜が降り止む前に",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2515,
+   "song": {
+    "song_id": 2515,
+    "title": "夜が降り止む前に",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23212,
+   "key_version": 1,
+   "title_key": "夜空にふたつ",
+   "artist_key": "電ポルp",
+   "raw_title": "夜空にふたつ",
+   "raw_artist": "電ポルP",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1836,
+   "song": {
+    "song_id": 1836,
+    "title": "夜空にふたつ",
+    "artists": [
+     "koyori"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23276,
+   "key_version": 1,
+   "title_key": "夢見る少女じゃいられない",
+   "artist_key": "相川 七瀬",
+   "raw_title": "夢見る少女じゃいられない",
+   "raw_artist": "相川 七瀬",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1893,
+   "song": {
+    "song_id": 1893,
+    "title": "夢見る少女じゃいられない",
+    "artists": [
+     "相川七瀬"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23336,
+   "key_version": 1,
+   "title_key": "天命系メルト",
+   "artist_key": "valis",
+   "raw_title": "天命系メルト",
+   "raw_artist": "VALIS",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2556,
+   "song": {
+    "song_id": 2556,
+    "title": "天命系メルト",
+    "artists": [
+     "VALIS"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 23751,
+   "key_version": 1,
+   "title_key": "彷徨い",
+   "artist_key": "花譜",
+   "raw_title": "彷徨い",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2196,
+   "song": {
+    "song_id": 2196,
+    "title": "彷徨い",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24123,
+   "key_version": 1,
+   "title_key": "愛して愛して愛して",
+   "artist_key": "kikuo",
+   "raw_title": "愛して愛して愛して",
+   "raw_artist": "Kikuo",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1332,
+   "song": {
+    "song_id": 1332,
+    "title": "愛して愛して愛して",
+    "artists": [
+     "きくお"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24191,
+   "key_version": 1,
+   "title_key": "愛・おぼえていますか",
+   "artist_key": "mari iijima",
+   "raw_title": "愛・おぼえていますか",
+   "raw_artist": "Mari Iijima",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1963,
+   "song": {
+    "song_id": 1963,
+    "title": "愛・おぼえていますか",
+    "artists": [
+     "飯島真理"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24194,
+   "key_version": 1,
+   "title_key": "愛・おぼえていますか",
+   "artist_key": "飯島 真理",
+   "raw_title": "愛･おぼえていますか",
+   "raw_artist": "飯島 真理",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1963,
+   "song": {
+    "song_id": 1963,
+    "title": "愛・おぼえていますか",
+    "artists": [
+     "飯島真理"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24247,
+   "key_version": 1,
+   "title_key": "戸惑いテレパシー",
+   "artist_key": "花譜",
+   "raw_title": "戸惑いテレパシー",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2195,
+   "song": {
+    "song_id": 2195,
+    "title": "戸惑いテレパシー",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24374,
+   "key_version": 1,
+   "title_key": "斯く美しき造花",
+   "artist_key": "ヰ世界情緒",
+   "raw_title": "斯く美しき造花",
+   "raw_artist": "ヰ世界情緒",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2274,
+   "song": {
+    "song_id": 2274,
+    "title": "斯く美しき造花",
+    "artists": [
+     "ヰ世界情緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24494,
+   "key_version": 1,
+   "title_key": "星めぐる詩",
+   "artist_key": "suis fromヨルシカ",
+   "raw_title": "星めぐる詩",
+   "raw_artist": "suis fromヨルシカ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1964,
+   "song": {
+    "song_id": 1964,
+    "title": "星めぐる詩",
+    "artists": [
+     "suis"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24495,
+   "key_version": 1,
+   "title_key": "星を待つ",
+   "artist_key": "hachi",
+   "raw_title": "星を待つ",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2837,
+   "song": {
+    "song_id": 2837,
+    "title": "星を待つ",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24547,
+   "key_version": 1,
+   "title_key": "春ひさぎ",
+   "artist_key": "yorushika",
+   "raw_title": "春ひさぎ",
+   "raw_artist": "Yorushika",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1254,
+   "song": {
+    "song_id": 1254,
+    "title": "春ひさぎ",
+    "artists": [
+     "ヨルシカ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24658,
+   "key_version": 1,
+   "title_key": "暁の車",
+   "artist_key": "fiction junction yuuka",
+   "raw_title": "暁の車",
+   "raw_artist": "Fiction Junction YUUKA",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1233,
+   "song": {
+    "song_id": 1233,
+    "title": "暁の車",
+    "artists": [
+     "FictionJunction YUUKA"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24805,
+   "key_version": 1,
+   "title_key": "月華歌 / 羽緒",
+   "artist_key": "",
+   "raw_title": "月華歌 / 羽緒",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2025,
+   "song": {
+    "song_id": 2025,
+    "title": "月華歌",
+    "artists": [
+     "羽緒"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24882,
+   "key_version": 1,
+   "title_key": "未確認少女進行形",
+   "artist_key": "花譜",
+   "raw_title": "未確認少女進行形",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2371,
+   "song": {
+    "song_id": 2371,
+    "title": "未確認少女進行形",
+    "artists": [
+     "カンザキイオリ",
+     "花譜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24902,
+   "key_version": 1,
+   "title_key": "朱月の季節",
+   "artist_key": "朱名",
+   "raw_title": "朱月の季節",
+   "raw_artist": "朱名",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2421,
+   "song": {
+    "song_id": 2421,
+    "title": "朱月の季節",
+    "artists": [
+     "朱名"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 24961,
+   "key_version": 1,
+   "title_key": "栞",
+   "artist_key": "creephyp",
+   "raw_title": "栞",
+   "raw_artist": "CreepHyp",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1284,
+   "song": {
+    "song_id": 1284,
+    "title": "栞",
+    "artists": [
+     "クリープハイプ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25016,
+   "key_version": 1,
+   "title_key": "極彩的ミラージュ",
+   "artist_key": "蜜乃木 ジル",
+   "raw_title": "極彩的ミラージュ",
+   "raw_artist": "蜜乃木 ジル",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2416,
+   "song": {
+    "song_id": 2416,
+    "title": "極彩的ミラージュ",
+    "artists": [
+     "蜜乃木ジル"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25253,
+   "key_version": 1,
+   "title_key": "永遠の場所",
+   "artist_key": "松永 依織",
+   "raw_title": "永遠の場所",
+   "raw_artist": "松永 依織",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2408,
+   "song": {
+    "song_id": 2408,
+    "title": "永遠の場所",
+    "artists": [
+     "松永依織"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25263,
+   "key_version": 1,
+   "title_key": "決戦スピリット",
+   "artist_key": "chico with honey works",
+   "raw_title": "決戦スピリット",
+   "raw_artist": "CHiCO With Honey Works",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1680,
+   "song": {
+    "song_id": 1680,
+    "title": "決戦スピリット",
+    "artists": [
+     "CHiCO with HoneyWorks"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25365,
+   "key_version": 1,
+   "title_key": "消せない罪",
+   "artist_key": "北出 菜奈",
+   "raw_title": "消せない罪",
+   "raw_artist": "北出 菜奈",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1512,
+   "song": {
+    "song_id": 1512,
+    "title": "消せない罪",
+    "artists": [
+     "北出菜奈"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25413,
+   "key_version": 1,
+   "title_key": "深海のリトルクライ",
+   "artist_key": "sasakure .uk",
+   "raw_title": "深海のリトルクライ",
+   "raw_artist": "sasakure .UK",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1792,
+   "song": {
+    "song_id": 1792,
+    "title": "深海のリトルクライ",
+    "artists": [
+     "sasakure.UK"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25540,
+   "key_version": 1,
+   "title_key": "点描の唄",
+   "artist_key": "mrs.green apple",
+   "raw_title": "点描の唄",
+   "raw_artist": "Mrs.GREEN APPLE",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1234,
+   "song": {
+    "song_id": 1234,
+    "title": "点描の唄",
+    "artists": [
+     "Mrs. GREEN APPLE"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25549,
+   "key_version": 1,
+   "title_key": "焔の扉",
+   "artist_key": "fiction junction yuuka",
+   "raw_title": "焔の扉",
+   "raw_artist": "Fiction Junction YUUKA",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1494,
+   "song": {
+    "song_id": 1494,
+    "title": "焔の扉",
+    "artists": [
+     "FictionJunction YUUKA"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25559,
+   "key_version": 1,
+   "title_key": "無色夏",
+   "artist_key": "cona",
+   "raw_title": "無色夏",
+   "raw_artist": "CONA",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2445,
+   "song": {
+    "song_id": 2445,
+    "title": "無色夏",
+    "artists": [
+     "CONA"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25630,
+   "key_version": 1,
+   "title_key": "狂乱hey kids!!",
+   "artist_key": "the oral cigarettes",
+   "raw_title": "狂乱Hey Kids!!",
+   "raw_artist": "THE ORAL CIGARETTES",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1318,
+   "song": {
+    "song_id": 1318,
+    "title": "狂乱 Hey Kids!!",
+    "artists": [
+     "THE ORAL CIGARETTES"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25705,
+   "key_version": 1,
+   "title_key": "甘美な無法",
+   "artist_key": "理芽",
+   "raw_title": "甘美な無法",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2098,
+   "song": {
+    "song_id": 2098,
+    "title": "甘美な無法",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25716,
+   "key_version": 1,
+   "title_key": "生きる",
+   "artist_key": "水野 あつ",
+   "raw_title": "生きる",
+   "raw_artist": "水野 あつ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1563,
+   "song": {
+    "song_id": 1563,
+    "title": "生きる",
+    "artists": [
+     "水野あつ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25767,
+   "key_version": 1,
+   "title_key": "白い雪のプリンセスは",
+   "artist_key": "noboru",
+   "raw_title": "白い雪のプリンセスは",
+   "raw_artist": "Noboru",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1538,
+   "song": {
+    "song_id": 1538,
+    "title": "白い雪のプリンセスは",
+    "artists": [
+     "のぼる↑"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25796,
+   "key_version": 1,
+   "title_key": "白金ディスコ",
+   "artist_key": "阿良々木月火(cv.井口裕香)",
+   "raw_title": "白金ディスコ",
+   "raw_artist": "阿良々木月火(cv.井口裕香)",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1708,
+   "song": {
+    "song_id": 1708,
+    "title": "白金ディスコ",
+    "artists": [
+     "阿良々木月火（井口裕香）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25804,
+   "key_version": 1,
+   "title_key": "百花繚乱",
+   "artist_key": "春猿火",
+   "raw_title": "百花繚乱",
+   "raw_artist": "春猿火",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2604,
+   "song": {
+    "song_id": 2604,
+    "title": "百花繚乱",
+    "artists": [
+     "春猿火"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25811,
+   "key_version": 1,
+   "title_key": "盗作",
+   "artist_key": "yorushika",
+   "raw_title": "盗作",
+   "raw_artist": "Yorushika",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1455,
+   "song": {
+    "song_id": 1455,
+    "title": "盗作",
+    "artists": [
+     "ヨルシカ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25844,
+   "key_version": 1,
+   "title_key": "真夜中のドア ~stay with me",
+   "artist_key": "松原 みき",
+   "raw_title": "真夜中のドア ~Stay With Me",
+   "raw_artist": "松原 みき",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1844,
+   "song": {
+    "song_id": 1844,
+    "title": "真夜中のドア〜Stay With Me",
+    "artists": [
+     "松原みき"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25850,
+   "key_version": 1,
+   "title_key": "真夜中のドア〜 stay with me",
+   "artist_key": "松原みき",
+   "raw_title": "真夜中のドア〜 Stay With Me",
+   "raw_artist": "松原みき",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1844,
+   "song": {
+    "song_id": 1844,
+    "title": "真夜中のドア〜Stay With Me",
+    "artists": [
+     "松原みき"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 25886,
+   "key_version": 1,
+   "title_key": "眼裏の懐疑",
+   "artist_key": "ciel",
+   "raw_title": "眼裏の懐疑",
+   "raw_artist": "CIEL",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2685,
+   "song": {
+    "song_id": 2685,
+    "title": "眼裏の懐疑",
+    "artists": [
+     "香椎モイミ",
+     "CIEL"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26068,
+   "key_version": 1,
+   "title_key": "空と君のあいだに",
+   "artist_key": "中島 みゆき",
+   "raw_title": "空と君のあいだに",
+   "raw_artist": "中島 みゆき",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1240,
+   "song": {
+    "song_id": 1240,
+    "title": "空と君のあいだに",
+    "artists": [
+     "中島みゆき"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26116,
+   "key_version": 1,
+   "title_key": "窓を開けて",
+   "artist_key": "ciel",
+   "raw_title": "窓を開けて",
+   "raw_artist": "CIEL",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2567,
+   "song": {
+    "song_id": 2567,
+    "title": "窓を開けて",
+    "artists": [
+     "カンザキイオリ",
+     "CIEL"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26271,
+   "key_version": 1,
+   "title_key": "罪と罰",
+   "artist_key": "椎名 林檎",
+   "raw_title": "罪と罰",
+   "raw_artist": "椎名 林檎",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1046,
+   "song": {
+    "song_id": 1046,
+    "title": "罪と罰",
+    "artists": [
+     "椎名林檎"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26356,
+   "key_version": 1,
+   "title_key": "胎児に月はキスをしない",
+   "artist_key": "理芽",
+   "raw_title": "胎児に月はキスをしない",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2109,
+   "song": {
+    "song_id": 2109,
+    "title": "胎児に月はキスをしない",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26373,
+   "key_version": 1,
+   "title_key": "脱色",
+   "artist_key": "culua",
+   "raw_title": "脱色",
+   "raw_artist": "CULUA",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2016,
+   "song": {
+    "song_id": 2016,
+    "title": "脱色",
+    "artists": [
+     "CULUA"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26402,
+   "key_version": 1,
+   "title_key": "自傷無色",
+   "artist_key": "ササノマリイ",
+   "raw_title": "自傷無色",
+   "raw_artist": "ササノマリイ",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1710,
+   "song": {
+    "song_id": 1710,
+    "title": "自傷無色",
+    "artists": [
+     "ササノマリイ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26630,
+   "key_version": 1,
+   "title_key": "蒼のエーテル",
+   "artist_key": "ランカ・リー(中島愛)",
+   "raw_title": "蒼のエーテル",
+   "raw_artist": "ランカ・リー（中島愛）",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1755,
+   "song": {
+    "song_id": 1755,
+    "title": "蒼のエーテル",
+    "artists": [
+     "ランカ・リー（中島愛）"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26760,
+   "key_version": 1,
+   "title_key": "言わないけどね。",
+   "artist_key": "大原 ゆい子",
+   "raw_title": "言わないけどね。",
+   "raw_artist": "大原 ゆい子",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1207,
+   "song": {
+    "song_id": 1207,
+    "title": "言わないけどね。",
+    "artists": [
+     "大原ゆい子"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26813,
+   "key_version": 1,
+   "title_key": "誰も知らない",
+   "artist_key": "hachi",
+   "raw_title": "誰も知らない",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2830,
+   "song": {
+    "song_id": 2830,
+    "title": "誰も知らない",
+    "artists": [
+     "ピコン",
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26818,
+   "key_version": 1,
+   "title_key": "謎",
+   "artist_key": "miho komatsu",
+   "raw_title": "謎",
+   "raw_artist": "Miho Komatsu",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1442,
+   "song": {
+    "song_id": 1442,
+    "title": "謎",
+    "artists": [
+     "小松未歩"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26832,
+   "key_version": 1,
+   "title_key": "負け犬にアンコールはいらない",
+   "artist_key": "yorushika",
+   "raw_title": "負け犬にアンコールはいらない",
+   "raw_artist": "Yorushika",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1261,
+   "song": {
+    "song_id": 1261,
+    "title": "負け犬にアンコールはいらない",
+    "artists": [
+     "ヨルシカ"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26843,
+   "key_version": 1,
+   "title_key": "貴方の恋人になりたいのです",
+   "artist_key": "mao abe",
+   "raw_title": "貴方の恋人になりたいのです",
+   "raw_artist": "Mao Abe",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1095,
+   "song": {
+    "song_id": 1095,
+    "title": "貴方の恋人になりたいのです",
+    "artists": [
+     "阿部真央"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26875,
+   "key_version": 1,
+   "title_key": "走り出したら",
+   "artist_key": "朝倉 杏子",
+   "raw_title": "走り出したら",
+   "raw_artist": "朝倉 杏子",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2817,
+   "song": {
+    "song_id": 2817,
+    "title": "走り出したら",
+    "artists": [
+     "朝倉杏子"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26973,
+   "key_version": 1,
+   "title_key": "透過夏",
+   "artist_key": "理芽",
+   "raw_title": "透過夏",
+   "raw_artist": "理芽",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2128,
+   "song": {
+    "song_id": 2128,
+    "title": "透過夏",
+    "artists": [
+     "理芽"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 26999,
+   "key_version": 1,
+   "title_key": "遠く 遠く",
+   "artist_key": "槇原敬之",
+   "raw_title": "遠く 遠く",
+   "raw_artist": "槇原敬之",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1849,
+   "song": {
+    "song_id": 1849,
+    "title": "遠く遠く",
+    "artists": [
+     "槇原敬之"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27002,
+   "key_version": 1,
+   "title_key": "遠く遠く",
+   "artist_key": "槇原 敬之",
+   "raw_title": "遠く遠く",
+   "raw_artist": "槇原 敬之",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1849,
+   "song": {
+    "song_id": 1849,
+    "title": "遠く遠く",
+    "artists": [
+     "槇原敬之"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27182,
+   "key_version": 1,
+   "title_key": "雨うつつ",
+   "artist_key": "hachi",
+   "raw_title": "雨うつつ",
+   "raw_artist": "HACHI",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2834,
+   "song": {
+    "song_id": 2834,
+    "title": "雨うつつ",
+    "artists": [
+     "HACHI"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27186,
+   "key_version": 1,
+   "title_key": "雨き声 残響",
+   "artist_key": "orangestar",
+   "raw_title": "雨き声 残響",
+   "raw_artist": "Orangestar",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 1713,
+   "song": {
+    "song_id": 1713,
+    "title": "雨き声残響",
+    "artists": [
+     "Orangestar"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27502,
+   "key_version": 1,
+   "title_key": "魔女",
+   "artist_key": "花譜",
+   "raw_title": "魔女",
+   "raw_artist": "花譜",
+   "occurrences": 1,
+   "basis": "exact",
+   "song_id": 2544,
+   "song": {
+    "song_id": 2544,
+    "title": "魔女",
+    "artists": [
+     "カンザキイオリ",
+     "花譜",
+     "理芽",
+     "春猿火",
+     "ヰ世界情緒",
+     "幸祜"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27652,
+   "key_version": 1,
+   "title_key": "イラティクオシー/伊月知世",
+   "artist_key": "",
+   "raw_title": "イラティクオシー/伊月知世",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2820,
+   "song": {
+    "song_id": 2820,
+    "title": "イラティクオシー",
+    "artists": [
+     "伊月知世"
+    ]
+   },
+   "would_link": 1
+  },
+  {
+   "key_id": 27667,
+   "key_version": 1,
+   "title_key": "レトロスペクティカ/伊月知世",
+   "artist_key": "",
+   "raw_title": "レトロスペクティカ/伊月知世",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 2821,
+   "song": {
+    "song_id": 2821,
+    "title": "レトロスペクティカ",
+    "artists": [
+     "伊月知世"
+    ]
+   },
+   "would_link": 1
+  }
+ ],
+ "review": [],
+ "import_id": null,
+ "exported_at": "2026-09-30T12:30:20Z",
+ "user_review": [],
+ "reviewed": true
+}

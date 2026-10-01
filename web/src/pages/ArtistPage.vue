@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useMediaQuery } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import {
   ArrowLeft,
@@ -8,22 +7,17 @@ import {
   Play,
   Disc3,
   CalendarDays,
-  ListMusic,
   ChevronDown,
-  FileText,
   ChartNoAxesColumnIncreasing,
 } from '@lucide/vue'
 import { api } from '@/api/client'
 import type { Live } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import ArtistAvatar from '@/components/ArtistAvatar.vue'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { formatDate, todayKey } from '@/lib/dates'
-import { openOverlay } from '@/lib/overlays'
-import { displayName } from '@/lib/display-name'
-import AlbumCover from '@/components/AlbumCover.vue'
+import { todayKey } from '@/lib/dates'
+import ArtistDiscography from '@/components/ArtistDiscography.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
 import ResourceState from '@/components/ResourceState.vue'
@@ -50,19 +44,16 @@ watch(
     returnState.value = readReturnState()
   },
 )
-const mobile = useMediaQuery('(max-width: 768px)')
 const id = computed(() => String(route.params.artistId))
 const tab = computed(() =>
   ['lives', 'statistics', 'originals', 'concerts'].includes(String(route.query.tab))
     ? String(route.query.tab)
     : 'lives',
 )
-const selectedAlbum = ref('')
 const extraLives = ref<Live[]>([])
 const moreLoading = ref(false)
 const moreError = ref('')
 watch(id, () => {
-  selectedAlbum.value = ''
   extraLives.value = []
   moreLoading.value = false
   moreError.value = ''
@@ -118,16 +109,6 @@ async function loadMore() {
   }
 }
 const {
-  data: albumData,
-  loading: albumsLoading,
-  error: albumsError,
-  reload: reloadAlbums,
-} = useResource(
-  (signal) =>
-    tab.value === 'originals' ? api.albums(Number(id.value), signal) : Promise.resolve(null),
-  [id, () => tab.value === 'originals'],
-)
-const {
   data: concertData,
   loading: concertsLoading,
   error: concertsError,
@@ -144,29 +125,11 @@ const data = computed(() =>
     ? {
         artist: profile.value,
         lives: [...(liveData.value?.items ?? []), ...extraLives.value],
-        albums: albumData.value ?? [],
         concerts: (concertData.value ?? []).filter((c) =>
           (profile.value?.related_artist_ids ?? [Number(id.value)]).includes(c.artist_id),
         ),
       }
     : null,
-)
-const albumSummary = computed(
-  () => data.value?.albums.find((a) => a.id === selectedAlbum.value) ?? data.value?.albums[0],
-)
-const {
-  data: album,
-  loading: tracksLoading,
-  error: tracksError,
-  reload: reloadTracks,
-} = useResource(
-  (signal) =>
-    !albumSummary.value
-      ? Promise.resolve(null)
-      : albumSummary.value.tracks_loaded === false
-        ? api.album(albumSummary.value.id, Number(id.value), signal)
-        : Promise.resolve(albumSummary.value),
-  [id, () => albumSummary.value?.id],
 )
 const upcoming = computed(() =>
   (data.value?.concerts ?? [])
@@ -182,7 +145,14 @@ function changeTab(value: string | number) {
   if (String(value) === tab.value) return
   const origin = returnState.value
   router.push({
-    query: { ...route.query, tab: String(value), event: undefined, lyrics: undefined },
+    query: {
+      ...route.query,
+      tab: String(value),
+      event: undefined,
+      lyrics: undefined,
+      album: undefined,
+      group: undefined,
+    },
     state: origin
       ? { artistReturnTo: origin.to, artistBackSteps: origin.steps + 1 }
       : undefined,
@@ -308,88 +278,7 @@ function returnToList() {
             </ResourceState>
           </TabsContent>
           <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">
-            <div class="section-heading">
-              <div>
-                <h2>디스코그래피</h2>
-              </div>
-            </div>
-            <ResourceState
-              :loading="albumsLoading"
-              :error="albumsError"
-              @retry="reloadAlbums"
-              :empty="!data.albums.length"
-              title="등록된 앨범이 없습니다"
-            >
-              <div class="discography-layout">
-                <ToggleGroup
-                  :key="mobile ? 'horizontal' : 'vertical'"
-                  type="single"
-                  :orientation="mobile ? 'horizontal' : 'vertical'"
-                  :model-value="albumSummary?.id"
-                  @update:model-value="
-                    (v) => {
-                      if (v) selectedAlbum = String(v)
-                    }
-                  "
-                  :spacing="2"
-                  variant="outline"
-                  class="album-grid"
-                  aria-label="앨범 선택"
-                >
-                  <ToggleGroupItem
-                    v-for="a in data.albums"
-                    :key="a.id"
-                    class="album-card"
-                    :value="a.id"
-                  >
-                    <AlbumCover :src="a.image_url" :title="a.name" />
-                    <div class="album-copy">
-                      <h3>{{ a.name }}</h3>
-                      <p>
-                        {{ a.release_date.slice(0, 4) }}
-                        <span>·</span>
-                        {{ ({ album: 'Album', single: 'Single', ep: 'EP', compilation: 'Compilation', other: 'Release' })[a.album_type] }}
-                      </p>
-                    </div>
-                  </ToggleGroupItem>
-                </ToggleGroup>
-                <ResourceState :loading="tracksLoading" :error="tracksError" @retry="reloadTracks">
-                  <section v-if="album" class="track-section">
-                    <div class="section-heading">
-                      <div>
-                        <h2>{{ album.name }}</h2>
-                        <p>{{ formatDate(album.release_date) }} · {{ album.tracks.length }}곡</p>
-                      </div>
-                      <Button v-if="album.source_url" as-child variant="outline" size="sm">
-                        <a :href="album.source_url" target="_blank" rel="noopener noreferrer">
-                          공식 릴리스
-                          <ArrowUpRight data-icon="inline-end" />
-                        </a>
-                      </Button>
-                    </div>
-                    <div v-for="(track, index) in album.tracks" :key="track.id" class="track-row">
-                      <span class="track-number">{{ String(index + 1).padStart(2, '0') }}</span>
-                      <div>
-                        <h3>{{ displayName(track.title, track.title_ko) }}</h3>
-                        <p>{{ displayName(data.artist.name, data.artist.display_name) }}</p>
-                      </div>
-                      <span class="track-duration">{{ track.duration }}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        :disabled="!track.has_lyrics"
-                        @click="
-                          openOverlay(router, route, 'lyrics', track.lyrics_id ?? track.song_id ?? Number(track.id))
-                        "
-                      >
-                        <FileText data-icon="inline-start" />
-                        {{ track.has_lyrics ? '가사' : '가사 없음' }}
-                      </Button>
-                    </div>
-                  </section>
-                </ResourceState>
-              </div>
-            </ResourceState>
+            <ArtistDiscography :artist="data.artist" :artist-id="Number(id)" />
           </TabsContent>
           <TabsContent value="concerts" class="pt-4 min-[769px]:pt-6">
             <ResourceState

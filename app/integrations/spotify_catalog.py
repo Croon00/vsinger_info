@@ -16,6 +16,8 @@ ISRC = r'^[A-Z]{2}[A-Z0-9]{3}[0-9]{7}$'
 # JP returns Japanese releases under their original titles; KR/US localize some of them to
 # romanized or English names (空想線 -> Kuusousen), which would break original-title storage.
 MARKET = 'JP'
+# Listing order for one account: each group is paged to its end before the next starts.
+ALBUM_GROUPS = ('album', 'single', 'appears_on', 'compilation')
 
 
 def normalize_isrc(value) -> str | None:
@@ -41,6 +43,8 @@ class SpotifyTrack(BaseModel):
     track_number: int = Field(ge=1)
     duration_ms: int | None = Field(default=None, ge=0)
     isrc: str | None = Field(default=None, pattern=ISRC)
+    # Spotify's own credit names, parallel to artist_ids; stored as provider evidence.
+    artist_names: list[str] = Field(default_factory=list)
     raw: dict
 
 
@@ -67,6 +71,12 @@ def _ids(artists) -> list[str]:
     return result
 
 
+def _names(artists) -> list[str]:
+    """Credit names as Spotify lists them; a blank name falls back to the artist ID."""
+    return [name.strip() if isinstance(name := artist.get('name'), str) and name.strip() else artist['id']
+            for artist in artists]
+
+
 def album_from_api(raw: dict, track_items: list[dict]) -> SpotifyAlbum:
     """Reject incomplete batches rather than silently persist a partial album."""
     if not isinstance(raw, dict) or not isinstance(track_items, list):
@@ -91,6 +101,7 @@ def album_from_api(raw: dict, track_items: list[dict]) -> SpotifyAlbum:
     if cover is not None and (not isinstance(cover, str) or not cover.startswith('https://')):
         cover = None
     tracks = [SpotifyTrack(id=item['id'], title=item['name'], artist_ids=_ids(item['artists']),
+                           artist_names=_names(item['artists']),
                            disc_number=item['disc_number'], track_number=item['track_number'],
                            duration_ms=item.get('duration_ms'), raw=item) for item in track_items]
     if not isinstance(raw.get('name'), str) or not raw['name'].strip() or any(not track.title.strip() for track in tracks):
@@ -161,15 +172,24 @@ class SpotifyCatalogClient:
         return await self._request('GET', 'https://api.spotify.com/v1' + path,
                                    headers={'Authorization': 'Bearer ' + token}, params=params)
 
-    async def albums_page(self, artist_id: str, *, offset: int) -> tuple[list[dict], bool]:
-        data = await self.get(f'/artists/{artist_id}/albums', params={'include_groups': 'album,single,appears_on,compilation',
+    async def albums_page(self, artist_id: str, *, offset: int, group: str) -> tuple[list[dict], bool, int | None]:
+        """One listing page of a single album group, with the listing's reported total.
+
+        Groups are listed one at a time: with all four groups in one request Spotify
+        stopped at offset 30 of total 38 for HACHI (2026-09-29) with an empty page and no
+        ``next``, dropping the tail where appears_on releases sit.
+        """
+        if group not in ALBUM_GROUPS:
+            raise ValueError('unknown album group')
+        data = await self.get(f'/artists/{artist_id}/albums', params={'include_groups': group,
                           'market': MARKET, 'limit': 10, 'offset': offset})
         items = data.get('items')
         if not isinstance(items, list) or any(not isinstance(item, dict) for item in items):
             raise SpotifyFailure('malformed_albums')
         if data.get('next') and not items:
             raise SpotifyFailure('incomplete_album_page')
-        return items, bool(data.get('next'))
+        total = data.get('total')
+        return items, bool(data.get('next')), total if isinstance(total, int) and total >= 0 else None
 
     async def credited_albums(self, artist_id: str, *, max_offset: int = 200) -> list[str]:
         """Album IDs credited to this exact artist ID, found through search and top tracks.

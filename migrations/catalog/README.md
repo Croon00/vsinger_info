@@ -70,6 +70,7 @@
 - revision 003(2026-09-27 운영 DB 적용, `--verify` 통과): latin 이름·제목은 출력 가능 ASCII만 허용. 001 스냅샷(`expected-schema.json`)은 이 제약을 제외하고 비교하며 `--verify`가 별도로 존재를 확인한다. 앱 revision 검사는 001-002와 001-003을 모두 허용한다.
 - revision 004(2026-09-27 운영 DB 적용, `--verify` 통과): 곡 식별 4개 표. 외부 ID provider별 형식, 같은 외부 ID의 중복 연결 금지, 판정 상태와 song_id·판정자의 일치, 병합 기록 불변. 앱 revision 검사는 001-002부터 001-004까지 허용한다.
 - revision 005(미적용, 2026-09-28 작성): ISRC 허용. 001 스냅샷 비교는 교체된 `recording_external_ids_platform_check1`과 새 CHECK 2개를 빼고 하며, `--verify`는 005 적용 여부에 맞춰 옛 CHECK가 없고 새 CHECK가 있는지 따로 확인한다. 운영 DB의 `recording_external_ids`는 작성 시점 0행이다(읽기 전용 확인). 앱 revision 검사는 001-005까지 허용하므로 코드 배포 → `--apply` 순서면 멈추지 않는다.
+- revision 006(미적용, 2026-09-29 작성): `recording_provider_credits` 표 추가. Spotify 트랙 ID별 provider 명의(순번·Spotify 아티스트 ID·이름)를 원문 증거로 저장하고, `recording_external_ids`(platform, external_id)가 지워지면 CASCADE로 함께 지워진다. 기존 표·열은 바꾸지 않는다. 열 계약은 `provider-credit-columns.json`, `--verify`는 `provider_credit_tables`로 확인한다. 앱 revision 검사는 001-006까지 허용하고, 표가 없으면 수집은 명의 저장만 건너뛰며 조회는 등록 녹음 명의로 대신한다.
 - 부모 자료 참조 보호. 명시적으로 소유된 연결 행만 부모 삭제 시 CASCADE.
 
 정확한 규칙은 SQL과 로컬 테스트가 기준이다. 일반 FK·CHECK로 다른 행의 의미까지 모두 검증한다고 해석하지 않는다.

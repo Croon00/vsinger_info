@@ -77,9 +77,19 @@ def main() -> int:
             (SELECT count(*) FROM recordings WHERE song_id IS NOT NULL) AS with_song""").fetchone()
         joined = conn.execute("""SELECT count(*) AS n FROM (SELECT recording_id FROM recording_external_ids
             WHERE platform='spotify' GROUP BY 1 HAVING count(*) > 1) x""").fetchone()["n"]
+        credits = None
+        if conn.execute("SELECT to_regclass('public.recording_provider_credits') AS t").fetchone()["t"] is not None:
+            credits = conn.execute("""SELECT count(*) AS spotify_tracks,
+                count(*) FILTER (WHERE EXISTS (SELECT 1 FROM recording_provider_credits c
+                    WHERE c.platform='spotify' AND c.track_id=x.external_id)) AS with_provider_credits
+                FROM recording_external_ids x WHERE x.platform='spotify'""").fetchone()
     actions = Counter()
     review = []
+    shortfalls = []
     for r in receipts:
+        listing = r["result_summary"].get("listing") or {}
+        if listing.get("shortfall"):
+            shortfalls.append({"account_id": r["result_summary"].get("account_id"), **listing})
         for a in r["result_summary"].get("actions", []):
             actions[a["status"]] += 1
             if a["status"] in REVIEW_ACTIONS:
@@ -103,6 +113,8 @@ def main() -> int:
     result = {"jobs": dict(states), "finished": not (states["pending"] or states["running"] or states["retry"]),
               "failed_jobs": failed, "totals": dict(totals), "recordings_joined_by_isrc": joined,
               "actions": dict(actions), "review_actions": len(review),
+              "provider_credits": dict(credits) if credits else None,
+              "listing_shortfalls": [dict(s, artist=by_account.get(s["account_id"], {}).get("name_native")) for s in shortfalls],
               "accounts_without_recordings": [r["artist"] for r in empty],
               "accounts_with_no_own_title_match": [{k: r[k] for k in ("artist", "spotify_id", "recordings", "sample_titles")}
                                                    for r in unmatched]}

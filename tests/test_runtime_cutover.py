@@ -16,6 +16,17 @@ async def _record(calls: list[str], name: str) -> None:
     calls.append(name)
 
 
+@pytest.fixture(autouse=True)
+def _no_live_site_monitor(monkeypatch):
+    # 로컬 .env가 모니터를 켜 두면 실제 사이트 조회 뒤 24시간 sleep으로 멈춘다.
+    monkeypatch.setattr(runtime.settings, "live_site_monitor_enabled", False)
+    monkeypatch.setattr(runtime, "live_site_loop", _unexpected_live_site_loop)
+
+
+async def _unexpected_live_site_loop() -> None:
+    raise AssertionError("live_site_loop must not run in runtime cutover tests")
+
+
 @pytest.mark.anyio
 async def test_runtime_starts_only_api_before_cutover(monkeypatch):
     calls: list[str] = []
