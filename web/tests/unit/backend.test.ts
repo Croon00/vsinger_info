@@ -83,6 +83,58 @@ describe('backend boundary mapping', () => {
 
 describe('real API requests', () => {
   beforeEach(() => vi.resetModules())
+  it('filters server song aliases while preserving song identity, title and rank', async () => {
+    const fetcher = vi.fn(async (path: string) => {
+      expect(path).toBe('/api/artists/42/statistics')
+      return json({
+        archives: 1,
+        archivesWithSetlist: 1,
+        performances: 3,
+        uniqueSongs: 2,
+        uniqueArtists: 1,
+        songs: [
+          {
+            key: 'song:1149',
+            title: '夜永唄',
+            titleKo: '긴 밤의 노래',
+            artist: 'Band',
+            searchText: '夜永唄 긴 밤의 노래 요나가우타 영원한 밤의 노래 Yonagauta',
+            count: 2,
+            rank: 1,
+            lastPerformedAt: null,
+          },
+          {
+            key: 'song:1150',
+            title: '夜永唄',
+            artist: 'Another Band',
+            searchText: '夜永唄 Another Band',
+            count: 1,
+            rank: 2,
+            lastPerformedAt: null,
+          },
+        ],
+        artists: [],
+        activity: [],
+      })
+    })
+    vi.stubGlobal('fetch', fetcher)
+    const { backendApi } = await import('@/api/backend')
+    const { filterAndSortSongs } = await import('@/lib/artist-statistics')
+    const stats = await backendApi.statistics(42)
+    for (const query of [
+      '요나가우타',
+      '나가',
+      '영원한 밤의 노래',
+      '영원한밤의노래',
+      'ＹＯＮＡＧＡＵＴＡ',
+    ]) {
+      const matches = filterAndSortSongs(stats.songs, query, 'most')
+      expect(matches).toHaveLength(1)
+      expect(matches[0]).toMatchObject({ key: 'song:1149', title: '夜永唄', count: 2, rank: 1 })
+    }
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(stats.performances).toBe(3)
+  })
   it('uses a single paged OR search and preserves unresolved singers', async () => {
     const calls: string[] = []
     vi.stubGlobal(

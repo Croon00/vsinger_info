@@ -52,6 +52,10 @@ SEARCH_CANDIDATES_SQL = f"""WITH matched_artists AS MATERIALIZED (
  UNION
  SELECT lower(btrim(al.alias)) FROM artist_aliases al
  JOIN matched_artists a ON a.id=al.artist_id
+), matched_song_aliases AS MATERIALIZED (
+ SELECT DISTINCT al.song_id FROM song_aliases al
+ JOIN songs s ON s.id=al.song_id AND s.archived_at IS NULL
+ WHERE al.alias ILIKE :query
 ), candidates AS MATERIALIZED (
  SELECT p.id,p.archive_id,p.ordinal,COALESCE(l.broadcast_at,v.published_at) broadcast_at
  FROM performances p JOIN live_archives l ON l.id=p.archive_id
@@ -59,6 +63,7 @@ SEARCH_CANDIDATES_SQL = f"""WITH matched_artists AS MATERIALIZED (
  LEFT JOIN songs s ON s.id=p.song_id AND s.archived_at IS NULL
  WHERE p.archived_at IS NULL AND {LIVE_VISIBLE} AND (
  concat_ws(' ',s.title_native,s.title_ko,s.title_latin,p.raw_title,p.raw_artist) ILIKE :query
+ OR s.id IN (SELECT song_id FROM matched_song_aliases)
  OR l.primary_artist_id IN (SELECT id FROM matched_artists)
  OR EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id
    AND pa.artist_id IN (SELECT id FROM matched_artists))
@@ -146,11 +151,20 @@ class CatalogReadRepository:
         {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}),
         entries AS (SELECT p.*,a.happened FROM ({PERFORMANCE_SQL}) p JOIN archives a ON a.id=p.archive_id
         WHERE EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id AND pa.artist_id=:artist))"""
-        songs = self.rows(cte+""" SELECT song_key,MIN(song_title) title,
+        # Attach aliases after grouping: repeated performances of a song do not
+        # each aggregate aliases, and archived songs using raw keys get none.
+        songs = self.rows(cte+""", grouped_songs AS (
+        SELECT song_key,MIN(song_title) title,
         MIN(NULLIF(btrim(song_title_ko),'')) title_ko,MIN(original_artist) artist,
         MIN(NULLIF(btrim(original_artist_ko),'')) artist_ko,
-        originals,COUNT(*) count,MAX(happened) last_date,string_agg(DISTINCT search_text,' ') search
-        FROM entries GROUP BY song_key,originals ORDER BY count DESC,song_key""",{"artist":artist_id})
+        originals,COUNT(*) count,MAX(happened) last_date,string_agg(DISTINCT search_text,' ') search,
+        MAX(song_id) FILTER (WHERE song_key='song:'||song_id::text) alias_song_id
+        FROM entries GROUP BY song_key,originals)
+        SELECT g.song_key,g.title,g.title_ko,g.artist,g.artist_ko,g.originals,g.count,g.last_date,
+        concat_ws(' ',g.search,al.aliases) search
+        FROM grouped_songs g LEFT JOIN LATERAL (
+          SELECT string_agg(alias,' ' ORDER BY id) aliases FROM song_aliases WHERE song_id=g.alias_song_id
+        ) al ON true ORDER BY g.count DESC,g.song_key""",{"artist":artist_id})
         months = self.rows(cte+""" SELECT count(*) total,count(*) FILTER(WHERE EXISTS
         (SELECT 1 FROM entries e WHERE e.archive_id=archives.id)) with_setlist,
         to_char(happened AT TIME ZONE 'Asia/Seoul','YYYY-MM') month_key,
