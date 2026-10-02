@@ -143,15 +143,39 @@ def test_both_sources_fail_without_removing_artist(store, images):
     images[1].assert_not_called()
 
 
-def test_upload_retry_preserves_provider_selection(store, images):
+def test_upload_retry_preserves_provider_selection(store, images, caplog):
     seed(store, both=False)
     images[1].side_effect = RuntimeError('storage credential secret')
     assert drain()[-1]['status'] == 'retry'
+    result = store.execute("SELECT result FROM avatar_jobs WHERE status='retry'").fetchone()[0]
+    assert result['source_url'] == 'https://image.test/youtube.png'
+    assert result['storage_error'] == {'stage': 'storage', 'code': 'storage_exception', 'error_type': 'RuntimeError'}
+    assert 'Avatar storage failed' in caplog.text and 'storage_exception' in caplog.text
+    assert 'storage credential secret' not in str(result) + caplog.text
     due(store)
     images[1].side_effect = lambda prefix, *args: 'https://storage.test/' + prefix + '/512.webp'
     images[0].side_effect = AssertionError('Provider should not be called again')
     assert 'succeeded' in [r['status'] for r in drain()]
     assert images[0].await_count == 1
+    assert 'storage_error' not in store.execute("SELECT result FROM avatar_jobs WHERE status='succeeded'").fetchone()[0]
+
+
+def test_detailed_storage_error_is_persisted_through_retry_exhaustion(store, images, caplog):
+    artist, _ = seed(store, both=False)
+    details = {'stage': 'upload_original', 'object_name': 'original', 'code': 's3_error',
+               'error_type': 'ClientError', 'provider_code': 'SignatureDoesNotMatch', 'http_status': 403}
+    images[1].side_effect = service.avatar_storage.AvatarStorageError(details)
+    assert drain()[-1]['status'] == 'retry'
+    store.execute("UPDATE avatar_jobs SET attempt_count=max_attempts-1 WHERE status='retry'")
+    store.commit()
+    due(store)
+    assert 'failed' in [r['status'] for r in drain()]
+    status, error, result = store.execute('SELECT status,last_error,result FROM avatar_jobs').fetchone()
+    assert status == 'failed' and error == 'avatar_storage_failed'
+    assert result['storage_error'] == details
+    assert 'SignatureDoesNotMatch' in caplog.text and 'upload_original' in caplog.text
+    assert images[0].await_count == 1
+    assert store.execute('SELECT avatar_url FROM artists WHERE id=%s', (artist,)).fetchone() == (None,)
 
 
 def test_manual_change_during_upload_is_preserved(store, images):

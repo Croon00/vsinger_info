@@ -98,8 +98,12 @@ async def _process(job):
     result = {**candidate.model_dump(), 'prefix': prefix, 'failures': failures}
     try:
         new_url = await asyncio.to_thread(avatar_storage.upload, prefix, data, generated)
-    except Exception:
+    except Exception as exc:
         # Upload failure never changes provider preference or the artist's image.
+        error = avatar_storage.storage_error(exc, stage='storage')
+        result['storage_error'] = error.details
+        logger.warning('Avatar storage failed: job_id=%s artist_id=%s attempt=%s error=%s',
+                       job['id'], job['artist_id'], job['attempt_count'], error.details)
         return await db_call(repository.fail, job, code='avatar_storage_failed', retry=True, result=result)
     result['new_url'] = new_url
     return await db_call(repository.finish, job, 'succeeded', result)

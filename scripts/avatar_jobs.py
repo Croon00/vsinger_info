@@ -2,6 +2,7 @@
 import argparse
 import asyncio
 import json
+import logging
 from pathlib import Path
 import sys
 
@@ -15,6 +16,8 @@ from app.services.avatar_jobs import run_once, avatar_worker_loop
 
 def execute(args):
     if args.action in ('run-once', 'worker'):
+        logging.basicConfig(level=logging.WARNING, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
+        logging.getLogger('app.services.avatar_jobs').setLevel(logging.INFO)
         return asyncio.run(run_once() if args.action == 'run-once' else avatar_worker_loop())
     with Session(catalog_engine(catalog_url())) as session:
         if not args.apply:

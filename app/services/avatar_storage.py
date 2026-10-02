@@ -2,12 +2,14 @@
 from hashlib import sha256
 from io import BytesIO
 import ipaddress
+import re
 import socket
 from urllib.parse import urljoin, urlsplit
 import warnings
 
 import boto3
 from botocore.config import Config
+from botocore.exceptions import ClientError
 import httpx
 from PIL import Image, ImageOps
 
@@ -15,6 +17,57 @@ from app.services.avatar_assets import SIZES, CACHE_CONTROL, storage_settings, p
 
 Image.MAX_IMAGE_PIXELS = 40_000_000
 MAX_BYTES = 20 * 1024 * 1024
+
+# SDK messages and request URLs can contain credentials. Keep only known codes
+# and structural metadata, never exception messages, response bodies or headers.
+S3_ERROR_CODES = {
+    'AccessDenied', 'AuthorizationHeaderMalformed', 'BadDigest', 'EntityTooLarge',
+    'ExpiredToken', 'IncompleteBody', 'InternalError', 'InvalidAccessKeyId',
+    'InvalidArgument', 'InvalidDigest', 'InvalidRequest', 'InvalidToken',
+    'NoSuchBucket', 'NoSuchKey', 'NotImplemented', 'RequestTimeout',
+    'RequestTimeTooSkewed', 'ServiceUnavailable', 'SignatureDoesNotMatch', 'SlowDown',
+    'Throttling', 'ThrottlingException', 'TooManyRequests',
+}
+VALIDATION_ERRORS = {
+    'missing_storage_configuration', 'bucket_requires_public_read',
+    'public_content_mismatch', 'cache_control_mismatch',
+}
+
+
+class AvatarStorageError(ValueError):
+    """Safe diagnostic that remains compatible with the explicit migration CLI."""
+
+    def __init__(self, details):
+        self.details = details
+        super().__init__(details['code'])
+
+
+def storage_error(exc, *, stage, object_name=None):
+    if isinstance(exc, AvatarStorageError):
+        return exc
+    name = type(exc).__name__
+    details = {'stage': stage, 'code': 'storage_exception',
+               'error_type': name if re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]{0,79}', name) else 'Exception'}
+    if object_name is not None:
+        details['object_name'] = object_name
+    if isinstance(exc, ClientError):
+        details['code'] = 's3_error'
+        provider_code = exc.response.get('Error', {}).get('Code')
+        details['provider_code'] = provider_code if provider_code in S3_ERROR_CODES else 'unrecognized'
+        status = exc.response.get('ResponseMetadata', {}).get('HTTPStatusCode')
+        if isinstance(status, int) and 100 <= status <= 599:
+            details['http_status'] = status
+    elif isinstance(exc, httpx.HTTPStatusError):
+        details.update(code='public_http_error', http_status=exc.response.status_code)
+    elif isinstance(exc, (httpx.TimeoutException, TimeoutError)):
+        details['code'] = 'storage_timeout'
+    elif isinstance(exc, httpx.RequestError):
+        details['code'] = 'storage_connection_error'
+    elif isinstance(exc, ValueError) and len(exc.args) == 1 and isinstance(exc.args[0], str) and exc.args[0] in VALIDATION_ERRORS:
+        details['code'] = exc.args[0]
+        if exc.args[0] == 'bucket_requires_public_read':
+            details['http_status'] = 403
+    return AvatarStorageError(details)
 
 
 def public_url(url):
@@ -85,19 +138,31 @@ def storage():
 
 def upload(prefix, data, generated, *, client=None, bucket=None):
     if client is None:
-        client, bucket = storage()
+        try:
+            client, bucket = storage()
+        except Exception as exc:
+            raise storage_error(exc, stage='storage_config') from None
     for filename, content in [('original', data), *((f'{s}.webp', generated[s]) for s in SIZES)]:
-        client.put_object(Bucket=bucket, Key=f'{prefix}/{filename}', Body=content,
-            ContentType='image/webp' if filename.endswith('.webp') else 'application/octet-stream',
-            CacheControl=CACHE_CONTROL)
-    with httpx.Client(timeout=20) as http:
-        for size in SIZES:
-            response = http.get(public_base() + prefix + f'/{size}.webp')
-            if response.status_code == 403:
-                raise ValueError('bucket_requires_public_read')
-            response.raise_for_status()
-            if response.content != generated[size]:
-                raise ValueError('public_content_mismatch')
-            if response.headers.get('cache-control') != CACHE_CONTROL:
-                raise ValueError('cache_control_mismatch')
+        try:
+            client.put_object(Bucket=bucket, Key=f'{prefix}/{filename}', Body=content,
+                ContentType='image/webp' if filename.endswith('.webp') else 'application/octet-stream',
+                CacheControl=CACHE_CONTROL)
+        except Exception as exc:
+            raise storage_error(exc, stage='upload_original' if filename == 'original' else 'upload_variant',
+                                object_name=filename) from None
+    filename = None
+    try:
+        with httpx.Client(timeout=20) as http:
+            for size in SIZES:
+                filename = f'{size}.webp'
+                response = http.get(public_base() + prefix + '/' + filename)
+                if response.status_code == 403:
+                    raise ValueError('bucket_requires_public_read')
+                response.raise_for_status()
+                if response.content != generated[size]:
+                    raise ValueError('public_content_mismatch')
+                if response.headers.get('cache-control') != CACHE_CONTROL:
+                    raise ValueError('cache_control_mismatch')
+    except Exception as exc:
+        raise storage_error(exc, stage='verify_public', object_name=filename) from None
     return public_base() + prefix + '/512.webp'
