@@ -83,6 +83,58 @@ describe('backend boundary mapping', () => {
 
 describe('real API requests', () => {
   beforeEach(() => vi.resetModules())
+  it('filters server song aliases while preserving song identity, title and rank', async () => {
+    const fetcher = vi.fn(async (path: string) => {
+      expect(path).toBe('/api/artists/42/statistics')
+      return json({
+        archives: 1,
+        archivesWithSetlist: 1,
+        performances: 3,
+        uniqueSongs: 2,
+        uniqueArtists: 1,
+        songs: [
+          {
+            key: 'song:1149',
+            title: '夜永唄',
+            titleKo: '긴 밤의 노래',
+            artist: 'Band',
+            searchText: '夜永唄 긴 밤의 노래 요나가우타 영원한 밤의 노래 Yonagauta',
+            count: 2,
+            rank: 1,
+            lastPerformedAt: null,
+          },
+          {
+            key: 'song:1150',
+            title: '夜永唄',
+            artist: 'Another Band',
+            searchText: '夜永唄 Another Band',
+            count: 1,
+            rank: 2,
+            lastPerformedAt: null,
+          },
+        ],
+        artists: [],
+        activity: [],
+      })
+    })
+    vi.stubGlobal('fetch', fetcher)
+    const { backendApi } = await import('@/api/backend')
+    const { filterAndSortSongs } = await import('@/lib/artist-statistics')
+    const stats = await backendApi.statistics(42)
+    for (const query of [
+      '요나가우타',
+      '나가',
+      '영원한 밤의 노래',
+      '영원한밤의노래',
+      'ＹＯＮＡＧＡＵＴＡ',
+    ]) {
+      const matches = filterAndSortSongs(stats.songs, query, 'most')
+      expect(matches).toHaveLength(1)
+      expect(matches[0]).toMatchObject({ key: 'song:1149', title: '夜永唄', count: 2, rank: 1 })
+    }
+    expect(fetcher).toHaveBeenCalledTimes(1)
+    expect(stats.performances).toBe(3)
+  })
   it('uses a single paged OR search and preserves unresolved singers', async () => {
     const calls: string[] = []
     vi.stubGlobal(
@@ -157,14 +209,47 @@ describe('real API requests', () => {
       expect(path).toBe('/api/albums/15')
       return json({ id: '15', name: 'Release', album_type: 'ep', total_tracks: 1,
         tracks: [{ id: '21', recording_id: 37, song_id: 987, has_lyrics: true,
-          name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000 }] })
+          name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000,
+          artists: [{ artist_id: 42, name: 'Singer', name_ko: '가수' }, { artist_id: null, name: 'Guest' }] }] })
     })
     vi.stubGlobal('fetch', fetcher)
     const { backendApi } = await import('@/api/backend')
     const album = await backendApi.album('15', 42)
     expect(album.album_type).toBe('ep')
-    expect(album.tracks[0]).toMatchObject({ id: '21', song_id: 987, lyrics_id: 37, has_lyrics: true, duration: '02:03' })
+    expect(album.is_primary).toBeUndefined()
+    expect(album.tracks[0]).toMatchObject({
+      id: '21',
+      song_id: 987,
+      lyrics_id: 37,
+      has_lyrics: true,
+      duration: '2:03',
+      duration_ms: 123000,
+      disc_number: 1,
+      track_number: 1,
+    })
+    expect(album.tracks[0].artists).toEqual([
+      { id: 42, name: 'Singer', name_ko: '가수' },
+      { id: undefined, name: 'Guest', name_ko: '' },
+    ])
     expect(fetcher).toHaveBeenCalledTimes(1)
+  })
+  it('keeps own and appears-on releases apart in the artist listing', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (path: string) => {
+        expect(path).toBe('/api/artists/42/albums')
+        return json([
+          { id: '15', name: 'Own', album_type: 'single', total_tracks: 1, is_primary: true },
+          { id: '16', name: 'Guest', album_type: 'compilation', total_tracks: 2, is_primary: false },
+        ])
+      }),
+    )
+    const { backendApi } = await import('@/api/backend')
+    const albums = await backendApi.albums(42)
+    expect(albums.map((a) => [a.id, a.is_primary, a.tracks_loaded])).toEqual([
+      ['15', true, false],
+      ['16', false, false],
+    ])
   })
   it('distinguishes missing Spotify linkage, authentication and HTML fallback', async () => {
     const { request } = await import('@/api/http')

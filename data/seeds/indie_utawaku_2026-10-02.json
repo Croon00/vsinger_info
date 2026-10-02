@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "figaro",
+    "name_native": "Figaro",
+    "name_ko": "피가로",
+    "name_latin": null,
+    "handle": "Figaro_qpt",
+    "channel_id": "UC7CtvN04ublW4LGTPksG6mg",
+    "channel_url": "https://www.youtube.com/@Figaro_qpt",
+    "backfill_video_ids": ["5aL33GFt4Gw", "OdiryBMgNlM", "J2o19mNnURo", "T6qq-GGFS6A", "NqN7EHHEdFo"]
+  },
+  {
+    "slug": "shin-vsinger",
+    "name_native": "shin",
+    "name_ko": "SHIN",
+    "name_latin": null,
+    "handle": "shingames7857",
+    "channel_id": "UC5zO6IFsWSUHMYgJMv81XKg",
+    "channel_url": "https://www.youtube.com/@shingames7857",
+    "backfill_video_ids": ["626WcOIYWcs", "QoQNx0EFCT8", "2iGWkPvq70Y", "BTr5v3JlkSs", "lryCJbsim14"]
+  },
+  {
+    "slug": "otodama-hibiku",
+    "name_native": "音魂ヒビク",
+    "name_ko": "히비쿠",
+    "name_latin": "Otodama Hibiku",
+    "handle": "otodama_hibiku",
+    "channel_id": "UCGKNbtDv8OTa8559buDu-Gw",
+    "channel_url": "https://www.youtube.com/@otodama_hibiku",
+    "backfill_video_ids": ["hlG1hadohIc", "zB3hamYVsb8", "feebYyD5KM0", "zchN5OpcUfY", "rNK7U510EEk"]
+  }
+]

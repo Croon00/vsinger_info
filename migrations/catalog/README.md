@@ -1,6 +1,6 @@
 # 새 카탈로그 DB 마이그레이션
 
-최초 적용일: 2026-09-19. 운영 schema 적용일: 2026-09-21. 현재 revision은 `002`, 계약 버전은 `catalog-v2`다. 사용자 지정 Neon PostgreSQL 18.6에 실제 적용하고 별도 연결에서 읽기 전용 검증했다.
+최초 적용일: 2026-09-19. 최초 운영 schema 적용일: 2026-09-21(`002`). 계약 버전은 `catalog-v2`다. 아래 최초 적용 결과는 당시 기록이다. 코드의 최신 revision은 `007`(2026-10-02 초기 이미지 큐)이며, 007의 운영 DB 적용은 아직 확인하지 않았다.
 
 ## 적용 결과
 
@@ -25,6 +25,8 @@
 | 004_song_identity.sql | 곡 별칭·외부 ID·원문 키 판정·병합 기록 4개 표 추가. 기존 표·컬럼 변경 없음 |
 | song-identity-columns.json | 004가 추가한 4개 표의 필드·타입·NULL 계약. runner는 revision별로 계약 파일을 합쳐 검증 |
 | 005_recording_isrc.sql | `recording_external_ids.platform`에 `isrc` 허용. 001의 허용 CHECK를 새 이름으로 교체하고 platform별 ID 형식 CHECK 추가. 표·컬럼 변경 없음 |
+| 006_recording_provider_credits.sql | Spotify 트랙별 제공자 명의 저장 |
+| 007_avatar_jobs.sql / avatar-job-columns.json | 초기 이미지 큐 1개 표·예약 함수·아티스트/계정/소유 관계 trigger. 기존 아티스트 일괄 작업 생성이나 외부 조회 없음 |
 | columns.json | 31개 표의 필드·타입·NULL 계약 |
 | runtime-columns.json | 10개 운영 표의 필드·타입·NULL 계약 |
 | expected-schema.json | 로컬 PostgreSQL에서 검증한 컬럼·제약·인덱스·트리거·함수 정의 |
@@ -70,6 +72,7 @@
 - revision 003(2026-09-27 운영 DB 적용, `--verify` 통과): latin 이름·제목은 출력 가능 ASCII만 허용. 001 스냅샷(`expected-schema.json`)은 이 제약을 제외하고 비교하며 `--verify`가 별도로 존재를 확인한다. 앱 revision 검사는 001-002와 001-003을 모두 허용한다.
 - revision 004(2026-09-27 운영 DB 적용, `--verify` 통과): 곡 식별 4개 표. 외부 ID provider별 형식, 같은 외부 ID의 중복 연결 금지, 판정 상태와 song_id·판정자의 일치, 병합 기록 불변. 앱 revision 검사는 001-002부터 001-004까지 허용한다.
 - revision 005(미적용, 2026-09-28 작성): ISRC 허용. 001 스냅샷 비교는 교체된 `recording_external_ids_platform_check1`과 새 CHECK 2개를 빼고 하며, `--verify`는 005 적용 여부에 맞춰 옛 CHECK가 없고 새 CHECK가 있는지 따로 확인한다. 운영 DB의 `recording_external_ids`는 작성 시점 0행이다(읽기 전용 확인). 앱 revision 검사는 001-005까지 허용하므로 코드 배포 → `--apply` 순서면 멈추지 않는다.
+- revision 006(미적용, 2026-09-29 작성): `recording_provider_credits` 표 추가. Spotify 트랙 ID별 provider 명의(순번·Spotify 아티스트 ID·이름)를 원문 증거로 저장하고, `recording_external_ids`(platform, external_id)가 지워지면 CASCADE로 함께 지워진다. 기존 표·열은 바꾸지 않는다. 열 계약은 `provider-credit-columns.json`, `--verify`는 `provider_credit_tables`로 확인한다. 앱 revision 검사는 001-006까지 허용하고, 표가 없으면 수집은 명의 저장만 건너뛰며 조회는 등록 녹음 명의로 대신한다.
 - 부모 자료 참조 보호. 명시적으로 소유된 연결 행만 부모 삭제 시 CASCADE.
 
 정확한 규칙은 SQL과 로컬 테스트가 기준이다. 일반 FK·CHECK로 다른 행의 의미까지 모두 검증한다고 해석하지 않는다.

@@ -16,7 +16,7 @@ defineProps<{
   empty?: boolean
   title?: string
   description?: string
-  loadingLayout?: 'artists' | 'favorites'
+  loadingLayout?: 'artists' | 'favorites' | 'releases'
 }>()
 defineEmits<{ retry: [] }>()
 </script>
@@ -42,6 +42,13 @@ defineEmits<{ retry: [] }>()
             <Skeleton class="h-3 w-1/2" />
           </div>
         </div>
+      </div>
+    </div>
+    <div v-else-if="loadingLayout === 'releases'" class="release-grid" aria-hidden="true">
+      <div v-for="n in 8" :key="n" class="release-skeleton">
+        <Skeleton class="aspect-square w-full rounded-xl" />
+        <Skeleton class="h-4 w-3/4" />
+        <Skeleton class="h-3 w-1/2" />
       </div>
     </div>
     <div v-else class="flex flex-col gap-6 py-4" aria-hidden="true">

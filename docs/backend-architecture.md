@@ -27,6 +27,7 @@ runtime → API + Discord bot + 선택적 X/Discord scheduler + 독립 음악 wo
 | `app/repositories/runtime_delivery.py` | X account/state lease, 원문·delivery 원자 저장, 전송 상태 SQL |
 | `app/services/x_collection.py` | external_accounts 기반 pagination과 계정별 실패 격리 |
 | `app/services/music_jobs.py`, `app/repositories/worker_jobs.py` | 독립 음악 작업 계약·선점·재시도·heartbeat·원자 결과 저장. YouTube·Spotify handler 연결 |
+| `app/services/avatar_jobs.py`, `app/repositories/avatar_jobs.py` | revision 007의 등록 후 초기 이미지 큐·독립 worker. YouTube → X 조회 후 검증된 저장소 URL 반영 |
 | `scripts/music_jobs.py`, `/ready` | 로컬 작업 실행 경계와 읽기 전용 준비 상태. admin-web·관리 HTTP API 없음 |
 | `app/services/notification_delivery.py` | offline·retry·failed·unknown을 포함한 durable 전송 상태 전이 |
 | `app/core/config.py` | 루트 `.env`/환경변수의 단일 신규 DB 설정. 이전 변수명 충돌 시 거부 |
@@ -53,6 +54,8 @@ X 분류·공연/티켓 추출 workflow와 `music_graph.py`는 제거했다. X �
 
 독립 YouTube 수집은 `music_jobs` → `services/youtube_collection.py` → `integrations/youtube_catalog.py` → `repositories/youtube_collection.py`로 실행한다. 신규 활성 계정의 채널 감시, 완료 라이브의 종료 후 24시간 대기, 세트리스트 원문/가창과 커버 저장을 지원한다. X scheduler와 공개 API는 이를 실행하지 않는다. [보완 2단계](backend-service-step-2-jobs.md)에서 worker_jobs 실행기와 로컬 명령·/ready를 구현했다. YouTube handler 2개와 등록 Spotify 계정 handler 1개를 연결했다. 첫 채널 조회는 과거 자동 수집을 막는 기준선을 만든다. 댓글 대기와 기존 빈 아카이브의 재개는 [보완 5단계](backend-service-step-5-migration.md)에서 이전 작업으로 연결했다. 기존 가창은 덮어쓰지 않고 변경 후보를 보존한다. Spotify 수집은 `services/spotify_collection.py` → `integrations/spotify_catalog.py` → `repositories/spotify_collection.py`로 처리하며 [보완 4단계 결과](backend-service-step-4-spotify.md)에 등록 계정·크레딧·보존 규칙을 기록한다. admin-web은 의존하지 않으며 노래방·가사·번역·독음은 후속 TODO다.
 
+아티스트 초기 이미지는 DB `owner` 관계 저장 → `avatar_jobs` → 이미지 worker → YouTube/X 프로필 조회 → 저장소 업로드/공개 검증 → `artists.avatar_url`과 감사 이력 반영으로 처리한다. 수집 활성화와 별개이며 기존 이미지를 교체하지 않는다. 조회 API·X 게시글 처리에서는 시작하지 않는다. 실행·실패·재시도 계약은 [프로필 이미지 저장](avatar-storage.md)에 둔다.
+
 ## Discord 사용
 
 Discord 봇에는 slash command, interaction, command tree가 없다. 아티스트·source·route·YouTube·Spotify·가사·Google 관리를 제공하지 않는다. 이미 신규 DB에 설정된 활성 route의 channel로 X `source_url` 한 줄만 보낸다. route가 없으면 원문만 저장하고 delivery를 만들지 않는다. 원격 Discord 애플리케이션에 과거 command가 남아 있다면 6단계 배포 검증에서 제거한다.
@@ -73,7 +76,8 @@ Discord 봇에는 slash command, interaction, command tree가 없다. 아티스�
 | `YOUTUBE_API_KEY` | YouTube 수집 |
 | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | Spotify 조회·매칭 |
 | `OPENAI_API_KEY`, `OPENAI_MODEL` | YouTube 댓글 세트리스트의 선택적 추출. 없으면 규칙 추출 |
-| `AWS_ENDPOINT_URL_S3`, `AVATAR_BUCKET` | 이미지 URL 생성. access key는 업로드 도구만 사용 |
+| `AWS_ENDPOINT_URL_S3`, `AVATAR_BUCKET` | 이미지 URL 생성. access key는 이미지 worker·업로드 도구만 사용 |
+| `AVATAR_WORKER_ENABLED` | 기본 true. cutover와 agent 활성 시 독립 초기 이미지 worker 실행. 007 미적용 시 대기 |
 | `PORT` | runtime API 포트, 기본 8000 |
 
 `.env.example`은 운영 전환 전 실수로 외부 작업을 시작하지 않도록 `RUNTIME_CUTOVER_ENABLED=false`, `AGENT_ENABLED=false`다. 첫 값이 false이면 `python -m app.runtime`도 API만 실행하며 Discord에 연결하거나 X를 수집하지 않는다. 외부 연동 설정이 존재하는 것과 그 기능이 현재 실행 경로에 연결되어 있는 것은 별개다.

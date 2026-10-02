@@ -20,7 +20,7 @@ import type {
 } from './backend-types'
 import { cachedRead } from './read-cache'
 import { normalize } from '@/lib/search'
-import { formatTime } from '@/lib/dates'
+import { formatTrackLength } from '@/lib/dates'
 
 export function safeUrl(value?: string | null) {
   try {
@@ -166,6 +166,7 @@ function mapAlbum(row: BackendAlbum, artistId: number): Album {
     image_url: safeUrl(row.image_url),
     source_url: safeUrl(row.spotify_url),
     total_tracks: row.total_tracks,
+    is_primary: row.is_primary ?? undefined,
     tracks: [],
     tracks_loaded: false,
     is_sample: false,
@@ -230,8 +231,16 @@ export const backendApi = {
           lyrics_id: t.recording_id,
           title: t.name,
           title_ko: t.name_ko ?? '',
-          duration: t.duration_ms ? formatTime(t.duration_ms / 1000) : '',
+          duration: t.duration_ms ? formatTrackLength(t.duration_ms) : '',
+          duration_ms: t.duration_ms ?? undefined,
+          disc_number: t.disc_number,
+          track_number: t.track_number,
           has_lyrics: t.has_lyrics,
+          artists: (t.artists ?? []).map((a) => ({
+            id: a.artist_id ?? undefined,
+            name: a.name,
+            name_ko: a.name_ko ?? '',
+          })),
         }
       }),
     }

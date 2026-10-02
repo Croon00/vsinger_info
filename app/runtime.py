@@ -12,6 +12,7 @@ from app.api.main import app
 from app.bots.discord_bot import start_discord_bot
 from app.core.config import settings
 from app.services.music_jobs import music_worker_loop
+from app.services.avatar_jobs import avatar_worker_loop
 
 
 async def _serve_api() -> None:
@@ -34,6 +35,8 @@ async def main() -> None:
         if settings.agent_enabled:
             tasks.append(agent_loop())
             tasks.append(music_worker_loop())
+            if settings.avatar_worker_enabled:
+                tasks.append(avatar_worker_loop())
         else:
             logging.info("Agent loop is disabled by AGENT_ENABLED=false.")
     else:

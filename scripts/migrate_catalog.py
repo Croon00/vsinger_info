@@ -17,6 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 MIGRATIONS = ROOT / "migrations" / "catalog"
 REVISION_TABLE = "catalog_schema_migrations"
 LOCK_ID = 731064921
+AVATAR_FUNCTIONS = {'avatar_sources', 'avatar_enqueue', 'avatar_artist_changed',
+                    'avatar_link_changed', 'avatar_account_changed'}
+AVATAR_TRIGGERS = {('artists', 'avatar_artist_enqueue'),
+                   ('artist_external_accounts', 'avatar_link_enqueue'),
+                   ('external_accounts', 'avatar_account_enqueue')}
 # CHECK constraints that later revisions add to revision-001 tables. The 001
 # snapshot predates them, so base comparison ignores them and verify() checks them.
 LATER_BASE_CONSTRAINTS = {
@@ -84,6 +89,8 @@ COLUMN_CONTRACTS = (
     ("001", "columns.json"),
     ("002", "runtime-columns.json"),
     ("004", "song-identity-columns.json"),
+    ("006", "provider-credit-columns.json"),
+    ("007", "avatar-job-columns.json"),
 )
 
 
@@ -155,9 +162,10 @@ def schema_shape(conn) -> dict:
 def base_schema_shape(shape: dict) -> dict:
     base_tables = set(expected_columns(include_runtime=False)) | {REVISION_TABLE}
     return {
-        name: rows if name == "functions" else [
+        name: [row for row in rows if row[0] not in AVATAR_FUNCTIONS] if name == "functions" else [
             row for row in rows
             if row[0] in base_tables
+            and not (name == 'triggers' and (row[0], row[1]) in AVATAR_TRIGGERS)
             and not (name == "constraints" and (row[0], row[1]) in LATER_BASE_CONSTRAINTS.keys() | REMOVED_BASE_CONSTRAINTS.keys())
         ]
         for name, rows in shape.items()
@@ -175,6 +183,12 @@ def verify_later_constraints(conn, applied: set[str]) -> None:
     for key, version in REMOVED_BASE_CONSTRAINTS.items():
         if (key in found) == (version in applied):
             raise MigrationError("Later revision constraint differs: " + key[1])
+    if '007' in applied:
+        shape = schema_shape(conn)
+        functions = {r[0] for r in shape['functions']}
+        triggers = {(r[0], r[1]) for r in shape['triggers'] if r[2] == 'O'}
+        if not AVATAR_FUNCTIONS <= functions or not AVATAR_TRIGGERS <= triggers:
+            raise MigrationError('Avatar queue functions or enabled triggers are missing')
 
 
 def verify_columns(conn, *, include_runtime: bool = True, upto: str | None = None) -> None:
@@ -241,11 +255,14 @@ def verify(conn, *, require_empty: bool = False) -> dict:
     if require_empty and (any(counts.values()) or identity[0][2] is not None or identity[0][3] is not None):
         raise MigrationError("Expected catalog with no initial data")
     runtime_count = len(expected_columns(upto="002")) - len(expected_columns(include_runtime=False))
-    song_identity_count = len(expected_columns()) - len(expected_columns(upto="003"))
+    song_identity_count = len(expected_columns(upto="005")) - len(expected_columns(upto="003"))
+    provider_credit_count = len(expected_columns(upto="006")) - len(expected_columns(upto="005"))
     return {
         "catalog_tables": len(expected_columns(include_runtime=False)),
         "runtime_tables": runtime_count,
         "song_identity_tables": song_identity_count,
+        "provider_credit_tables": provider_credit_count,
+        "avatar_job_tables": len(expected_columns()) - len(expected_columns(upto="006")),
         "migration_tables": 1,
         "catalog_instance_id": str(identity[0][0]),
         "schema_version": identity[0][1],

@@ -54,6 +54,14 @@ export function formatTime(seconds: number) {
   const mins = Math.floor(value / 60)
   return `${mins >= 60 ? `${Math.floor(mins / 60)}:` : ''}${String(mins % 60).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`
 }
+/** Track length in the music-app form m:ss (h:mm:ss past an hour). */
+export function formatTrackLength(ms: number) {
+  const value = Math.max(0, Math.floor(ms / 1000))
+  const hours = Math.floor(value / 3600)
+  const mins = Math.floor(value / 60) % 60
+  const secs = String(value % 60).padStart(2, '0')
+  return hours ? `${hours}:${String(mins).padStart(2, '0')}:${secs}` : `${mins}:${secs}`
+}
 export function calendarEvents(
   artists: Artist[],
   concerts: Concert[],

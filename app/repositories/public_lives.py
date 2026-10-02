@@ -92,7 +92,7 @@ def save_public_live(event: PublicLive, artist_ids: list[int]) -> bool:
             VALUES ('official_page', %s, %s, %s, %s, %s, %s::jsonb)
             RETURNING id
         """, (
-            event.source_url, event.source_url.rsplit("/", 1)[-1], datetime.now(timezone.utc),
+            event.source_url, event.source_url.rstrip("/").rsplit("/", 1)[-1], datetime.now(timezone.utc),
             event.excerpt or event.title, digest, json.dumps({"collector": "public-live-sites"}),
         )).mappings().one()["id"]
         values = (

@@ -15,7 +15,7 @@ from test_music_jobs import store
 from app.api.routers.read_api import router
 from app.core.config import settings
 from app.db.catalog_session import get_catalog_session
-from app.integrations.spotify_catalog import SpotifyCatalogClient, SpotifyFailure, album_from_api
+from app.integrations.spotify_catalog import ALBUM_GROUPS, SpotifyCatalogClient, SpotifyFailure, album_from_api
 from app.integrations.youtube_catalog import Video
 from app.schemas.worker_jobs import JobRequest
 from app.services import music_jobs, spotify_collection as service
@@ -64,7 +64,7 @@ def request(account, **payload):
 
 @pytest.fixture
 def provider(monkeypatch):
-    fake = SimpleNamespace(albums_page=AsyncMock(return_value=([{'id': ALBUM}], False)),
+    fake = SimpleNamespace(albums_page=AsyncMock(return_value=([{'id': ALBUM}], False, None)),
                            album=AsyncMock(return_value=make_album()),
                            isrcs=AsyncMock(return_value={}),
                            credited_albums=AsyncMock(return_value=[]))
@@ -74,6 +74,17 @@ def provider(monkeypatch):
 
 def run():
     return asyncio.run(music_jobs.run_once(handlers=service.handlers(), min_interval_seconds=0))
+
+
+def drain(limit=20):
+    """Run jobs until the queue is idle; follow-up pages and album groups are separate jobs."""
+    statuses = []
+    for _ in range(limit):
+        status = run()['status']
+        if status == 'idle':
+            return statuses
+        statuses.append(status)
+    raise AssertionError('queue did not drain')
 
 
 def enqueue(account, **payload):
@@ -105,8 +116,10 @@ def test_registered_artist_release_and_track_reach_real_api(store, provider, mon
         listing = api.get(f'/api/artists/{artist}/albums')
         assert listing.status_code == 200, listing.text
         assert listing.json()[0]['name'] == 'Original Album'
+        assert listing.json()[0]['is_primary'] is True
         detail = api.get(f'/api/albums/{album[0]}')
         assert detail.status_code == 200, detail.text
+        assert detail.json()['is_primary'] is None
         assert detail.json()['tracks'][0]['name'] == 'Original Track'
         assert detail.json()['tracks'][0]['song_id'] is None
     assert provider.albums_page.await_count == 1
@@ -137,7 +150,9 @@ def test_featured_track_release_is_visible_to_registered_source_artist(store, pr
     engine = create_engine(f'postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}')
     try:
         with Session(engine) as session:
-            assert len(CatalogRead(session).albums(artist)) == 1
+            listed = CatalogRead(session).albums(artist)
+            assert len(listed) == 1
+            assert listed[0]['is_primary'] is False
     finally:
         engine.dispose()
 
@@ -200,7 +215,7 @@ def test_recollection_keeps_manual_edits_links_and_lyrics(store, provider):
 
 def test_reuse_same_track_across_two_new_albums_without_duplication(store, provider):
     _, account = register(store)
-    provider.albums_page.return_value = ([{'id': ALBUM}, {'id': SECOND}], False)
+    provider.albums_page.return_value = ([{'id': ALBUM}, {'id': SECOND}], False, None)
     provider.album.side_effect = [make_album(ALBUM), make_album(SECOND)]
     enqueue(account)
     assert run()['status'] == 'succeeded'
@@ -211,12 +226,12 @@ def test_reuse_same_track_across_two_new_albums_without_duplication(store, provi
 
 def test_next_page_is_durable_and_uses_same_account(store, provider):
     _, account = register(store)
-    provider.albums_page.return_value = ([{'id': ALBUM}], True)
+    provider.albums_page.return_value = ([{'id': ALBUM}], True, None)
     enqueue(account)
     assert run()['status'] == 'succeeded'
     pending = store.execute("SELECT payload,external_account_id FROM worker_jobs WHERE status='pending'").fetchone()
     assert pending[0]['album_offset'] == 10 and pending[1] == account
-    provider.albums_page.return_value = ([], False)
+    provider.albums_page.return_value = ([], False, None)
     assert run()['status'] == 'succeeded'
     assert provider.albums_page.await_args_list[-1].kwargs['offset'] == 10
 
@@ -349,7 +364,7 @@ def test_adapter_error_status_retry_after_and_no_secret_leak(status, retry):
         return httpx.Response(status, json={'error': 'PRIVATE'}, headers={'Retry-After': '120'})
     provider = SpotifyCatalogClient('CLIENT','SECRET',transport=httpx.MockTransport(respond),interval_seconds=0)
     with pytest.raises(SpotifyFailure) as failure:
-        asyncio.run(provider.albums_page(SINGER,offset=0))
+        asyncio.run(provider.albums_page(SINGER, offset=0, group='album'))
     assert failure.value.retry == retry and failure.value.retry_after >= 120
     assert 'PRIVATE' not in str(failure.value) and 'SECRET' not in str(failure.value)
 
@@ -362,7 +377,7 @@ def test_adapter_rejects_malformed_pages(body):
         return httpx.Response(200,content=body)
     provider = SpotifyCatalogClient('CLIENT','SECRET',transport=httpx.MockTransport(respond),interval_seconds=0)
     with pytest.raises(SpotifyFailure):
-        asyncio.run(provider.albums_page(SINGER,offset=0))
+        asyncio.run(provider.albums_page(SINGER, offset=0, group='album'))
 
 
 def test_adapter_timeout_is_retryable_and_page_size_is_ten():
@@ -374,7 +389,7 @@ def test_adapter_timeout_is_retryable_and_page_size_is_ten():
         raise httpx.ReadTimeout('PRIVATE')
     provider = SpotifyCatalogClient('CLIENT','SECRET',transport=httpx.MockTransport(respond),interval_seconds=0)
     with pytest.raises(SpotifyFailure) as failure:
-        asyncio.run(provider.albums_page(SINGER,offset=10))
+        asyncio.run(provider.albums_page(SINGER, offset=10, group='album'))
     assert failure.value.retry
     assert calls[-1].url.params['limit'] == '10' and calls[-1].url.params['offset'] == '10'
 
@@ -444,7 +459,7 @@ def test_isrc_is_stored_and_joins_another_release_of_the_same_recording(store, p
     store.commit()
     # A later compilation carries the same recording under another Spotify track ID.
     provider.album.return_value = make_album(id=SECOND, tracks=[raw_track(id=OTHER_TRACK)])
-    provider.albums_page.return_value = ([{'id': SECOND}], False)
+    provider.albums_page.return_value = ([{'id': SECOND}], False, None)
     enqueue(account, request_run='second')
     assert run()['status'] == 'succeeded'
     assert store.execute('SELECT count(*) FROM recordings').fetchone()[0] == 1
@@ -494,7 +509,7 @@ def test_adapter_reads_albums_in_the_japanese_market():
             return httpx.Response(200, json={'items': [raw_track()], 'next': None})
         return httpx.Response(200, json=raw_album())
     provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
-    asyncio.run(provider.albums_page(SINGER, offset=0))
+    asyncio.run(provider.albums_page(SINGER, offset=0, group='album'))
     asyncio.run(provider.album(ALBUM))
     assert [market for _, market in seen] == ['JP', 'JP', 'JP']
 
@@ -513,7 +528,7 @@ def test_compilation_keeps_only_tracks_credited_to_registered_artists(store, pro
     # The artist's own release keeps every track, credited to them or not.
     provider.album.return_value = make_album(id=SECOND, tracks=[
         raw_track(id='w' * 22, number=1), raw_track(id='y' * 22, artists=('x' * 22,), number=2)])
-    provider.albums_page.return_value = ([{'id': SECOND}], False)
+    provider.albums_page.return_value = ([{'id': SECOND}], False, None)
     enqueue(account, request_run='own')
     assert run()['status'] == 'succeeded'
     assert store.execute("SELECT count(*) FROM recording_external_ids WHERE platform='spotify'").fetchone()[0] == 3
@@ -525,26 +540,46 @@ def test_search_pass_queues_credited_albums_missing_from_the_listing(store, prov
     provider.album.side_effect = lambda external: make_album(id=external, tracks=[
         raw_track(id=TRACK if external == ALBUM else OTHER_TRACK)])
     enqueue(account)
-    assert run()['status'] == 'succeeded'
+    assert set(drain()) == {'succeeded'}
+    # Each album group is listed in its own job; only the last one runs the search pass.
+    payloads = [r[0] for r in store.execute('SELECT payload FROM worker_jobs ORDER BY id')]
+    assert [p['album_group'] for p in payloads if not p['album_ids']] == list(ALBUM_GROUPS)
     provider.credited_albums.assert_awaited_once_with(SINGER)
-    follow = store.execute("SELECT payload FROM worker_jobs WHERE status='pending'").fetchall()
-    assert [p[0]['album_ids'] for p in follow] == [[SECOND]]
-    assert run()['status'] == 'succeeded'
+    assert [p['album_ids'] for p in payloads if p['album_ids']] == [[SECOND]]
     assert sorted(r[0] for r in store.execute('SELECT spotify_album_id FROM albums')) == sorted([ALBUM, SECOND])
-    assert provider.credited_albums.await_count == 1            # the follow-up does not search again
-    # A new run finds both albums stored and queues nothing more.
+    # A new run finds both albums stored and queues no album follow-up.
     enqueue(account, request_run='again')
-    assert run()['status'] == 'succeeded'
-    assert store.execute("SELECT count(*) FROM worker_jobs WHERE status='pending'").fetchone()[0] == 0
+    assert set(drain()) == {'succeeded'}
+    assert store.execute("SELECT count(*) FROM worker_jobs WHERE jsonb_array_length(payload->'album_ids') > 0").fetchone()[0] == 1
+
+
+def test_search_pass_requeues_a_stored_album_missing_provider_credits(store, provider):
+    # 羽緒 case: an album only the search pass finds was stored before migration 006.
+    _, account = register(store)
+    provider.albums_page.return_value = ([], False, None)
+    provider.credited_albums.return_value = [ALBUM]
+    enqueue(account)
+    assert set(drain()) == {'succeeded'}
+    store.execute('DELETE FROM recording_provider_credits')
+    store.commit()
+    enqueue(account, request_run='backfill')
+    assert set(drain()) == {'succeeded'}
+    assert store.execute("SELECT count(*) FROM recording_provider_credits WHERE track_id=%s", (TRACK,)).fetchone()[0] > 0
+    assert store.execute('SELECT count(*) FROM albums').fetchone()[0] == 1
+    follow_ups = "SELECT count(*) FROM worker_jobs WHERE jsonb_array_length(payload->'album_ids') > 0"
+    assert store.execute(follow_ups).fetchone()[0] == 2
+    # Once credited, the album is complete and a later run does not queue it again.
+    enqueue(account, request_run='again')
+    assert set(drain()) == {'succeeded'}
+    assert store.execute(follow_ups).fetchone()[0] == 2
 
 
 def test_empty_listing_is_filled_by_the_search_pass(store, provider):
     _, account = register(store)
-    provider.albums_page.return_value = ([], False)
+    provider.albums_page.return_value = ([], False, None)
     provider.credited_albums.return_value = [ALBUM]
     enqueue(account)
-    assert run()['status'] == 'succeeded'
-    assert run()['status'] == 'succeeded'
+    assert set(drain()) == {'succeeded'}
     assert store.execute('SELECT spotify_album_id FROM albums').fetchall() == [(ALBUM,)]
 
 
@@ -583,3 +618,75 @@ def test_rate_limit_on_one_job_pauses_every_spotify_job(store, provider):
     store.commit()
     provider.albums_page.side_effect = None
     assert run()['status'] == 'succeeded'                 # pause ends at the provider's Retry-After
+
+
+def _album_tracks(store, artist):
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import Session
+    from app.services.catalog_read import CatalogRead
+    info = store.info
+    engine = create_engine(f'postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}')
+    try:
+        with Session(engine) as session:
+            read = CatalogRead(session)
+            return read.album(int(read.albums(artist)[0]['id']))['tracks']
+    finally:
+        engine.dispose()
+
+
+def test_own_album_keeps_every_track_under_its_spotify_performers(store, provider):
+    # HARMONICS case: the artist's own album holds a guest track and another person's remix.
+    artist, account = register(store)
+    provider.album.return_value = make_album(tracks=[
+        {**raw_track(id=TRACK, number=1), 'artists': [{'id': SINGER, 'name': 'SINGER SPOTIFY'}]},
+        {**raw_track(id=OTHER_TRACK, number=2), 'artists': [{'id': GUEST, 'name': 'Guest'}, {'id': 'x' * 22, 'name': 'Remixer'}]}])
+    enqueue(account)
+    assert set(drain()) == {'succeeded'}
+    credits = store.execute('SELECT track_id,position,provider_artist_id,name FROM recording_provider_credits ORDER BY track_id,position').fetchall()
+    assert credits == [(TRACK, 0, SINGER, 'SINGER SPOTIFY'), (OTHER_TRACK, 0, GUEST, 'Guest'), (OTHER_TRACK, 1, 'x' * 22, 'Remixer')]
+    assert store.execute('SELECT count(*) FROM recording_artists').fetchone()[0] == 1     # still registered artists only
+    assert store.execute('SELECT count(*) FROM artists').fetchone()[0] == 1
+    tracks = _album_tracks(store, artist)
+    # A registered performer shows the catalog names; an unregistered one Spotify's name.
+    assert tracks[0]['artists'] == [{'artist_id': artist, 'name': 'Singer s', 'name_ko': None}]
+    assert tracks[1]['artists'] == [{'artist_id': None, 'name': 'Guest', 'name_ko': None},
+                                    {'artist_id': None, 'name': 'Remixer', 'name_ko': None}]
+
+
+def test_recollection_backfills_provider_credits_of_stored_tracks(store, provider):
+    artist, account = register(store)
+    enqueue(account)
+    assert set(drain()) == {'succeeded'}
+    store.execute('DELETE FROM recording_provider_credits')                  # stored before revision 006
+    store.commit()
+    # Without provider credits the registered recording credits are shown.
+    assert _album_tracks(store, artist)[0]['artists'] == [{'artist_id': artist, 'name': 'Singer s', 'name_ko': None}]
+    enqueue(account, request_run='credits')
+    assert set(drain()) == {'succeeded'}
+    assert store.execute('SELECT track_id,provider_artist_id FROM recording_provider_credits').fetchall() == [(TRACK, SINGER)]
+    assert store.execute('SELECT count(*) FROM albums').fetchone()[0] == 1
+    receipts = [r[0] for r in store.execute("SELECT result_summary FROM catalog_imports WHERE source_kind='batch_import' ORDER BY id")]
+    assert {'album_id': ALBUM, 'status': 'review_candidate', 'credited_tracks': 1} in receipts[len(ALBUM_GROUPS)]['actions']
+
+
+def test_listing_that_ends_before_its_total_records_a_shortfall(store, provider):
+    _, account = register(store)
+    provider.albums_page.return_value = ([{'id': ALBUM}], False, 5)
+    enqueue(account)
+    assert set(drain()) == {'succeeded'}
+    listings = [r[0] for r in store.execute("SELECT result_summary->'listing' FROM catalog_imports WHERE source_kind='batch_import' ORDER BY id")]
+    assert [(l['group'], l['items'], l['total'], l['shortfall']) for l in listings] == [(g, 1, 5, 4) for g in ALBUM_GROUPS]
+
+
+def test_adapter_lists_one_album_group_with_its_total():
+    calls = []
+    def respond(request):
+        calls.append(request)
+        if request.url.host == 'accounts.spotify.com':
+            return httpx.Response(200, json={'access_token': 'TOKEN'})
+        return httpx.Response(200, json={'items': [{'id': ALBUM}], 'next': None, 'total': 7})
+    provider = SpotifyCatalogClient('CLIENT', 'SECRET', transport=httpx.MockTransport(respond), interval_seconds=0)
+    assert asyncio.run(provider.albums_page(SINGER, offset=0, group='appears_on')) == ([{'id': ALBUM}], False, 7)
+    assert calls[-1].url.params['include_groups'] == 'appears_on'
+    with pytest.raises(ValueError):
+        asyncio.run(provider.albums_page(SINGER, offset=0, group='album,single'))

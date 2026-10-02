@@ -52,6 +52,7 @@ export interface BackendAlbum {
   release_date?: string | null
   release_date_precision?: string | null
   total_tracks: number
+  is_primary?: boolean | null
   image_url?: string | null
   spotify_url?: string | null
   tracks?: {
@@ -64,6 +65,7 @@ export interface BackendAlbum {
     duration_ms?: number | null
     track_number: number
     disc_number: number
+    artists?: { artist_id?: number | null; name: string; name_ko?: string | null }[]
   }[]
 }
 export interface BackendLyricsSummary {

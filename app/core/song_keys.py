@@ -39,21 +39,42 @@ def song_key(title: str | None, artist: str | None) -> tuple[str, str]:
 
 # Rule-parsed setlist lines keep "title / artist" or "title - artist" in raw_title.
 _COMBINED_SEPARATOR = re.compile(r"\s*[/／]\s*|\s+[-－–—]\s+")
+# Numbered setlists ("＃10 二息歩行 / DECO*27"): a hash mark, 1-3 digits, then space.
+# A bare number is left alone because it can be the song title ("55", "20").
+_NUMBERING = re.compile(r"^\s*[#＃♯]\s*[0-9０-９]{1,3}\s+(?=\S)")
+
+
+def strip_numbering(title: str | None) -> str | None:
+    """``title`` without a leading ``＃N `` setlist number, or None when it has none."""
+    if not title:
+        return None
+    match = _NUMBERING.match(title)
+    return title[match.end():] if match else None
 
 
 def lookup_keys(title: str | None, artist: str | None) -> list[tuple[str, str]]:
-    """Exact key first, then every (title, artist) split of a combined line when no artist is given.
+    """Exact key first, then lookup-only variants: the title without a ``＃N`` number,
+    and every (title, artist) split of a combined line when no artist is given.
 
-    Splits are only lookup candidates against confirmed keys; they are never stored.
+    Variants are only lookup candidates against confirmed keys; they are never stored.
     """
     exact = song_key(title, artist)
     keys = [exact]
-    if exact[1] or not title:
+    if not title:
         return keys
-    for match in _COMBINED_SEPARATOR.finditer(title):
-        key = song_key(title[:match.start()], title[match.end():])
-        if key[0] and key[1] and key not in keys:
+    bare = strip_numbering(title)
+    titles = [title] + ([bare] if bare else [])
+    if bare:
+        key = song_key(bare, artist)
+        if key[0] and key not in keys:
             keys.append(key)
+    if exact[1]:
+        return keys
+    for text in titles:
+        for match in _COMBINED_SEPARATOR.finditer(text):
+            key = song_key(text[:match.start()], text[match.end():])
+            if key[0] and key[1] and key not in keys:
+                keys.append(key)
     return keys
 
 

@@ -52,6 +52,10 @@ SEARCH_CANDIDATES_SQL = f"""WITH matched_artists AS MATERIALIZED (
  UNION
  SELECT lower(btrim(al.alias)) FROM artist_aliases al
  JOIN matched_artists a ON a.id=al.artist_id
+), matched_song_aliases AS MATERIALIZED (
+ SELECT DISTINCT al.song_id FROM song_aliases al
+ JOIN songs s ON s.id=al.song_id AND s.archived_at IS NULL
+ WHERE al.alias ILIKE :query
 ), candidates AS MATERIALIZED (
  SELECT p.id,p.archive_id,p.ordinal,COALESCE(l.broadcast_at,v.published_at) broadcast_at
  FROM performances p JOIN live_archives l ON l.id=p.archive_id
@@ -59,6 +63,7 @@ SEARCH_CANDIDATES_SQL = f"""WITH matched_artists AS MATERIALIZED (
  LEFT JOIN songs s ON s.id=p.song_id AND s.archived_at IS NULL
  WHERE p.archived_at IS NULL AND {LIVE_VISIBLE} AND (
  concat_ws(' ',s.title_native,s.title_ko,s.title_latin,p.raw_title,p.raw_artist) ILIKE :query
+ OR s.id IN (SELECT song_id FROM matched_song_aliases)
  OR l.primary_artist_id IN (SELECT id FROM matched_artists)
  OR EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id
    AND pa.artist_id IN (SELECT id FROM matched_artists))
@@ -146,11 +151,20 @@ class CatalogReadRepository:
         {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}),
         entries AS (SELECT p.*,a.happened FROM ({PERFORMANCE_SQL}) p JOIN archives a ON a.id=p.archive_id
         WHERE EXISTS (SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id AND pa.artist_id=:artist))"""
-        songs = self.rows(cte+""" SELECT song_key,MIN(song_title) title,
+        # Attach aliases after grouping: repeated performances of a song do not
+        # each aggregate aliases, and archived songs using raw keys get none.
+        songs = self.rows(cte+""", grouped_songs AS (
+        SELECT song_key,MIN(song_title) title,
         MIN(NULLIF(btrim(song_title_ko),'')) title_ko,MIN(original_artist) artist,
         MIN(NULLIF(btrim(original_artist_ko),'')) artist_ko,
-        originals,COUNT(*) count,MAX(happened) last_date,string_agg(DISTINCT search_text,' ') search
-        FROM entries GROUP BY song_key,originals ORDER BY count DESC,song_key""",{"artist":artist_id})
+        originals,COUNT(*) count,MAX(happened) last_date,string_agg(DISTINCT search_text,' ') search,
+        MAX(song_id) FILTER (WHERE song_key='song:'||song_id::text) alias_song_id
+        FROM entries GROUP BY song_key,originals)
+        SELECT g.song_key,g.title,g.title_ko,g.artist,g.artist_ko,g.originals,g.count,g.last_date,
+        concat_ws(' ',g.search,al.aliases) search
+        FROM grouped_songs g LEFT JOIN LATERAL (
+          SELECT string_agg(alias,' ' ORDER BY id) aliases FROM song_aliases WHERE song_id=g.alias_song_id
+        ) al ON true ORDER BY g.count DESC,g.song_key""",{"artist":artist_id})
         months = self.rows(cte+""" SELECT count(*) total,count(*) FILTER(WHERE EXISTS
         (SELECT 1 FROM entries e WHERE e.archive_id=archives.id)) with_setlist,
         to_char(happened AT TIME ZONE 'Asia/Seoul','YYYY-MM') month_key,
@@ -179,11 +193,15 @@ class CatalogReadRepository:
         {"artist":artist_id,"start":start,"end":end,"key":key},offset,limit,"COALESCE(q.starts_at,q.event_date::timestamp AT TIME ZONE 'Asia/Seoul') NULLS LAST,q.id")
 
     def albums(self, artist_id=None, key=None):
+        # is_primary: the listed artist is an album-level credit (own release) rather than
+        # only a track credit (appears on). NULL when no artist scopes the read.
         return self.rows("""SELECT a.id::text id,a.title_native name,a.title_ko name_ko,a.album_type,
         concat_ws('-',a.release_year::text,lpad(a.release_month::text,2,'0'),lpad(a.release_day::text,2,'0')) release_date,
         a.cover_image_url image_url,
         CASE WHEN a.spotify_album_id IS NOT NULL THEN 'https://open.spotify.com/album/'||a.spotify_album_id END spotify_url,
-        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks
+        (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks,
+        CASE WHEN CAST(:artist AS integer) IS NULL THEN NULL
+          ELSE EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist) END is_primary
         FROM albums a WHERE a.archived_at IS NULL
         AND (CAST(:key AS integer) IS NULL OR a.id=:key)
         AND (CAST(:artist AS integer) IS NULL
@@ -195,9 +213,39 @@ class CatalogReadRepository:
         {"artist":artist_id,"key":key})
 
     def tracks(self, album_id):
-        return self.rows("""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
+        """Album tracks with who performs each one.
+
+        Spotify's own track credits (revision 006) come first, so a track on an artist's
+        album that the artist does not perform (a guest track, another person's remix) is
+        shown under its real performers. A credit whose Spotify ID is a registered owner
+        account shows that catalog artist's names. A recording joined by ISRC holds several
+        Spotify track IDs; the credits of its earliest stored one are used. Without
+        provider credits (before 006 or before backfill) the registered recording credits
+        are used, and an empty list means the track has no known performer.
+        """
+        registered = """SELECT jsonb_agg(jsonb_build_object('artist_id',a.id,'name',a.name_native,'name_ko',a.name_ko)
+          ORDER BY ra.position,ra.id) FROM recording_artists ra
+          JOIN artists a ON a.id=ra.artist_id AND a.archived_at IS NULL AND a.show_in_catalog
+          WHERE ra.recording_id=r.id"""
+        present = self.rows("SELECT to_regclass('public.recording_provider_credits') IS NOT NULL present")[0]["present"]
+        artists = f"COALESCE(({registered}),'[]'::jsonb)"
+        if present:
+            artists = f"""COALESCE((SELECT jsonb_agg(jsonb_build_object('artist_id',owner.id,
+              'name',COALESCE(owner.name_native,c.name),'name_ko',owner.name_ko) ORDER BY c.position)
+              FROM recording_provider_credits c
+              LEFT JOIN LATERAL (SELECT ar.id,ar.name_native,ar.name_ko FROM external_accounts ea
+                JOIN artist_external_accounts e ON e.account_id=ea.id AND e.relationship='owner'
+                JOIN artists ar ON ar.id=e.artist_id AND ar.archived_at IS NULL AND ar.show_in_catalog
+                WHERE ea.platform='spotify' AND ea.platform_id=c.provider_artist_id AND ea.archived_at IS NULL
+                ORDER BY ar.id LIMIT 1) owner ON true
+              WHERE c.platform='spotify' AND c.track_id=(SELECT x.external_id FROM recording_external_ids x
+                WHERE x.recording_id=r.id AND x.platform='spotify' AND EXISTS (SELECT 1 FROM recording_provider_credits pc
+                  WHERE pc.platform='spotify' AND pc.track_id=x.external_id) ORDER BY x.id LIMIT 1)),
+              ({registered}),'[]'::jsonb)"""
+        return self.rows(f"""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
         r.duration_ms,t.disc_number,t.track_number,
-        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics
+        EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics,
+        {artists} artists
         FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
         WHERE t.album_id=:id ORDER BY t.disc_number,t.track_number,t.id""",{"id":album_id})
 

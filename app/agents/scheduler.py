@@ -49,14 +49,17 @@ async def _x_loop() -> None:
     if not settings.agent_run_on_start:
         await asyncio.sleep(interval)
     while True:
+        provider_wait_seconds = 0
         try:
             result = await collect_x_once(poll_interval_seconds=interval)
+            provider_wait_seconds = result.provider_wait_seconds
             if result.accounts or result.failures:
                 logger.info("X collection: %s", result)
         except Exception:
             logger.error("X collection cycle failed")
-        # DB next_poll_at controls provider frequency; this only checks due work.
-        await asyncio.sleep(min(10, interval))
+        # A shared twscrape account limit applies to every target X account.
+        # Leave Discord delivery on its independent loop while X waits.
+        await asyncio.sleep(max(min(10, interval), provider_wait_seconds))
 
 
 async def _delivery_loop() -> None:

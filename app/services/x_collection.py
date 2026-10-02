@@ -9,12 +9,13 @@ from typing import Awaitable, Callable
 from uuid import uuid4
 
 from app.db.catalog_session import catalog_runtime_session
-from app.integrations.x_client import fetch_post_pages, post_url
+from app.integrations.x_client import XProviderUnavailable, fetch_post_pages, post_url
 from app.repositories.runtime_delivery import (
     StoredPost,
     XAccount,
     claim_x_accounts,
     fail_x_account,
+    pause_x_account_for_provider,
     store_x_posts,
 )
 
@@ -29,6 +30,7 @@ class CollectionResult:
     posts_stored: int = 0
     deliveries_queued: int = 0
     failures: int = 0
+    provider_wait_seconds: int = 0
 
 
 def _published_at(value: str | None) -> datetime:
@@ -104,6 +106,15 @@ async def collect_x_once(
                 )
             result.posts_stored += stored
             result.deliveries_queued += queued
+        except XProviderUnavailable as exc:
+            result.provider_wait_seconds = exc.retry_after_seconds
+            with catalog_runtime_session() as session:
+                pause_x_account_for_provider(
+                    session, account_id=account.id, worker_id=account.lease_owner,
+                    retry_after_seconds=exc.retry_after_seconds,
+                )
+            logger.info("X provider unavailable; retry in %s seconds", exc.retry_after_seconds)
+            break
         except Exception as exc:
             result.failures += 1
             logger.warning("X account %s collection failed (%s)", account.id, type(exc).__name__)

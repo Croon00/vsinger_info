@@ -109,6 +109,8 @@ def test_normalized_catalog_reads_and_attribution(store):
         assert set(events["items"][0]["artist_ids"])=={a,guest}
         assert service.concert(concert)["city"]=="Tokyo"
         assert service.albums(a)[0]["id"]==str(album)
+        assert service.albums(a)[0]["is_primary"] is True
+        assert service.album(album)["is_primary"] is None
         assert service.album(album)["release_date"]=="2026-09"
         assert service.album(album)["tracks"][0]["recording_id"]==recording
         assert service.album(album)["tracks"][0]["has_lyrics"] is True
@@ -157,3 +159,115 @@ def test_archived_private_and_undated_data(store):
         assert service.album(album) is None
         assert service.concert(concert)["starts_at"]==""
         assert service.concerts(0,100,None,"2026-09-01","2026-10-01")["total"]==0
+
+
+def seed_song_aliases(db, song_id):
+    for alias in ("요나가우타", "요나가우타(읽기)", "영원한 밤의 노래", "Yonagauta"):
+        row(db, "song_aliases", song_id=song_id, alias=alias, normalized_alias=alias.casefold(),
+            locale="ko" if alias != "Yonagauta" else "en", source="manual")
+    db.commit()
+
+
+def test_song_alias_search_is_partial_deduplicated_paged_and_id_based(store, monkeypatch):
+    db, engine = store
+    singer, _, _, archive, _, _, _ = seed(db)
+    song_id = db.execute('SELECT song_id FROM performances WHERE archive_id=%s ORDER BY ordinal LIMIT 1', (archive,)).fetchone()[0]
+    seed_song_aliases(db, song_id)
+    # Equal titles do not transfer aliases to unlinked or distinct songs.
+    other_song = row(db, "songs", title_native="Title")
+    for ordinal, linked_song in ((3, None), (4, other_song)):
+        perf = row(db, "performances", archive_id=archive, ordinal=ordinal, song_id=linked_song,
+                   raw_title="Title", raw_artist="Original", start_seconds=ordinal*30)
+        row(db, "performance_artists", performance_id=perf, artist_id=singer, role="lead")
+    db.commit()
+    with Session(engine) as session:
+        session.execute(text("SET TRANSACTION READ ONLY"))
+        service = CatalogRead(session)
+        for query in ("요나가우타", "나가", "영원한 밤의 노래", "밤의", "yonagauta"):
+            first = service.search(query, 0, 1)
+            second = service.search(query, 1, 1)
+            beyond = service.search(query, 99, 1)
+            assert first['total'] == second['total'] == beyond['total'] == 2
+            assert first['items'][0]['ordinal'] == 1 and second['items'][0]['ordinal'] == 2
+            assert first['items'][0]['id'] != second['items'][0]['id']
+            assert first['items'][0]['song_id'] == song_id
+            assert first['items'][0]['song_title'] == 'Title'
+            assert beyond['items'] == []
+            Page[SearchRead].model_validate(first)
+        assert service.search('Title', 0, 50)['total'] == 4
+
+    app = FastAPI()
+    app.include_router(router, prefix='/api')
+    monkeypatch.setattr(settings, 'api_key', 'test')
+    def readonly_session():
+        with Session(engine) as session:
+            session.execute(text('SET TRANSACTION READ ONLY'))
+            yield session
+    app.dependency_overrides[get_catalog_session] = readonly_session
+    with TestClient(app, headers={'X-API-Key': 'test'}) as client:
+        response = client.get('/api/search', params={'q': '나가', 'limit': 1})
+        assert response.status_code == 200
+        assert response.json()['total'] == 2
+        assert 'queries;desc="1"' in response.headers['Server-Timing']
+        stats = client.get(f'/api/artists/{singer}/statistics').json()
+        matched = [s for s in stats['songs'] if '요나가우타' in s['searchText']]
+        assert len(matched) == 1 and matched[0]['key'] == f'song:{song_id}'
+        assert stats['performances'] == 3 and stats['uniqueSongs'] == 3
+
+
+@pytest.mark.parametrize('hidden', ['private', 'deleted', 'archive', 'performance', 'song'])
+def test_song_alias_search_respects_visibility_and_archived_song_fallback(store, hidden):
+    db, engine = store
+    singer, _, _, archive, _, _, _ = seed(db)
+    song_id = db.execute('SELECT song_id FROM performances WHERE archive_id=%s LIMIT 1', (archive,)).fetchone()[0]
+    seed_song_aliases(db, song_id)
+    if hidden in ('private', 'deleted'):
+        db.execute('UPDATE videos SET availability=%s', (hidden,))
+    elif hidden == 'archive':
+        db.execute('UPDATE live_archives SET archived_at=now()')
+    elif hidden == 'performance':
+        db.execute('UPDATE performances SET archived_at=now()')
+    else:
+        db.execute('UPDATE songs SET archived_at=now()')
+    db.commit()
+    with Session(engine) as session:
+        session.execute(text('SET TRANSACTION READ ONLY'))
+        service = CatalogRead(session)
+        assert service.search('요나가우타', 0, 50)['total'] == 0
+        songs = service.statistics(singer)['songs']
+        assert all('요나가우타' not in song['searchText'] for song in songs)
+
+
+def test_statistics_adds_aliases_without_changing_counts_or_rank(store):
+    db, engine = store
+    singer, guest, _, archive, _, _, _ = seed(db)
+    song_id = db.execute('SELECT song_id FROM performances WHERE archive_id=%s LIMIT 1', (archive,)).fetchone()[0]
+    with Session(engine) as session:
+        before = CatalogRead(session).statistics(singer)
+    seed_song_aliases(db, song_id)
+    with Session(engine) as session:
+        session.execute(text('SET TRANSACTION READ ONLY'))
+        service = CatalogRead(session)
+        after = service.statistics(singer)
+        assert service.query_count == 2
+        for alias in ('요나가우타', '영원한 밤의 노래', 'Yonagauta'):
+            assert alias in after['songs'][0]['searchText']
+            assert after['songs'][0]['searchText'].count(alias) == (2 if alias == '요나가우타' else 1)
+        after['songs'][0]['searchText'] = before['songs'][0]['searchText']
+        assert after == before
+        assert '요나가우타' in service.statistics(guest)['songs'][0]['searchText']
+
+
+def test_song_alias_search_escapes_like_metacharacters(store):
+    db, engine = store
+    _, _, _, archive, _, _, _ = seed(db)
+    song_id = db.execute('SELECT song_id FROM performances WHERE archive_id=%s LIMIT 1', (archive,)).fetchone()[0]
+    alias = '100%_literal\\alias'
+    row(db, 'song_aliases', song_id=song_id, alias=alias, normalized_alias=alias, source='manual')
+    db.commit()
+    with Session(engine) as session:
+        session.execute(text('SET TRANSACTION READ ONLY'))
+        service = CatalogRead(session)
+        for query in (alias, '%', '_', '\\'):
+            assert service.search(query, 0, 50)['total'] == 2
+        assert service.search('100xxx', 0, 50)['total'] == 0

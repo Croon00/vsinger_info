@@ -36,6 +36,8 @@ class SpotifyCollect(Payload):
     spotify_artist_id: str = Field(pattern=r'^[A-Za-z0-9]{22}$')
     link_youtube: bool = False
     album_offset: int = Field(default=0, ge=0, le=1000)
+    # The listing is paged one album group at a time, in ALBUM_GROUPS order.
+    album_group: Literal['album', 'single', 'appears_on', 'compilation'] = 'album'
     # Set only on follow-up jobs for albums the search pass found beyond the listing.
     album_ids: list[Annotated[str, Field(pattern=r'^[A-Za-z0-9]{22}$')]] = Field(default_factory=list, max_length=10)
 

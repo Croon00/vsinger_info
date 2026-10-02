@@ -1,0 +1,42 @@
+{
+ "policy": "match-key-song-confirm-v1",
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "summary": {
+  "pending_keys": 12135,
+  "confirm": 1,
+  "review": 0,
+  "confirm_by_basis": {
+   "split": 1
+  },
+  "songs": 1,
+  "would_link_performances": 1,
+  "candidate_songs": 2153
+ },
+ "confirm": [
+  {
+   "key_id": 27881,
+   "key_version": 1,
+   "title_key": "島のうた (セイレーンver.) / セイレーン",
+   "artist_key": "",
+   "raw_title": "島のうた (セイレーンver.) / セイレーン",
+   "raw_artist": null,
+   "occurrences": 1,
+   "basis": "split",
+   "song_id": 1156,
+   "song": {
+    "song_id": 1156,
+    "title": "島のうた(セイレーンver.)",
+    "artists": [
+     "セイレーン",
+     "鈴木みのり"
+    ]
+   },
+   "would_link": 1
+  }
+ ],
+ "review": [],
+ "import_id": null,
+ "exported_at": "2026-09-30T12:34:52Z",
+ "user_review": [],
+ "reviewed": true
+}

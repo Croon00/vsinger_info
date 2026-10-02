@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 from contextlib import aclosing
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,12 @@ from app.core.config import settings
 X_API_BASE_URL = "https://api.x.com/2"
 _twscrape_api: Any | None = None
 _twscrape_lock = asyncio.Lock()
+
+
+class XProviderUnavailable(RuntimeError):
+    def __init__(self, retry_after_seconds: int):
+        super().__init__("X provider has no available UserTweets account")
+        self.retry_after_seconds = retry_after_seconds
 
 
 def x_configured() -> bool:
@@ -237,15 +244,25 @@ async def _fetch_recent_posts_twscrape(
     posts: list[dict[str, Any]] = []
     since_value = int(since_id) if since_id else None
 
-    async with aclosing(api.user_tweets(int(user_id), limit=max_results)) as tweets:
-        async for tweet in tweets:
-            if since_value is not None and tweet.id <= since_value:
-                continue
-            if tweet.retweetedTweet is not None or tweet.inReplyToTweetId is not None:
-                continue
-            posts.append(_tweet_to_post(tweet))
-            if len(posts) >= max_results:
-                break
+    from twscrape import NoAccountError
+
+    try:
+        async with aclosing(api.user_tweets(int(user_id), limit=max_results)) as tweets:
+            async for tweet in tweets:
+                if since_value is not None and tweet.id <= since_value:
+                    continue
+                if tweet.retweetedTweet is not None or tweet.inReplyToTweetId is not None:
+                    continue
+                posts.append(_tweet_to_post(tweet))
+                if len(posts) >= max_results:
+                    break
+    except NoAccountError:
+        accounts = [account for account in await api.pool.get_all() if account.active]
+        now = datetime.now(timezone.utc)
+        unlocks = [account.locks["UserTweets"] for account in accounts
+                   if "UserTweets" in account.locks]
+        delay = min(3600, max(30, int((min(unlocks) - now).total_seconds()) + 1)) if unlocks else 300
+        raise XProviderUnavailable(delay) from None
 
     return posts
 

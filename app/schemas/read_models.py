@@ -109,6 +109,12 @@ class ConcertRead(BaseModel):
     event_type: str
     event_format: str
 
+class CatalogTrackArtistRead(BaseModel):
+    # Null when the credited performer is not a catalog-visible artist.
+    artist_id: int | None = None
+    name: str
+    name_ko: str | None = None
+
 class CatalogTrackRead(BaseModel):
     id: str
     recording_id: int
@@ -119,6 +125,8 @@ class CatalogTrackRead(BaseModel):
     disc_number: int
     track_number: int
     has_lyrics: bool
+    # Performers of this track in credit order (Spotify credits first, then registered credits).
+    artists: list[CatalogTrackArtistRead] = Field(default_factory=list)
 
 class CatalogAlbumRead(BaseModel):
     id: str
@@ -129,6 +137,9 @@ class CatalogAlbumRead(BaseModel):
     image_url: str | None = None
     spotify_url: str | None = None
     total_tracks: int
+    # Only on /artists/{id}/albums: True when that artist is an album-level credit,
+    # False when the artist is credited on tracks only (appears on). None on /albums/{id}.
+    is_primary: bool | None = None
     tracks: list[CatalogTrackRead] = Field(default_factory=list)
 
 class CatalogLyricsRead(BaseModel):

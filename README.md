@@ -62,6 +62,10 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 설정은 [`app/core/config.py`](app/core/config.py)와 [`.env.example`](.env.example)를 기준으로 한다. Python 코드 기본값과 예시 환경변수가 다를 수 있으며 실제 환경변수가 우선한다. DB·외부 서비스 키는 백엔드에 보관한다. 수집기 실행은 DB 저장·외부 알림을 동반하므로 화면 조회와 구분한다.
 
+신규 아티스트의 초기 이미지는 migration 007 적용 후 YouTube → X 순서로 자동 저장한다. 기존 이미지는 보존하며 runtime의 `AVATAR_WORKER_ENABLED` 기본값은 true다(cutover·agent 활성 조건도 필요). 기존 아티스트의 빈 이미지 미리보기·작업 등록은 `python scripts/avatar_jobs.py enqueue --artist-id ID`를 사용한다. `status ID`로 작업 결과와 `result.storage_error`의 실패 단계·코드를 조회할 수 있으며 단독 worker도 처리 로그를 출력한다. 실행·저장소 설정과 재시도는 [프로필 이미지 저장](docs/avatar-storage.md)에 정리했다. 2026-10-02 SHIN·히비쿠 작업 성공을 확인했고 Figaro는 로컬에서 작업 9를 수동 완료했다. 서버 worker의 저장소 환경변수 갱신·재시작은 남아 있다.
+
+곡 별칭은 통합검색과 아티스트의 부른 곡 검색에서 사용할 수 있다. 활성 `song_id`가 연결된 가창 기록에 적용하며 추가 migration은 필요 없다. 검색·집계 기준과 2026-10-02 읽기 전용 실데이터 검증은 [통합 조회 API](docs/read-api-v2.md)에 정리했다. 서버 반영은 변경된 백엔드 코드 배포·API 재시작으로 적용한다.
+
 ## 문서 안내
 
 | 문서 | 다루는 내용 |
