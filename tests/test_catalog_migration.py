@@ -100,15 +100,15 @@ def reject(conn, code, callback):
 def test_schema_contract_and_empty_initial_state(database):
     report = apply(database)
     assert report["applied"] and report["non_identity_row_count"] == 0
-    assert report["applied_versions"] == ["001", "002", "003", "004", "005", "006"]
+    assert report["applied_versions"] == ["001", "002", "003", "004", "005", "006", "007"]
     assert report["schema_version"] == "catalog-v2"
     assert not report["initial_data_imported"]
-    assert len(migration.table_names(database)) == 47
+    assert len(migration.table_names(database)) == 48
     second = migration.migrate(database)
     assert not second["applied"]
     assert second["catalog_instance_id"] == report["catalog_instance_id"]
     expected = migration.expected_columns()
-    assert len(expected) == 46
+    assert len(expected) == 47
     assert {"title_latin", "language_code"} <= {f["name"] for f in expected["songs"]}
     assert "karaoke_numbers" in expected
     assert not {"artist_links", "song_credits", "recording_credits", "legacy_entity_map"} & expected.keys()
@@ -139,7 +139,7 @@ def test_upgrade_from_001_preserves_catalog_rows(database):
     database.commit()
 
     report = apply(database)
-    assert report["applied_versions"] == ["002", "003", "004", "005", "006"]
+    assert report["applied_versions"] == ["002", "003", "004", "005", "006", "007"]
     assert database.execute(
         "SELECT platform_id,collection_enabled FROM external_accounts WHERE id=%s", (account,)
     ).fetchone() == ("123", True)
@@ -351,7 +351,7 @@ def test_upgrade_from_002_adds_latin_constraints_and_keeps_rows(database):
     song = row(database, "songs", title_native="Lemon", title_latin="Lemon")
     database.commit()
     report = apply(database)
-    assert report["applied_versions"] == ["003", "004", "005", "006"]
+    assert report["applied_versions"] == ["003", "004", "005", "006", "007"]
     assert database.execute("SELECT title_latin FROM songs WHERE id=%s", (song,)).fetchone()[0] == "Lemon"
     database.execute("ALTER TABLE songs DROP CONSTRAINT songs_title_latin_ascii")
     with pytest.raises(migration.MigrationError, match="songs_title_latin_ascii"):
@@ -460,7 +460,7 @@ def test_upgrade_from_004_allows_isrc_and_keeps_spotify_rows(database):
     reject(database, "23514", lambda: row(database, "recording_external_ids", recording_id=recording,
                                           platform="isrc", external_id="JPU902602729"))
     report = apply(database)
-    assert report["applied_versions"] == ["005", "006"]
+    assert report["applied_versions"] == ["005", "006", "007"]
     assert migration.verify(database)["verified"] is True
     row(database, "recording_external_ids", recording_id=recording, platform="isrc", external_id="JPU902602729")
     assert database.execute("SELECT count(*) FROM recording_external_ids").fetchone()[0] == 2

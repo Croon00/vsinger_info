@@ -29,7 +29,9 @@ NAMESPACE = uuid.UUID("55a7b968-c120-4d74-964b-3a46479618a8")
 def register(conn, items: list[dict], *, write: bool) -> dict:
     identity = conn.execute("SELECT id::text,schema_version FROM catalog_instance").fetchone()
     revisions = [row[0] for row in conn.execute("SELECT version FROM catalog_schema_migrations ORDER BY version")]
-    if not identity or identity[1] != "catalog-v2" or revisions != [f"{n:03}" for n in range(1, 7)]:
+    if not identity or identity[1] != "catalog-v2" or revisions not in (
+        [f"{n:03}" for n in range(1, 7)], [f"{n:03}" for n in range(1, 8)],
+    ):
         raise RuntimeError("Unexpected unified catalog identity or revision")
     if write:
         conn.execute("SELECT pg_advisory_xact_lock(%s)", (731064923,))
@@ -87,6 +89,9 @@ def register(conn, items: list[dict], *, write: bool) -> dict:
             changes.append((entity_type, key, after, {"policy": POLICY, "source_url": item["channel_url"]}))
             mappings.append({"entity_type": entity_type, "id": key, "slug": item["slug"]})
         plan.update(artist_id=artist_id, account_id=account_id)
+        if '007' in revisions:
+            # Ownership INSERT queued the avatar atomically through revision 007.
+            plan['avatar_job_id'] = conn.execute('SELECT avatar_enqueue(%s)', (artist_id,)).fetchone()[0]
         request = JobRequest(job_type="youtube_poll", external_account_id=account_id,
                              payload={"channel_id": item["channel_id"],
                                       "request_run": "indie-utawaku-2026-10-02",

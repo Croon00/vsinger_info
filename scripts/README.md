@@ -36,6 +36,7 @@
 | `register_indie_utawaku.py` | 2026-10-02 검증한 Figaro, shin, 音魂ヒビク의 아티스트·YouTube 계정을 등록하고 채널별 최근 우타와꾸 5건의 수집 작업을 예약. 기본 읽기 전용 미리보기, `--apply`는 신규 DB에 한 transaction으로 반영. 공연·일정 데이터는 생성하지 않음. |
 | `audit_spotify_collection.py` | Spotify 수집 결과 읽기 전용 점검(작업 결과, 합계, 검토 필요 기록, 녹음 0 계정, 제목 일치가 없는 계정). 상세는 Git 제외 `db-migration/reports/spotify-collection/audit.json` |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영. [프로필 이미지 저장](../docs/avatar-storage.md) |
+| `avatar_jobs.py` | 007 초기 이미지 큐. `enqueue --artist-id ID`는 기본 읽기 전용 미리보기, `--apply`는 빈 이미지 작업 등록. `status ID`는 조회. `run-once`/`worker`는 YouTube → X 이미지 조회·저장소 업로드·DB 반영을 실행. `--request-run` 새 라벨로 끝난 작업의 명시적 재시도. 음악 수집·Discord 전송 없음 |
 
 ## 보존된 구 DB 도구
 

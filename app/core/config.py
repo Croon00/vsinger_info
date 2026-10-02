@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     discord_bot_token: str | None = None
     agent_interval_seconds: int = 86400
     agent_enabled: bool = False
+    avatar_worker_enabled: bool = True
     agent_run_on_start: bool = False
     runtime_cutover_enabled: bool = False
     live_site_monitor_enabled: bool = True

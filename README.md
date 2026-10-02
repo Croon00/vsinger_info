@@ -62,6 +62,8 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 
 설정은 [`app/core/config.py`](app/core/config.py)와 [`.env.example`](.env.example)를 기준으로 한다. Python 코드 기본값과 예시 환경변수가 다를 수 있으며 실제 환경변수가 우선한다. DB·외부 서비스 키는 백엔드에 보관한다. 수집기 실행은 DB 저장·외부 알림을 동반하므로 화면 조회와 구분한다.
 
+신규 아티스트의 초기 이미지는 migration 007 적용 후 YouTube → X 순서로 자동 저장한다. 기존 이미지는 보존하며 runtime의 `AVATAR_WORKER_ENABLED` 기본값은 true다(cutover·agent 활성 조건도 필요). 기존 아티스트의 빈 이미지 미리보기·작업 등록은 `python scripts/avatar_jobs.py enqueue --artist-id ID`를 사용한다. 실제 실행·저장소 설정과 재시도는 [프로필 이미지 저장](docs/avatar-storage.md)에 정리했다. 007 운영 적용·실제 이미지 업로드는 아직 검증하지 않았다.
+
 ## 문서 안내
 
 | 문서 | 다루는 내용 |

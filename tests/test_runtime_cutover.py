@@ -18,6 +18,7 @@ async def _record(calls: list[str], name: str) -> None:
 
 @pytest.fixture(autouse=True)
 def _no_live_site_monitor(monkeypatch):
+    monkeypatch.setattr(runtime.settings, 'avatar_worker_enabled', False)
     # 로컬 .env가 모니터를 켜 두면 실제 사이트 조회 뒤 24시간 sleep으로 멈춘다.
     monkeypatch.setattr(runtime.settings, "live_site_monitor_enabled", False)
     monkeypatch.setattr(runtime, "live_site_loop", _unexpected_live_site_loop)
@@ -59,3 +60,16 @@ async def test_runtime_starts_discord_and_agent_after_cutover(monkeypatch):
     await runtime.main()
 
     assert calls == ["api", "discord", "agent", "music"]
+
+
+@pytest.mark.anyio
+async def test_runtime_starts_independent_avatar_worker(monkeypatch):
+    calls = []
+    monkeypatch.setattr(runtime.settings, 'runtime_cutover_enabled', True)
+    monkeypatch.setattr(runtime.settings, 'agent_enabled', True)
+    monkeypatch.setattr(runtime.settings, 'avatar_worker_enabled', True)
+    for attribute, name in [('_serve_api', 'api'), ('start_discord_bot', 'discord'),
+                            ('agent_loop', 'agent'), ('music_worker_loop', 'music'), ('avatar_worker_loop', 'avatar')]:
+        monkeypatch.setattr(runtime, attribute, lambda n=name: _record(calls, n))
+    await runtime.main()
+    assert calls == ['api', 'discord', 'agent', 'music', 'avatar']

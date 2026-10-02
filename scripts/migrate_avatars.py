@@ -3,29 +3,18 @@ import argparse
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
-from hashlib import sha256
-from io import BytesIO
-import ipaddress
 import json
 from pathlib import Path
-import socket
 import sys
-from urllib.parse import urlsplit, urljoin
-import warnings
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-import boto3
-from botocore.config import Config
 import httpx
-from PIL import Image, ImageOps
 from sqlalchemy import text
 from app.db.catalog_session import catalog_engine, catalog_url
-from app.services.avatar_assets import SIZES, CACHE_CONTROL, storage_settings, public_base, avatar_variants
+from app.services.avatar_assets import SIZES, avatar_variants
+from app.services.avatar_storage import public_url, download, variants, storage, image_prefix, upload
 
-Image.MAX_IMAGE_PIXELS = 40_000_000
-warnings.simplefilter("error", Image.DecompressionBombWarning)
-MAX_BYTES = 20 * 1024 * 1024
 WORK = ROOT / "db-migration/workspace/avatars"
 
 def save_report(path, report):
@@ -33,47 +22,6 @@ def save_report(path, report):
     temporary = path.with_suffix(".tmp")
     temporary.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     temporary.replace(path)
-
-def public_url(url):
-    parsed = urlsplit(url)
-    if parsed.scheme not in ("https", "http") or not parsed.hostname or parsed.username or parsed.password:
-        raise ValueError("invalid_source_url")
-    if parsed.port not in (None, 80, 443):
-        raise ValueError("unsupported_source_port")
-    addresses = socket.getaddrinfo(parsed.hostname, parsed.port or (443 if parsed.scheme == "https" else 80))
-    if not addresses or any(not ipaddress.ip_address(a[4][0]).is_global for a in addresses):
-        raise ValueError("non_public_source")
-    return url
-
-def download(url):
-    with httpx.Client(timeout=httpx.Timeout(20, connect=10), headers={"User-Agent": "schedule-music-avatar-import/1.0"}) as client:
-        for _ in range(6):
-            public_url(url)
-            with client.stream("GET", url) as response:
-                if response.is_redirect:
-                    url = urljoin(url, response.headers["location"])
-                    continue
-                response.raise_for_status()
-                data = bytearray()
-                for chunk in response.iter_bytes():
-                    data.extend(chunk)
-                    if len(data) > MAX_BYTES:
-                        raise ValueError("source_too_large")
-                return bytes(data)
-    raise ValueError("too_many_redirects")
-
-def variants(data):
-    with Image.open(BytesIO(data)) as source:
-        source.load()
-        image = ImageOps.exif_transpose(source).convert("RGBA" if "A" in source.getbands() else "RGB")
-        result = {}
-        for size in SIZES:
-            copy = image.copy()
-            copy.thumbnail((size, size), Image.Resampling.LANCZOS)
-            output = BytesIO()
-            copy.save(output, format="WEBP", quality=85, method=6)
-            result[size] = output.getvalue()
-        return result
 
 def prepare_item(row):
     item = dict(row)
@@ -83,8 +31,7 @@ def prepare_item(row):
         data = download(item["source"])
         generated = variants(data)
         # Hash the output too: encoder/settings changes produce a different immutable URL.
-        digest = sha256(data + b"".join(generated.values())).hexdigest()[:32]
-        prefix = f"avatars/v1/{item['id']}/{digest}"
+        prefix = image_prefix(item['id'], data, generated)
         folder = WORK / prefix
         folder.mkdir(parents=True, exist_ok=True)
         (folder / "original").write_bytes(data)
@@ -115,18 +62,6 @@ def prepare(args):
             print(f"artist {item['id']}: {item['status']}", flush=True)
     print(json.dumps(dict(Counter(i["status"] for i in report["items"]))))
 
-def storage():
-    settings = storage_settings()
-    required = ("AWS_ENDPOINT_URL_S3","AWS_ACCESS_KEY_ID","AWS_SECRET_ACCESS_KEY","AWS_REGION")
-    if any(not settings.get(k) for k in required):
-        raise ValueError("missing_storage_configuration")
-    client = boto3.client("s3", endpoint_url=settings["AWS_ENDPOINT_URL_S3"],
-        aws_access_key_id=settings["AWS_ACCESS_KEY_ID"], aws_secret_access_key=settings["AWS_SECRET_ACCESS_KEY"],
-        region_name=settings["AWS_REGION"], config=Config(signature_version="s3v4", s3={"addressing_style":"path"},
-            connect_timeout=10, read_timeout=30, retries={"max_attempts":3,"mode":"standard"},
-            request_checksum_calculation="when_required", response_checksum_validation="when_required"))
-    return client, settings.get("AVATAR_BUCKET") or "artists-avator"
-
 def apply(args):
     report = json.loads(args.report.read_text(encoding="utf-8"))
     client, bucket = storage()
@@ -138,25 +73,8 @@ def apply(args):
         try:
             prefix = item["prefix"]
             folder = WORK / prefix
-            for filename in ("original", *(f"{s}.webp" for s in SIZES)):
-                content = (folder / filename).read_bytes()
-                client.put_object(Bucket=bucket, Key=f"{prefix}/{filename}", Body=content,
-                    ContentType="image/webp" if filename.endswith(".webp") else "application/octet-stream",
-                    CacheControl=CACHE_CONTROL)
-            new_url = public_base() + prefix + "/512.webp"
-            # Verify ALL sizes anonymously before publishing an address in the DB.
-            with httpx.Client(timeout=20) as http:
-                for size in SIZES:
-                    response = http.get(public_base() + prefix + f"/{size}.webp")
-                    if response.status_code == 403:
-                        item["status"] = "uploaded"
-                        save_report(args.report, report)
-                        raise ValueError("bucket_requires_public_read")
-                    response.raise_for_status()
-                    if response.content != (folder / f"{size}.webp").read_bytes():
-                        raise ValueError("public_content_mismatch")
-                    if response.headers.get("cache-control") != CACHE_CONTROL:
-                        raise ValueError("cache_control_mismatch")
+            new_url = upload(prefix, (folder / 'original').read_bytes(),
+                {s: (folder / f'{s}.webp').read_bytes() for s in SIZES}, client=client, bucket=bucket)
             # Persist rollback information before the short transaction.
             item["new_url"] = new_url
             item["status"] = "uploaded"

@@ -1,6 +1,6 @@
 # 새 카탈로그 DB 마이그레이션
 
-최초 적용일: 2026-09-19. 운영 schema 적용일: 2026-09-21. 현재 revision은 `002`, 계약 버전은 `catalog-v2`다. 사용자 지정 Neon PostgreSQL 18.6에 실제 적용하고 별도 연결에서 읽기 전용 검증했다.
+최초 적용일: 2026-09-19. 최초 운영 schema 적용일: 2026-09-21(`002`). 계약 버전은 `catalog-v2`다. 아래 최초 적용 결과는 당시 기록이다. 코드의 최신 revision은 `007`(2026-10-02 초기 이미지 큐)이며, 007의 운영 DB 적용은 아직 확인하지 않았다.
 
 ## 적용 결과
 
@@ -25,6 +25,8 @@
 | 004_song_identity.sql | 곡 별칭·외부 ID·원문 키 판정·병합 기록 4개 표 추가. 기존 표·컬럼 변경 없음 |
 | song-identity-columns.json | 004가 추가한 4개 표의 필드·타입·NULL 계약. runner는 revision별로 계약 파일을 합쳐 검증 |
 | 005_recording_isrc.sql | `recording_external_ids.platform`에 `isrc` 허용. 001의 허용 CHECK를 새 이름으로 교체하고 platform별 ID 형식 CHECK 추가. 표·컬럼 변경 없음 |
+| 006_recording_provider_credits.sql | Spotify 트랙별 제공자 명의 저장 |
+| 007_avatar_jobs.sql / avatar-job-columns.json | 초기 이미지 큐 1개 표·예약 함수·아티스트/계정/소유 관계 trigger. 기존 아티스트 일괄 작업 생성이나 외부 조회 없음 |
 | columns.json | 31개 표의 필드·타입·NULL 계약 |
 | runtime-columns.json | 10개 운영 표의 필드·타입·NULL 계약 |
 | expected-schema.json | 로컬 PostgreSQL에서 검증한 컬럼·제약·인덱스·트리거·함수 정의 |
