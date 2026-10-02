@@ -40,6 +40,7 @@
 | `normalize_artist_names.py` | 기존 아티스트 별칭·소속 정규화 |
 | `import_vsinger_profiles.py` | `data/seeds/` 프로필 반영 |
 | `register_missing_youtube_channels.py` | 시드의 누락 채널 등록 |
+| `prepare_requested_vsingers.py` | 요청 채널의 공식 ID·공개 업로드 목록·채널 통계를 읽기 전용 조사. `--max-pages 400`은 상한 내 전체 목록, `--report-only`는 로컬 CSV 생성. DB 등록·세트리스트 수집·번역을 수행하지 않음. [2026-10-02 상태](../docs/requested-vsingers-2026-10-02.md) |
 | `register_riot_music_youtube_monitors.py` | RIOT MUSIC 채널 모니터 등록 |
 | `backfill_youtube_channel.py` | 지정 채널 과거 영상 수집·저장 |
 | `backfill_riot_music_youtube.py` | RIOT MUSIC 채널 과거 자료 수집·저장 |

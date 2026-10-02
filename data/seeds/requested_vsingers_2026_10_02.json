@@ -1,0 +1,669 @@
+{
+  "requested_on": "2026-10-02",
+  "status": "research_only_not_applied",
+  "artists": [
+    {
+      "slug": "kannagi-anna",
+      "name_native": "神凪アンナ",
+      "name_ko": "칸나기 안나",
+      "channel_url": "https://www.youtube.com/channel/UCvuAdWg_I8U9kwVGZ4XLvog",
+      "agency": "Re:AcT",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@KannagiAnna",
+      "channel_id": "UCvuAdWg_I8U9kwVGZ4XLvog",
+      "channel_title": "神凪アンナ - Kannagi Anna - ",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.v-react.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "anya-kumori",
+      "name_native": "杏夜くもり",
+      "name_ko": "안야 쿠모리",
+      "channel_url": "https://www.youtube.com/channel/UCHnbtVLZYGuKkGh6iFxxTpw",
+      "agency": "Re:AcT",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@AnyaKumori",
+      "channel_id": "UCHnbtVLZYGuKkGh6iFxxTpw",
+      "channel_title": "杏夜 くもり - Anya Kumori -",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.v-react.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "usuwa-suu",
+      "name_native": "稀羽すう",
+      "name_ko": "우스와 스우",
+      "channel_url": "https://www.youtube.com/channel/UCeqIMtLuGc3YgwkhEaG8oDg",
+      "agency": "Re:AcT",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@Suu_Usuwa",
+      "channel_id": "UCeqIMtLuGc3YgwkhEaG8oDg",
+      "channel_title": "稀羽すう - Suu Usuwa -",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.v-react.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "shishigami-leona",
+      "name_native": "獅子神レオナ",
+      "name_ko": "시시가미 레오나",
+      "channel_url": "https://www.youtube.com/channel/UCB1s_IdO-r0nUkY2mXeti-A",
+      "agency": "Re:AcT",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@Leona_Shishigami",
+      "channel_id": "UCB1s_IdO-r0nUkY2mXeti-A",
+      "channel_title": "獅子神レオナ/レオナちゃんねる",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.v-react.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "shiratama-utano",
+      "name_native": "白玖ウタノ",
+      "name_ko": "시라타마 우타노",
+      "channel_url": "https://www.youtube.com/channel/UCNskpCCH661BeRJkN8n8d-A",
+      "agency": "UniVIRTUAL",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@UTANOch",
+      "channel_id": "UCNskpCCH661BeRJkN8n8d-A",
+      "channel_title": "UTANO ch. 白玖ウタノ",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://univirtual.jp/news/202602_02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "kannagi-tenri",
+      "name_native": "巫てんり",
+      "name_ko": "칸나기 텐리",
+      "channel_url": "https://www.youtube.com/channel/UCq7n-GF0SZ7Pt1NCVfTvIaQ",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@KannagiTenri",
+      "channel_id": "UCq7n-GF0SZ7Pt1NCVfTvIaQ",
+      "channel_title": "巫てんり / Kannagi Tenri ",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "ryugasaki-rene",
+      "name_native": "龍ヶ崎リン",
+      "name_ko": "류가사키 레네",
+      "channel_url": "https://www.youtube.com/channel/UC2hc-00y-MSR6eYA4eQ4tjQ",
+      "agency": "ななしいんく",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UC2hc-00y-MSR6eYA4eQ4tjQ",
+      "channel_id": "UC2hc-00y-MSR6eYA4eQ4tjQ",
+      "channel_title": "龍ヶ崎リン / Rene Ryugasaki【ななしいんく】",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.774.ai/talent/rene-ryugasaki",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "류가사키 레네"
+      ]
+    },
+    {
+      "slug": "shin-vsinger",
+      "name_native": "shin",
+      "name_ko": "신",
+      "channel_url": "https://www.youtube.com/channel/UC5zO6IFsWSUHMYgJMv81XKg",
+      "agency": "개인세",
+      "affiliation_status": "candidate",
+      "source_url": "https://www.youtube.com/@shingames7857",
+      "channel_id": "UC5zO6IFsWSUHMYgJMv81XKg",
+      "channel_title": "shin",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "yoshika",
+      "name_native": "よしか⁂",
+      "name_ko": "요시카",
+      "channel_url": "https://www.youtube.com/channel/UC3xQCiEPSkco54WhuiDcngw",
+      "agency": "개인세",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@YOSHIKA-Ch",
+      "channel_id": "UC3xQCiEPSkco54WhuiDcngw",
+      "channel_title": "YOSHIKA⁂Ch. ",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://yuzuriharecords.jp/artist/yoshika/",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "고구마"
+      ]
+    },
+    {
+      "slug": "otodama-hibiku",
+      "name_native": "音魂ヒビク",
+      "name_ko": "히비쿠",
+      "channel_url": "https://www.youtube.com/channel/UCGKNbtDv8OTa8559buDu-Gw",
+      "agency": "개인세",
+      "affiliation_status": "candidate",
+      "source_url": "https://www.youtube.com/@otodama_hibiku",
+      "channel_id": "UCGKNbtDv8OTa8559buDu-Gw",
+      "channel_title": "音魂ヒビク / Otodama Hibiku",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "hizuki-rurufu",
+      "name_native": "陽月るるふ",
+      "name_ko": "히즈키 루루후",
+      "channel_url": "https://www.youtube.com/channel/UCcQsDietWkYakBKbGpCaeLA",
+      "agency": "スナックにり",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@RurufuHizuki",
+      "channel_id": "UCcQsDietWkYakBKbGpCaeLA",
+      "channel_title": "陽月るるふ / Hizuki Rurufu",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://snacknili.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "nagisawa-shichi",
+      "name_native": "渚沢シチ",
+      "name_ko": "나기사와 시치",
+      "channel_url": "https://www.youtube.com/channel/UCAoKkBp0Qj0xW0NEOp7G4hw",
+      "agency": "ミクストガールズ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@Shichi_Mixstgirls",
+      "channel_id": "UCAoKkBp0Qj0xW0NEOp7G4hw",
+      "channel_title": "渚沢シチ / Shichi Channel【ミクスト】",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://mixstgirls.com/member/shichi-nagisawa",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "미쿠스토 시치"
+      ]
+    },
+    {
+      "slug": "nonono-nono",
+      "name_native": "音ノ乃のの",
+      "name_ko": "노노노 노노",
+      "channel_url": "https://www.youtube.com/channel/UCqe0-vqZwAvZUb22wCMu1fA",
+      "agency": "ミリプロ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@_nonono_nono",
+      "channel_id": "UCqe0-vqZwAvZUb22wCMu1fA",
+      "channel_title": "音ノ乃のの / NononoNono",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://milpr.com/talents",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "오토노세 노노노"
+      ]
+    },
+    {
+      "slug": "kano",
+      "name_native": "鹿乃まほろ",
+      "name_ko": "카노 마호로",
+      "channel_url": "https://www.youtube.com/channel/UCShXNLMXCfstmWKH_q86B8w",
+      "agency": "ミリプロ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UCShXNLMXCfstmWKH_q86B8w",
+      "channel_id": "UCShXNLMXCfstmWKH_q86B8w",
+      "channel_title": "鹿乃まほろ / Kano Mahoro",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://milpr.com/talents",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "카노",
+        "鹿乃"
+      ]
+    },
+    {
+      "slug": "nephla",
+      "name_native": "NEPHLA",
+      "name_ko": "네플라",
+      "channel_url": "https://www.youtube.com/channel/UCZlj_hp57CuyacF5d7K0VMg",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/channel/UCZlj_hp57CuyacF5d7K0VMg",
+      "channel_id": "UCZlj_hp57CuyacF5d7K0VMg",
+      "channel_title": "NEPHLA",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "serenade-oxblood",
+      "name_native": "セレナーデ・オックスブラッド",
+      "name_ko": "세레나데 옥스블러드",
+      "channel_url": "https://www.youtube.com/channel/UCdQ9LnNR6DTj52nrpRggexg",
+      "agency": "Varium",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@SerenadeOxblood",
+      "channel_id": "UCdQ9LnNR6DTj52nrpRggexg",
+      "channel_title": "Serenade Ch. セレナーデ・オックスブラッド",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://varium.jp/talent/serenade/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "hinary",
+      "name_native": "INARI",
+      "name_ko": "이나리",
+      "channel_url": "https://www.youtube.com/channel/UCV6V6YJLO0Zykeq1VD16txg",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@0hinarysan",
+      "channel_id": "UCV6V6YJLO0Zykeq1VD16txg",
+      "channel_title": "INARI",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "이나리"
+      ]
+    },
+    {
+      "slug": "noir",
+      "name_native": "NoiR",
+      "name_ko": "느와르",
+      "channel_url": "https://www.youtube.com/channel/UCRQa9FvT-ZlxQrN6B2HjIgQ",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@NoiR-NoWorld",
+      "channel_id": "UCRQa9FvT-ZlxQrN6B2HjIgQ",
+      "channel_title": "NoiR / NoWorld",
+      "channel_verified_on": "2026-10-02",
+      "group": "NoWorld",
+      "group_status": "verified",
+      "group_source_url": "https://www.youtube.com/channel/UCRQa9FvT-ZlxQrN6B2HjIgQ",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "ibara-muan",
+      "name_native": "茨むあん",
+      "name_ko": "무앙",
+      "channel_url": "https://www.youtube.com/channel/UC9zLKU6WiRdcKtAh-6o_zmA",
+      "agency": "개인세",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@ibaramuan",
+      "channel_id": "UC9zLKU6WiRdcKtAh-6o_zmA",
+      "channel_title": "Muan ch.茨むあん",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.youtube.com/channel/UC9zLKU6WiRdcKtAh-6o_zmA",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "machita-chima",
+      "name_native": "町田ちま",
+      "name_ko": "마치타 치마",
+      "channel_url": "https://www.youtube.com/channel/UCo7TRj3cS-f_1D9ZDmuTsjw",
+      "agency": "にじさんじ",
+      "affiliation_status": "candidate",
+      "source_url": "https://www.youtube.com/channel/UCo7TRj3cS-f_1D9ZDmuTsjw",
+      "channel_id": "UCo7TRj3cS-f_1D9ZDmuTsjw",
+      "channel_title": "町田ちま【にじさんじ】",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "inui-toko",
+      "name_native": "戌亥とこ",
+      "name_ko": "이누이 토코",
+      "channel_url": "https://www.youtube.com/channel/UCXRlIK3Cw_TJIQC5kSJJQMg",
+      "agency": "にじさんじ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UCXRlIK3Cw_TJIQC5kSJJQMg",
+      "channel_id": "UCXRlIK3Cw_TJIQC5kSJJQMg",
+      "channel_title": "戌亥とこ -Inui Toko-",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.nijisanji.jp/talents/l/toko-inui",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "nayuta",
+      "name_native": "nayuta",
+      "name_ko": "나유타",
+      "channel_url": "https://www.youtube.com/channel/UCmhtmUBjkXOAetnaDq-XJ1g",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/channel/UCmhtmUBjkXOAetnaDq-XJ1g",
+      "channel_id": "UCmhtmUBjkXOAetnaDq-XJ1g",
+      "channel_title": "nayuta",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "tsunomaki-watame",
+      "name_native": "角巻わため",
+      "name_ko": "츠노마키 와타메",
+      "channel_url": "https://www.youtube.com/channel/UCqm3BQLlJfvkTsX_hvm0UmA",
+      "agency": "ホロライブ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UCqm3BQLlJfvkTsX_hvm0UmA",
+      "channel_id": "UCqm3BQLlJfvkTsX_hvm0UmA",
+      "channel_title": "Watame Ch. 角巻わため",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://hololive.hololivepro.com/talents/tsunomaki-watame/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "azki",
+      "name_native": "AZKi",
+      "name_ko": "아즈키",
+      "channel_url": "https://www.youtube.com/channel/UC0TXe_LYZ4scaW2XMyi5_kw",
+      "agency": "ホロライブ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UC0TXe_LYZ4scaW2XMyi5_kw",
+      "channel_id": "UC0TXe_LYZ4scaW2XMyi5_kw",
+      "channel_title": "AZKi Channel",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://hololive.hololivepro.com/talents/azki/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "hoshimachi-suisei",
+      "name_native": "星街すいせい",
+      "name_ko": "호시마치 스이세이",
+      "channel_url": "https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A",
+      "agency": "ホロライブ",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A",
+      "channel_id": "UC5CwaMl1eIgY8h02uZw7u8A",
+      "channel_title": "Suisei Channel",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://hololive.hololivepro.com/talents/hoshimachi-suisei/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "figaro",
+      "name_native": "Figaro",
+      "name_ko": "피가로",
+      "channel_url": "https://www.youtube.com/channel/UC7CtvN04ublW4LGTPksG6mg",
+      "agency": "개인세",
+      "affiliation_status": "candidate",
+      "source_url": "https://www.youtube.com/@Figaro_qpt",
+      "channel_id": "UC7CtvN04ublW4LGTPksG6mg",
+      "channel_title": "Figaro",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "miran",
+      "name_native": "MiRan",
+      "name_ko": "미란",
+      "channel_url": "https://www.youtube.com/channel/UCMZc2rSj7MewoEvXNfjxuKg",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@MiRanOfficialChannel",
+      "channel_id": "UCMZc2rSj7MewoEvXNfjxuKg",
+      "channel_title": "MiRan Official Channel",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo",
+      "identity_note": "Provided URL resolves to MiRan Official Channel (Vocalist & Violinist), four public uploads and zero singing-title candidates. Do not replace it with Amane Miran without user clarification."
+    },
+    {
+      "slug": "neg",
+      "name_native": "えん / neG",
+      "name_ko": "엥",
+      "channel_url": "https://www.youtube.com/channel/UCXw752V8J8yl_kkiEycyyqg",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/channel/UCXw752V8J8yl_kkiEycyyqg",
+      "channel_id": "UCXw752V8J8yl_kkiEycyyqg",
+      "channel_title": "えん / neG",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "soratsuki-tyra",
+      "name_native": "宙月ティラ",
+      "name_ko": "소라츠키 티라",
+      "channel_url": "https://www.youtube.com/channel/UCdQYcUyffHZoz0KOwuiG0lQ",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/channel/UCdQYcUyffHZoz0KOwuiG0lQ",
+      "channel_id": "UCdQYcUyffHZoz0KOwuiG0lQ",
+      "channel_title": "宙月ティラ",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "cybill",
+      "name_native": "CYBILL",
+      "name_ko": "시빌",
+      "channel_url": "https://www.youtube.com/channel/UC_eiXiNIBK-GzmM1jiY7OHA",
+      "agency": "スナックにり",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@CYBILL_ch",
+      "channel_id": "UC_eiXiNIBK-GzmM1jiY7OHA",
+      "channel_title": "CYBILL",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://snacknili.com/",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "samayoi-suzu",
+      "name_native": "彷徨鈴",
+      "name_ko": "사마요이 스즈",
+      "channel_url": "https://www.youtube.com/channel/UCqDN60QQx3GGmfagx1eyIEg",
+      "agency": "개인세",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@SamayoiSuzu",
+      "channel_id": "UCqDN60QQx3GGmfagx1eyIEg",
+      "channel_title": "彷徨 鈴【Samayoi Suzu】",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://www.youtube.com/channel/UCqDN60QQx3GGmfagx1eyIEg",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "quon-tama",
+      "name_native": "久遠たま",
+      "name_ko": "쿠온 타마",
+      "channel_url": "https://www.youtube.com/channel/UCBC7vYFNQoGPupe5NxPG4Bw",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@QuonTama",
+      "channel_id": "UCBC7vYFNQoGPupe5NxPG4Bw",
+      "channel_title": "QuonTama Ch. 久遠たま",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "kagura-mea",
+      "name_native": "神楽めあ",
+      "name_ko": "카구라 메아",
+      "channel_url": "https://www.youtube.com/channel/UCWCc8tO-uUl_7SJXIKJACMw",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@KaguraMea",
+      "channel_id": "UCWCc8tO-uUl_7SJXIKJACMw",
+      "channel_title": "神楽めあ / KaguraMea",
+      "channel_verified_on": "2026-10-02",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "hizuki-yui",
+      "name_native": "緋月ゆい",
+      "name_ko": "히즈키 유이",
+      "channel_url": "https://www.youtube.com/channel/UCuk7vapXKckSw6yCGGDspDg",
+      "agency": "Neo-Porte",
+      "affiliation_status": "verified",
+      "source_url": "https://www.youtube.com/@Hizuki_Yui_",
+      "channel_id": "UCuk7vapXKckSw6yCGGDspDg",
+      "channel_title": "緋月ゆい / Hizuki Yui",
+      "channel_verified_on": "2026-10-02",
+      "affiliation_source_url": "https://neo-porte.jp/member/hizuki-yui",
+      "entity_kind": "solo",
+      "requested_aliases": [
+        "하즈키 유이"
+      ]
+    },
+    {
+      "slug": "tansansui",
+      "name_native": "炭酸水",
+      "name_ko": "탄산수",
+      "channel_url": "https://www.youtube.com/channel/UCOZvymJrEDhlINeeTJ1SGjQ",
+      "source_url": "https://www.youtube.com/@tansansuichan",
+      "agency": "StudioAbyss Inc.",
+      "affiliation_status": "verified",
+      "entity_kind": "solo",
+      "channel_id": "UCOZvymJrEDhlINeeTJ1SGjQ",
+      "channel_title": "炭酸水🥤｡oO Vsinger",
+      "channel_verified_on": "2026-10-03",
+      "affiliation_source_url": "https://www.studioabyssinc.com/news/2026-tansansui-rurine-join/",
+      "management_started_on": "2026-07-01",
+      "debut_date": "2024-09-08",
+      "birthday_month": 7,
+      "birthday_day": 29
+    }
+  ],
+  "unresolved": [],
+  "schema_note": "Research input only. Current checkout supports revisions 001-005; connected database reports 001-007. No database changes applied.",
+  "releases_research": [
+    {
+      "artist_slug": "kannagi-anna",
+      "title_native": "相対性インソムニア",
+      "title_ko": "상대성 인솜니아",
+      "album_type": "ep",
+      "release_date": "2026-09-13",
+      "source_url": "https://www.v-react.com/archives/4425",
+      "tracks": [
+        "相対性インソムニア",
+        "とける光",
+        "Voyage (Cover)",
+        "ダウト (Cover)"
+      ]
+    },
+    {
+      "artist_slug": "anya-kumori",
+      "title_native": "くもりのあしあと",
+      "title_ko": "쿠모리의 발자국",
+      "album_type": "ep",
+      "release_date": "2026-08-30",
+      "source_url": "https://www.v-react.com/archives/4402",
+      "tracks": [
+        "天気雨",
+        "晴れきらない空に",
+        "Seeker (Cover)",
+        "5月のせいにして。 (Cover)"
+      ]
+    },
+    {
+      "artist_slug": "usuwa-suu",
+      "title_native": "Dive iN",
+      "album_type": "album",
+      "release_date": "2025-07-30",
+      "source_url": "https://www.v-react.com/archives/4073",
+      "tracks": [
+        "Ride on (インタルード)",
+        "Starry night",
+        "ナラタージュ",
+        "思い出とペトリコール",
+        "seaglass",
+        "トロイメライ -The Herb Shop Remix-",
+        "Starry night (Inst)",
+        "ナラタージュ (Inst)",
+        "思い出とペトリコール (Inst)",
+        "seaglass (Inst)"
+      ]
+    },
+    {
+      "artist_slug": "usuwa-suu",
+      "title_native": "seaglass",
+      "album_type": "single",
+      "release_date": "2025-05-22",
+      "source_url": "https://www.v-react.com/archives/4073"
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "History:E",
+      "album_type": "album",
+      "source_listed_date": "2022-03-30",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "History:L",
+      "album_type": "album",
+      "source_listed_date": "2021-06-01",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "頑張れ頑張れ超頑張れ",
+      "album_type": "album",
+      "source_listed_date": "2020-04-01",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "Leona’s YELL 2",
+      "album_type": "album",
+      "source_listed_date": "2020-04-01",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "LEONA’s YELL",
+      "album_type": "album",
+      "source_listed_date": "2019-09-25",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "きみのためのアマイせかい / ダウト",
+      "album_type": "single",
+      "source_listed_date": "2023-06-21",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "ナンセンス・ワード",
+      "album_type": "single",
+      "source_listed_date": "2020-12-02",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "レイニーデイリーファンキー",
+      "album_type": "single",
+      "source_listed_date": "2020-11-07",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "5月のせいにして。",
+      "album_type": "single",
+      "source_listed_date": "2020-05-02",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    },
+    {
+      "artist_slug": "shishigami-leona",
+      "title_native": "Brightenin’ Hope",
+      "album_type": "single",
+      "source_listed_date": "2019-09-25",
+      "source_url": "https://www.v-react.com/archives/artist-name/shishigami-reona",
+      "review_note": "Official work-list date; verify individual release page before applying."
+    }
+  ],
+  "releases_research_note": "Not applied. Korean album titles are editorial translations; recordings and song identities require evidence review.",
+  "existing_artists": [
+    {
+      "slug": "figaro",
+      "artist_id": 941,
+      "account_id": 218
+    },
+    {
+      "slug": "shin-vsinger",
+      "artist_id": 942,
+      "account_id": 219
+    },
+    {
+      "slug": "otodama-hibiku",
+      "artist_id": 943,
+      "account_id": 220
+    }
+  ],
+  "corrected_on": "2026-10-03"
+}
