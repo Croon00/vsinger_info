@@ -14,6 +14,7 @@
 | `correct_legacy_group_live_hosts.py` | 그룹 채널 영상의 명시적 멤버 진행자 203건 검사·수정 (`--apply`) |
 | `apply_reviewed_legacy_setlists.py` | 사용자 결정 파일에 따른 예외 영상 검사·반영 (`--apply`) |
 | `backfill_performance_hosts.py` | 세트리스트 곡을 방송 대표 진행자의 임시 가창으로 연결 (`--apply`, 감사 기록) |
+| `link_performance_artists.py` | 원문 근거와 가창자를 명시한 manifest의 연결 검사. `--manifest FILE --output FILE`은 읽기 전용, `--apply`는 방송을 분할하지 않는 최대 1,000가창 배치로 관계·영수증·행별 근거를 함께 저장. 기존 크레딧·변경된 행은 보존하고 같은 manifest 재실행은 no-op. 채널 진행자로 자동 추론하지 않음. [2026-10-04 반영과 보류 범위](../docs/performance-artists-2026-10-04.md) |
 | `backfill_catalog_video_durations.py` | 새 카탈로그의 누락 영상 길이를 YouTube API로 조회 (`--fetch`)하고 검증된 값만 반영 (`--apply`) |
 | `apply_reviewed_duration_conflict.py` | 사용자 검수로 바로잡은 곡 시각과 API 영상 길이를 함께 반영 (`--apply`) |
 | `verify_legacy_setlist_import.py` | 새 카탈로그의 이관 건수·참조·예외 영상 읽기 전용 검증 |

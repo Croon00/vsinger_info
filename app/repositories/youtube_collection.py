@@ -4,11 +4,45 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import UTC, datetime, timedelta
+from uuid import NAMESPACE_URL, uuid5
 
 from sqlalchemy import text
 
 from app.repositories import song_match_keys, worker_jobs
 from app.schemas.worker_jobs import JobRequest
+
+OWNER_ATTRIBUTION_POLICY = 'youtube-channel-owner-v1'
+
+
+def _record_owner_credits(session, job, document, credits):
+    """Audit provisional credits in the same transaction as the claimed job."""
+    if not credits:
+        return
+    source_hash = session.execute(text('SELECT content_hash FROM source_documents WHERE id=:id'),
+                                  {'id': document}).scalar_one()
+    instance = session.execute(text('SELECT id::text FROM catalog_instance')).scalar_one()
+    body = dict(policy=OWNER_ATTRIBUTION_POLICY, job_id=job.id, account_id=job.external_account_id,
+                source_document_id=document, source_hash=source_hash,
+                credits=[dict(row) for row in credits])
+    digest = hashlib.sha256(json.dumps(body, sort_keys=True, ensure_ascii=False,
+                                       separators=(',', ':')).encode()).hexdigest()
+    import_id = session.execute(text('''INSERT INTO catalog_imports
+        (operation_id,catalog_instance_id,manifest_hash,source_kind,result_mapping,result_summary)
+        VALUES (:operation,:instance,:hash,'batch_import',CAST(:mapping AS jsonb),CAST(:summary AS jsonb)) RETURNING id'''),
+        dict(operation=str(uuid5(NAMESPACE_URL, f'{instance}:{OWNER_ATTRIBUTION_POLICY}:{job.id}')),
+             instance=instance, hash=digest,
+             mapping=json.dumps([dict(entity_type='performance_artists', id=r['id'],
+                                      performance_id=r['performance_id']) for r in credits]),
+             summary=json.dumps(dict(kind=OWNER_ATTRIBUTION_POLICY, job_id=job.id,
+                                     inserted=len(credits), review_status='provisional')))).scalar_one()
+    changes = [dict(entity_id=r['id'], after_data=r['after_data'], provenance=dict(
+        policy=OWNER_ATTRIBUTION_POLICY, basis='channel_owner', review_status='provisional',
+        job_id=job.id, account_id=job.external_account_id, performance_id=r['performance_id'],
+        source_document_id=document, source_hash=source_hash)) for r in credits]
+    session.execute(text('''INSERT INTO catalog_changes(import_id,entity_type,entity_id,action,after_data,provenance)
+        SELECT :import_id,'performance_artists',x.entity_id,'create',x.after_data,x.provenance
+        FROM jsonb_to_recordset(CAST(:changes AS jsonb)) x(entity_id integer,after_data jsonb,provenance jsonb)'''),
+        dict(import_id=import_id, changes=json.dumps(changes)))
 
 
 def poll_state(session, account):
@@ -105,12 +139,16 @@ def persist_collect(session, job, payload, value):
             dict(external=video.id, account=job.external_account_id, title=video.title, published=video.published_at,
                  duration=video.duration_seconds, availability=video.availability)).scalar_one()
     archive_id = current['archive']['id'] if current['archive'] else None
+    # The registered channel owner is the requested default even for group or
+    # collaborative streams. Never choose arbitrarily between multiple owners.
+    owners = session.execute(text('''SELECT a.id FROM artist_external_accounts e JOIN artists a ON a.id=e.artist_id
+        WHERE e.account_id=:account AND e.relationship='owner' AND a.archived_at IS NULL
+        ORDER BY e.position,a.id FOR SHARE OF e,a'''),
+        {'account': job.external_account_id}).scalars().all() if payload.purpose == 'archive' else []
+    singer = owners[0] if len(owners) == 1 else None
     new_archive = False
     if (payload.purpose == 'archive' and video_id and not conflict and not archive_id and not current['cover']
             and outcome not in ('waiting', 'not_due', 'not_eligible')):
-        owners = session.execute(text('''SELECT a.id FROM artist_external_accounts e JOIN artists a ON a.id=e.artist_id
-            WHERE e.account_id=:account AND e.relationship='owner' AND a.archived_at IS NULL ORDER BY e.position,a.id'''),
-            {'account': job.external_account_id}).scalars().all()
         archive_id = session.execute(text('''INSERT INTO live_archives(video_id,primary_artist_id,broadcast_at,setlist_state)
             VALUES (:video,:artist,:broadcast,:state) RETURNING id'''),
             dict(video=video_id, artist=owners[0] if len(owners) == 1 else None,
@@ -131,7 +169,12 @@ def persist_collect(session, job, payload, value):
     metadata = dict(collector='youtube-catalog', video_id=payload.youtube_video_id, outcome=outcome,
                     video=video.model_dump(mode='json') if video else None,
                     extraction_version=payload.extraction_version, extractor=value['extractor'], rows=value['rows'],
-                    comments_truncated=value.get('comments_truncated', False), attribution='unresolved')
+                    comments_truncated=value.get('comments_truncated', False),
+                    attribution='provisional_channel_owner' if singer is not None else 'unresolved',
+                    attribution_policy=OWNER_ATTRIBUTION_POLICY, attribution_artist_id=singer,
+                    attribution_reason=('single_owner' if singer is not None else
+                                        'multiple_owners' if owners else
+                                        'owner_missing' if payload.purpose == 'archive' else 'not_archive'))
     comment = value.get('comment')
     document, _ = _document(session, video_id=payload.youtube_video_id,
         kind='youtube_comment' if comment else 'video_description', external_id=comment.id if comment else payload.youtube_video_id,
@@ -144,12 +187,20 @@ def persist_collect(session, job, payload, value):
         # Only already-confirmed keys link here; everything else stays NULL for review.
         songs = song_match_keys.link_song_ids(
             session, [(entry['title'], entry.get('original_artist') or None) for entry in value['rows']])
+        credits = []
         for ordinal, (entry, song) in enumerate(zip(value['rows'], songs, strict=True), 1):
-            session.execute(text('''INSERT INTO performances(archive_id,ordinal,start_seconds,raw_title,raw_artist,raw_timestamp,
+            performance_id = session.execute(text('''INSERT INTO performances(archive_id,ordinal,start_seconds,raw_title,raw_artist,raw_timestamp,
                     source_document_id,song_id)
-                VALUES (:archive,:ordinal,:seconds,:title,:artist,:stamp,:document,:song)'''),
+                VALUES (:archive,:ordinal,:seconds,:title,:artist,:stamp,:document,:song) RETURNING id'''),
                 dict(archive=archive_id, ordinal=ordinal, seconds=entry['start_seconds'], title=entry['title'],
-                     artist=entry.get('original_artist') or None, stamp=entry['timestamp'], document=document, song=song))
+                     artist=entry.get('original_artist') or None, stamp=entry['timestamp'], document=document, song=song)).scalar_one()
+            if singer is not None:
+                credit = session.execute(text('''INSERT INTO performance_artists(performance_id,artist_id,role,position)
+                    VALUES (:performance,:artist,'lead',0)
+                    RETURNING id,performance_id,to_jsonb(performance_artists) after_data'''),
+                    dict(performance=performance_id, artist=singer)).mappings().one()
+                credits.append(credit)
+        _record_owner_credits(session, job, document, credits)
     if (payload.purpose == 'cover' and outcome == 'collected' and video_id and not conflict
             and not current['archive'] and not current['cover']):
         session.execute(text('INSERT INTO covers(video_id) VALUES (:id) ON CONFLICT DO NOTHING'), {'id': video_id})

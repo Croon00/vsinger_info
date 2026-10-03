@@ -532,7 +532,7 @@ YouTube·Spotify 계정과 공식 사이트·팬클럽 표시 링크를 통합 �
 **연결·검증 규칙**
 
 - UNIQUE(performance_id, artist_id). 동일인은 해당 가창에서 한 번만 계산합니다.
-- 실제 가창자를 모르면 관계를 비워 검수된 미상으로 둘 수 있습니다. 채널 주인으로 자동 채우지 않습니다.
+- 2026-10-04 사용자 요청으로 YouTube 세트리스트 수집은 새 가창에 활성 채널 owner가 정확히 한 명이면 `lead`, 순번 0으로 임시 연결합니다. 그룹·공동 방송을 별도로 판정하지 않습니다. owner가 없거나 여러 명이면 관계를 비웁니다. `catalog_changes`에 `review_status=provisional`, `basis=channel_owner`와 원문 근거를 기록하며 실제 곡별 가창자 검수와 구분합니다. 기존 관계와 수동 삭제는 재수집으로 변경하지 않습니다([수집 계약](backend-service-step-3-youtube.md)).
 
 ## D. 공연·티켓
 
