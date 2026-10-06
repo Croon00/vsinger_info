@@ -81,7 +81,7 @@ def enqueue(session: Session, request: JobRequest, *, due_at: datetime | None = 
 
 
 def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds: float,
-          min_interval_seconds: float = 1) -> Job | None:
+          min_interval_seconds: float = 1, request_run: str | None = None) -> Job | None:
     if not kinds:
         return None
     if set(kinds) - set(PAYLOAD_MODELS):
@@ -101,7 +101,7 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
                 available.extend(selected)
     if not available:
         return None
-    params = dict(kinds=tuple(available), interval=max(0, min_interval_seconds))
+    params = dict(kinds=tuple(available), interval=max(0, min_interval_seconds), request_run=request_run)
     # Only handle registered job types; unimplemented/legacy jobs stay untouched.
     session.execute(text('''
         UPDATE worker_jobs SET status=CASE WHEN attempt_count >= max_attempts THEN 'failed' ELSE 'retry' END,
@@ -109,11 +109,13 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
           lease_owner=NULL,lease_expires_at=NULL,next_attempt_at=clock_timestamp(),
           last_error='worker lease expired'
         WHERE job_type IN :kinds AND status='running' AND lease_expires_at <= clock_timestamp()
+          AND (CAST(:request_run AS text) IS NULL OR payload->>'request_run'=CAST(:request_run AS text))
     ''').bindparams(bindparam('kinds', expanding=True)), params)
     session.execute(text('''
         UPDATE worker_jobs j SET status='cancelled',finished_at=clock_timestamp(),
           next_attempt_at=NULL,last_error='account unavailable'
         WHERE job_type IN :kinds AND status IN ('pending','retry')
+          AND (CAST(:request_run AS text) IS NULL OR j.payload->>'request_run'=CAST(:request_run AS text))
           AND NOT EXISTS (
             SELECT 1 FROM external_accounts a WHERE a.id=j.external_account_id
               AND a.collection_enabled AND a.archived_at IS NULL
@@ -123,10 +125,12 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
         UPDATE worker_jobs SET status='failed',finished_at=clock_timestamp(),next_attempt_at=NULL,
           last_error='attempt limit reached'
         WHERE job_type IN :kinds AND status IN ('pending','retry') AND attempt_count >= max_attempts
+          AND (CAST(:request_run AS text) IS NULL OR payload->>'request_run'=CAST(:request_run AS text))
     ''').bindparams(bindparam('kinds', expanding=True)), params)
     row = session.execute(text('''
         SELECT j.* FROM worker_jobs j JOIN external_accounts a ON a.id=j.external_account_id
         WHERE j.job_type IN :kinds AND j.status IN ('pending','retry')
+          AND (CAST(:request_run AS text) IS NULL OR j.payload->>'request_run'=CAST(:request_run AS text))
           AND (j.next_attempt_at IS NULL OR j.next_attempt_at <= clock_timestamp())
           AND a.collection_enabled AND a.archived_at IS NULL
           AND NOT EXISTS (

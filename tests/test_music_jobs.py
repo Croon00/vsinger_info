@@ -70,6 +70,18 @@ def test_explicit_new_request_run_creates_new_job(store):
     assert asyncio.run(service.enqueue(again)) != first
 
 
+def test_scoped_runner_leaves_other_request_jobs_untouched(store):
+    req = request(store)
+    other = asyncio.run(service.enqueue(req))
+    scoped = req.model_copy(update={'payload': {**req.payload, 'request_run': 'requested-batch'}})
+    selected = asyncio.run(service.enqueue(scoped))
+    result = run({'youtube_collect': handler()}, request_run='requested-batch')
+    assert result == {'id': selected, 'status': 'succeeded'}
+    assert asyncio.run(service.status(other))['status'] == 'pending'
+    assert run({'youtube_collect': handler()}, request_run='requested-batch')['status'] == 'idle'
+    assert asyncio.run(service.status(other))['attempt_count'] == 0
+
+
 @pytest.mark.parametrize('kind,payload', [
     ('youtube_collect', {'channel_id': CHANNEL, 'youtube_video_id': 'bad'}),
     ('youtube_poll', {'channel_id': CHANNEL, 'secret': 'not-allowed'}),

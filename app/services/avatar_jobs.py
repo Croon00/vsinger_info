@@ -109,10 +109,10 @@ async def _process(job):
     return await db_call(repository.finish, job, 'succeeded', result)
 
 
-async def run_once():
+async def run_once(*, artist_ids=None):
     if not await db_call(repository.available):
         return {'status': 'migration_required'}
-    job = await db_call(repository.claim, owner='avatar-' + str(uuid4()))
+    job = await db_call(repository.claim, owner='avatar-' + str(uuid4()), artist_ids=artist_ids)
     if job is None:
         return {'status': 'idle'}
     heartbeat = asyncio.create_task(_heartbeat(job))
@@ -132,11 +132,12 @@ async def run_once():
         await asyncio.gather(heartbeat, work, return_exceptions=True)
 
 
-async def avatar_worker_loop():
+async def avatar_worker_loop(*, artist_ids=None):
+    logger.info('Avatar worker started: artist_scope=%s', artist_ids)
     previous = None
     while True:
         try:
-            result = await run_once()
+            result = await run_once(artist_ids=artist_ids)
             if result['status'] != 'idle' and (result['status'] != 'migration_required' or previous != result['status']):
                 logger.info('Avatar job: %s', result)
             previous = result['status']

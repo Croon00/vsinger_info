@@ -67,6 +67,14 @@ def due(db):
     db.commit()
 
 
+def test_avatar_claim_respects_artist_scope(store):
+    artist, _ = seed(store, both=False)
+    assert call(repo.claim, owner='scope-test', artist_ids=[]) is None
+    assert store.execute("SELECT count(*) FROM avatar_jobs WHERE status='pending'").fetchone()[0] == 1
+    selected = call(repo.claim, owner='scope-test', artist_ids=[artist])
+    assert selected['artist_id'] == artist
+
+
 def test_registration_atomic_queue_and_priority_even_with_collection_disabled(store, images):
     artist, _ = seed(store)
     jobs = store.execute('SELECT id,sources FROM avatar_jobs ORDER BY id').fetchall()

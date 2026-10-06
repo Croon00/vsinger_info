@@ -1,6 +1,31 @@
 # 2026-10-02 아티스트 추가·우타와꾸 조사
 
-상태: **조사 자료 준비, DB 반영·세트리스트 수집·번역 반영 미완료**.
+상태: **2026-10-03 미란 제외 34명 카탈로그 등록·표시 확인 완료. 세트리스트 수집·가창 통계·번역 반영 미완료**.
+
+## 2026-10-03 등록 재개
+
+현재 코드에는 migration 006(Spotify 트랙 명의), 007(초기 이미지 작업 큐)와
+007까지의 지원 검사가 있다. 실제 연결 신규 DB의 identity 검사도 통과했다.
+아래의 005/007 차단 기록은 최초 조사 당시 기록이며 현재 차단 사유가 아니다.
+
+`scripts/register_requested_vsingers.py`로 30명 신규 등록, 기존 스이세이 표시 활성화와
+YouTube owner 연결, 기존 Figaro·shin·히비쿠 유지, 검증된 소속 11개 등록을 수행했다.
+이름·slug·채널 ID·기존 소유권 충돌을 거부하며 기존 이름은 덮어쓰지 않는다.
+미확인 소속은 비워 두고 미란은 채널 확인 전 제외한다. 기존 계정의 수집 상태는
+유지하고 신규 계정은 수집 비활성으로 등록했다. 신규 owner 연결에 따른 007의
+초기 이미지 작업 예약은 DB trigger가 수행한다. 음악 수집 작업이나 알림은 시작하지 않았다.
+
+실데이터 검증(2026-10-03): 먼저 적용과 반복 적용을 한 transaction에서 검증한 뒤
+rollback했다(첫 변경 104개, 반복 변경 0개). 실제 적용은 한 transaction과
+`catalog_imports`/`catalog_changes` 감사 기록에 저장했다. 적용 후 신규 DB를 읽기
+전용으로 조회하고 공개 API의 `CatalogReadRepository.artists()` 결과에 요청 아티스트
+34/34명이 포함되는 것을 확인했다. 배포 URL의 API·화면 검증은 URL 확인 후 수행한다.
+실행 결과는 `.tmp/requested-vsingers-registration-2026-10-03.json`에 보존한다.
+
+```powershell
+.\.venv\Scripts\python.exe scripts/register_requested_vsingers.py
+.\.venv\Scripts\python.exe scripts/register_requested_vsingers.py --apply
+```
 
 2026-10-03 사용자 정정으로 `사이다`는 `탄산수(炭酸水)`이며 공식 채널은
 `https://www.youtube.com/@tansansuichan`임을 확인했다. 요청 목록은 총 35명이다. 입력 자료는
@@ -10,6 +35,64 @@ Data API로 확인했다. 한국어 활동명은 요청 표기를 정리한 편�
 남겼다. 소속 미확인을 개인세로 자동 치환하지 않는다.
 
 ## 확인한 소속과 이름
+
+### 2026-10-03 과거 우타와꾸 수집 재개
+
+공식 YouTube API 영상 검증 요청에서 실제 `quotaExceeded` 응답을 확인했다.
+한도 우회나 반복 호출은 하지 않았다. `scripts/backfill_requested_utawaku.py`로
+미란 제외 34개 채널의 제목 후보 **10,386개**를 `youtube_collect` 작업으로 등록했다.
+200개 이하 transaction으로 나누고, 채널 ID·owner를 검사하고 비활성 YouTube 계정
+31개의 수집을 감사 기록과 함께 활성화했다. 각 입력은 `JobRequest` schema로 검증한다.
+작업은 실제 수집 시 원래 서비스가 채널 일치·방송 시작/종료·제목·공개 상태를 재검증한다.
+일반 영상·타 채널·조회 불가 후보를 성공한 우타와꾸로 간주하지 않는다.
+
+이번 request_run은 `requested-utawaku-2026-10-03`이다. 등록 직후 상태는
+**pending 10,386개, 이번 작업의 성공 수집 0개**이며, quota 대기 정책에 따라
+등록 시각에서 24시간 이후 실행하도록 예약했다.
+이후 공식 quota 초기화 시각(태평양 시간 자정)을 확인해 아직 시도하지 않은
+pending 10,386개의 첫 실행을 **2026-10-03 16:01 KST**로 앞당겼다.
+앞선 24시간 예약은 현재 첫 실행 시각이 아니다. 실제 provider가 이후 quota 오류를
+반환하면 기존 재시도 정책을 적용한다. 공식 근거:
+https://developers.google.com/youtube/v3/determine_quota_cost
+
+로컬 전용 worker(PID 34820)를
+숨김 실행했고 시작 로그와 프로세스를 확인했다. 해당 PC에서 이 프로세스가 유지되는
+동안 자동 재개하며 OS 재부팅 후의 재실행은 자동 등록하지 않았다. 전역 `.env`의
+cutover/agent 설정은 바꾸지 않고 해당 프로세스에만 활성 값을 전달했다.
+Discord·Calendar·Spotify 작업은 실행하지 않는다. worker의 `request_run` 필터가
+이번 요청과 그 후속 댓글 확인 작업만 처리한다.
+
+이 기록은 **목록·세트리스트·가창 통계·한국어 제목 전체 수집 완료 기록이 아니다**.
+원문과 기존 세트리스트를 보존하는 표준 저장 경로를 사용한다. 가창자 추정과 번역을
+이번 큐 등록 단계에서 만들어 넣지 않았다. quota 응답 후 전체 YouTube 작업을
+대기시키도록 오류 코드를 보완했다. 코드 변경은 배포하지 않았으며 로컬 worker가
+현재 코드를 사용한다.
+
+검증(2026-10-03): 관련 fixture 테스트 **28 passed, 52 skipped**. 로컬 PostgreSQL
+바이너리가 없어 DB fixture 테스트가 생략됐다. 별도로 연결된 신규 DB에서 명시적
+rollback transaction으로 요청 범위 선점과 quota 발생 후 추가 선점 생략을 검증했고,
+검증용 변경은 전부 rollback했다. 등록 후 DB 읽기 전용 집계로 pending 10,386개를
+확인했다. 최초 5개 재등록 결과 신규 작업 0개도 확인했다.
+
+```powershell
+.\.venv\Scripts\python.exe scripts/backfill_requested_utawaku.py plan
+.\.venv\Scripts\python.exe scripts/backfill_requested_utawaku.py status
+# enqueue --apply는 cutover 활성 프로세스에서만 사용. 기본 quota 대기 24시간.
+# worker는 cutover/agent 활성 프로세스에서만 사용하며 이번 요청만 실행.
+```
+
+진행 로그: `.tmp/requested-utawaku-enqueue.stdout.log`,
+`.tmp/requested-utawaku-worker.stdout.log`, `.tmp/requested-utawaku-worker.stderr.log`.
+
+2026-10-03 사용자 `.env` YouTube 키 변경 후 영상 조회와 댓글 조회가 모두 실제로
+성공했다. 이전 로컬 worker(PID 16988)를 종료하고 현재 설정을 읽는 요청 전용
+worker(PID 30308)를 재시작했다. 아직 시도하지 않은 초기 작업과 재시도 작업의
+quota 대기 예약 10,383개를 해제했으며, 댓글 재확인(`wait_count>0`) 예약은 유지했다.
+새 프로세스의 작업 54131·52802 성공과 실제 archive 5883·5884, 가창 행 10·33개
+저장을 읽기 전용으로 확인했다(두 방송, 총 43행). 전체 완료 수는 아니다.
+선택적 AI 세트리스트 추출은 `RateLimitError`가 발생했으며 기존 규칙 파서로 저장했다.
+새 로그는 `.tmp/requested-utawaku-worker-new-key.stdout.log`와
+`.tmp/requested-utawaku-worker-new-key.stderr.log`다. 키 값은 기록하지 않았다.
 
 - Re:AcT: 神凪アンナ, 杏夜くもり, 稀羽すう, 獅子神レオナ.
 - UniVIRTUAL: 白玖ウタノ. 요청에서 그 아래에 나열된 다른 채널까지 같은 소속으로 묶지 않는다.
@@ -69,7 +152,7 @@ Data API로 확인했다. 한국어 활동명은 요청 표기를 정리한 편�
 댓글 세트리스트·가창자·곡 연결이 확보된 것은 아니다. 비공개·삭제·회원 전용 영상은
 공개 API로 전체 확보를 보장할 수 없다.
 
-## DB 호환성 차단과 남은 작업
+## 최초 조사 당시 DB 호환성 차단과 남은 작업
 
 연결된 신규 DB는 `catalog-v2`, revision `001`–`007`이다. 이 체크아웃은
 `catalog-v2`를 사용하지만 migration 파일과 runtime의 `SUPPORTED_REVISIONS`는
@@ -119,3 +202,8 @@ Data API로 확인했다. 한국어 활동명은 요청 표기를 정리한 편�
 중복 영상 제거, 다른 채널 소유 영상 제외, 페이지 상한의 미완료 표시, quota 시
 다음 채널 호출 중단과 잘못된 채널 ID 거부를 확인했다. 실제 API 조회와 신규 DB 읽기 전용 조사는 별도
 실데이터 조사이며 fixture 테스트의 성공을 DB 적용·서비스 수집 성공으로 해석하지 않는다.
+
+
+## 2026-10-03 15:43 KST OpenAI credit recovery verification
+
+After the user replenished OpenAI credits, a real saved comment (source document 6887) was submitted again to the existing setlist extractor and returned 20 rows successfully. This check did not replace existing performance rows. The running backfill worker recovered without restarting: source documents 6896, 6897, 6898, 6899, 6901, 6902, 6903 and 6905 record `openai:gpt-4.1-mini`, with 136 extracted rows in total. These are live API and database observations, not fixture test results. Older rule-fallback results have not all been reprocessed; full backfill and Korean song-title work remain incomplete.

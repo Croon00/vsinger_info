@@ -120,7 +120,8 @@ async def _record_failure(job, exc, retry, delay=30):
 
 async def run_once(*, handlers: dict[str, Handler] | None = None,
                    kinds: tuple[str, ...] | None = None, lease_seconds: float = 90,
-                   min_interval_seconds: float = 1, worker_name: str = 'music') -> dict:
+                   min_interval_seconds: float = 1, worker_name: str = 'music',
+                   request_run: str | None = None) -> dict:
     handlers = HANDLERS if handlers is None else handlers
     if set(handlers) - set(PAYLOAD_MODELS):
         raise ValueError('Unsupported music handler')
@@ -134,7 +135,8 @@ async def run_once(*, handlers: dict[str, Handler] | None = None,
         health['state'] = 'waiting_for_handler'
         return {'status': 'waiting_for_handler'}
     job = await db_call(repository.claim, enabled, owner=f'{worker_name}-{uuid4()}',
-                        lease_seconds=lease_seconds, min_interval_seconds=min_interval_seconds)
+                        lease_seconds=lease_seconds, min_interval_seconds=min_interval_seconds,
+                        request_run=request_run)
     if job is None:
         return {'status': 'idle'}
     health.update(state='running', job_id=job.id)

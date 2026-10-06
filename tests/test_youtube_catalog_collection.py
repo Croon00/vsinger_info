@@ -168,6 +168,25 @@ def test_pending_archive_can_fill_existing_empty_catalog_archive(store, provider
     assert store.execute('SELECT count(*) FROM live_archives').fetchone()[0] == 1
 
 
+def test_quota_failure_pauses_following_youtube_jobs(store, provider):
+    req, first = queue(store)
+    next_request = req.model_copy(update={'payload': {**req.payload, 'request_run': 'another-request'}})
+    second = asyncio.run(music_jobs.enqueue(next_request))
+    provider.videos.side_effect = YouTubeFailure('quotaExceeded', retry=True, retry_after=86400)
+    assert run() == {'id': first, 'status': 'retry'}
+    assert store.execute('SELECT last_error FROM worker_jobs WHERE id=%s', (first,)).fetchone()[0] == 'rate_limited'
+    assert run()['status'] == 'idle'
+    assert asyncio.run(music_jobs.status(second))['attempt_count'] == 0
+    assert provider.videos.await_count == 1
+
+
+def test_youtube_quota_maps_to_provider_pause():
+    with pytest.raises(music_jobs.RetryableJobError) as failure:
+        service._translate(YouTubeFailure('quotaExceeded', retry=True, retry_after=86400))
+    assert failure.value.code == 'rate_limited'
+    assert failure.value.retry_after == 86400
+
+
 def test_edit_during_provider_call_fences_write(store, provider):
     req, _ = queue(store)
     vid = row(store, 'videos', platform='youtube', platform_video_id='abcdefghijk', title='Manual title')

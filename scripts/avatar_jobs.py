@@ -18,7 +18,8 @@ def execute(args):
     if args.action in ('run-once', 'worker'):
         logging.basicConfig(level=logging.WARNING, format='%(asctime)s %(levelname)s %(name)s: %(message)s')
         logging.getLogger('app.services.avatar_jobs').setLevel(logging.INFO)
-        return asyncio.run(run_once() if args.action == 'run-once' else avatar_worker_loop())
+        artists = getattr(args, 'artist_id', None)
+        return asyncio.run(run_once(artist_ids=artists) if args.action == 'run-once' else avatar_worker_loop(artist_ids=artists))
     with Session(catalog_engine(catalog_url())) as session:
         if not args.apply:
             session.execute(text('SET TRANSACTION READ ONLY'))
@@ -50,8 +51,8 @@ def main():
     enqueue.add_argument('--apply', action='store_true')
     status = subs.add_parser('status')
     status.add_argument('job_id', type=int)
-    subs.add_parser('run-once')
-    subs.add_parser('worker')
+    for command in ('run-once', 'worker'):
+        subs.add_parser(command).add_argument('--artist-id', type=int, action='append')
     args = parser.parse_args()
     if not hasattr(args, 'apply'):
         args.apply = False

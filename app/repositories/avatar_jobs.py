@@ -27,21 +27,23 @@ def get_job(session, job_id):
     return dict(row) if row else None
 
 
-def claim(session, *, owner, lease_seconds=300):
+def claim(session, *, owner, lease_seconds=300, artist_ids=None):
     session.execute(text('''UPDATE avatar_jobs SET status='failed',last_error='lease_exhausted',
         finished_at=clock_timestamp(),lease_owner=NULL,lease_expires_at=NULL,updated_at=clock_timestamp()
-        WHERE status='running' AND lease_expires_at<=clock_timestamp() AND attempt_count>=max_attempts'''))
+        WHERE status='running' AND lease_expires_at<=clock_timestamp() AND attempt_count>=max_attempts
+        AND (CAST(:artists AS integer[]) IS NULL OR artist_id=ANY(CAST(:artists AS integer[])))'''), {'artists': artist_ids})
     row = session.execute(text('''SELECT * FROM avatar_jobs
         WHERE attempt_count<max_attempts AND ((status IN ('pending','retry') AND
           (next_attempt_at IS NULL OR next_attempt_at<=clock_timestamp())) OR
           (status='running' AND lease_expires_at<=clock_timestamp()))
+        AND (CAST(:artists AS integer[]) IS NULL OR artist_id=ANY(CAST(:artists AS integer[])))
         AND NOT EXISTS (SELECT 1 FROM avatar_jobs busy WHERE busy.artist_id=avatar_jobs.artist_id
           AND busy.status='running' AND busy.lease_expires_at>clock_timestamp())
         AND NOT EXISTS (SELECT 1 FROM avatar_jobs cooldown WHERE cooldown.status='retry'
           AND cooldown.next_attempt_at>clock_timestamp() AND EXISTS (
             SELECT 1 FROM jsonb_array_elements(avatar_jobs.sources) candidate
             WHERE candidate->>'platform'=cooldown.result->>'retry_platform'))
-        ORDER BY next_attempt_at NULLS FIRST,id FOR UPDATE SKIP LOCKED LIMIT 1''')).mappings().one_or_none()
+        ORDER BY next_attempt_at NULLS FIRST,id FOR UPDATE SKIP LOCKED LIMIT 1'''), {'artists': artist_ids}).mappings().one_or_none()
     if row is None:
         return None
     # Serialize claims for different snapshots of the same artist, including different workers.
