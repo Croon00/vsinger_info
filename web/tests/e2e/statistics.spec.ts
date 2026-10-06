@@ -1,5 +1,22 @@
 import { test, expect } from '@playwright/test'
 
+test('statistics song links show singer dates and open the selected timestamp', async ({ page }) => {
+  await page.goto('/artists/1?tab=statistics')
+  const song = page.locator('.statistics-song-row a.statistics-song-title').first()
+  await expect(song).toBeVisible()
+  const title = (await song.textContent())!.trim()
+  await song.click()
+  await expect(page.getByRole('heading', { name: '부른 날짜', exact: true })).toBeVisible()
+  expect(new URL(page.url()).searchParams.get('artist_id')).toBe('1')
+  const result = page.locator('a.performance-result').first()
+  await expect(result).toBeVisible()
+  await expect(result.locator('.performance-title')).toHaveText(title)
+  const target = await result.getAttribute('href')
+  expect(target).toMatch(/\/lives\/[^?]+\?t=\d+/)
+  await result.click()
+  await expect(page).toHaveURL(new RegExp(target!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'))
+})
+
 test('artist bars hide immediately when their page becomes inactive', async ({ page }) => {
   await page.goto('/artists/1?tab=statistics', { waitUntil: 'domcontentloaded' })
   await expect(page.getByRole('progressbar')).toHaveCount(10)

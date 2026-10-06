@@ -55,8 +55,10 @@ def statistics(artist_id:int,service:Catalog,response:Response):
     return finish(response,service,service.statistics(artist_id))
 
 @router.get('/search',response_model=Page[SearchRead])
-def search(service:Catalog,response:Response,q:Annotated[str,Query(min_length=1,max_length=200)],offset:Offset=0,limit:Limit=50):
-    return finish(response,service,service.search(q.strip(),offset,limit) if q.strip() else {'items':[],'total':0,'offset':offset,'limit':limit})
+def search(service:Catalog,response:Response,q:Annotated[str,Query(min_length=1,max_length=200)],offset:Offset=0,limit:Limit=50,
+           artist_id:Annotated[int|None,Query(ge=1)]=None,
+           song_key:Annotated[str|None,Query(pattern=r'^(song:[1-9][0-9]*|raw:[a-f0-9]{32})$')]=None):
+    return finish(response,service,service.search(q.strip(),offset,limit,artist_id,song_key) if q.strip() else {'items':[],'total':0,'offset':offset,'limit':limit})
 
 @router.get('/concerts',response_model=Page[ConcertRead])
 def concerts(service:Catalog,response:Response,offset:Offset=0,limit:Limit=100,artist_id:int|None=None,start:date|None=None,end:date|None=None):

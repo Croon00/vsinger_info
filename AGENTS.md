@@ -1,4 +1,4 @@
-# schedule_music 작업 지침
+# UtaMowa (우타모와) 작업 지침
 
 ## 현재 기준
 

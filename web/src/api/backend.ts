@@ -281,24 +281,27 @@ export const backendApi = {
     if (!result) throw new Error('찾으시는 공연이 없어요.')
     return result
   },
-  async search(q: string, signal?: AbortSignal, offset = 0): Promise<SearchResults> {
+  async search(q: string, signal?: AbortSignal, offset = 0, options: { artistId?: number; songKey?: string } = {}): Promise<SearchResults> {
     if (!q.trim()) return { artists: [], performances: [], total: 0 }
     const query = q.trim()
+    const params = new URLSearchParams({ q: query, offset: String(offset), limit: '50' })
+    if (options.artistId) params.set('artist_id', String(options.artistId))
+    if (options.songKey) params.set('song_key', options.songKey)
     const [all, result] = await Promise.all([
       artists(signal),
       cachedRead<Page<BackendSearchPerformance>>(
-        `/api/search?${new URLSearchParams({ q: query, offset: String(offset), limit: '50' })}`,
+        `/api/search?${params}`,
         signal,
       ),
     ])
     return {
-      artists: all.filter((a) =>
+      artists: options.artistId ? [] : all.filter((a) =>
         [a.name, ...(a.aliases ?? [])].some((name) => normalize(name).includes(normalize(query))),
       ),
       total: result.total,
       performances: result.items.map((row) => {
         const owner =
-          all.find((a) => (a.related_artist_ids ?? [a.id]).includes(row.artist_id ?? -1))
+          all.find((a) => (a.related_artist_ids ?? [a.id]).includes(options.artistId ?? row.artist_id ?? -1))
         return {
           ...mapPerformance(row),
           artist: owner ?? { id: null, name: row.artist_name, display_name: row.artist_name_ko ?? '' },

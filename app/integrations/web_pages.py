@@ -15,7 +15,7 @@ async def fetch_public_page_text(url: str) -> str | None:
         async with httpx.AsyncClient(
             follow_redirects=True,
             timeout=20,
-            headers={"User-Agent": "schedule-music/0.1"},
+            headers={"User-Agent": "UtaMowa/0.1"},
         ) as client:
             response = await client.get(url)
             response.raise_for_status()

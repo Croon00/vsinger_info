@@ -23,8 +23,12 @@ const mockApi = {
     signal?: AbortSignal,
     _options?: { artistId?: number; start?: string; end?: string },
   ) => request<Concert[]>('/api/draft/concerts', signal),
-  search: (q: string, signal?: AbortSignal, _offset = 0) =>
-    request<SearchResults>(`/api/draft/search?q=${encodeURIComponent(q)}`, signal),
+  search: async (q: string, signal?: AbortSignal, _offset = 0, options: { artistId?: number; songKey?: string } = {}) => {
+    const result = await request<SearchResults>(`/api/draft/search?q=${encodeURIComponent(q)}`, signal)
+    if (!options.artistId) return result
+    const performances = result.performances.filter((p) => p.artist.id === options.artistId && p.song_title === q)
+    return { ...result, artists: [], performances, total: performances.length }
+  },
 }
 
 export const api = isMock

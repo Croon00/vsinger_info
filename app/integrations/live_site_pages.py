@@ -14,7 +14,7 @@ from urllib.robotparser import RobotFileParser
 import httpx
 
 JST = timezone(timedelta(hours=9))
-USER_AGENT = "schedule_music/1.0 (+public event calendar; daily polling)"
+USER_AGENT = "UtaMowa/1.0 (+public event calendar; daily polling)"
 ZAN_CHANNELS = {
     "rkmusic": "https://www.zan-live.com/ko/channel/rkmusic",
     "virtual_kaf": "https://www.zan-live.com/ko/channel/virtual_kaf",

@@ -95,6 +95,13 @@ def test_normalized_catalog_reads_and_attribution(store):
         assert service.search("Guest",0,50)["total"]==1
         assert service.search("%",0,50)["total"]==0
         assert service.search("Title",99,1)["total"]==2
+        song_key = service.statistics(a)["songs"][0]["key"]
+        scoped = service.search("Title",0,1,a,song_key)
+        assert scoped["total"]==1
+        assert scoped["items"][0]["artist_id"]==a
+        assert service.search("Title",1,1,a,song_key)["total"]==1
+        assert service.search("Title",0,50,original,song_key)["total"]==0
+        assert service.search("Title",0,50,a,"raw:"+"0"*32)["total"]==0
         for artist in [a,guest]:
             stats=service.statistics(artist)
             assert stats["archives"]==1 and stats["performances"]==1

@@ -14,7 +14,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 def fetch(url):
     url = quote(url, safe=':/?=&%')
-    return urlopen(Request(url, headers={'User-Agent': 'schedule-music-design-preview/0.1'}), timeout=30).read()
+    return urlopen(Request(url, headers={'User-Agent': 'UtaMowa-preview/0.1'}), timeout=30).read()
 
 class Page(HTMLParser):
     def __init__(self, content):

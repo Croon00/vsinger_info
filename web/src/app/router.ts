@@ -31,5 +31,5 @@ router.beforeEach((to, from) => {
   if (to.path !== from.path) positions.set(key(from.fullPath), window.scrollY)
 })
 router.afterEach((to) => {
-  document.title = `${to.path === '/' ? '홈' : to.path.startsWith('/calendar') ? '캘린더' : to.path.startsWith('/settings') ? '설정' : to.path.startsWith('/search') ? '검색' : '탐색'} · schedule_music`
+  document.title = `${to.path === '/' ? '홈' : to.path.startsWith('/calendar') ? '캘린더' : to.path.startsWith('/settings') ? '설정' : to.path.startsWith('/search') ? '검색' : '탐색'} · UtaMowa (우타모와)`
 })

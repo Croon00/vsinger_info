@@ -46,12 +46,12 @@ const activeIndex = computed(() => nav.findIndex((item) => item.href === active.
         <RouterLink
           to="/"
           class="brand group-data-[collapsible=icon]:justify-center"
-          aria-label="schedule_music 홈"
+          aria-label="UtaMowa (우타모와) 홈"
         >
           <span class="brand-symbol"><AudioLines class="size-6" /></span>
           <span v-if="wide">
-            schedule
-            <span class="font-normal text-muted-foreground">_music</span>
+            UtaMowa
+            <span class="font-normal text-muted-foreground">(우타모와)</span>
           </span>
         </RouterLink>
       </SidebarHeader>

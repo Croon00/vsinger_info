@@ -83,7 +83,7 @@ def public_url(url):
 
 
 def download(url):
-    with httpx.Client(timeout=httpx.Timeout(20, connect=10), headers={'User-Agent': 'schedule-music-avatar/1.0'}) as client:
+    with httpx.Client(timeout=httpx.Timeout(20, connect=10), headers={'User-Agent': 'UtaMowa-avatar/1.0'}) as client:
         for _ in range(6):
             public_url(url)
             with client.stream('GET', url) as response:

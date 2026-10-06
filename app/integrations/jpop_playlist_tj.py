@@ -26,7 +26,7 @@ CATEGORY_PATH = (
     "/category/%EB%85%B8%EB%9E%98%EB%B0%A9%20%EB%B2%88%ED%98%B8/"
     "J-POP%20%EB%85%B8%EB%9E%98%EB%B0%A9%20%EB%B2%88%ED%98%B8"
 )
-USER_AGENT = "schedule-music/1.0 (karaoke number lookup)"
+USER_AGENT = "UtaMowa/1.0 (karaoke number lookup)"
 
 
 @dataclass(frozen=True)

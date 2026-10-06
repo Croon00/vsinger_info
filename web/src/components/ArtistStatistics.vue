@@ -38,7 +38,7 @@ import { Progress } from '@/components/ui/progress'
 import ResourceState from '@/components/ResourceState.vue'
 import ArchiveActivity from '@/components/ArchiveActivity.vue'
 
-const props = defineProps<{ lives: Live[]; summary?: Statistics }>()
+const props = defineProps<{ lives: Live[]; summary?: Statistics; artistId?: number }>()
 const query = ref('')
 const sort = ref<SongSort>('most')
 const page = ref(1)
@@ -169,7 +169,12 @@ const date = (value: string | null) =>
                       <span class="statistics-rank">{{ song.rank }}</span>
                     </TableCell>
                     <TableCell class="min-w-0 whitespace-normal">
-                      <div class="statistics-song-title">{{ displayName(song.title, song.titleKo) }}</div>
+                      <RouterLink v-if="artistId" class="statistics-song-title hover:underline focus-visible:underline underline-offset-4"
+                        :to="{ path: '/search', query: { q: song.title.slice(0, 200), artist_id: String(artistId), song_key: song.key } }"
+                        :aria-label="`${displayName(song.title, song.titleKo)} 부른 날짜 보기`">
+                        {{ displayName(song.title, song.titleKo) }}
+                      </RouterLink>
+                      <div v-else class="statistics-song-title">{{ displayName(song.title, song.titleKo) }}</div>
                       <div class="statistics-song-artist">{{ displayName(song.artist, song.artistKo) }}</div>
                       <div class="statistics-mobile-date">
                         최근 {{ date(song.lastPerformedAt) }}

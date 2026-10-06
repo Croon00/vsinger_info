@@ -23,14 +23,19 @@ import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
 const query = computed(() => String(route.query.q ?? ''))
+const scope = computed(() => {
+  const id = Number(route.query.artist_id)
+  return { artistId: Number.isInteger(id) && id > 0 ? id : undefined,
+    songKey: typeof route.query.song_key === 'string' ? route.query.song_key : undefined }
+})
 const performer = ref('all')
 const original = ref('all')
 const extra = ref<SearchPerformance[]>([])
 const moreLoading = ref(false)
 const moreError = ref('')
 const { data, loading, error, reload } = useResource(
-  (signal) => api.search(query.value, signal),
-  [query],
+  (signal) => api.search(query.value, signal, 0, scope.value),
+  [query, scope],
 )
 watch(data, () => {
   extra.value = []
@@ -43,7 +48,7 @@ async function loadMore() {
   moreLoading.value = true
   moreError.value = ''
   try {
-    const result = await api.search(query.value, undefined, results.value.length)
+    const result = await api.search(query.value, undefined, results.value.length, scope.value)
     if (data.value === initial) {
       const known = new Set(results.value.map((p) => p.id))
       extra.value.push(...result.performances.filter((p) => !known.has(p.id)))
@@ -55,7 +60,7 @@ async function loadMore() {
     moreLoading.value = false
   }
 }
-watch(query, () => {
+watch([query, scope], () => {
   performer.value = 'all'
   original.value = 'all'
 })
@@ -89,8 +94,8 @@ function search(q: string) {
 <template>
   <div class="page-container search-page page-enter">
     <div class="page-heading">
-      <h1>검색 결과</h1>
-      <p>아티스트 이름, 원곡명, 원곡 아티스트로 라이브 속 노래를 찾아보세요.</p>
+      <h1>{{ scope.artistId ? '부른 날짜' : '검색 결과' }}</h1>
+      <p>{{ scope.artistId ? '방송 날짜를 선택하면 해당 곡을 부른 시점부터 볼 수 있어요.' : '아티스트 이름, 원곡명, 원곡 아티스트로 라이브 속 노래를 찾아보세요.' }}</p>
     </div>
     <SearchForm :initial="query" @search="search" />
     <ResourceState

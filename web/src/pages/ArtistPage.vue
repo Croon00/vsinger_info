@@ -274,7 +274,7 @@ function returnToList() {
           </TabsContent>
           <TabsContent value="statistics" class="pt-4 min-[769px]:pt-6">
             <ResourceState :loading="statsLoading" :error="statsError" @retry="reloadStats">
-              <ArtistStatistics v-if="stats" :key="id" :lives="[]" :summary="stats" />
+              <ArtistStatistics v-if="stats" :key="id" :lives="[]" :summary="stats" :artist-id="Number(id)" />
             </ResourceState>
           </TabsContent>
           <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">

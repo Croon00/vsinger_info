@@ -16,7 +16,7 @@ from typing import Callable, Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-USER_AGENT = "schedule_music-song-master/0.1 ( https://github.com/Croon00/vsinger_info )"
+USER_AGENT = "UtaMowa-song-master/0.1 ( https://github.com/Croon00/vsinger_info )"
 MBID = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 VOCADB_SITES = {"vocadb": "https://vocadb.net", "utaitedb": "https://utaitedb.net"}
 MAX_RETRY_AFTER = 120.0

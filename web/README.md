@@ -1,4 +1,4 @@
-# schedule_music · 새 프론트
+# UtaMowa (우타모와) · 새 프론트
 
 Vue + TypeScript + Vite, shadcn-vue Luma 기반 프론트입니다. 기본 실행은 새 Neon 카탈로그에 연결된 통합 조회 `/api`를 사용합니다. 디자인 목업은 별도 모드로 유지합니다.
 

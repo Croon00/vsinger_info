@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Railway와 로컬 .env에서 읽어오는 앱 전체 설정입니다."""
 
-    app_name: str = "schedule-music"
+    app_name: str = "UtaMowa (우타모와)"
     # The only normal runtime DB is the guarded unified catalog.
     database_url: str | None = None
     new_database_instance_id: str | None = None

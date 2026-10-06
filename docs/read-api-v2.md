@@ -80,3 +80,10 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 ## 프로필 이미지
 
 artists 응답에 avatar_variants(128/256/512 URL 객체)를 제공한다. 대표 이미지 필드 spotify_image_url은 호환성을 위해 유지하지만 값은 새 DB의 avatar_url이며 Spotify 조회를 의미하지 않는다. 관리 이미지에만 변형 URL을 제공하고 외부 이미지에는 빈 객체를 반환한다. 요청 중 이미지 다운로드·변환은 하지 않는다. 저장소 연결과 교체 절차는 [프로필 이미지 저장](avatar-storage.md)을 따른다.
+
+
+### Statistics song drilldown (2026-10-06)
+
+`GET /api/search` accepts optional `artist_id` (positive integer) and `song_key` (`song:<id>` or `raw:<32-character lowercase MD5>`). Both filters apply before pagination: the artist must be credited in `performance_artists` on the performance, and the song key uses the same identity as artist statistics. Results retain the existing newest-broadcast-first order and timestamp playback links. The UI links statistics song titles to `/search?q=...&artist_id=...&song_key=...`; selecting a dated result opens `/lives/<archive>?t=<seconds>`. Ordinary home search remains unscoped.
+
+Verification on 2026-10-06: frontend build passed; backend adapter unit tests 12 passed; desktop browser drilldown 1 passed. PostgreSQL fixture tests 12 skipped because the local PostgreSQL fixture server is unavailable. A separate read-only live catalog check confirmed scoped results, out-of-range pagination totals, and ordinary unscoped search; no collection or data writes were performed. Deploy both API and frontend to enable this feature on the public site.

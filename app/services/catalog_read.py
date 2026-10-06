@@ -26,7 +26,8 @@ class CatalogRead:
             row["artist_id"] = artist_id
         return result
     def live(self, key): return self.repository.live(key)
-    def search(self, q, offset, limit): return self.repository.search(q,offset,limit)
+    def search(self, q, offset, limit, artist_id=None, song_key=None):
+        return self.repository.search(q,offset,limit,artist_id,song_key)
     def concerts(self, offset, limit, artist_id=None, start=None, end=None):
         return self._concert_dates(self.repository.concerts(offset,limit,artist_id,start,end))
     def concert(self, key):

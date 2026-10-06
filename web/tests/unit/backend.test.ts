@@ -158,6 +158,21 @@ describe('real API requests', () => {
     expect(result.performances[0].live.video_id).toBe('abcdefghijk')
     expect(calls).toHaveLength(2)
   })
+  it('scopes statistics drilldown on the server across pages', async () => {
+    vi.stubGlobal('fetch', vi.fn(async (path: string) => {
+      if (path === '/api/artists') return json([rawArtist])
+      const params = new URL(path, 'http://localhost').searchParams
+      expect(params.get('artist_id')).toBe(String(rawArtist.id))
+      expect(params.get('song_key')).toBe('song:123')
+      expect(params.get('offset')).toBe('50')
+      return json({ items: [rawPerformance], total: 51, offset: 50, limit: 50 })
+    }))
+    const { backendApi } = await import('@/api/backend')
+    const result = await backendApi.search('Band', undefined, 50, { artistId: rawArtist.id, songKey: 'song:123' })
+    expect(result.artists).toEqual([])
+    expect(result.performances[0].artist.id).toBe(rawArtist.id)
+    expect(result.total).toBe(51)
+  })
   it('loads only a page of archive summaries, without requesting complete setlists', async () => {
     vi.stubGlobal(
       'fetch',

@@ -19,9 +19,9 @@ function search(q: string) {
 <template>
   <div class="home-page page-enter">
     <section class="home-search" aria-labelledby="home-heading">
-      <div class="home-title" aria-label="schedule_music">
+      <div class="home-title" aria-label="UtaMowa (우타모와)">
         <AudioLines class="size-5" aria-hidden="true" />
-        <span>schedule_music</span>
+        <span>UtaMowa (우타모와)</span>
       </div>
       <h1 id="home-heading" class="sr-only">통합검색</h1>
       <SearchForm large placeholder="아티스트 또는 원곡 검색" @search="search" />

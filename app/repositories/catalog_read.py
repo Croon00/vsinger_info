@@ -122,10 +122,16 @@ class CatalogReadRepository:
         row["performances"] = self.rows(f"SELECT * FROM ({PERFORMANCE_SQL}) p WHERE archive_id=:id ORDER BY ordinal,id", {"id":key})
         return row
 
-    def search(self, query, offset, limit):
+    def search(self, query, offset, limit, artist_id=None, song_key=None):
         pattern = "%" + query.replace("\\","\\\\").replace("%","\\%").replace("_","\\_") + "%"
-        params = {"query":pattern,"offset":offset,"limit":limit}
-        rows = self.rows(f"""{SEARCH_CANDIDATES_SQL}, page AS MATERIALIZED (
+        params = {"query":pattern,"offset":offset,"limit":limit,"artist":artist_id,"song_key":song_key}
+        # Scope before pagination so other singers cannot fill the first page.
+        scope = """ AND (CAST(:artist AS integer) IS NULL OR EXISTS (SELECT 1 FROM performance_artists pa
+          WHERE pa.performance_id=p.id AND pa.artist_id=:artist))
+          AND (CAST(:song_key AS text) IS NULL OR :song_key=CASE WHEN s.id IS NOT NULL THEN 'song:'||s.id::text
+          ELSE 'raw:'||md5(lower(btrim(p.raw_title))||'/'||lower(btrim(COALESCE(p.raw_artist,'')))) END)"""
+        candidates = SEARCH_CANDIDATES_SQL[:-1] + scope + ')'
+        rows = self.rows(f"""{candidates}, page AS MATERIALIZED (
         SELECT candidates.*,count(*) OVER() _total FROM candidates
         ORDER BY broadcast_at DESC NULLS LAST,archive_id DESC,ordinal,id
         LIMIT :limit OFFSET :offset)
@@ -140,7 +146,7 @@ class CatalogReadRepository:
         JOIN videos v ON v.id=l.video_id LEFT JOIN artists a ON a.id=l.primary_artist_id AND a.archived_at IS NULL
         ORDER BY page.broadcast_at DESC NULLS LAST,page.archive_id DESC,page.ordinal,page.id""",params)
         total = rows[0].pop("_total") if rows else (
-            self.rows(SEARCH_CANDIDATES_SQL + " SELECT count(*) n FROM candidates",params)[0]["n"]
+            self.rows(candidates + " SELECT count(*) n FROM candidates",params)[0]["n"]
             if offset else 0)
         for row in rows[1:]:
             row.pop("_total")
