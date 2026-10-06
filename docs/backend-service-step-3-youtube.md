@@ -36,12 +36,14 @@
 
 - 영상은 `(platform, platform_video_id)`로 식별하고 신규 행에 `source_account_id`, 제목, 공개 시각, 길이, 공개 상태를 저장한다. 기존 영상의 수동 메타데이터를 자동 갱신하지 않으며 새 관측값은 원문 문서의 메타데이터에 남긴다.
 - `broadcast_at`에는 실제 방송 시작만 사용한다. 예정 시각이나 업로드 시각을 복사하지 않는다.
-- 새 archive는 계정의 기존 `owner` 관계를 진행자(`archive_artists.host`)로 연결한다. 단일 소유자가 있을 때만 대표 표시 아티스트를 설정한다. 각 곡의 가창자로 자동 복사하지 않는다.
-- 새 가창은 `performances`에 순서·초 단위 시작·원문 timestamp·곡명·명시된 원곡자·문서 ID를 저장한다. `song_id`는 원문이 `song_match_keys`의 confirmed 키와 맞을 때만 같은 transaction에서 채운다(`app/repositories/song_match_keys.py`). 정규화 원문(`app/core/song_keys.py`) 정확 일치를 먼저 보고, 원곡자 원문이 없으면 `곡명 / 원곡자`·`곡명 - 원곡자` 형태를 나눈 쌍도 비교하며, 나눈 쌍이 여러 곡을 가리키면 연결하지 않는다. 보관·병합된 곡의 키와 pending/ambiguous/rejected/not_song 키는 NULL로 둔다. 이 조회는 원문·키·곡·판정을 만들거나 바꾸지 않으며 새 원문 키와 빈도는 `scripts/backfill_song_match_keys.py`가 모은다. revision 004 표가 없으면 연결 없이 저장한다. 불확실한 `performance_artists`는 비워 둔다. 공동 가창 표기는 댓글/원문 행에 보존한다. 이름만으로 작품·인물을 생성하거나 병합하지 않는다.
+- 새 archive는 계정의 기존 `owner` 관계를 진행자(`archive_artists.host`)로 연결한다. 단일 소유자가 있을 때만 대표 표시 아티스트를 설정한다. 2026-10-04 사용자 요청으로 새 가창에는 활성 owner가 정확히 한 명이면 `performance_artists(role='lead', position=0)`도 같은 transaction에 저장한다. 그룹 채널·공동 방송·게스트·합창 여부를 별도로 판정하지 않는다. owner가 없거나 여러 명이면 임의로 고르지 않고 가창자 관계를 비운다.
+- 새 가창은 `performances`에 순서·초 단위 시작·원문 timestamp·곡명·명시된 원곡자·문서 ID를 저장한다. `song_id`는 원문이 `song_match_keys`의 confirmed 키와 맞을 때만 같은 transaction에서 채운다(`app/repositories/song_match_keys.py`). 정규화 원문(`app/core/song_keys.py`) 정확 일치를 먼저 보고, 원곡자 원문이 없으면 `곡명 / 원곡자`·`곡명 - 원곡자` 형태를 나눈 쌍도 비교하며, 나눈 쌍이 여러 곡을 가리키면 연결하지 않는다. 보관·병합된 곡의 키와 pending/ambiguous/rejected/not_song 키는 NULL로 둔다. 이 조회는 원문·키·곡·판정을 만들거나 바꾸지 않으며 새 원문 키와 빈도는 `scripts/backfill_song_match_keys.py`가 모은다. revision 004 표가 없으면 곡 연결 없이 저장한다. `song_id`가 없어도 단일 owner의 임시 가창자 관계는 저장한다. 공동 가창 표기는 댓글/원문 행에 보존하고 실제 가창자 교정에 사용할 수 있다. 이름만으로 작품·인물을 생성하거나 병합하지 않는다.
+- 자동 owner 연결의 정책은 `youtube-channel-owner-v1`이다. `catalog_imports`의 작업별 영수증과 `catalog_changes`의 관계별 생성 이력에 `review_status='provisional'`, `basis='channel_owner'`, 작업·계정·출처 문서 ID·해시를 저장한다. 곡별 실제 가창자 검수 완료를 뜻하지 않는다. 현재 통계는 이 임시 관계도 집계한다. 감사 기록 실패 시 영상·원문·가창·가창자 관계와 작업 완료가 함께 롤백된다.
+- 원문 metadata의 `attribution='provisional_channel_owner'`, `attribution_artist_id`, `attribution_policy`는 관측 당시 귀속 정책·후보를 나타낸다. `disposition='review_candidate'`나 `version_conflict`이면 기존 가창에는 적용하지 않는다. `attribution='unresolved'`의 사유는 `owner_missing`, `multiple_owners`, 커버의 `not_archive`로 기록한다. 실제 관계 생성은 감사 기록으로 확인한다.
 - 기존 정규 파싱의 범위 종료 시각·곡 번호·인용부호·점수 제거를 유지하고 잘못된 시간·중복 시작 시각·비가창 행을 제외한다. 선택적 기존 LLM 추출에는 댓글 최대 20,000자를 보내며 원문에 없는 timestamp·제목·원곡자를 채택하지 않는다. LLM 불가 시 정규 파싱을 사용한다.
 - 자동 추출은 검수 완료를 뜻하지 않으므로 새 세트리스트는 `partial`이다. 새 번역·독음·가사·노래방 수집은 호출하지 않는다.
 - `source_documents`에는 원문과 외부 ID/URL, 영상 메타데이터, 추출 방식/모델·버전, 추출 행과 처리 사유를 보존한다. hash는 kind·외부 ID·원문·메타데이터의 정렬 JSON으로 계산하며 확보 시각/검토 상태는 hash에서 제외한다. 같은 원문·추출 결과의 재처리는 중복 문서를 만들지 않는다.
-- 기존 archive/가창/인물 연결은 삭제·교체하지 않는다. 변경된 댓글·추출 버전은 `review_candidate` 문서로 남긴다. 수집 도중 영상/archive/cover version이 달라졌거나 보관되면 `version_conflict` 문서를 남기고 적용을 보류한다. 검토 후보는 내부 보존 계약이며 승인 UI/API는 구현하지 않았다.
+- 기존 archive/가창/인물 연결은 삭제·교체하지 않는다. owner 자동 연결은 신규 archive와 기존 빈 archive를 재개하며 생성하는 새 가창에만 적용한다. 이미 가창이 있는 방송의 미연결 관계를 재수집으로 채우거나 수동 삭제한 크레딧을 복원하지 않는다. 변경된 댓글·추출 버전은 `review_candidate` 문서로 남긴다. 수집 도중 영상/archive/cover version이 달라졌거나 보관되면 `version_conflict` 문서를 남기고 적용을 보류한다. 검토 후보는 내부 보존 계약이며 승인 UI/API는 구현하지 않았다.
 - 커버는 일반 업로드 중 기존 제목/설명 키워드를 충족하고 라이브/예약 영상이 아닌 경우에 `videos/covers`로 저장한다. 작품·가창자를 추측하지 않고 설명과 검토 후보를 남긴다. 기존 `cover_artists`와 작품 연결은 보존한다. 별도 커버 조회 화면/API는 이번 단계에 추가하지 않는다.
 
 ## admin-web 없는 입력
@@ -71,6 +73,14 @@
 backfill은 일반 감시 기준선/주기를 바꾸지 않는다. 지정 영상이 조회되지 않거나 다른 채널이면 해당 요청을 실패로 남기며 조용히 범위를 축소하지 않는다. 가용한 영상만 따로 검토해 요청할 수 있다. 이 문서 작성 중 실제 URL 등록/backfill은 실행하지 않았다.
 
 ## 검증과 다음 단계
+
+2026-10-04 owner 자동 가창자 연결 보완: `tests/test_youtube_catalog_collection.py`,
+`tests/test_music_jobs.py`, `tests/test_link_performance_artists.py` **86 passed**, 107 warnings,
+56.30초. 로컬 일회용 PostgreSQL과 가짜 YouTube/LLM을 사용했다. 공동 방송 제목·게스트
+설명이 있는 그룹 owner도 연결, owner 누락·복수·보관 시 보류, 기존 빈 archive의
+가창 생성 시 연결, `song_id` 미연결 곡의 통계 반영, 재수집·수동 크레딧 수정/삭제 보존,
+감사 실패 롤백·재시도, 커버 경로 보존을 검증했다. 추가 schema migration은 없다.
+이 변경에 대한 운영 DB 적용·실제 provider 수집·worker 배포/재시작 검증은 수행하지 않았다.
 
 2026-09-23 전체 `python -m pytest -q -p no:cacheprovider`: **270 passed**, 346 warnings, 116.82초. 경고는 기존 FastAPI/Starlette와 Python의 deprecated API 사용이다. 일회용 로컬 PostgreSQL과 가짜 provider/LLM을 사용했다. 마지막 제목 필터·감시 gap 보존 보완 뒤 YouTube 관련 테스트를 다시 실행해 **41 passed**, 51 warnings, 16.75초를 확인했다. URL 명령의 `--validate-only`와 `git diff --check`도 통과했다.
 

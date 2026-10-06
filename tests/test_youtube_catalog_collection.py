@@ -49,20 +49,27 @@ def queue(db, **payload):
     return req, asyncio.run(music_jobs.enqueue(req))
 
 
-def test_archive_to_real_api_preserves_raw_source_and_unresolved_attribution(store, provider, monkeypatch):
+def test_archive_to_real_api_connects_channel_owner_even_for_group_collaboration(store, provider, monkeypatch):
     req, _ = queue(store)
     artist = row(store, 'artists', entity_kind='group', slug='group', name_native='Group', show_in_catalog=True)
     row(store, 'artist_external_accounts', artist_id=artist, account_id=req.external_account_id, relationship='owner')
+    provider.videos.return_value = [video(title='歌枠 コラボ Group × Guest', description='ゲスト出演: Guest')]
     store.commit()
     assert run()['status'] == 'succeeded'
     archive = store.execute('SELECT id,setlist_state,broadcast_at FROM live_archives').fetchone()
     assert archive[1] == 'partial'
     assert archive[2] == provider.videos.return_value[0].started_at
     assert store.execute('SELECT count(*) FROM performances WHERE song_id IS NULL').fetchone()[0] == 2
-    assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 0
+    assert store.execute('SELECT artist_id,role,position FROM performance_artists ORDER BY id').fetchall() == [
+        (artist, 'lead', 0), (artist, 'lead', 0)]
     source = store.execute('SELECT external_id,content_text,source_metadata FROM source_documents').fetchone()
     assert source[0] == 'comment-id' and source[1] == comment().text
-    assert source[2]['extractor'] == 'rules-1' and source[2]['attribution'] == 'unresolved'
+    assert source[2]['extractor'] == 'rules-1' and source[2]['attribution'] == 'provisional_channel_owner'
+    assert source[2]['attribution_artist_id'] == artist
+    audits = store.execute("SELECT provenance FROM catalog_changes WHERE entity_type='performance_artists'").fetchall()
+    assert len(audits) == 2
+    assert all(a[0]['review_status'] == 'provisional' and a[0]['basis'] == 'channel_owner' for a in audits)
+    assert all(a[0]['source_document_id'] == store.execute('SELECT id FROM source_documents').fetchone()[0] for a in audits)
     app = FastAPI()
     app.include_router(router, prefix='/api')
     def session():
@@ -78,6 +85,9 @@ def test_archive_to_real_api_preserves_raw_source_and_unresolved_attribution(sto
         detail = api.get(f'/api/lives/{archive[0]}')
         assert detail.status_code == 200, detail.text
         assert len(detail.json()['performances']) == 2
+        stats = api.get(f'/api/artists/{artist}/statistics')
+        assert stats.status_code == 200, stats.text
+        assert stats.json()['performances'] == 2 and stats.json()['archivesWithSetlist'] == 1
         found = api.get('/api/search?q=Song%20One')
         assert found.status_code == 200, found.text
         assert found.json()['total'] == 1
@@ -138,7 +148,13 @@ def test_provider_retry_after_and_no_partial_write(store, provider):
 
 def test_reprocessing_and_manual_changes_are_never_replaced(store, provider):
     req, _ = queue(store)
+    owner = row(store, 'artists', entity_kind='solo', slug='owner', name_native='Owner')
+    row(store, 'artist_external_accounts', artist_id=owner, account_id=req.external_account_id, relationship='owner')
+    store.commit()
     assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 2
+    # A human removes both default credits and supplies only one guest credit.
+    store.execute('DELETE FROM performance_artists')
     perf = store.execute('SELECT id FROM performances ORDER BY ordinal').fetchone()[0]
     guest = row(store, 'artists', entity_kind='solo', slug='guest', name_native='Guest')
     row(store, 'performance_artists', performance_id=perf, artist_id=guest, role='guest')
@@ -153,6 +169,8 @@ def test_reprocessing_and_manual_changes_are_never_replaced(store, provider):
     assert store.execute('SELECT raw_title FROM performances WHERE id=%s', (perf,)).fetchone()[0] == 'Manual correction'
     assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 2
     assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 1
+    assert store.execute('SELECT artist_id FROM performance_artists').fetchone()[0] == guest
+    assert store.execute('SELECT count(*) FROM catalog_imports').fetchone()[0] == 1
     assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->>'disposition'='review_candidate'").fetchone()[0] == 1
 
 
@@ -160,12 +178,57 @@ def test_pending_archive_can_fill_existing_empty_catalog_archive(store, provider
     req, _ = queue(store, wait_count=3)
     video_id = row(store, 'videos', platform='youtube', platform_video_id='abcdefghijk',
                    source_account_id=req.external_account_id, title='Legacy import')
-    archive_id = row(store, 'live_archives', video_id=video_id, setlist_state='unavailable')
+    owner = row(store, 'artists', entity_kind='solo', slug='owner', name_native='Owner')
+    host = row(store, 'artists', entity_kind='solo', slug='manual-host', name_native='Manual host')
+    row(store, 'artist_external_accounts', artist_id=owner, account_id=req.external_account_id, relationship='owner')
+    archive_id = row(store, 'live_archives', video_id=video_id, primary_artist_id=host, setlist_state='unavailable')
     store.commit()
     assert run()['status'] == 'succeeded'
     assert store.execute('SELECT setlist_state FROM live_archives WHERE id=%s', (archive_id,)).fetchone()[0] == 'partial'
     assert store.execute('SELECT count(*) FROM performances WHERE archive_id=%s', (archive_id,)).fetchone()[0] == 2
     assert store.execute('SELECT count(*) FROM live_archives').fetchone()[0] == 1
+    assert store.execute('SELECT primary_artist_id FROM live_archives').fetchone()[0] == host
+    assert store.execute('SELECT artist_id FROM performance_artists').fetchall() == [(owner,), (owner,)]
+
+
+@pytest.mark.parametrize('ownership,reason', [('missing', 'owner_missing'), ('multiple', 'multiple_owners'),
+                                            ('archived', 'owner_missing')])
+def test_missing_or_ambiguous_active_owner_leaves_credits_unresolved(store, provider, ownership, reason):
+    req, _ = queue(store)
+    if ownership != 'missing':
+        owner = row(store, 'artists', entity_kind='solo', slug='owner', name_native='Owner',
+                    archived_at=datetime.now(UTC) if ownership == 'archived' else None)
+        row(store, 'artist_external_accounts', artist_id=owner, account_id=req.external_account_id, relationship='owner')
+    if ownership == 'multiple':
+        other = row(store, 'artists', entity_kind='solo', slug='other', name_native='Other')
+        row(store, 'artist_external_accounts', artist_id=other, account_id=req.external_account_id, relationship='owner')
+    store.commit()
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 2
+    assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 0
+    metadata = store.execute('SELECT source_metadata FROM source_documents').fetchone()[0]
+    assert metadata['attribution'] == 'unresolved' and metadata['attribution_reason'] == reason
+    assert store.execute('SELECT count(*) FROM catalog_imports').fetchone()[0] == 0
+
+
+def test_owner_credit_audit_failure_rolls_back_collection_and_can_retry(store, provider):
+    req, _ = queue(store)
+    owner = row(store, 'artists', entity_kind='solo', slug='owner', name_native='Owner')
+    row(store, 'artist_external_accounts', artist_id=owner, account_id=req.external_account_id, relationship='owner')
+    store.execute("""CREATE FUNCTION reject_owner_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+        BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$""")
+    store.execute('CREATE TRIGGER reject_owner_audit BEFORE INSERT ON catalog_changes FOR EACH ROW EXECUTE FUNCTION reject_owner_audit()')
+    store.commit()
+    assert run()['status'] == 'failed'
+    for table in ('videos', 'live_archives', 'performances', 'performance_artists', 'source_documents', 'catalog_imports'):
+        assert store.execute(f'SELECT count(*) FROM {table}').fetchone()[0] == 0
+    store.execute('DROP TRIGGER reject_owner_audit ON catalog_changes')
+    store.commit()
+    asyncio.run(music_jobs.enqueue(req.model_copy(update={'payload': {**req.payload, 'request_run': 'retry-audit'}})))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 2
+    assert store.execute('SELECT count(*) FROM catalog_changes').fetchone()[0] == 2
+    assert store.execute('SELECT count(*) FROM catalog_imports').fetchone()[0] == 1
 
 
 def test_quota_failure_pauses_following_youtube_jobs(store, provider):
@@ -261,12 +324,16 @@ def test_explicit_backfill_bypasses_baseline_only_for_selected_ids(store, provid
 
 
 def test_cover_is_separate_and_does_not_invent_singer_or_song(store, provider):
-    queue(store, purpose='cover')
+    req, _ = queue(store, purpose='cover')
+    owner = row(store, 'artists', entity_kind='solo', slug='owner', name_native='Owner')
+    row(store, 'artist_external_accounts', artist_id=owner, account_id=req.external_account_id, relationship='owner')
+    store.commit()
     provider.videos.return_value = [video(title='Song / cover', started_at=None, ended_at=None)]
     assert run()['status'] == 'succeeded'
     assert store.execute('SELECT count(*) FROM covers WHERE song_id IS NULL').fetchone()[0] == 1
     assert store.execute('SELECT count(*) FROM cover_artists').fetchone()[0] == 0
     assert store.execute('SELECT count(*) FROM live_archives').fetchone()[0] == 0
+    assert store.execute('SELECT count(*) FROM performance_artists').fetchone()[0] == 0
     provider.comments.assert_not_awaited()
 
 
