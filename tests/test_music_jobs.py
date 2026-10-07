@@ -1,5 +1,6 @@
 """Music queue contracts using disposable PostgreSQL and fake providers only."""
 import asyncio
+from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -80,6 +81,37 @@ def test_scoped_runner_leaves_other_request_jobs_untouched(store):
     assert asyncio.run(service.status(other))['status'] == 'pending'
     assert run({'youtube_collect': handler()}, request_run='requested-batch')['status'] == 'idle'
     assert asyncio.run(service.status(other))['attempt_count'] == 0
+
+
+def test_verified_credential_recovery_is_scoped_and_obeys_new_quota_errors(store):
+    req = request(store)
+    other = asyncio.run(service.enqueue(req))
+
+    async def limited(*_):
+        raise service.RetryableJobError(code='rate_limited', retry_after=86400)
+
+    assert run({'youtube_collect': handler(limited)})['status'] == 'retry'
+    before = asyncio.run(service.status(other))
+    verified_after = datetime.now(UTC)
+    scoped = req.model_copy(update={'payload': {**req.payload, 'request_run': 'recovered'}})
+    selected = asyncio.run(service.enqueue(scoped))
+    assert run({'youtube_collect': handler()}, request_run='recovered')['status'] == 'idle'
+    assert run({'youtube_collect': handler(limited)}, request_run='recovered',
+               rate_limit_observed_after=verified_after) == {'id': selected, 'status': 'retry'}
+    assert run({'youtube_collect': handler()}, request_run='recovered',
+               rate_limit_observed_after=verified_after)['status'] == 'idle'
+    assert asyncio.run(service.status(other)) == before
+
+
+def test_credential_recovery_cannot_be_unscoped():
+    with pytest.raises(ValueError, match='scoped request'):
+        run({'youtube_collect': handler()}, rate_limit_observed_after=datetime.now(UTC))
+
+
+def test_credential_recovery_rejects_future_verification():
+    with pytest.raises(ValueError, match='future'):
+        run({'youtube_collect': handler()}, request_run='recovered',
+            rate_limit_observed_after=datetime.now(UTC) + timedelta(hours=1))
 
 
 @pytest.mark.parametrize('kind,payload', [

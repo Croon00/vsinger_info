@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy import bindparam, text
 from sqlalchemy.orm import Session
@@ -81,7 +81,12 @@ def enqueue(session: Session, request: JobRequest, *, due_at: datetime | None = 
 
 
 def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds: float,
-          min_interval_seconds: float = 1, request_run: str | None = None) -> Job | None:
+          min_interval_seconds: float = 1, request_run: str | None = None,
+          rate_limit_observed_after: datetime | None = None) -> Job | None:
+    if rate_limit_observed_after is not None and (not request_run or rate_limit_observed_after.tzinfo is None):
+        raise ValueError('Verified credential recovery requires a scoped request and timezone-aware time')
+    if rate_limit_observed_after is not None and rate_limit_observed_after > datetime.now(UTC):
+        raise ValueError('Credential verification time cannot be in the future')
     if not kinds:
         return None
     if set(kinds) - set(PAYLOAD_MODELS):
@@ -93,10 +98,15 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
                                         {'key': lock_id}).scalar_one():
             # A provider 429 on any job pauses that provider for every job until the
             # Retry-After it gave, so queued jobs do not keep spending the quota.
+            # Explicit request recovery after a successful credential probe ignores
+            # only older errors; the stored holds and normal workers are unchanged.
             paused = session.execute(text('''
                 SELECT 1 FROM worker_jobs WHERE job_type IN :selected AND status='retry'
-                  AND last_error='rate_limited' AND next_attempt_at > clock_timestamp() LIMIT 1
-            ''').bindparams(bindparam('selected', expanding=True)), {'selected': tuple(selected)}).first()
+                  AND last_error='rate_limited' AND next_attempt_at > clock_timestamp()
+                  AND (CAST(:after AS timestamptz) IS NULL OR updated_at >= CAST(:after AS timestamptz)) LIMIT 1
+            ''')
+                .bindparams(bindparam('selected', expanding=True)),
+                {'selected': tuple(selected), 'after': rate_limit_observed_after}).first()
             if not paused:
                 available.extend(selected)
     if not available:

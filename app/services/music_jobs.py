@@ -121,7 +121,12 @@ async def _record_failure(job, exc, retry, delay=30):
 async def run_once(*, handlers: dict[str, Handler] | None = None,
                    kinds: tuple[str, ...] | None = None, lease_seconds: float = 90,
                    min_interval_seconds: float = 1, worker_name: str = 'music',
-                   request_run: str | None = None) -> dict:
+                   request_run: str | None = None,
+                   rate_limit_observed_after: datetime | None = None) -> dict:
+    if rate_limit_observed_after is not None and (not request_run or rate_limit_observed_after.tzinfo is None):
+        raise ValueError('Verified credential recovery requires a scoped request and timezone-aware time')
+    if rate_limit_observed_after is not None and rate_limit_observed_after > datetime.now(UTC):
+        raise ValueError('Credential verification time cannot be in the future')
     handlers = HANDLERS if handlers is None else handlers
     if set(handlers) - set(PAYLOAD_MODELS):
         raise ValueError('Unsupported music handler')
@@ -136,7 +141,7 @@ async def run_once(*, handlers: dict[str, Handler] | None = None,
         return {'status': 'waiting_for_handler'}
     job = await db_call(repository.claim, enabled, owner=f'{worker_name}-{uuid4()}',
                         lease_seconds=lease_seconds, min_interval_seconds=min_interval_seconds,
-                        request_run=request_run)
+                        request_run=request_run, rate_limit_observed_after=rate_limit_observed_after)
     if job is None:
         return {'status': 'idle'}
     health.update(state='running', job_id=job.id)
