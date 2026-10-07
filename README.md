@@ -76,6 +76,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [보완 5단계 결과](docs/backend-service-step-5-migration.md) | 선택 이전·설정 통합·레거시 차단과 Railway 변수표 |
 | [보완 6단계 결과](docs/backend-service-step-6-validation.md) | 이전→수집→조회 통합, 웹 브라우저·회귀 검증과 PR·배포 준비 |
 | [보완 3단계 결과](docs/backend-service-step-3-youtube.md) | 신규 YouTube 채널 감시·세트리스트·커버 저장, 댓글 대기와 수동 수정 보존 |
+| [세트리스트 후보 비교](docs/youtube-setlist-selection.md) | 최대 3개 댓글 비교·원문 보존과 오류 보류. 자동 가창 등록은 `OPENAI_API_KEY` 필요 |
 | [보완 2단계 결과](docs/backend-service-step-2-jobs.md) | 독립 작업 실행기, 로컬 명령, 재시도·취소·heartbeat·readiness 계약 |
 | [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md) | 전체 서비스 준비 판정, 재현 결함 6건, YouTube 등 독립 수집기 개발 순서와 합격 기준 |
 | [백엔드 통합 1단계 준비](docs/backend-phase-1-baseline.md) | 읽기 전용 계정 매핑·선택 이전 조사 절차, 참고 기준선, 실행 전 확인 목록 |

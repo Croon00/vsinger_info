@@ -349,17 +349,18 @@ def test_readiness_requires_provider_credentials_only_for_registered_active_acco
     from app.services.worker_readiness import inspect_readiness
     request(store)
     monkeypatch.setattr(service.settings, 'youtube_api_key', None)
+    monkeypatch.setattr(service.settings, 'openai_api_key', None)
     monkeypatch.setattr(service.settings, 'spotify_client_id', None)
     monkeypatch.setattr(service.settings, 'spotify_client_secret', None)
     first = asyncio.run(inspect_readiness())
     assert first.active_accounts == {'youtube': 1}
-    assert first.missing_credentials == ['YOUTUBE_API_KEY']
+    assert first.missing_credentials == ['YOUTUBE_API_KEY', 'OPENAI_API_KEY']
     row(store, 'external_accounts', platform='spotify', platform_id=SPOTIFY,
         collection_enabled=True, url='https://example.com/spotify')
     store.commit()
     second = asyncio.run(inspect_readiness())
     assert second.active_accounts == {'youtube': 1, 'spotify': 1}
-    assert set(second.missing_credentials) == {'YOUTUBE_API_KEY', 'SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET'}
+    assert set(second.missing_credentials) == {'YOUTUBE_API_KEY', 'OPENAI_API_KEY', 'SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET'}
 
 
 def test_account_identity_change_during_collection_rolls_back_result(store):

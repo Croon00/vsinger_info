@@ -17,6 +17,21 @@ from app.db.catalog_session import get_catalog_session
 from app.api.routers.read_api import router
 from app.integrations.youtube_catalog import Video, Comment, YouTubeClient, YouTubeFailure, parse_setlist, purpose
 from app.services import music_jobs, youtube_collection as service
+from app.services import youtube_setlist as selection
+from app.integrations.youtube_setlist import ComparisonResult, SetlistDecision
+
+
+def fixture_decision(contexts):
+    chosen = contexts[0]
+    songs = []
+    for line in chosen['lines']:
+        for parsed in parse_setlist(line['text']):
+            songs.append(dict(line_number=line['line_number'], timestamp=parsed['timestamp'],
+                              title=parsed['title'], original_artist=None))
+    return ComparisonResult(status='ok', decision=SetlistDecision(
+        decision='selected', selected_candidate_id=chosen['candidate_id'], reason='Fixture song list',
+        judgments=[dict(candidate_id=c['candidate_id'], category='setlist' if c is chosen else 'chat',
+                        reason='Fixture judgment') for c in contexts], songs=songs))
 
 
 def video(**updates):
@@ -35,7 +50,7 @@ def provider(monkeypatch):
     fake = SimpleNamespace(videos=AsyncMock(return_value=[video()]), comments=AsyncMock(return_value=([comment()], False)),
                            recent=AsyncMock(return_value=('uploads', [video()], False)))
     monkeypatch.setattr(service, 'client', lambda: fake)
-    monkeypatch.setattr(service, 'extract_youtube_setlist', AsyncMock(return_value=None))
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(side_effect=fixture_decision))
     return fake
 
 
@@ -64,7 +79,7 @@ def test_archive_to_real_api_connects_channel_owner_even_for_group_collaboration
         (artist, 'lead', 0), (artist, 'lead', 0)]
     source = store.execute('SELECT external_id,content_text,source_metadata FROM source_documents').fetchone()
     assert source[0] == 'comment-id' and source[1] == comment().text
-    assert source[2]['extractor'] == 'rules-1' and source[2]['attribution'] == 'provisional_channel_owner'
+    assert source[2]['extractor'].startswith('openai:') and source[2]['attribution'] == 'provisional_channel_owner'
     assert source[2]['attribution_artist_id'] == artist
     audits = store.execute("SELECT provenance FROM catalog_changes WHERE entity_type='performance_artists'").fetchall()
     assert len(audits) == 2
@@ -427,14 +442,100 @@ def test_deactivated_account_has_no_provider_call(store, provider):
 
 def test_ai_extraction_requires_source_evidence_and_does_not_resolve_names(store, provider, monkeypatch):
     queue(store)
-    monkeypatch.setattr(service, 'extract_youtube_setlist', AsyncMock(return_value=[
-        {'timestamp': '00:30', 'title': 'Song One', 'original_artist': 'Original'},
-        {'timestamp': '02:10', 'title': 'Imaginary song', 'original_artist': 'Imaginary artist'},
-        {'timestamp': '59:59', 'title': 'Song One', 'original_artist': None},
-    ]))
+    def extract(contexts):
+        result = fixture_decision(contexts)
+        result.decision.songs[0].title = 'Song One'
+        result.decision.songs[0].original_artist = 'Original'
+        result.decision.songs = result.decision.songs[:1]
+        return result
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(side_effect=extract))
     assert run()['status'] == 'succeeded'
     assert store.execute('SELECT raw_title,raw_artist,song_id FROM performances').fetchall() == [('Song One', 'Original', None)]
     assert store.execute("SELECT source_metadata->>'extractor' FROM source_documents").fetchone()[0].startswith('openai:')
+
+
+def test_5850_candidates_are_preserved_and_only_selected_songs_are_published(store, provider, monkeypatch):
+    from test_youtube_setlist_selection import CHAT, SONGS, comment as candidate, decision_for_5850
+    req, _ = queue(store)
+    provider.videos.return_value = [video(duration_seconds=12424)]
+    provider.comments.return_value = ([candidate('chat', CHAT), candidate('songs', SONGS),
+                                      candidate('third', '00:01 配信開始'), candidate('fourth', '00:02 挨拶')], False)
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(side_effect=decision_for_5850))
+    assert run()['status'] == 'succeeded'
+    documents = store.execute('SELECT id,external_id,content_text,source_metadata FROM source_documents ORDER BY id').fetchall()
+    assert len(documents) == 3
+    selected = next(d for d in documents if d[1] == 'songs')
+    assert selected[2] == SONGS and selected[3]['selected'] is True
+    assert any(d[1] == 'chat' and d[2] == CHAT and not d[3]['selected'] for d in documents)
+    assert store.execute('SELECT count(*) FROM archive_sources').fetchone()[0] == 3
+    performances = store.execute('SELECT raw_title,source_document_id FROM performances ORDER BY ordinal').fetchall()
+    assert len(performances) == 14 and performances[0] == ('STAND-ALONE', selected[0])
+    assert {p[1] for p in performances} == {selected[0]}
+    asyncio.run(music_jobs.enqueue(req.model_copy(update={'payload': {**req.payload, 'request_run': 'repeat'}})))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM source_documents').fetchone()[0] == 3
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 14
+
+
+@pytest.mark.parametrize('status', ['unconfigured', 'provider_error', 'invalid_response'])
+def test_failed_selection_preserves_comment_without_publishing_or_looping(store, provider, monkeypatch, status):
+    queue(store)
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status=status)))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    assert store.execute('SELECT setlist_state FROM live_archives').fetchone()[0] == 'unprocessed'
+    metadata = store.execute('SELECT source_metadata FROM source_documents').fetchone()[0]
+    assert metadata['selection']['status'] == status and metadata['outcome'] == 'review_required'
+    assert metadata['disposition'] == 'review_candidate' and not metadata['rows']
+    assert store.execute('SELECT count(*) FROM worker_jobs').fetchone()[0] == 1
+
+
+def test_semantic_empty_result_waits_without_restoring_rule_rows(store, provider, monkeypatch):
+    queue(store)
+    decision = SetlistDecision(decision='no_songs', selected_candidate_id=None, reason='Only conversation',
+        judgments=[dict(candidate_id='comment-id', category='chat', reason='Conversation')], songs=[])
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status='ok', decision=decision)))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    assert store.execute('SELECT content_text FROM source_documents').fetchone()[0] == comment().text
+    pending = store.execute("SELECT payload FROM worker_jobs WHERE status='pending'").fetchone()[0]
+    assert pending['wait_count'] == 1 and pending['selection_retry_count'] == 0
+
+
+def test_transient_selection_retries_twice_preserving_evidence(store, provider, monkeypatch):
+    queue(store, wait_count=100)
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status='transient_error', retry_after_seconds=7200)))
+    for attempt in range(3):
+        store.execute("UPDATE worker_jobs SET next_attempt_at=clock_timestamp() WHERE status='pending'")
+        store.commit()
+        assert run()['status'] == 'succeeded'
+        if attempt < 2:
+            due = store.execute("SELECT next_attempt_at FROM worker_jobs WHERE status='pending'").fetchone()[0]
+            assert due > datetime.now(UTC) + timedelta(seconds=7100)
+    assert store.execute("SELECT count(*) FROM worker_jobs WHERE status='pending'").fetchone()[0] == 0
+    assert store.execute('SELECT count(*) FROM worker_jobs').fetchone()[0] == 3
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->>'outcome'='review_required'").fetchone()[0] == 1
+
+
+def test_old_payload_without_selection_counter_remains_idempotent(store, provider):
+    req, job_id = queue(store)
+    store.execute("UPDATE worker_jobs SET payload=payload-'selection_retry_count' WHERE id=%s", (job_id,))
+    store.commit()
+    assert asyncio.run(music_jobs.enqueue(req)) == job_id
+
+
+def test_conflicting_candidates_remain_reviewable_without_performances(store, provider, monkeypatch):
+    queue(store)
+    provider.comments.return_value = ([comment(), comment('00:30 Different Song').model_copy(update={'id': 'other'})], False)
+    decision = SetlistDecision(decision='uncertain', selected_candidate_id=None, reason='Same timestamp, conflicting songs',
+        judgments=[dict(candidate_id=c.id, category='uncertain', reason='Conflicting candidate') for c in provider.comments.return_value[0]], songs=[])
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status='ok', decision=decision)))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    assert store.execute('SELECT count(*) FROM archive_sources').fetchone()[0] == 2
+    assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->'selection'->>'status'='uncertain'").fetchone()[0] == 2
+    assert store.execute('SELECT count(*) FROM worker_jobs').fetchone()[0] == 1
 
 
 def match_key(db, title, status='confirmed', song=None, artist=''):

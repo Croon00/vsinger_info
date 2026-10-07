@@ -183,7 +183,9 @@ class YouTubeClient:
                 for item in data['items']:
                     comment = item['snippet']['topLevelComment']
                     content = comment['snippet'].get('textOriginal') or comment['snippet']['textDisplay']
-                    if len(parse_setlist(content)) >= 2:
+                    # A timestamp is only a candidate signal, never proof of a song.
+                    # Keep single-song streams and let the semantic comparison reject reactions.
+                    if STAMP.search(content):
                         result.append(Comment(id=comment['id'], text=content, captured_at=datetime.now(UTC)))
             except (KeyError, TypeError, ValueError):
                 raise YouTubeFailure('malformed_comment') from None

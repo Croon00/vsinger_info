@@ -153,7 +153,7 @@ def persist_collect(session, job, payload, value):
             VALUES (:video,:artist,:broadcast,:state) RETURNING id'''),
             dict(video=video_id, artist=owners[0] if len(owners) == 1 else None,
                  broadcast=video.started_at if video else None,
-                 state='partial' if value['rows'] else 'unavailable')).scalar_one()
+                 state='partial' if value['rows'] else ('unprocessed' if outcome in ('review_required', 'selection_retry') else 'unavailable'))).scalar_one()
         for position, artist in enumerate(owners):
             session.execute(text("INSERT INTO archive_artists(archive_id,artist_id,role,position) VALUES (:archive,:artist,'host',:position)"),
                             dict(archive=archive_id, artist=artist, position=position))
@@ -175,14 +175,30 @@ def persist_collect(session, job, payload, value):
                     attribution_reason=('single_owner' if singer is not None else
                                         'multiple_owners' if owners else
                                         'owner_missing' if payload.purpose == 'archive' else 'not_archive'))
+    if 'selection' in value:
+        metadata['selection'] = value['selection']
     comment = value.get('comment')
-    document, _ = _document(session, video_id=payload.youtube_video_id,
-        kind='youtube_comment' if comment else 'video_description', external_id=comment.id if comment else payload.youtube_video_id,
-        content=comment.text if comment else (video.description if video else ''), metadata=metadata,
-        disposition=disposition, captured_at=comment.captured_at if comment else value['captured_at'])
-    if archive_id and not conflict:
-        session.execute(text('''INSERT INTO archive_sources(archive_id,document_id,role) VALUES (:archive,:document,:role)
-            ON CONFLICT DO NOTHING'''), dict(archive=archive_id, document=document, role='setlist_evidence' if comment else 'metadata_evidence'))
+    candidates = value.get('candidates') or [dict(comment=comment)]
+    document = None
+    for candidate in candidates:
+        source = candidate['comment']
+        selected = source is not None and comment is not None and source.id == comment.id
+        candidate_metadata = dict(metadata)
+        if 'selection' in value:
+            candidate_metadata['candidate'] = {k: v for k, v in candidate.items() if k != 'comment'}
+            candidate_metadata['selected'] = selected
+            candidate_metadata['rows'] = value['rows'] if selected else []
+        source_disposition = disposition if selected or 'selection' not in value else (
+            'version_conflict' if conflict else 'review_candidate')
+        source_id, _ = _document(session, video_id=payload.youtube_video_id,
+            kind='youtube_comment' if source else 'video_description', external_id=source.id if source else payload.youtube_video_id,
+            content=source.text if source else (video.description if video else ''), metadata=candidate_metadata,
+            disposition=source_disposition, captured_at=source.captured_at if source else value['captured_at'])
+        if selected or 'selection' not in value:
+            document = source_id
+        if archive_id and not conflict:
+            session.execute(text('''INSERT INTO archive_sources(archive_id,document_id,role) VALUES (:archive,:document,:role)
+                ON CONFLICT DO NOTHING'''), dict(archive=archive_id, document=source_id, role='setlist_evidence' if source else 'metadata_evidence'))
     if new_archive or resume_archive:
         # Only already-confirmed keys link here; everything else stays NULL for review.
         songs = song_match_keys.link_song_ids(
@@ -206,9 +222,13 @@ def persist_collect(session, job, payload, value):
         session.execute(text('INSERT INTO covers(video_id) VALUES (:id) ON CONFLICT DO NOTHING'), {'id': video_id})
         # A channel owner is not proof of vocal participation. Credits remain in
         # the immutable description until explicit artist evidence is approved.
-    if outcome in ('waiting', 'not_due') and not conflict and payload.wait_count < 168:
+    if ((outcome in ('waiting', 'not_due') and payload.wait_count < 168)
+            or (outcome == 'selection_retry' and payload.selection_retry_count < 2)) and not conflict:
         next_payload = payload.model_dump()
-        next_payload['wait_count'] += 1
+        if outcome == 'selection_retry':
+            next_payload['selection_retry_count'] += 1
+        else:
+            next_payload['wait_count'] += 1
         worker_jobs.enqueue(session, JobRequest(job_type='youtube_collect', external_account_id=job.external_account_id,
             video_id=job.video_id, payload=next_payload, max_attempts=job.max_attempts),
             due_at=value.get('due_at') or datetime.now(UTC) + timedelta(hours=1))

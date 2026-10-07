@@ -8,13 +8,14 @@ from fastapi.testclient import TestClient
 from test_catalog_migration import database, local_server, row
 from test_phase4_runtime import runtime_store
 from test_runtime_state_migration import fixture_plan, runtime
-from test_youtube_catalog_collection import CHANNEL, comment, video
+from test_youtube_catalog_collection import CHANNEL, comment, video, fixture_decision
 
 from app.api.main import app
 from app.core.config import settings
 from app.db.catalog_session import get_catalog_session
 from app.schemas.worker_jobs import JobRequest
 from app.services import music_jobs, notification_delivery, youtube_collection
+from app.services import youtube_setlist as selection
 
 
 def test_migrated_youtube_job_reaches_real_api_without_resending_x(runtime_store, monkeypatch):
@@ -48,7 +49,7 @@ def test_migrated_youtube_job_reaches_real_api_without_resending_x(runtime_store
     fake = SimpleNamespace(videos=AsyncMock(return_value=[video(channel_id=CHANNEL)]),
                            comments=AsyncMock(return_value=([comment()], False)))
     monkeypatch.setattr(youtube_collection, 'client', lambda: fake)
-    monkeypatch.setattr(youtube_collection, 'extract_youtube_setlist', AsyncMock(return_value=None))
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(side_effect=fixture_decision))
     monkeypatch.setattr(music_jobs, 'catalog_runtime_session',
                         notification_delivery.catalog_runtime_session)
     assert asyncio.run(music_jobs.run_once(

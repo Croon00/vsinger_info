@@ -6,8 +6,8 @@ from urllib.parse import parse_qs, urlparse
 import re
 
 from app.core.config import settings
-from app.integrations.youtube_catalog import YouTubeClient, YouTubeFailure, parse_setlist, purpose
-from app.integrations.ai_extractor import extract_youtube_setlist
+from app.integrations.youtube_catalog import YouTubeClient, YouTubeFailure, purpose
+from app.services.youtube_setlist import POLICY, select_setlist
 from app.repositories import youtube_collection as repository
 from app.schemas.worker_jobs import JobRequest
 
@@ -62,7 +62,7 @@ async def collect_video(job, payload):
     before = await db_call(repository.snapshot, payload.youtube_video_id)
     captured = datetime.now(UTC)
     result = dict(snapshot=before, captured_at=captured, video=None, rows=[], comment=None,
-                  extractor='rules-1', outcome='unavailable')
+                  extractor=POLICY, outcome='unavailable')
     provider = client()
     try:
         videos = await provider.videos([payload.youtube_video_id])
@@ -92,23 +92,18 @@ async def collect_video(job, payload):
         if not comments:
             result['outcome'] = 'waiting' if payload.wait_count < 168 else 'wait_exhausted'
             return result
-        comment = max(comments, key=lambda c: len(parse_setlist(c.text)))
-        rows = parse_setlist(comment.text)
-        # Only bounded comment context is sent to the optional retained extractor.
-        extracted = await extract_youtube_setlist(comment.text[:20000])
-        if extracted is not None:
-            evidence = {r['timestamp']: r for r in rows}
-            refined = []
-            for entry in extracted:
-                raw = evidence.get(entry['timestamp'])
-                if raw and entry['title'] and entry['title'].casefold() in raw['raw_line'].casefold():
-                    artist = entry.get('original_artist')
-                    refined.append({**raw, 'title': entry['title'], 'original_artist': artist if artist and artist.casefold() in raw['raw_line'].casefold() else None})
-            if refined:
-                rows = sorted({r['start_seconds']: r for r in refined}.values(), key=lambda r: r['start_seconds'])
-                result['extractor'] = 'openai:' + settings.openai_model
-        rows = [r for r in rows if video.duration_seconds is None or r['start_seconds'] < video.duration_seconds]
-        result.update(comment=comment, rows=rows, outcome='collected' if rows else ('waiting' if payload.wait_count < 168 else 'wait_exhausted'))
+        result.update(await select_setlist(comments, video.duration_seconds))
+        status = result['selection']['status']
+        result['selection']['model'] = settings.openai_model
+        if status == 'selected':
+            result.update(outcome='collected', extractor='openai:' + settings.openai_model)
+        elif status == 'no_songs':
+            result['outcome'] = 'waiting' if payload.wait_count < 168 else 'wait_exhausted'
+        elif status == 'transient_error' and payload.selection_retry_count < 2:
+            result['outcome'] = 'selection_retry'
+            result['due_at'] = datetime.now(UTC) + timedelta(seconds=max(3600, result['selection']['retry_after_seconds']))
+        else:
+            result['outcome'] = 'review_required'
         return result
     except YouTubeFailure as exc:
         if exc.reason in ('commentsDisabled', 'videoNotFound'):

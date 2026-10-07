@@ -17,6 +17,8 @@ async def inspect_readiness() -> WorkerReadiness:
     active = data['active_accounts']
     if active.get('youtube', 0) and not settings.youtube_api_key:
         missing.append('YOUTUBE_API_KEY')
+    if active.get('youtube', 0) and not settings.openai_api_key:
+        missing.append('OPENAI_API_KEY')
     if active.get('spotify', 0) and not settings.spotify_client_id:
         missing.append('SPOTIFY_CLIENT_ID')
     if active.get('spotify', 0) and not settings.spotify_client_secret:

@@ -74,7 +74,7 @@ def enqueue(session: Session, request: JobRequest, *, due_at: datetime | None = 
     '''), dict(kind=request.job_type, key=key)).mappings().one()
     if (existing['external_account_id'] != request.external_account_id
             or existing['video_id'] != request.video_id
-            or existing['payload'] != payload.model_dump()
+            or request.model_copy(update={'payload': existing['payload']}).parsed_payload().model_dump() != payload.model_dump()
             or existing['max_attempts'] != request.max_attempts):
         raise JobConflict('Existing job has a different contract; use an explicit new request_run')
     return int(existing['id'])

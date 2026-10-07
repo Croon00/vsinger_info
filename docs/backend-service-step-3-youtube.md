@@ -5,7 +5,7 @@
 ## 실행 경로
 
 - `integrations/youtube_catalog.py`: 유한한 timeout·페이지 수·호출 간격을 가진 YouTube 읽기 adapter와 정규 파서. 구 DB 모듈을 import하지 않는다.
-- `services/youtube_collection.py`: 채널/영상 ID 검증, 방송 종료 대기, 댓글 확보, 선택적 세트리스트 추출, URL 입력 계약.
+- `services/youtube_collection.py`: 채널/영상 ID 검증, 방송 종료 대기, 댓글 확보, 세트리스트 비교·검증, URL 입력 계약. 2026-10-07 [후보 비교 계약](youtube-setlist-selection.md)으로 보완했다.
 - `repositories/youtube_collection.py`: 신규 영상·아카이브·원문·가창·커버와 후속 작업을 같은 transaction에서 저장한다.
 - `music_jobs.HANDLERS`: `youtube_poll`, `youtube_collect` 등록. Spotify handler는 보완 4단계 대상이다. X scheduler·Discord 봇·공개 GET에서 YouTube 작업을 시작하지 않는다.
 
@@ -20,7 +20,7 @@
 | uploads 조회 | 최대 4페이지/200개. 채널 응답의 uploads playlist 사용 |
 | 진행/예약 방송 | 별도 ID 목록 최대 200개 유지. 최신 uploads 목록에서 빠져도 종료 여부 재확인 |
 | 완료 라이브 | 기존 유효한 노래방송 제목 규칙을 적용. 실제 시작·종료가 확인된 방송만 archive 대상이며 종료 후 24시간에 작업 예약 |
-| 댓글 | 관련도 순 최대 3페이지/300개 중 timestamp 가창 후보가 2개 이상인 댓글 선택. 댓글 ID·URL·원문·확보 시각 보존 |
+| 댓글 | 관련도 순 최대 3페이지/300개 중 timestamp 댓글을 후보로 받고 상위 최대 3개 비교·원문 보존. 한 곡 댓글도 후보. 검증된 선택 후보의 곡만 저장 |
 | 댓글 없음 | 현재 확인 작업은 완료하고 1시간 후 후속 작업을 원자 등록. 기본 `wait_count=0`, 최대 168회 후속 확인. 일반 오류 재시도 기본 5회와 별개 |
 | 아직 24시간 전 | 수동 URL 요청도 동일한 대기 규칙 적용. 댓글 호출 없이 예정 시각으로 후속 작업 예약 |
 | 댓글 비활성 | `comments_disabled`, 신규 archive의 `setlist_state=unavailable`. 시간 재시도 없음 |
@@ -40,7 +40,7 @@
 - 새 가창은 `performances`에 순서·초 단위 시작·원문 timestamp·곡명·명시된 원곡자·문서 ID를 저장한다. `song_id`는 원문이 `song_match_keys`의 confirmed 키와 맞을 때만 같은 transaction에서 채운다(`app/repositories/song_match_keys.py`). 정규화 원문(`app/core/song_keys.py`) 정확 일치를 먼저 보고, 원곡자 원문이 없으면 `곡명 / 원곡자`·`곡명 - 원곡자` 형태를 나눈 쌍도 비교하며, 나눈 쌍이 여러 곡을 가리키면 연결하지 않는다. 보관·병합된 곡의 키와 pending/ambiguous/rejected/not_song 키는 NULL로 둔다. 이 조회는 원문·키·곡·판정을 만들거나 바꾸지 않으며 새 원문 키와 빈도는 `scripts/backfill_song_match_keys.py`가 모은다. revision 004 표가 없으면 곡 연결 없이 저장한다. `song_id`가 없어도 단일 owner의 임시 가창자 관계는 저장한다. 공동 가창 표기는 댓글/원문 행에 보존하고 실제 가창자 교정에 사용할 수 있다. 이름만으로 작품·인물을 생성하거나 병합하지 않는다.
 - 자동 owner 연결의 정책은 `youtube-channel-owner-v1`이다. `catalog_imports`의 작업별 영수증과 `catalog_changes`의 관계별 생성 이력에 `review_status='provisional'`, `basis='channel_owner'`, 작업·계정·출처 문서 ID·해시를 저장한다. 곡별 실제 가창자 검수 완료를 뜻하지 않는다. 현재 통계는 이 임시 관계도 집계한다. 감사 기록 실패 시 영상·원문·가창·가창자 관계와 작업 완료가 함께 롤백된다.
 - 원문 metadata의 `attribution='provisional_channel_owner'`, `attribution_artist_id`, `attribution_policy`는 관측 당시 귀속 정책·후보를 나타낸다. `disposition='review_candidate'`나 `version_conflict`이면 기존 가창에는 적용하지 않는다. `attribution='unresolved'`의 사유는 `owner_missing`, `multiple_owners`, 커버의 `not_archive`로 기록한다. 실제 관계 생성은 감사 기록으로 확인한다.
-- 기존 정규 파싱의 범위 종료 시각·곡 번호·인용부호·점수 제거를 유지하고 잘못된 시간·중복 시작 시각·비가창 행을 제외한다. 선택적 기존 LLM 추출에는 댓글 최대 20,000자를 보내며 원문에 없는 timestamp·제목·원곡자를 채택하지 않는다. LLM 불가 시 정규 파싱을 사용한다.
+- 2026-10-07부터 LLM이 후보 최대 3개를 비교하며 댓글별 최대 20,000자와 원문 줄 번호를 사용한다. 원문에 없는 timestamp·제목·원곡자, 중복 시작 시각·영상 길이 밖 시각은 선택 전체를 보류한다. 빈 결과·호출 실패 시 정규 파싱으로 가창을 복원하지 않는다. 상세 상태·재시도·보존 계약은 [후보 비교](youtube-setlist-selection.md)에 둔다.
 - 자동 추출은 검수 완료를 뜻하지 않으므로 새 세트리스트는 `partial`이다. 새 번역·독음·가사·노래방 수집은 호출하지 않는다.
 - `source_documents`에는 원문과 외부 ID/URL, 영상 메타데이터, 추출 방식/모델·버전, 추출 행과 처리 사유를 보존한다. hash는 kind·외부 ID·원문·메타데이터의 정렬 JSON으로 계산하며 확보 시각/검토 상태는 hash에서 제외한다. 같은 원문·추출 결과의 재처리는 중복 문서를 만들지 않는다.
 - 기존 archive/가창/인물 연결은 삭제·교체하지 않는다. owner 자동 연결은 신규 archive와 기존 빈 archive를 재개하며 생성하는 새 가창에만 적용한다. 이미 가창이 있는 방송의 미연결 관계를 재수집으로 채우거나 수동 삭제한 크레딧을 복원하지 않는다. 변경된 댓글·추출 버전은 `review_candidate` 문서로 남긴다. 수집 도중 영상/archive/cover version이 달라졌거나 보관되면 `version_conflict` 문서를 남기고 적용을 보류한다. 검토 후보는 내부 보존 계약이며 승인 UI/API는 구현하지 않았다.

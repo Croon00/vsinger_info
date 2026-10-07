@@ -30,6 +30,7 @@ class YouTubeCollect(Payload):
     purpose: Literal['archive', 'cover'] = 'archive'
     extraction_version: str = Field(default='1', pattern=r'^[A-Za-z0-9._-]{1,40}$')
     wait_count: int = Field(default=0, ge=0, le=168)
+    selection_retry_count: int = Field(default=0, ge=0, le=2)
 
 
 class SpotifyCollect(Payload):
@@ -61,7 +62,11 @@ class JobRequest(BaseModel):
         return PAYLOAD_MODELS[self.job_type].model_validate(self.payload)
 
     def key(self) -> str:
-        canonical = json.dumps(self.parsed_payload().model_dump(), sort_keys=True,
+        payload = self.parsed_payload().model_dump()
+        # Preserve keys of already queued v1 jobs when the new counter is zero.
+        if payload.get('selection_retry_count') == 0:
+            payload.pop('selection_retry_count')
+        canonical = json.dumps(payload, sort_keys=True,
                                separators=(',', ':'), ensure_ascii=True)
         digest = hashlib.sha256(canonical.encode()).hexdigest()
         return f'{self.job_type}:v1:{self.external_account_id}:{digest}'

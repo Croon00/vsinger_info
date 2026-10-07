@@ -75,7 +75,7 @@ Discord 봇에는 slash command, interaction, command tree가 없다. 아티스�
 | `X_PROVIDER` | auto / twscrape / x_api; 필요한 인증은 선택한 provider에 설정 |
 | `YOUTUBE_API_KEY` | YouTube 수집 |
 | `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` | Spotify 조회·매칭 |
-| `OPENAI_API_KEY`, `OPENAI_MODEL` | YouTube 댓글 세트리스트의 선택적 추출. 없으면 규칙 추출 |
+| `OPENAI_API_KEY`, `OPENAI_MODEL` | YouTube 세트리스트 후보 비교·추출. 키가 없으면 원문만 보존하고 자동 가창 등록 보류. [판정 계약](youtube-setlist-selection.md) |
 | `AWS_ENDPOINT_URL_S3`, `AVATAR_BUCKET` | 이미지 URL 생성. access key는 이미지 worker·업로드 도구만 사용 |
 | `AVATAR_WORKER_ENABLED` | 기본 true. cutover와 agent 활성 시 독립 초기 이미지 worker 실행. 007 미적용 시 대기 |
 | `PORT` | runtime API 포트, 기본 8000 |
