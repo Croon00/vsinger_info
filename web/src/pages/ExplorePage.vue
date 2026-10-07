@@ -53,9 +53,17 @@ watch(
     query.value = String(q ?? '')
   },
 )
-const agencies = computed(() =>
-  [...new Set((data.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
-)
+const agencies = computed(() => {
+  const counts = new Map<string, number>()
+  for (const artist of data.value ?? []) {
+    if (artist.agency) {
+      counts.set(artist.agency, (counts.get(artist.agency) ?? 0) + 1)
+    }
+  }
+  return [...counts.keys()]
+    .sort()
+    .sort((a, b) => counts.get(b)! - counts.get(a)!)
+})
 const hasIndependentArtists = computed(() => (data.value ?? []).some((a) => !a.agency))
 const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
 const favoritesForSort = new Set(favoriteIds.value)
