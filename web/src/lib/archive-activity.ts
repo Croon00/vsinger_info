@@ -8,7 +8,8 @@ export function monthlyActivity(
   now = new Date(),
 ) {
   const toIndex = (key: string) => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7)) - 1
-  const end = toIndex(dateKey(now))
+  // Compare completed calendar months in Asia/Seoul only.
+  const end = toIndex(dateKey(now)) - 1
   const counts = new Map(
     months.filter((m) => toIndex(m.month) <= end).map((m) => [toIndex(m.month), m.count]),
   )
@@ -25,12 +26,13 @@ export function monthlyActivity(
 }
 export function archiveActivity(lives: Live[], period: ActivityPeriod, now = new Date()) {
   const toIndex = (key: string) => Number(key.slice(0, 4)) * 12 + Number(key.slice(5, 7)) - 1
-  const end = toIndex(dateKey(now))
+  const end = toIndex(dateKey(now)) - 1
   const counts = new Map<number, number>()
   for (const live of lives) {
     const date = new Date(live.broadcast_at)
     if (!Number.isFinite(date.getTime()) || date > now) continue
     const month = toIndex(dateKey(date))
+    if (month > end) continue
     counts.set(month, (counts.get(month) ?? 0) + 1)
   }
   const start =
