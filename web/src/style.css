@@ -810,8 +810,8 @@ a:focus-visible {
 }
 .search-artist-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(0, 116px));
+  gap: 16px;
 }
 .search-filters {
   display: flex;
@@ -1463,7 +1463,8 @@ a:focus-visible {
     font-size: 12px;
   }
   .search-artist-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(0, min(88px, 100%)));
+    gap: 12px;
   }
   .search-section .section-heading {
     flex-wrap: wrap;
@@ -1541,12 +1542,6 @@ a:focus-visible {
 }
 .home-title {
   display: none;
-}
-.search-help {
-  margin-top: 12px;
-  color: var(--muted-foreground);
-  font-size: 12px;
-  text-align: center;
 }
 /* Artist releases tab: filter, latest-release hero, cover grid, detail overlay. */
 .artist-discography {
@@ -1733,9 +1728,6 @@ a:focus-visible {
   .favorites-section {
     margin-top: 0;
     margin-bottom: 0;
-  }
-  .search-help {
-    font-size: 11px;
   }
   .explore-toolbar {
     row-gap: 20px;

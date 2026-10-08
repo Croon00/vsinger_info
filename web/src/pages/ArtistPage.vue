@@ -230,7 +230,6 @@ function returnToList() {
               @retry="reloadLives"
               :empty="!data.lives.length"
               title="등록된 라이브가 없습니다"
-              description="공식 채널에서 영상을 확인할 수 있습니다."
             >
               <template #action>
                 <Button

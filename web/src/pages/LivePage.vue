@@ -247,7 +247,7 @@ function returnFromViewer() {
                 <ResourceState
                   :empty="!data.performances.length"
                   title="세트리스트 준비 중"
-                  description="등록된 곡 정보가 없습니다. 영상은 재생할 수 있습니다."
+                  description="영상은 재생할 수 있습니다."
                 >
                   <ol class="setlist">
                     <li v-for="(song, index) in data.performances" :key="song.id">

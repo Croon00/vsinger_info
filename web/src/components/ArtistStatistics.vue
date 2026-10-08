@@ -135,11 +135,7 @@ const date = (value: string | null) =>
         <ResourceState
           :empty="!songs.length"
           :title="stats.uniqueSongs ? '검색 결과가 없습니다' : '아직 집계할 세트리스트가 없어요'"
-          :description="
-            stats.uniqueSongs
-              ? '다른 곡명이나 아티스트로 검색해 보세요.'
-              : '세트리스트가 등록되면 통계가 표시됩니다.'
-          "
+          :description="stats.uniqueSongs ? '다른 곡명이나 아티스트로 검색해 보세요.' : undefined"
         >
           <div class="statistics-pages">
             <div

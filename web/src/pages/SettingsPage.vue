@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Monitor, Moon, Sun } from '@lucide/vue'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { FieldGroup, Field, FieldTitle, FieldDescription } from '@/components/ui/field'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { theme, type Theme } from '@/composables/preferences'
@@ -13,7 +13,6 @@ import { theme, type Theme } from '@/composables/preferences'
     <Card>
       <CardHeader>
         <CardTitle>화면 테마</CardTitle>
-        <CardDescription>기기 설정에 맞추거나 원하는 테마를 선택하세요.</CardDescription>
       </CardHeader>
       <CardContent>
         <FieldGroup>

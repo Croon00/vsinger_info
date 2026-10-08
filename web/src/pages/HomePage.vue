@@ -25,7 +25,6 @@ function search(q: string) {
       </div>
       <h1 id="home-heading" class="sr-only">통합검색</h1>
       <SearchForm large placeholder="아티스트 또는 원곡 검색" @search="search" />
-      <p class="search-help">아티스트 이름, 원곡명, 원곡 아티스트로 검색</p>
     </section>
     <section class="favorites-section" aria-labelledby="favorites-heading">
       <div class="section-heading">

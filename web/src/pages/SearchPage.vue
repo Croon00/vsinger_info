@@ -95,19 +95,16 @@ function search(q: string) {
   <div class="page-container search-page page-enter">
     <div class="page-heading">
       <h1>{{ scope.artistId ? '부른 날짜' : '검색 결과' }}</h1>
-      <p>{{ scope.artistId ? '방송 날짜를 선택하면 해당 곡을 부른 시점부터 볼 수 있어요.' : '아티스트 이름, 원곡명, 원곡 아티스트로 라이브 속 노래를 찾아보세요.' }}</p>
+      <p v-if="scope.artistId">방송 날짜를 선택하면 해당 곡을 부른 시점부터 볼 수 있어요.</p>
     </div>
     <SearchForm :initial="query" @search="search" />
     <ResourceState
+      v-if="query.trim() || scope.artistId"
       :loading="loading"
       :error="error"
       :empty="!data || (!data.artists.length && !data.performances.length)"
-      :title="query ? '검색 결과가 없어요' : '어떤 노래를 찾고 있나요?'"
-      :description="
-        query
-          ? '다른 이름이나 원곡 아티스트로 검색해 보세요.'
-          : '예를 들어 HACHI, 晴る, 요루시카를 검색해 보세요.'
-      "
+      title="검색 결과가 없어요"
+      :description="query ? '다른 이름이나 원곡 아티스트로 검색해 보세요.' : undefined"
       @retry="reload"
     >
       <section v-if="data?.artists.length" class="search-section">
