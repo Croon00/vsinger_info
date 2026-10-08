@@ -186,7 +186,7 @@ const date = (value: string | null) =>
                       </time>
                     </TableCell>
                     <TableCell class="text-center">
-                      <span class="statistics-count">
+                      <span class="statistics-count statistics-metric">
                         {{ number(song.count) }}
                         <small>회</small>
                       </span>
@@ -252,7 +252,7 @@ const date = (value: string | null) =>
                       <h3>{{ displayName(artist.name, artist.nameKo) }}</h3>
                       <span class="statistics-artist-count">
                         {{ number(artist.count) }}회
-                        <span>{{ artist.percentage.toFixed(1) }}%</span>
+                        <span class="statistics-metric">{{ artist.percentage.toFixed(1) }}<small>%</small></span>
                       </span>
                     </div>
                     <Progress

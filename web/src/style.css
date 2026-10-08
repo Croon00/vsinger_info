@@ -509,13 +509,15 @@ a:focus-visible {
 .statistics-mobile-date {
   display: none;
 }
-.statistics-count {
-  font-size: 20px;
+.statistics-metric {
+  font-size: 16px;
   font-weight: 600;
+  color: var(--foreground);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
 }
-.statistics-count small {
+.statistics-metric small {
   margin-left: 4px;
   font-size: 11px;
   color: var(--muted-foreground);
@@ -583,16 +585,15 @@ a:focus-visible {
 .statistics-artist-count {
   flex-shrink: 0;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
+  color: var(--muted-foreground);
   font-variant-numeric: tabular-nums;
 }
-.statistics-artist-count span {
+.statistics-artist-count .statistics-metric {
   display: inline-block;
   min-width: 44px;
   margin-left: 8px;
   text-align: right;
-  font-weight: 400;
-  color: var(--muted-foreground);
 }
 @media (max-width: 1200px) {
   .statistics-columns {
