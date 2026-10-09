@@ -93,7 +93,7 @@ class CatalogReadRepository:
             row.pop("_total", None)
         return {"items": rows, "total": total, "offset": offset, "limit": limit}
 
-    def artists(self):
+    def artists(self, artist_id=None):
         return self.rows("""SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
         g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,
         CASE WHEN a.birthday_month IS NOT NULL AND a.birthday_day IS NOT NULL THEN
@@ -106,7 +106,9 @@ class CatalogReadRepository:
           FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
           WHERE ae.artist_id=a.id AND e.archived_at IS NULL),'[]'::jsonb) sources
         FROM artists a LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
-        WHERE a.archived_at IS NULL AND a.show_in_catalog ORDER BY lower(a.name_native),a.id""")
+        WHERE a.archived_at IS NULL AND a.show_in_catalog
+        AND (CAST(:artist_id AS integer) IS NULL OR a.id=:artist_id)
+        ORDER BY lower(a.name_native),a.id""", {"artist_id": artist_id})
 
     def lives(self, artist_id, offset, limit):
         return self.page(f"""SELECT {LIVE_COLUMNS},

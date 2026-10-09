@@ -19,6 +19,7 @@ from app.core.config import settings
 from app.db.catalog_session import catalog_runtime_session, verify_catalog_identity
 from app.repositories import worker_jobs as repository
 from app.schemas.worker_jobs import JobRequest, PAYLOAD_MODELS, Payload
+from app.services.worker_wait import idle_delay, wait_for_work
 
 logger = logging.getLogger(__name__)
 
@@ -186,22 +187,28 @@ async def run_once(*, handlers: dict[str, Handler] | None = None,
 
 async def _provider_loop(platform: str):
     name = f'music-{platform}'
+    next_schedule = 0.0
+    loop = asyncio.get_running_loop()
     try:
         while True:
+            busy = False
             try:
                 kinds = tuple(kind for kind in HANDLERS if kind.startswith(platform + '_'))
-                if 'youtube_poll' in kinds:
+                if 'youtube_poll' in kinds and loop.time() >= next_schedule:
                     await db_call(repository.schedule_youtube_polls,
                                   interval_seconds=HANDLERS['youtube_poll'].poll_interval_seconds)
+                    next_schedule = loop.time() + idle_delay()
                 result = await run_once(kinds=kinds, worker_name=name)
-                if result['status'] not in ('idle', 'waiting_for_handler'):
+                busy = result['status'] not in ('idle', 'waiting_for_handler')
+                if busy:
                     logger.info('Music job outcome: %s', result)
             except Exception as exc:
                 WORKER_HEALTH.setdefault(name, {}).update(
                     state='error', heartbeat_at=datetime.now(UTC).isoformat(),
                     last_failure_at=datetime.now(UTC).isoformat(), error=type(exc).__name__)
                 logger.error('Music worker %s failed (%s)', platform, type(exc).__name__)
-            await asyncio.sleep(5)
+            await wait_for_work(seconds=5 if busy else None,
+                                health=WORKER_HEALTH.setdefault(name, {}))
     finally:
         WORKER_HEALTH.setdefault(name, {})['state'] = 'stopped'
 

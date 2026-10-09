@@ -10,6 +10,7 @@ from app.integrations.avatar_sources import discover, AvatarSourceError, AvatarC
 from app.repositories import avatar_jobs as repository
 from app.services import avatar_storage
 from app.services.music_jobs import db_call
+from app.services.worker_wait import wait_for_work
 
 logger = logging.getLogger(__name__)
 
@@ -136,11 +137,13 @@ async def avatar_worker_loop(*, artist_ids=None):
     logger.info('Avatar worker started: artist_scope=%s', artist_ids)
     previous = None
     while True:
+        busy = False
         try:
             result = await run_once(artist_ids=artist_ids)
             if result['status'] != 'idle' and (result['status'] != 'migration_required' or previous != result['status']):
                 logger.info('Avatar job: %s', result)
             previous = result['status']
+            busy = result['status'] not in ('idle', 'migration_required')
         except Exception:
             logger.error('Avatar worker failed')
-        await asyncio.sleep(5)
+        await wait_for_work(seconds=5 if busy else None)

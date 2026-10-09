@@ -6,6 +6,7 @@ class CatalogRead:
     def __init__(self, session):
         self.repository = CatalogReadRepository(session)
         self._artists = None
+        self._artist_by_id = {}
     @property
     def query_ms(self): return self.repository.query_ms
     @property
@@ -19,7 +20,15 @@ class CatalogRead:
                 artist["avatar_variants"] = avatar_variants(artist.get("spotify_image_url"), image_base)
         return self._artists
     def artist(self, artist_id):
-        return next((a for a in self.artists() if a["id"]==artist_id), None)
+        if self._artists is not None:
+            return next((a for a in self._artists if a["id"] == artist_id), None)
+        if artist_id not in self._artist_by_id:
+            rows = self.repository.artists(artist_id=artist_id)
+            artist = rows[0] if rows else None
+            if artist is not None:
+                artist["avatar_variants"] = avatar_variants(artist.get("spotify_image_url"), public_base())
+            self._artist_by_id[artist_id] = artist
+        return self._artist_by_id[artist_id]
     def lives(self, artist_id, offset, limit):
         result = self.repository.lives(artist_id,offset,limit)
         for row in result["items"]:

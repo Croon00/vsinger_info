@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Literal
 
 from dotenv import dotenv_values
-from pydantic import field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     catalog_schema_version: str = "catalog-v2"
     api_key: str | None = None
     discord_bot_token: str | None = None
+    worker_idle_seconds: int = Field(default=900, ge=1, le=86400)
     agent_interval_seconds: int = 86400
     agent_enabled: bool = False
     avatar_worker_enabled: bool = True

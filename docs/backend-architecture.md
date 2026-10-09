@@ -70,6 +70,7 @@ Discord 봇에는 slash command, interaction, command tree가 없다. 아티스�
 | `API_KEY` | 일부 기존 라우터와 v2의 선택적 X-API-Key 인증 |
 | `RUNTIME_CUTOVER_ENABLED` | 운영 DB 전환 승인이 끝난 뒤 Discord/수집 runtime 활성화, 코드 기본 false |
 | `AGENT_ENABLED` / `AGENT_RUN_ON_START` | runtime 수집 / 시작 직후 실행, 코드 기본 false / false |
+| `WORKER_IDLE_SECONDS` | 기본 900초(1~86400). 빈 큐·오류 후 DB 재확인을 공통 시간 경계에 맞춤 |
 | `AGENT_INTERVAL_SECONDS` | 코드 기본 86400초. 수집량과 제공자 제한을 보고 운영 환경에서 조정 |
 | `DISCORD_BOT_TOKEN` | URL 전송 전용 봇 인증. 구 관리 명령의 guild 설정은 사용하지 않음 |
 | `X_PROVIDER` | auto / twscrape / x_api; 필요한 인증은 선택한 provider에 설정 |
@@ -91,3 +92,14 @@ v2 GET은 새 DB에 저장된 정보만 조회한다. Spotify 등 외부 서비�
 현재 선택적 API 키는 완성된 사용자/관리자 권한 체계가 아니다. 새 프론트 개발 프록시는 서버 전용 키를 넣으며 GET/HEAD만 전달한다. 공개 배포에는 별도 API 라우팅과 읽기·쓰기 권한 검토가 필요하다. 토큰·DB URL은 로그나 프론트 번들에 넣지 않는다.
 
 구매·결제·응모 제출·CAPTCHA 우회는 구현 범위 밖이다. 공식 소스의 이용 조건과 rate limit을 지키며 테스트의 외부 전송은 mock 처리한다.
+
+
+## DB 유휴 시간 확보 (2026-10-09)
+
+X·Discord·YouTube·Spotify·아바타 루프는 처리할 작업이 없으면 `WORKER_IDLE_SECONDS`의 공통 시간 경계까지 DB를 조회하지 않는다. 기본 900초이며 신규 외부 등록 작업, 예약 수집 및 재시도 발견은 최대 약 15분 늦어질 수 있다(처리 시간 별도). 실행 중인 작업의 lease heartbeat·중복 방지·전송 직전 권한 확인은 유지한다. X 제공자 Retry-After 대기도 유지한다.
+
+작업 처리 중에는 기존 5초 간격(X는 최대 10초)으로 다음 작업을 확인한다. YouTube 예약 스캔은 작업마다 반복하지 않고 공통 유휴 간격마다 실행한다. X 수집 사이클에서 delivery를 생성하면 같은 runtime의 전송 루프를 메모리 Event로 깨운다. 다른 프로세스에서 등록한 작업은 다음 확인 시 발견한다. 시작 시에는 기존 초기 실행 규칙을 따른다.
+
+음악 worker는 긴 대기 중에도 30초마다 메모리 heartbeat만 갱신하므로 readiness의 60초 판정을 유지한다. 오류 상태는 heartbeat 갱신만으로 정상 처리하지 않는다. `/health`는 DB 없는 생존 확인이고 `/ready`는 DB를 조회하므로 빈번한 외부 감시는 `/health`를 사용한다.
+
+Neon 절전은 웹 요청·다른 클라이언트·실행 중 작업이 없어야 가능하다. `WORKER_IDLE_SECONDS`를 300초 이하로 줄이면 기본 5분 절전 시간을 확보하기 어렵다. 운영 적용 후 Active 시간과 CU-hours를 확인해야 하며 코드 수정만으로 절감량을 확정하지 않는다. 조회 API의 아티스트 단건 확인은 전체 목록 대신 ID로 제한하고 요청 안에서만 재사용한다.
