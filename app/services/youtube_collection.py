@@ -99,7 +99,7 @@ async def collect_video(job, payload):
             result.update(outcome='collected', extractor='openai:' + settings.openai_model)
         elif status == 'no_songs':
             result['outcome'] = 'waiting' if payload.wait_count < 168 else 'wait_exhausted'
-        elif status == 'transient_error' and payload.selection_retry_count < 2:
+        elif status in ('transient_error', 'invalid_response') and payload.selection_retry_count < 2:
             result['outcome'] = 'selection_retry'
             result['due_at'] = datetime.now(UTC) + timedelta(seconds=max(3600, result['selection']['retry_after_seconds']))
         else:

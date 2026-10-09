@@ -38,7 +38,19 @@ class Comment(BaseModel):
 
 SINGING = ('歌枠', '歌配信', 'カラオケ', '弾き語り', 'うたわく', 'singing', 'karaoke', 'acoustic')
 COVER = ('cover', '歌ってみた', '歌唱', 'カバー', 'covered by')
-STAMP = re.compile(r'(?<![\d:])((?:\d{1,2}:)?[0-5]?\d:[0-5]\d)(?![\d:])')
+# Colon timestamps, including full-width digits/colon and elapsed minutes >59.
+_DIGIT = r'[0-9０-９]'
+_COLON = r'[:：]'
+_SMALL = r'[0-5０-５]?[0-9０-９]'
+TIMESTAMP_PATTERN = rf'(?:{_DIGIT}{{1,2}}{_COLON}{_SMALL}{_COLON}[0-5０-５]{_DIGIT}|{_DIGIT}{{1,4}}{_COLON}[0-5０-５]{_DIGIT})'
+STAMP = re.compile(rf'(?<![0-9０-９:：])({TIMESTAMP_PATTERN})(?![0-9０-９:：])')
+
+
+def timestamp_seconds(value: str) -> int:
+    if STAMP.fullmatch(value) is None:
+        raise ValueError('Invalid timestamp')
+    parts = value.replace('：', ':').split(':')
+    return sum(int(part) * 60 ** i for i, part in enumerate(reversed(parts)))
 
 
 def purpose(video: Video) -> str | None:
@@ -68,8 +80,7 @@ def parse_setlist(content: str) -> list[dict]:
         title = re.sub(r'\s+[0-9０-９]+(?:[.．][0-9０-９]+)?(?:点|pts?\.?)?\s*$', '', title, flags=re.I).strip()
         if not title or re.match(r'^(start|end|opening|closing|mc|intro|outro|挨拶|雑談|終了|시작|종료)(?:\b|\s|[!！])', title, re.I):
             continue
-        parts = [int(p) for p in stamp.split(':')]
-        seconds = sum(p * 60 ** i for i, p in enumerate(reversed(parts)))
+        seconds = timestamp_seconds(stamp)
         if seconds in seen:
             continue
         seen.add(seconds)

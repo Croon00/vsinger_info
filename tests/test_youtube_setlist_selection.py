@@ -197,7 +197,10 @@ def test_adapter_transport_and_unconfigured(monkeypatch):
 def test_adapter_structured_success(monkeypatch):
     contexts = [service.context_for(comment('songs', SONGS))]
     expected = decision_for_5850(contexts).decision
-    create = mock_client(monkeypatch, content=expected.model_dump_json())
+    wire = expected.model_copy(deep=True)
+    wire.selected_candidate_id = 'c1'
+    wire.judgments[0].candidate_id = 'c1'
+    create = mock_client(monkeypatch, content=wire.model_dump_json())
     result = asyncio.run(integration.compare_setlist_candidates(contexts))
     assert result.decision == expected
     assert create.call_args.kwargs['response_format']['json_schema']['strict'] is True

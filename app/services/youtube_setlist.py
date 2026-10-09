@@ -1,32 +1,44 @@
-"""Rank time-index comments, compare their meaning, and verify source evidence."""
+"""Rank comments and validate bounded, explicit source spans for each song."""
 from __future__ import annotations
 
 import re
 
-from app.integrations.youtube_catalog import STAMP, Comment
+from app.integrations.youtube_catalog import STAMP, Comment, timestamp_seconds
 from app.integrations.youtube_setlist import ComparisonResult, compare_setlist_candidates
 
-POLICY = 'setlist-comparison-2'
+POLICY = 'setlist-comparison-3'
 MAX_CONTEXT_CHARS = 20000
+MAX_EVIDENCE_LINES = 4
+HEADING = re.compile(r'set\s*list|セットリスト|セトリ|세트리스트|歌唱タイムスタンプ', re.I)
+PAIR = re.compile(r'\S\s*[/／|｜—]\s*\S')
+NUMBERED = re.compile(r'^\s*(?:M\.?\s*)?(?:[＃#]\s*)?[0-9０-９]+\s*[.．、)曲]')
 
 
 def shortlist(comments: list[Comment]) -> list[dict]:
-    candidates = []
-    seen = set()
+    candidates, seen = [], set()
     for comment in comments:
         if comment.id in seen:
             continue
         seen.add(comment.id)
-        lines = [line for line in comment.text.splitlines() if STAMP.search(line)]
-        if not lines:
+        lines = comment.text.splitlines()
+        indices = [i for i, line in enumerate(lines) if STAMP.search(line)]
+        if not indices:
             continue
-        heading = bool(re.search(r'set\s*list|セットリスト|セトリ|세트리스트', comment.text, re.I))
-        pairs = sum(bool(re.search(r'\S\s+[/／|｜—]\s+\S', line)) for line in lines)
-        numbered = sum(bool(re.search(r'(?:\d+[.．、)]|[＃#]\d+|\d+曲目)', line)) for line in lines)
-        # Length contributes at most one point; semantic structure carries more weight.
-        score = 8 * heading + 4 * pairs / len(lines) + 2 * numbered / len(lines) + min(len(lines), 20) / 20
+        heading = bool(HEADING.search(comment.text))
+        # Include a short continuation, stopping before the next timestamp.
+        # These are ranking signals only, never automatic song evidence.
+        pairs = numbered = 0
+        for i in indices:
+            block = [lines[i]]
+            for line in lines[i + 1:i + MAX_EVIDENCE_LINES]:
+                if STAMP.search(line) or not line.strip():
+                    break
+                block.append(line)
+            pairs += any(PAIR.search(re.sub(r'https?://\S+', '', line)) for line in block)
+            numbered += bool(NUMBERED.search(lines[i]) or re.search(r'[＃#]\s*[0-9０-９]+', lines[i]))
+        score = 8 * heading + 4 * pairs / len(indices) + 2 * numbered / len(indices) + min(len(indices), 20) / 20
         candidates.append(dict(comment=comment, score=score, signals=dict(
-            heading=heading, artist_pair_lines=pairs, numbered_lines=numbered, timestamp_lines=len(lines))))
+            heading=heading, artist_pair_lines=pairs, numbered_lines=numbered, timestamp_lines=len(indices))))
     return sorted(candidates, key=lambda c: (-c['score'], c['comment'].id))[:3]
 
 
@@ -59,21 +71,40 @@ def verified_rows(decision, contexts: list[dict], duration: int | None) -> list[
     if context['truncated']:
         raise ValueError('Selected context was truncated')
     lines = {line['line_number']: line['text'] for line in context['lines']}
-    rows, seen = [], set()
+    rows, seen, used_lines = [], set(), set()
     for song in decision.songs:
-        line = lines.get(song.line_number, '')
-        match = STAMP.search(line)
+        start = song.line_number
+        end = song.end_line_number if song.end_line_number is not None else start
+        if not start <= end < start + MAX_EVIDENCE_LINES or any(n not in lines for n in range(start, end + 1)):
+            raise ValueError('Invalid evidence span')
+        span = [lines[n] for n in range(start, end + 1)]
+        stamps = [(i, list(STAMP.finditer(line))) for i, line in enumerate(span) if STAMP.search(line)]
+        # One timestamp line, with an optional end time. Never join adjacent songs.
+        if len(stamps) != 1 or not 1 <= len(stamps[0][1]) <= 2:
+            raise ValueError('Ambiguous evidence timestamps')
+        index, matches = stamps[0]
+        match = matches[0]
+        if len(matches) == 2:
+            separator = span[index][match.end():matches[1].start()]
+            if not re.fullmatch(r'\s*[~〜～–—−-]\s*', separator):
+                raise ValueError('Ambiguous evidence timestamps')
+            if timestamp_seconds(matches[1].group(1)) <= timestamp_seconds(match.group(1)):
+                raise ValueError('Invalid time range')
         title = song.title.strip()
         artist = song.original_artist.strip() if song.original_artist else None
-        if (not match or match.group(1) != song.timestamp or not title or
-                title not in line or (artist and artist not in line)):
+        if (timestamp_seconds(match.group(1)) != timestamp_seconds(song.timestamp) or not title or
+                not any(title in line for line in span) or (artist and not any(artist in line for line in span))):
             raise ValueError('Missing source evidence')
-        seconds = sum(int(p) * 60 ** i for i, p in enumerate(reversed(song.timestamp.split(':'))))
+        seconds = timestamp_seconds(match.group(1))
         if seconds in seen or (duration is not None and seconds >= duration):
             raise ValueError('Invalid song time')
+        evidence_lines = set(range(start, end + 1))
+        if evidence_lines & used_lines:
+            raise ValueError('Overlapping song evidence')
         seen.add(seconds)
-        rows.append(dict(timestamp=song.timestamp, start_seconds=seconds, title=title,
-                         original_artist=artist, raw_line=line, line_number=song.line_number))
+        used_lines.update(evidence_lines)
+        rows.append(dict(timestamp=match.group(1), start_seconds=seconds, title=title,
+                         original_artist=artist, raw_line='\n'.join(span), line_number=start, end_line_number=end))
     return sorted(rows, key=lambda r: r['start_seconds'])
 
 
@@ -91,7 +122,7 @@ async def select_setlist(comments: list[Comment], duration: int | None) -> dict:
             selected = result.decision.selected_candidate_id
         except ValueError as exc:
             status = 'invalid_response'
-            validation_error = str(exc)  # Fixed local messages; never provider exception text.
+            validation_error = str(exc)
     for rank, (candidate, context) in enumerate(zip(candidates, contexts), 1):
         candidate.update(rank=rank, context_truncated=context['truncated'])
     return dict(candidates=candidates, comment=next((c['comment'] for c in candidates if c['comment'].id == selected), None),

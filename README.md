@@ -97,6 +97,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [카탈로그 테이블·필드](docs/catalog-schema.md) | 새 DB 도메인별 상세 필드와 로컬 검수 저장소 설계 |
 | [로컬 카탈로그 관리자](docs/admin-web-plan.md) | 실행·JSON 검수·승인 후 반영·수동 관리·백업 |
 | [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
+| [전환 시기 아카이브 복구](docs/youtube-cutover-recovery-2026-10-09.md) | 2026-10-09 활성 104채널 조사, 9/20~23 누락 아카이브 28개 복구·실DB/API 검증 |
 | [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
 | [새 프론트 실행](web/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
 | [새 프론트 화면 설계](web/docs/design-plan.md) | 현재 화면·반응형·접근성·디자인 기준 |

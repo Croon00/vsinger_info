@@ -477,7 +477,7 @@ def test_5850_candidates_are_preserved_and_only_selected_songs_are_published(sto
     assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 14
 
 
-@pytest.mark.parametrize('status', ['unconfigured', 'provider_error', 'invalid_response'])
+@pytest.mark.parametrize('status', ['unconfigured', 'provider_error'])
 def test_failed_selection_preserves_comment_without_publishing_or_looping(store, provider, monkeypatch, status):
     queue(store)
     monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status=status)))
@@ -610,3 +610,36 @@ def test_new_youtube_modules_have_no_legacy_or_excluded_dependencies():
         tree = ast.parse(Path(file).read_text(encoding='utf-8'))
         modules = [node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom)]
         assert not any(module and module.startswith(forbidden) for module in modules)
+
+@pytest.mark.parametrize('error', ['invalid_response', 'transient_error'])
+def test_selection_output_retries_are_bounded_and_keep_wait_count(store, provider, monkeypatch, error):
+    queue(store, wait_count=12)
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status=error)))
+    for attempt in range(3):
+        store.execute("UPDATE worker_jobs SET next_attempt_at=clock_timestamp() WHERE status='pending'")
+        store.commit()
+        assert run()['status'] == 'succeeded'
+        if attempt < 2:
+            pending = store.execute("SELECT payload,next_attempt_at FROM worker_jobs WHERE status='pending'").fetchone()
+            assert pending[0]['selection_retry_count'] == attempt + 1
+            assert pending[0]['wait_count'] == 12
+            assert pending[1] > datetime.now(UTC) + timedelta(seconds=3500)
+    assert store.execute("SELECT count(*) FROM worker_jobs WHERE status='pending'").fetchone()[0] == 0
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->>'outcome'='review_required'").fetchone()[0] == 1
+
+
+def test_multiline_evidence_is_persisted_with_original_comment_and_song_rows(store, provider, monkeypatch):
+    queue(store)
+    body = 'SETLIST\n01. 01:00 ~ 02:00\n┗ Song One / Original\n02. 03:00 ~ 04:00\n┗ Song Two / Another'
+    provider.comments.return_value = ([comment(body)], False)
+    d = SetlistDecision(decision='selected', selected_candidate_id='comment-id', reason='Fixture',
+        judgments=[dict(candidate_id='comment-id', category='setlist', reason='Fixture')],
+        songs=[dict(line_number=2, end_line_number=3, timestamp='01:00', title='Song One', original_artist='Original'),
+               dict(line_number=4, end_line_number=5, timestamp='03:00', title='Song Two', original_artist='Another')])
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(return_value=ComparisonResult(status='ok', decision=d)))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT raw_title,start_seconds FROM performances ORDER BY ordinal').fetchall() == [('Song One',60),('Song Two',180)]
+    content, metadata = store.execute('SELECT content_text,source_metadata FROM source_documents').fetchone()
+    assert content == body and metadata['rows'][0]['end_line_number'] == 3
+    assert metadata['rows'][0]['raw_line'] == '01. 01:00 ~ 02:00\n┗ Song One / Original'

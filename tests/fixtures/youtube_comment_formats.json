@@ -1,0 +1,212 @@
+[
+  {
+    "name": "tree_range",
+    "source_url": "https://www.youtube.com/watch?v=BlhUQBbuKw0&lc=Ugx17bs48VeKhY4k4vt4AaABAg",
+    "document_id": 21198,
+    "source_line_start": 6,
+    "artist": "松永依織",
+    "text": "１. 8:37~12:24\n└ Walking with you / Novel Bright 🤍",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 2,
+      "timestamp": "8:37",
+      "title": "Walking with you",
+      "original_artist": "Novel Bright"
+    }
+  },
+  {
+    "name": "tree_bilingual",
+    "source_url": "https://www.youtube.com/watch?v=sweGnKRnfDA&lc=Ugz475N1bJNyRfByNWF4AaABAg",
+    "document_id": 21395,
+    "source_line_start": 6,
+    "artist": "皇美緒奈",
+    "text": "１. 8:04~12:22\n├ 残酷な天使のテーゼ / 髙橋 洋子 ❇️\n└ (The Cruel Angel's Thesis / Youko Takahashi) ",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 3,
+      "timestamp": "8:04",
+      "title": "残酷な天使のテーゼ",
+      "original_artist": "髙橋 洋子"
+    }
+  },
+  {
+    "name": "unnumbered_range",
+    "source_url": "https://www.youtube.com/watch?v=u_LdmB6_3UE&lc=Ugynp681j8pJFFlwblF4AaABAg",
+    "document_id": 19735,
+    "source_line_start": 3,
+    "artist": "時庭らんぜ",
+    "text": "13:25~18:32\n　└ 夜明けと蛍 / n-buna",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 2,
+      "timestamp": "13:25",
+      "title": "夜明けと蛍",
+      "original_artist": "n-buna"
+    }
+  },
+  {
+    "name": "translation_alias",
+    "source_url": "https://www.youtube.com/watch?v=_dPGqaMLJ3w&lc=UgxiuhLEF6LxrpYL8Zh4AaABAg",
+    "document_id": 20327,
+    "source_line_start": 6,
+    "artist": "ミナミイズミ",
+    "text": "1 . 5:24~8:23\n├ サムライハート / SPYAIR  (初披露)\n└ (Some Like It Hot!!)",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 3,
+      "timestamp": "5:24",
+      "title": "サムライハート",
+      "original_artist": "SPYAIR"
+    }
+  },
+  {
+    "name": "emoji_annotations",
+    "source_url": "https://www.youtube.com/watch?v=6oYwTGBy4gk&lc=UgyfsHb--AGguLEMvXV4AaABAg",
+    "document_id": 20226,
+    "source_line_start": 6,
+    "artist": "朱名",
+    "text": "1 . 5:14~9:30\n├ 残酷な天使のテーゼ / 高橋 洋子 🪭🌙 (初披露)\n└ (The Cruel Angel's Thesis / Youko Takahashi)",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 3,
+      "timestamp": "5:14",
+      "title": "残酷な天使のテーゼ",
+      "original_artist": "高橋 洋子"
+    }
+  },
+  {
+    "name": "leciel_two_lines",
+    "source_url": "https://www.youtube.com/watch?v=4OKDpFpTvIQ&lc=Ugxf0e5EArmUWVErNk54AaABAg",
+    "document_id": 20668,
+    "source_line_start": 5,
+    "artist": "宮島ルシェル",
+    "text": "01. 0:11:55 ~ 0:17:18 \n　┗ 福笑い ／ 高橋優【初】",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 2,
+      "timestamp": "0:11:55",
+      "title": "福笑い",
+      "original_artist": "高橋優"
+    }
+  },
+  {
+    "name": "slash_inside_title",
+    "source_url": "https://www.youtube.com/watch?v=958ss5bDKqY&lc=UgyUcLrfLVs2qPAlG6R4AaABAg",
+    "document_id": 21062,
+    "source_line_start": 6,
+    "artist": "傘屋くぐる",
+    "text": "１ 7:41~12:30\n├ ハロ／ハワユ / ナノウ 🐟☂️\n└ (Hallo Hawayu / Nanou)",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 3,
+      "timestamp": "7:41",
+      "title": "ハロ／ハワユ",
+      "original_artist": "ナノウ"
+    }
+  },
+  {
+    "name": "version_annotation",
+    "source_url": "https://www.youtube.com/watch?v=mawaS5UbE7M&lc=UgzIwNLp8WPjlwLPJx54AaABAg",
+    "document_id": 21011,
+    "source_line_start": 4,
+    "artist": "shin",
+    "text": "0:24:55　翼をください / 桜高軽音部（けいおんVer.）",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "0:24:55",
+      "title": "翼をください",
+      "original_artist": "桜高軽音部"
+    }
+  },
+  {
+    "name": "no_space_pair",
+    "source_url": "https://www.youtube.com/watch?v=3pt7lNP9D50&lc=Ugw7d6MmN9wFRPWUo7F4AaABAg",
+    "document_id": 21430,
+    "source_line_start": 4,
+    "artist": "MEDA",
+    "text": "00:13:27 02. Overdose／なとり",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "00:13:27",
+      "title": "Overdose",
+      "original_artist": "なとり"
+    }
+  },
+  {
+    "name": "m_numbering",
+    "source_url": "https://www.youtube.com/watch?v=alJrUevkhzg&lc=Ugzo7J0s6GlbyHnGDHd4AaABAg",
+    "document_id": 21288,
+    "source_line_start": 2,
+    "artist": "NUROJUNK",
+    "text": "M. 01　11:18　才能シュレッダー / ナナホシ管弦楽団",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "11:18",
+      "title": "才能シュレッダー",
+      "original_artist": "ナナホシ管弦楽団"
+    }
+  },
+  {
+    "name": "single_song",
+    "source_url": "https://www.youtube.com/watch?v=yyzjw1KumTc&lc=UgxXcFKJJoSUJvyuVC54AaABAg",
+    "document_id": 20066,
+    "source_line_start": 2,
+    "artist": "MEDA",
+    "text": "0:02:33  01. 蝶々結び / Aimer",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "0:02:33",
+      "title": "蝶々結び",
+      "original_artist": "Aimer"
+    }
+  },
+  {
+    "name": "artist_first",
+    "source_url": "https://www.youtube.com/watch?v=eMJPkNAnhes&lc=Ugx3F5ouWcTuJc_b_SF4AaABAg",
+    "document_id": 22319,
+    "source_line_start": 3,
+    "artist": "鈴鳴すばる",
+    "text": "4:36 山下達郎 / クリスマス・イブ",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "4:36",
+      "title": "クリスマス・イブ",
+      "original_artist": "山下達郎"
+    }
+  },
+  {
+    "name": "no_artist",
+    "source_url": "https://www.youtube.com/watch?v=9qZb-P6poh4&lc=UgzgYgo_XcDu6DTO_dF4AaABAg",
+    "document_id": 23004,
+    "source_line_start": 1,
+    "artist": "ノア・ポラリス",
+    "text": "8:35 きゅうくらりん",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "8:35",
+      "title": "きゅうくらりん",
+      "original_artist": null
+    }
+  },
+  {
+    "name": "romanized_alias",
+    "source_url": "https://www.youtube.com/watch?v=43PDqrhN3ZQ&lc=UgyVjNR6w5JA9lTRExt4AaABAg",
+    "document_id": 22257,
+    "source_line_start": 3,
+    "artist": "大神ミオ",
+    "text": "03:56 未来へ/miraie / Kiroro(1998)",
+    "song": {
+      "line_number": 1,
+      "end_line_number": 1,
+      "timestamp": "03:56",
+      "title": "未来へ",
+      "original_artist": "Kiroro"
+    }
+  }
+]
