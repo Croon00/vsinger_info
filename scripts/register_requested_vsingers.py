@@ -76,10 +76,10 @@ def register(conn, items, *, write=False):
         if not write:
             continue
         if not artist:
-            artist = conn.execute("INSERT INTO artists(slug,name_native,name_ko,entity_kind,is_virtual,show_in_catalog,agency_id) VALUES (%s,%s,%s,'solo',true,true,%s) RETURNING id,to_jsonb(artists)",
-                                  (item['slug'], item['name_native'], item['name_ko'], agency)).fetchone()
+            artist = conn.execute("INSERT INTO artists(slug,name_native,name_ko,name_latin,entity_kind,is_virtual,show_in_catalog,agency_id) VALUES (%s,%s,%s,%s,'solo',%s,true,%s) RETURNING id,to_jsonb(artists)",
+                                  (item['slug'], item['name_native'], item['name_ko'], item.get('name_latin'), item.get('is_virtual', True), agency)).fetchone()
             record('artists', artist[0], None, artist[1], item)
-        elif not artist[1]['show_in_catalog'] or not artist[1]['name_ko'] or (agency and not artist[1]['agency_id']):
+        elif not artist[1]['show_in_catalog'] or (item.get('name_ko') and not artist[1]['name_ko']) or (agency and not artist[1]['agency_id']):
             after = conn.execute('UPDATE artists SET show_in_catalog=true,name_ko=COALESCE(name_ko,%s),agency_id=COALESCE(agency_id,%s),updated_at=clock_timestamp(),version=version+1 WHERE id=%s RETURNING to_jsonb(artists)',
                                  (item['name_ko'], agency, artist[0])).fetchone()[0]
             record('artists', artist[0], artist[1], after, item)
@@ -88,9 +88,26 @@ def register(conn, items, *, write=False):
                                    (item['channel_id'], item['channel_url'])).fetchone()
             record('external_accounts', account[0], None, account[1], item)
         if not owners:
-            key, after = conn.execute("INSERT INTO artist_external_accounts(artist_id,account_id,relationship,is_primary,position) VALUES (%s,%s,'owner',true,0) RETURNING id,to_jsonb(artist_external_accounts)", (artist[0], account[0])).fetchone()
+            key, after = conn.execute("INSERT INTO artist_external_accounts(artist_id,account_id,relationship,is_primary,position,label) VALUES (%s,%s,'owner',%s,%s,%s) RETURNING id,to_jsonb(artist_external_accounts)",
+                                      (artist[0], account[0], item.get('is_primary', True), item.get('position', 0), item.get('label'))).fetchone()
             record('artist_external_accounts', key, None, after, item)
         plan.update(artist_id=artist[0], account_id=account[0])
+        if item.get('group') and item.get('group_slug') and item['affiliation_status'] == 'verified':
+            groups = conn.execute('SELECT id,to_jsonb(a) FROM artists a WHERE name_native=%s', (item['group'],)).fetchall()
+            if len(groups) > 1 or (groups and (groups[0][1]['entity_kind'] != 'group' or groups[0][1]['archived_at'])):
+                raise ValueError('Conflicting group identity')
+            if groups:
+                group = groups[0]
+            else:
+                group = conn.execute("INSERT INTO artists(slug,name_native,entity_kind,show_in_catalog) VALUES (%s,%s,'group',false) RETURNING id,to_jsonb(artists)", (item['group_slug'],item['group'])).fetchone()
+                record('artists', group[0], None, group[1], item)
+            membership = conn.execute('SELECT id,left_on FROM artist_group_members WHERE group_id=%s AND member_id=%s', (group[0],artist[0])).fetchone()
+            if membership and membership[1]:
+                raise ValueError('Conflicting ended group membership')
+            if not membership:
+                key, after = conn.execute('INSERT INTO artist_group_members(group_id,member_id) VALUES (%s,%s) RETURNING id,to_jsonb(artist_group_members)', (group[0],artist[0])).fetchone()
+                record('artist_group_members', key, None, after, item)
+            plan['group_id'] = group[0]
     if changes:
         digest = hashlib.sha256(json.dumps(items, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
         operation = uuid.uuid5(uuid.NAMESPACE_URL, identity[0] + POLICY + digest)
@@ -105,8 +122,9 @@ def register(conn, items, *, write=False):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--apply', action='store_true')
+    parser.add_argument('--seed', type=Path, default=SEED)
     args = parser.parse_args()
-    items = json.loads(SEED.read_text(encoding='utf-8'))['artists']
+    items = json.loads(args.seed.read_text(encoding='utf-8'))['artists']
     with psycopg.connect(load_connection(), connect_timeout=20) as conn:
         configure_transaction(conn, read_only=not args.apply)
         result = register(conn, items, write=args.apply)

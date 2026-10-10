@@ -1,0 +1,21 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "ookami-mio",
+      "name_native": "大神ミオ",
+      "name_ko": "오오카미 미오",
+      "name_latin": "Ookami Mio",
+      "is_virtual": true,
+      "agency": "ホロライブ",
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://hololive.hololivepro.com/en/talents/ookami-mio/",
+      "channel_id": "UCp-5t9SrOQwXMU7iIjQfARg",
+      "channel_url": "https://www.youtube.com/channel/UCp-5t9SrOQwXMU7iIjQfARg",
+      "source_url": "https://www.youtube.com/channel/UCp-5t9SrOQwXMU7iIjQfARg",
+      "channel_title": "Mio Channel 大神ミオ",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo"
+    }
+  ]
+}

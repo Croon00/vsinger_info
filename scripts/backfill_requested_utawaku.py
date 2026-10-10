@@ -23,11 +23,12 @@ from app.repositories import worker_jobs
 from app.services import music_jobs
 
 REPORT = ROOT / 'db-migration/reports/requested-vsingers-2026-10-02'
+SEED = ROOT / 'data/seeds/requested_vsingers_2026_10_02.json'
 RUN = 'requested-utawaku-2026-10-03'
 
 
 def targets():
-    items = json.loads((ROOT / 'data/seeds/requested_vsingers_2026_10_02.json').read_text(encoding='utf-8'))['artists']
+    items = json.loads(SEED.read_text(encoding='utf-8'))['artists']
     for item in items:
         if item['slug'] == 'miran':
             continue
@@ -131,11 +132,16 @@ async def worker():
 
 
 def main():
+    global SEED, REPORT, RUN
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('plan', 'enqueue', 'status', 'worker'))
     parser.add_argument('--apply', action='store_true')
     parser.add_argument('--delay-hours', type=float, default=24)
+    parser.add_argument('--seed', type=Path, default=SEED)
+    parser.add_argument('--reports', type=Path, default=REPORT)
+    parser.add_argument('--request-run', default=RUN)
     args = parser.parse_args()
+    SEED, REPORT, RUN = args.seed, args.reports, args.request_run
     if args.delay_hours < 0:
         parser.error('delay must not be negative')
     if args.command == 'worker':

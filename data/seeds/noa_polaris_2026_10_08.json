@@ -1,0 +1,21 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "noa-polaris",
+      "name_native": "ノア・ポラリス",
+      "name_ko": "노아 폴라리스",
+      "name_latin": "Noa Polaris",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "pending",
+      "affiliation_source_url": null,
+      "channel_id": "UCIu1rRiQLeUU8e1saN6I0eg",
+      "channel_url": "https://www.youtube.com/channel/UCIu1rRiQLeUU8e1saN6I0eg",
+      "source_url": "https://www.youtube.com/@noa_polaris/streams",
+      "channel_title": "ノア・ポラリス -Noa Polaris-",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo"
+    }
+  ]
+}

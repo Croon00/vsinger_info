@@ -1,0 +1,23 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "stratia",
+      "name_native": "すとらてぃあ",
+      "name_ko": "스토라티아",
+      "name_latin": "Stratia",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://www.youtube.com/@Stratia113",
+      "group": "Fillnecode",
+      "group_slug": "fillnecode",
+      "channel_id": "UC6vfupe1qvNeTwyREZHBG1A",
+      "channel_url": "https://www.youtube.com/channel/UC6vfupe1qvNeTwyREZHBG1A",
+      "source_url": "https://www.youtube.com/@Stratia113/streams",
+      "channel_title": "すとらてぃあ-Stratia",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo"
+    }
+  ]
+}

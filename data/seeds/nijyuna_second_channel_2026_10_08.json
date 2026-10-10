@@ -1,0 +1,24 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "nijyuna",
+      "name_native": "Nijyuna",
+      "name_ko": "니쥬나",
+      "name_latin": "Nijyuna",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "pending",
+      "affiliation_source_url": null,
+      "channel_id": "UCpJc-f0Xs-u3QrkBQr5QiEQ",
+      "channel_url": "https://www.youtube.com/channel/UCpJc-f0Xs-u3QrkBQr5QiEQ",
+      "source_url": "https://www.youtube.com/@Nijyuuu7/streams",
+      "channel_title": "にじゅな",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo",
+      "is_primary": false,
+      "position": 1,
+      "label": "YouTube 2"
+    }
+  ]
+}

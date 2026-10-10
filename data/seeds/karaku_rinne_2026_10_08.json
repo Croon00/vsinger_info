@@ -1,0 +1,23 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "karaku-rinne",
+      "name_native": "からくりんね",
+      "name_ko": "카라쿠 린네",
+      "name_latin": "KarakuRinne",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://www.youtube.com/@KarakuRinne",
+      "group": "Fillnecode",
+      "channel_id": "UCvzw0gUNosiKA9mwchAeWlQ",
+      "channel_url": "https://www.youtube.com/channel/UCvzw0gUNosiKA9mwchAeWlQ",
+      "source_url": "https://www.youtube.com/@KarakuRinne",
+      "channel_title": "からくりんね-KarakuRinne",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo",
+      "group_slug": "fillnecode"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "requested_on": "2026-10-08",
+  "artists": [
+    {
+      "slug": "suzuna-subaru",
+      "name_native": "鈴鳴すばる",
+      "name_ko": "스바루",
+      "name_latin": "Suzuna Subaru",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://www.youtube.com/@suzuna_subaru",
+      "group": "まりなす",
+      "group_slug": "marinasu",
+      "channel_id": "UC1CXNJGwnUUVawDeCwwOmFg",
+      "channel_url": "https://www.youtube.com/channel/UC1CXNJGwnUUVawDeCwwOmFg",
+      "source_url": "https://www.youtube.com/@suzuna_subaru",
+      "channel_title": "鈴鳴すばる",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo"
+    },
+    {
+      "slug": "toma-rin",
+      "name_native": "燈舞りん",
+      "name_ko": "토마린",
+      "name_latin": "Toma Rin",
+      "is_virtual": true,
+      "agency": null,
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://www.youtube.com/@TomaRindesu",
+      "group": "まりなす",
+      "group_slug": "marinasu",
+      "channel_id": "UCNex1zlO3-TIHgqeSGVFOsw",
+      "channel_url": "https://www.youtube.com/channel/UCNex1zlO3-TIHgqeSGVFOsw",
+      "source_url": "https://www.youtube.com/@TomaRindesu",
+      "channel_title": "燈舞りん",
+      "channel_verified_on": "2026-10-08",
+      "entity_kind": "solo"
+    }
+  ]
+}

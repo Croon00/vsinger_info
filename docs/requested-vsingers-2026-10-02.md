@@ -230,3 +230,54 @@ owner가 없거나 여러 명이면 연결하지 않으며 기존 가창·수동
 ## 2026-10-03 15:43 KST OpenAI credit recovery verification
 
 After the user replenished OpenAI credits, a real saved comment (source document 6887) was submitted again to the existing setlist extractor and returned 20 rows successfully. This check did not replace existing performance rows. The running backfill worker recovered without restarting: source documents 6896, 6897, 6898, 6899, 6901, 6902, 6903 and 6905 record `openai:gpt-4.1-mini`, with 136 extracted rows in total. These are live API and database observations, not fixture test results. Older rule-fallback results have not all been reprocessed; full backfill and Korean song-title work remain incomplete.
+
+
+## 2026-10-07 additional artist: tayuta
+
+Registered the user-provided channel https://www.youtube.com/@tayuta-1012/streams as an independent solo artist: native name 揺蕩, Latin name tayuta, artist ID 1006, YouTube account ID 285 / channel UCR2u-QK5j3Hb1z3YmHIkTcw. Channel identity and display name were verified with YouTube channels.list. Independent affiliation follows the explicit user request; virtual-character status and Korean official name remain unconfirmed (NULL). The unified catalog read service returns the artist with its YouTube source and no agency. Registration recorded three audited creations; repeated application returned no_changes. Seed: data/seeds/tayuta_2026_10_07.json. Collection remains disabled; historical stream/setlist collection was not requested or started in this addition.
+
+
+2026-10-07 tayuta collection start: complete uploads listing contains 80 public videos and 30 singing-title candidates. Enqueued 30 idempotent youtube_collect jobs under tayuta-utawaku-2026-10-07 and enabled YouTube account 285 with catalog audit records. Dedicated local worker PID 46444 logs to .tmp/tayuta-worker.stdout.log / .stderr.log. A persisted global YouTube cooldown initially blocked claims; a real candidate commentThreads call succeeded, so one stale rate_limited marker was changed to rate_limit_recovery_verified without altering that old job's retry deadline. Candidate reports: db-migration/reports/tayuta-2026-10-07. Use scripts/backfill_requested_utawaku.py status --seed data/seeds/tayuta_2026_10_07.json --reports db-migration/reports/tayuta-2026-10-07 --request-run tayuta-utawaku-2026-10-07.
+
+
+## 2026-10-07 additional artist: Nijyuna
+
+Verified channel Nijyuna Ch. (UCPdJ_8sydhWVP-XntMz2uUQ) from https://www.youtube.com/@Nijyuna714/featured using channels.list. Registered solo virtual artist Nijyuna with user-provided Korean name 니쥬나 (artist 1007, YouTube account 286); affiliation remains unconfirmed. Three audited creations committed and repeat registration returned no_changes. Read-only catalog verification confirms visibility and channel linkage. Complete uploads listing: 44 public videos, 26 singing-title candidates. Activated collection with audit and enqueued 26 jobs under nijyuna-utawaku-2026-10-07. Dedicated local worker PID 32764 started; initial status 26 pending, no completed setlist claim. Seed: data/seeds/nijyuna_2026_10_07.json. Reports: db-migration/reports/nijyuna-2026-10-07. Logs: .tmp/nijyuna-worker.stdout.log / .stderr.log.
+
+
+## 2026-10-08 Nijyuna second channel
+
+Per the user's explicit identity confirmation, connected https://www.youtube.com/@Nijyuuu7/streams (channel UCpJc-f0Xs-u3QrkBQr5QiEQ, title にじゅな) as a second owner account of existing Nijyuna artist 1007, not a new artist. New account 287 has link label YouTube 2, is_primary=false and position=1. Existing account 286 remains primary. Audited two creations and collection activation; repeated registration returned no_changes. Read-only catalog verification confirms two YouTube links, one primary and collection enabled on both. Complete uploads listing has 136 public videos and 42 singing-title candidates. Enqueued 42 jobs under nijyuna-second-utawaku-2026-10-08; worker PID 32568 started. Initial observed status: 1 succeeded, 1 running, 40 pending (candidate processing, not a count of completed setlists). Seed: data/seeds/nijyuna_second_channel_2026_10_08.json; report: db-migration/reports/nijyuna-second-2026-10-08; log: .tmp/nijyuna-second-worker.stdout.log.
+
+
+## 2026-10-08 Utsumi channel registration
+
+Registered 慈 / Utsumi with user-provided Korean name 우츠미 (artist 1008, YouTube account 288, channel UCFJAOt-QLXiKZlfXWvdX4lA). Official channel https://www.youtube.com/@x_Utsumi_x identifies the artist as a singer. Affiliation and virtual-character status remain unconfirmed. User stated broadcasts have not started and setlists are unavailable; only the artist and channel were registered, collection disabled, no historical jobs or performances created. Audited three creations, repeated application no_changes, read-only catalog verification confirms visibility and YouTube linkage. Seed: data/seeds/utsumi_2026_10_08.json.
+
+
+## 2026-10-08 KarakuRinne
+
+Registered からくりんね / KarakuRinne, user-provided Korean name 카라쿠 린네 (artist 1013, YouTube account 291, channel UCvzw0gUNosiKA9mwchAeWlQ). Channel description identifies membership of the Vsinger unit Fillnecode: stored group artist 1014 and artist_group_members relation, without treating a unit as an agency. The group itself is hidden in exploration pending dedicated group content. Five audited creations committed, repeated registration no_changes; read-only catalog and group-link checks passed. Complete uploads listing: 63 public videos, 46 singing-title candidates. Activated collection with audit, queued 46 jobs under karaku-rinne-utawaku-2026-10-08 and started local worker PID 26408; initial status 46 pending. Seed: data/seeds/karaku_rinne_2026_10_08.json; report: db-migration/reports/karaku-rinne-2026-10-08; logs: .tmp/karaku-rinne-worker.stdout.log / .stderr.log. Setlist collection is pending, not reported as completed.
+
+
+## 2026-10-08 Stratia
+
+Registered Stratia / すとらてぃあ with user-provided Korean name 스토라티아 (artist 1015, account 292, channel UC6vfupe1qvNeTwyREZHBG1A). Official channel description verifies Fillnecode membership; linked to existing group 1014. Four audited creations, repeat registration no_changes, read-only catalog/channel/group checks passed. Complete uploads: 62 public videos, 46 singing-title candidates. Activated collection with audit, enqueued 46 jobs under stratia-utawaku-2026-10-08, dedicated worker PID 7452 started. Seed data/seeds/stratia_2026_10_08.json; report db-migration/reports/stratia-2026-10-08; log .tmp/stratia-worker.stdout.log. Setlist collection remains in progress.
+
+
+## 2026-10-08 Ookami Mio
+
+Registered 大神ミオ / Ookami Mio (artist 1016, YouTube account 293, channel UCp-5t9SrOQwXMU7iIjQfARg) under existing Hololive agency 23, matching Suisei, AZKi and Watame. Affiliation verified by channel description and https://hololive.hololivepro.com/en/talents/ookami-mio/. Three audited creations; repeat registration no_changes; read-only catalog and channel checks passed. Complete listing: 1527 public videos, 128 singing-title candidates. Collection activated with audit, 128 jobs queued under ookami-mio-utawaku-2026-10-08 and dedicated local worker started. Seed data/seeds/ookami_mio_2026_10_08.json; report db-migration/reports/ookami-mio-2026-10-08; logs .tmp/ookami-mio-worker.stdout.log / .stderr.log. Candidate jobs are not completed-setlist counts.
+
+
+## 2026-10-08 Marinasu members
+
+Registered 鈴鳴すばる / Suzuna Subaru (artist 1017, account 294, channel UC1CXNJGwnUUVawDeCwwOmFg) and 燈舞りん / Toma Rin (artist 1019, account 295, channel UCNex1zlO3-TIHgqeSGVFOsw). Both official channel descriptions verify Marinasu (まりなす) membership. Created group artist 1018 and linked both members; group entity is hidden until dedicated group content. Nine audited creations, repeated registration no_changes; read-only catalog checks confirm both artists visible, YouTube links, and shared group membership. Complete uploads listings: Subaru 444 videos / 70 singing-title candidates, Toma Rin 280 / 10. Activated both accounts with audit and queued 80 historical jobs under marinasu-utawaku-2026-10-08; local scoped worker started. Seed data/seeds/marinasu_2026_10_08.json; report db-migration/reports/marinasu-2026-10-08; logs .tmp/marinasu-worker.stdout.log / .stderr.log. Candidate counts are not completed setlists.
+
+
+2026-10-08 19:15 KST resume: no prior local Python collectors remained. Read-only DB snapshot showed 395 pending follow-up jobs across seven request runs, plus Mio job 68817 failed with DataError (not blindly reset). Marinasu run had no remaining jobs. Real YouTube commentThreads probe succeeded. Restarted seven scoped collectors for the pending runs, with .tmp/resume-<request-run>.stdout.log / .stderr.log. Existing completed archives and performances were preserved; no duplicate enqueue or notification.
+
+
+## 2026-10-08 Noa Polaris
+
+Registered ノア・ポラリス / Noa Polaris, user-provided Korean name 노아 폴라리스 (artist 1020, YouTube account 296, channel UCIu1rRiQLeUU8e1saN6I0eg). Channel identifies a Vsinger; affiliation remains unconfirmed. Three audited creations, repeated registration no_changes, read-only catalog verification confirms visibility and channel linkage. Complete listing has 738 public videos and 532 singing-title candidates. Activated collection with audit, queued 532 jobs under noa-polaris-utawaku-2026-10-08 and started a dedicated local worker. Seed data/seeds/noa_polaris_2026_10_08.json; reports db-migration/reports/noa-polaris-2026-10-08; log .tmp/noa-polaris-worker.stdout.log. Candidate counts are not completed setlists.
