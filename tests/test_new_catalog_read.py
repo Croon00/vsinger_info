@@ -278,3 +278,68 @@ def test_song_alias_search_escapes_like_metacharacters(store):
         for query in (alias, '%', '_', '\\'):
             assert service.search(query, 0, 50)['total'] == 2
         assert service.search('100xxx', 0, 50)['total'] == 0
+
+
+def test_artist_archive_scope_preserves_credits_visibility_and_pages(store):
+    db, engine = store
+    singer = row(db, 'artists', entity_kind='solo', slug='scope-singer',
+                 name_native='Scope Singer', show_in_catalog=True)
+    guest = row(db, 'artists', entity_kind='solo', slug='scope-guest',
+                name_native='Scope Guest', show_in_catalog=True)
+    empty = row(db, 'artists', entity_kind='solo', slug='scope-empty',
+                name_native='No Archives', show_in_catalog=True)
+
+    def archive(key, *, primary=None, participant=False, vocalist=False,
+                archived_performance=False, availability='public',
+                archived_video=False, archived_archive=False, date='2026-01-10T00:00:00Z'):
+        video = row(db, 'videos', platform='youtube', platform_video_id=key,
+                    title=key, availability=availability, published_at=date,
+                    archived_at='2026-01-11T00:00:00Z' if archived_video else None)
+        live = row(db, 'live_archives', video_id=video, primary_artist_id=primary,
+                   archived_at='2026-01-11T00:00:00Z' if archived_archive else None)
+        if participant:
+            row(db, 'archive_artists', archive_id=live, artist_id=singer, role='guest')
+        if vocalist or archived_performance:
+            for ordinal in (1, 2):
+                performance = row(db, 'performances', archive_id=live, ordinal=ordinal,
+                                  raw_title='Scope Song', raw_artist='Original', start_seconds=ordinal*30,
+                                  archived_at='2026-01-11T00:00:00Z' if archived_performance else None)
+                row(db, 'performance_artists', performance_id=performance, artist_id=singer, role='lead')
+        return live
+
+    primary = archive('primary', primary=singer)
+    participant = archive('participant', primary=guest, participant=True)
+    vocalist = archive('vocalist', primary=guest, vocalist=True)
+    overlap = archive('overlap', primary=singer, participant=True, vocalist=True)
+    undated = archive('undated', primary=singer, date=None, availability='unknown')
+    # An archived vocal credit cannot bring an unrelated archive into the scope.
+    archive('archived-vocal', primary=guest, archived_performance=True)
+    for availability in ('private', 'deleted'):
+        archive(availability, primary=singer, participant=True, vocalist=True, availability=availability)
+    archive('archived-video', primary=singer, vocalist=True, archived_video=True)
+    archive('archived-archive', primary=singer, participant=True, archived_archive=True)
+    archive('unrelated', primary=guest)
+    db.commit()
+
+    with Session(engine) as session:
+        session.execute(text('SET TRANSACTION READ ONLY'))
+        service = CatalogRead(session)
+        expected = [overlap, vocalist, participant, primary, undated]
+        full = service.lives(singer, 0, 100)
+        assert full['total'] == 5
+        assert [r['id'] for r in full['items']] == expected
+        assert [r['performance_count'] for r in full['items']] == [2, 2, 0, 0, 0]
+        assert all(r['artist_id'] == singer and 'performances' not in r for r in full['items'])
+        for offset, ids in ((0, expected[:2]), (2, expected[2:4]), (4, expected[4:]), (5, []), (99, [])):
+            page = service.lives(singer, offset, 2)
+            assert page['total'] == 5
+            assert page['offset'] == offset and page['limit'] == 2
+            assert [r['id'] for r in page['items']] == ids
+        stats = service.statistics(singer)
+        assert stats['archives'] == 5 and stats['archivesWithSetlist'] == 2
+        assert stats['performances'] == 4 and stats['uniqueSongs'] == 1
+        assert stats['songs'][0]['count'] == 4 and stats['songs'][0]['rank'] == 1
+        assert stats['activity'] == [{'month': '2026-01', 'count': 4}]
+        assert service.lives(empty, 0, 6)['total'] == 0
+        assert service.lives(empty, 99, 6)['items'] == []
+        assert service.statistics(empty)['archives'] == 0

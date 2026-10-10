@@ -45,3 +45,23 @@ LIVE scope의 OR + correlated EXISTS가 영상 약 18,625개를 기준으로 arc
 Git 제외 outputs/catalog-read-profile-2026-10-11/profile.json과 scope-comparison.json에 실제 데이터 측정·SQL·실행 계획을 보존했다. 진단 스크립트는 .tmp/profile_catalog_reads.py와 .tmp/compare_catalog_scope.py다.
 
 후속: archive 후보 집합을 먼저 제한하는 SQL을 repository에 적용하고 기존 접근 범위·집계·pagination 계약을 유지하는 테스트를 수행한다. 실데이터 비교와 운영 배포 후 Server-Timing을 따로 검증한다. 이 조사만으로 유료 전환의 필요성을 판단하지 않는다.
+
+## 2026-10-11 공통 로직 반영 및 검증
+
+후속 사용자 요청으로 app/repositories/catalog_read.py의 공통 SCOPE를 위 UNION 기반 archive 후보 조회로 변경했다. 모든 아티스트의 라이브 목록과 통계 두 쿼리에 적용된다. 화면 코드, HTTP 응답 모델, 포함 기준, 정렬, 페이지 크기, DB schema·인덱스는 변경하지 않았다. 대표 아티스트·출연자·활성 가창자 연결의 합집합을 사용하며 영상/아카이브의 공개·보관 제외 조건은 기존 위치에서 유지한다.
+
+실제 신규 DB의 HACHI·羽緒·AZKi를 읽기 전용으로 비교했다. 수정 전 SQL을 진단 래퍼에서 실행한 결과와 수정된 repository/service 결과의 라이브 첫 페이지, offset 6, 마지막 이후 두 offset 및 전체 통계 dict가 모두 같았다. 검증 기록은 outputs/catalog-read-profile-2026-10-11/implementation-verification.json에 보존했다. 동시 worker 변경의 영향은 피할 수 없으나 이번 비교에서는 차이가 없었다.
+
+수정된 서비스의 아티스트 확인을 포함한 DB 시간(이미 열린 연결, 각 1회):
+
+| 아티스트 | 라이브 첫 6개 | 전체 통계 |
+|---|---:|---:|
+| HACHI | 299ms | 856ms |
+| 羽緒 | 216ms | 669ms |
+| AZKi | 186ms | 470ms |
+
+이 수치는 로컬에서 DB까지의 통신을 포함한 측정이며 Railway 전체 응답·LCP를 보장하지 않는다. 원본의 앞선 중앙값과 같은 시점의 교대 반복 측정은 아니다.
+
+자동 검증: `tests/test_catalog_statistics_labels.py tests/test_phase4_boundaries.py`는 4 passed. `tests/test_new_catalog_read.py tests/test_catalog_statistics_labels.py`는 1 passed, 13 skipped. 로컬 PostgreSQL 바이너리가 없고 Docker 엔진도 사용 불가하여 DB fixture 테스트가 실행되지 않았다. 새 회귀 fixture는 대표/출연/가창 단독 연결, 중복 연결, 보관 가창, 비공개/삭제 영상, 보관 영상·아카이브, 날짜 없는 자료, 페이지 경계·total, 빈 아티스트, 개인 통계를 포함한다. 실데이터 검증과 fixture 실행 여부를 구분한다.
+
+운영 배포는 수행하지 않았다. 후속: PostgreSQL 사용 가능 CI에서 fixture 테스트를 실행하고 배포 후 API Server-Timing을 확인한다.

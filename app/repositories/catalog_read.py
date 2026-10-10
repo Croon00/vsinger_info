@@ -10,10 +10,14 @@ LIVE_VISIBLE = "l.archived_at IS NULL AND v.archived_at IS NULL AND v.availabili
 LIVE_COLUMNS = """l.id,a.id artist_id,COALESCE(a.name_native,'') artist_name,
  'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
  v.platform_video_id youtube_video_id,v.title video_title,l.broadcast_at,v.published_at,v.duration_seconds"""
-SCOPE = """(l.primary_artist_id=:artist OR EXISTS(SELECT 1 FROM archive_artists aa
- WHERE aa.archive_id=l.id AND aa.artist_id=:artist) OR EXISTS(
- SELECT 1 FROM performances sp JOIN performance_artists spa ON spa.performance_id=sp.id
- WHERE sp.archive_id=l.id AND sp.archived_at IS NULL AND spa.artist_id=:artist))"""
+# Gather the artist's archive IDs through indexed relationships before reading
+# archive details. UNION preserves one archive even when several credits match.
+SCOPE = """l.id IN (
+ SELECT id FROM live_archives WHERE primary_artist_id=:artist
+ UNION SELECT archive_id FROM archive_artists WHERE artist_id=:artist
+ UNION SELECT sp.archive_id FROM performance_artists spa
+ JOIN performances sp ON sp.id=spa.performance_id
+ WHERE spa.artist_id=:artist AND sp.archived_at IS NULL)"""
 # Distinct work IDs remain distinct even when their titles match.
 PERFORMANCE_SQL = """SELECT p.id,p.archive_id,p.ordinal,p.start_seconds,p.song_id,
  COALESCE(s.title_native,p.raw_title) song_title,s.title_ko song_title_ko,
