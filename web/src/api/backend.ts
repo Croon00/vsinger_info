@@ -236,6 +236,9 @@ export const backendApi = {
           disc_number: t.disc_number,
           track_number: t.track_number,
           has_lyrics: t.has_lyrics,
+          youtube_url: videoId(t.youtube_url ?? '')
+            ? `https://www.youtube.com/watch?v=${videoId(t.youtube_url ?? '')}`
+            : undefined,
           artists: (t.artists ?? []).map((a) => ({
             id: a.artist_id ?? undefined,
             name: a.name,

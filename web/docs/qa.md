@@ -131,6 +131,10 @@ Playwright는 설치된 Chrome을 사용하며 다른 경로는 CHROME_PATH로 �
 
 새 스키마의 임시 로컬 PostgreSQL 조회 테스트 3개 통과: 빈 DB·404·인증, 가창자별 통계와 검색/앨범/공연 연결, 보관·비공개·날짜 미정 처리. 프론트 단위 24개, 실제 모드 HTTP fixture PC/모바일 2개 통과. 실제 Neon READ ONLY 점검에서 노출 아티스트 68명과 검색·공연·라이브·통계·앨범 조회 200을 확인했다. 데이터 추가·수정, 수집기·봇 전환, 외부 영상 실재생 검증은 수행하지 않았다.
 
+## 2026-10-11 곡별 YouTube 링크
+
+실제 모드 빌드(vue-tsc 포함), URL 매핑·디스코그래피 단위 테스트 22개, HTTP fixture Playwright PC·모바일 2개 통과. 곡별 직접 영상 URL·새 탭 속성·미연결 Instrumental 버튼 생략·검은 알약과 빨간 hover·모바일 화면 폭 내 배치를 확인했다. fixture 화면 캡처는 `outputs/discography-youtube-2026-10-11/button-*.png`에 있다. 실데이터 자동 연결 기준과 적용 결과는 [곡별 YouTube 연결](../../docs/discography-youtube-links.md)에 분리해 기록한다.
+
 ## 2026-09-24 캘린더 화면 조정
 
 목업 빌드와 PC·모바일 Playwright 검증에서 보기 상태의 새로고침 유지, 오늘 칸 배경, 모바일 마지막 줄 테두리, 생일 아이콘 제거, 리스트 이미지 여백을 확인했다. 이 검증은 목업 일정과 로컬 Chrome 기준이다.

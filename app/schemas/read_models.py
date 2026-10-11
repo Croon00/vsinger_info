@@ -125,6 +125,7 @@ class CatalogTrackRead(BaseModel):
     disc_number: int
     track_number: int
     has_lyrics: bool
+    youtube_url: str | None = None
     # Performers of this track in credit order (Spotify credits first, then registered credits).
     artists: list[CatalogTrackArtistRead] = Field(default_factory=list)
 

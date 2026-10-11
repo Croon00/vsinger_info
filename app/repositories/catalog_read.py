@@ -257,6 +257,9 @@ class CatalogReadRepository:
         return self.rows(f"""SELECT t.id::text id,r.id recording_id,r.song_id,r.title_native name,r.title_ko name_ko,
         r.duration_ms,t.disc_number,t.track_number,
         EXISTS(SELECT 1 FROM recording_lyrics rl WHERE rl.recording_id=r.id AND rl.archived_at IS NULL) has_lyrics,
+        (SELECT 'https://www.youtube.com/watch?v='||v.platform_video_id FROM videos v
+          WHERE v.id=r.official_video_id AND v.platform='youtube' AND v.archived_at IS NULL
+            AND v.availability IN ('public','unlisted')) youtube_url,
         {artists} artists
         FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
         WHERE t.album_id=:id ORDER BY t.disc_number,t.track_number,t.id""",{"id":album_id})

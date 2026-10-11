@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { FileText } from '@lucide/vue'
+import { ArrowUpRight, FileText } from '@lucide/vue'
 import type { Track } from '@/api/types'
 import { Button } from '@/components/ui/button'
 import {
@@ -71,8 +71,23 @@ const multiDisc = computed(() => !props.compact && discGroups(props.tracks).leng
           <ItemContent v-if="track.duration" class="flex-none">
             <ItemDescription class="tabular-nums">{{ track.duration }}</ItemDescription>
           </ItemContent>
-          <ItemActions v-if="!compact && track.has_lyrics">
+          <ItemActions
+            v-if="!compact && (track.youtube_url || track.has_lyrics)"
+            class="release-track-actions"
+          >
+            <Button v-if="track.youtube_url" as-child variant="youtube" size="xs">
+              <a
+                :href="track.youtube_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="`${displayName(track.title, track.title_ko)} YouTube에서 보기 (새 탭)`"
+              >
+                YouTube로 보기
+                <ArrowUpRight data-icon="inline-end" />
+              </a>
+            </Button>
             <Button
+              v-if="track.has_lyrics"
               variant="ghost"
               size="sm"
               :data-lyrics-id="lyricsKey(track)"

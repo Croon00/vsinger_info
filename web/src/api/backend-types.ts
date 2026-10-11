@@ -60,6 +60,7 @@ export interface BackendAlbum {
     recording_id: number
     song_id?: number | null
     has_lyrics: boolean
+    youtube_url?: string | null
     name: string
     name_ko?: string | null
     duration_ms?: number | null

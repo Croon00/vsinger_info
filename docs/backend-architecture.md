@@ -54,6 +54,8 @@ X 분류·공연/티켓 추출 workflow와 `music_graph.py`는 제거했다. X �
 
 독립 YouTube 수집은 `music_jobs` → `services/youtube_collection.py` → `integrations/youtube_catalog.py` → `repositories/youtube_collection.py`로 실행한다. 신규 활성 계정의 채널 감시, 완료 라이브의 종료 후 24시간 대기, 세트리스트 원문/가창과 커버 저장을 지원한다. X scheduler와 공개 API는 이를 실행하지 않는다. [보완 2단계](backend-service-step-2-jobs.md)에서 worker_jobs 실행기와 로컬 명령·/ready를 구현했다. YouTube handler 2개와 등록 Spotify 계정 handler 1개를 연결했다. 첫 채널 조회는 과거 자동 수집을 막는 기준선을 만든다. 댓글 대기와 기존 빈 아카이브의 재개는 [보완 5단계](backend-service-step-5-migration.md)에서 이전 작업으로 연결했다. 기존 가창은 덮어쓰지 않고 변경 후보를 보존한다. Spotify 수집은 `services/spotify_collection.py` → `integrations/spotify_catalog.py` → `repositories/spotify_collection.py`로 처리하며 [보완 4단계 결과](backend-service-step-4-spotify.md)에 등록 계정·크레딧·보존 규칙을 기록한다. admin-web은 의존하지 않으며 노래방·가사·번역·독음은 후속 TODO다.
 
+2026-10-11 사용자 요청으로 미연결 Spotify 계정의 명시적 이름 일치 조사 도구를 추가했다. `scripts/discover_spotify_accounts.py` → `services/spotify_discovery.py` → `integrations/spotify_catalog.py.search_artists`가 후보를 조사하고, `--apply`에서만 신규 external_accounts·owner 연결·감사 이력과 기존 spotify_collect 작업을 한 트랜잭션으로 생성한다. 공개 조회·worker는 이름 검색을 시작하지 않는다. 기준과 검증은 [Spotify 이름 일치 연결](spotify-exact-name-discovery.md)에 기록한다.
+
 아티스트 초기 이미지는 DB `owner` 관계 저장 → `avatar_jobs` → 이미지 worker → YouTube/X 프로필 조회 → 저장소 업로드/공개 검증 → `artists.avatar_url`과 감사 이력 반영으로 처리한다. 수집 활성화와 별개이며 기존 이미지를 교체하지 않는다. 조회 API·X 게시글 처리에서는 시작하지 않는다. 실행·실패·재시도 계약은 [프로필 이미지 저장](avatar-storage.md)에 둔다.
 
 ## Discord 사용

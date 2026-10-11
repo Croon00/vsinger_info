@@ -6,6 +6,8 @@
 
 ## 시작하기
 
+곡별 YouTube 연결과 미연결 URL 목록 생성은 [디스코그래피 YouTube 연결 도구](docs/discography-youtube-links.md)를 따른다. 조회 API는 저장된 링크만 반환한다.
+
 프로젝트 루트에서 백엔드를 준비한다. 이미 `.env`가 있으면 덮어쓰지 않는다.
 
 ```powershell
@@ -36,6 +38,10 @@ npm run dev
 http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
 
 현재 사용자 조회 `/api`, X poller·Discord URL sender, 독립 YouTube·Spotify worker는 단일 `DATABASE_URL`의 신규 DB를 사용한다. 구 SQL 연결 함수는 차단되어 있다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행한다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용한다.
+
+### 미연결 아티스트의 디스코그래피
+
+`python scripts/discover_spotify_accounts.py --output outputs/spotify-discovery-배치명`은 표시 중인 아티스트 중 Spotify 미연결 대상을 API로 조사한다. 원어·등록 영문·한국어 이름과 일치하는 단일 후보만 연결 대상으로 삼고 동명이인·검색 미완료·기존 소유권·이전 검수 보류는 구분해 남긴다. 기본 실행은 DB 읽기 전용이며, 사용자 요청에 따른 실제 연결·수집은 `--apply --run 배치명`을 추가한다. 새 조사에는 새 output 디렉터리를 사용한다. 자세한 기준·실제 반영 결과는 [Spotify 이름 일치 연결](docs/spotify-exact-name-discovery.md)에 있다.
 
 ### 공개 라이브 일정
 

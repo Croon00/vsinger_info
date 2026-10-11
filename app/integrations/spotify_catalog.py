@@ -1,4 +1,4 @@
-"""Bounded, ID-only Spotify catalog reads. No artist search or translation."""
+"""Bounded Spotify catalog reads and explicit registration-tool artist search."""
 from __future__ import annotations
 
 import asyncio
@@ -171,6 +171,40 @@ class SpotifyCatalogClient:
         token = await self._token()
         return await self._request('GET', 'https://api.spotify.com/v1' + path,
                                    headers={'Authorization': 'Bearer ' + token}, params=params)
+
+    async def search_artists(self, name: str, *, max_pages: int = 10) -> tuple[list[dict], bool]:
+        """Bounded artist discovery; incomplete searches must never auto-link.
+
+        Read-only provider operation for explicit registration tools, not public
+        read endpoints or the registered-account collection worker.
+        """
+        if not name.strip() or not 1 <= max_pages <= 100:
+            raise ValueError('Artist name and bounded page count required')
+        found = {}
+        offset = 0
+        for _ in range(max_pages):
+            data = await self.get('/search', params={'q': name, 'type': 'artist',
+                                  'market': MARKET, 'limit': 10, 'offset': offset})
+            listing = data.get('artists')
+            if not isinstance(listing, dict) or not isinstance(listing.get('items'), list):
+                raise SpotifyFailure('malformed_artist_search')
+            items = listing['items']
+            for item in items:
+                if (not isinstance(item, dict) or not isinstance(item.get('name'), str)
+                        or not item['name'].strip() or not isinstance(item.get('id'), str)
+                        or not re.fullmatch(r'[A-Za-z0-9]{22}', item['id'])):
+                    raise SpotifyFailure('malformed_artist_search')
+                found[item['id']] = {'id': item['id'], 'name': item['name']}
+            total = listing.get('total')
+            if not isinstance(total, int) or isinstance(total, bool) or total < 0:
+                raise SpotifyFailure('malformed_artist_search')
+            through = offset + len(items)
+            if not listing.get('next'):
+                return list(found.values()), through >= total
+            if not items:
+                return list(found.values()), False
+            offset = through
+        return list(found.values()), False
 
     async def albums_page(self, artist_id: str, *, offset: int, group: str) -> tuple[list[dict], bool, int | None]:
         """One listing page of a single album group, with the listing's reported total.

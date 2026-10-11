@@ -65,6 +65,7 @@ export interface Statistics extends ReturnType<
   activity: { month: string; count: number }[]
 }
 export interface Track {
+  youtube_url?: string
   lyrics_id?: number
   id: number | string
   song_id?: number

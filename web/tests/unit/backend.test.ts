@@ -224,6 +224,7 @@ describe('real API requests', () => {
       expect(path).toBe('/api/albums/15')
       return json({ id: '15', name: 'Release', album_type: 'ep', total_tracks: 1,
         tracks: [{ id: '21', recording_id: 37, song_id: 987, has_lyrics: true,
+          youtube_url: 'https://youtu.be/abcdefghijk',
           name: 'Song', disc_number: 1, track_number: 1, duration_ms: 123000,
           artists: [{ artist_id: 42, name: 'Singer', name_ko: '가수' }, { artist_id: null, name: 'Guest' }] }] })
     })
@@ -237,6 +238,7 @@ describe('real API requests', () => {
       song_id: 987,
       lyrics_id: 37,
       has_lyrics: true,
+      youtube_url: 'https://www.youtube.com/watch?v=abcdefghijk',
       duration: '2:03',
       duration_ms: 123000,
       disc_number: 1,

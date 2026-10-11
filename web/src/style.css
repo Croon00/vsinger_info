@@ -50,6 +50,9 @@
 }
 
 :root {
+  --youtube-background: #080808;
+  --youtube-foreground: #fff;
+  --youtube-fill: #e62117;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -1628,6 +1631,38 @@ a:focus-visible {
   gap: 8px;
   padding: 0;
 }
+.youtube-link {
+  border-color: var(--youtube-foreground);
+  color: var(--youtube-foreground);
+  background-color: var(--youtube-background);
+  background-image: linear-gradient(var(--youtube-fill), var(--youtube-fill));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  border-radius: 999px;
+  transition: background-size var(--duration-fast) var(--ease-smooth-out),
+    border-color var(--duration-fast) var(--ease-smooth-out);
+}
+.youtube-link:hover,
+.youtube-link:focus-visible {
+  background-size: 100% 100%;
+  border-color: var(--youtube-fill);
+}
+.release-track-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+@media (max-width: 480px) {
+  .release-track:has(.release-track-actions) {
+    flex-wrap: wrap;
+  }
+  .release-track-actions {
+    margin-left: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .youtube-link { transition: none; }
+}
+
 .release-tracks {
   display: flex;
   flex-direction: column;
