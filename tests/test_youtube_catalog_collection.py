@@ -460,7 +460,8 @@ def test_5850_candidates_are_preserved_and_only_selected_songs_are_published(sto
     provider.videos.return_value = [video(duration_seconds=12424)]
     provider.comments.return_value = ([candidate('chat', CHAT), candidate('songs', SONGS),
                                       candidate('third', '00:01 配信開始'), candidate('fourth', '00:02 挨拶')], False)
-    monkeypatch.setattr(selection, 'compare_setlist_candidates', AsyncMock(side_effect=decision_for_5850))
+    model = AsyncMock(side_effect=decision_for_5850)
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', model)
     assert run()['status'] == 'succeeded'
     documents = store.execute('SELECT id,external_id,content_text,source_metadata FROM source_documents ORDER BY id').fetchall()
     assert len(documents) == 3
@@ -475,6 +476,44 @@ def test_5850_candidates_are_preserved_and_only_selected_songs_are_published(sto
     assert run()['status'] == 'succeeded'
     assert store.execute('SELECT count(*) FROM source_documents').fetchone()[0] == 3
     assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 14
+    assert model.await_count == 2
+
+
+def test_rules_resume_review_archive_and_preserve_manual_changes(store, provider, monkeypatch):
+    req, _ = queue(store, selection_retry_count=2)
+    model = AsyncMock(return_value=ComparisonResult(status='transient_error'))
+    monkeypatch.setattr(selection, 'compare_setlist_candidates', model)
+    assert run()['status'] == 'succeeded'
+    archive = store.execute('SELECT id,setlist_state FROM live_archives').fetchone()
+    assert archive[1] == 'unprocessed'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 0
+    source = '🌙🎼セトリ🌙🎼\n曲名 / 歌手\n01. First / Artist\n┗ 01:00 ~ 02:00\n03:00 「Second」Singer'
+    provider.comments.return_value = ([comment(source)], False)
+    model.side_effect = AssertionError('Rules must resume without the provider')
+    for run_id in ('rules-resume', 'rules-repeat'):
+        asyncio.run(music_jobs.enqueue(req.model_copy(update={'payload': {**req.payload, 'request_run': run_id}})))
+        assert run()['status'] == 'succeeded'
+    assert model.await_count == 1
+    assert store.execute('SELECT id,setlist_state FROM live_archives').fetchone() == (archive[0], 'partial')
+    assert store.execute('SELECT raw_title,raw_artist,raw_timestamp FROM performances ORDER BY ordinal').fetchall() == [
+        ('First', 'Artist', '01:00'), ('Second', 'Singer', '03:00')]
+    doc = store.execute("SELECT id,content_text,source_url,source_metadata FROM source_documents WHERE source_metadata->>'selected'='true'").fetchone()
+    assert doc[3]['extractor'] == 'setlist-rules-1'
+    assert doc[3]['candidate']['rule_reason'] == 'explicit_setlist'
+    assert doc[3]['selection']['method'] == 'rules'
+    assert doc[3]['selection']['model'] is None
+    assert doc[3]['selection']['comparison_calls'] == 0
+    assert doc[1] == source and doc[2] == 'https://www.youtube.com/watch?v=abcdefghijk&lc=comment-id'
+    assert doc[3]['rows'][0]['raw_line'] == '01. First / Artist\n┗ 01:00 ~ 02:00'
+    assert (doc[3]['rows'][0]['line_number'], doc[3]['rows'][0]['end_line_number']) == (3, 4)
+    assert store.execute('SELECT DISTINCT source_document_id FROM performances').fetchall() == [(doc[0],)]
+    assert store.execute('SELECT count(*) FROM source_documents').fetchone()[0] == 2
+    store.execute("UPDATE performances SET raw_title='Manual correction' WHERE ordinal=1")
+    store.commit()
+    asyncio.run(music_jobs.enqueue(req.model_copy(update={'payload': {**req.payload, 'request_run': 'manual-preserve'}})))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT raw_title FROM performances ORDER BY ordinal').fetchall() == [('Manual correction',), ('Second',)]
+    assert store.execute('SELECT count(*) FROM source_documents').fetchone()[0] == 2
 
 
 @pytest.mark.parametrize('status', ['unconfigured', 'provider_error'])
@@ -631,7 +670,7 @@ def test_selection_output_retries_are_bounded_and_keep_wait_count(store, provide
 
 def test_multiline_evidence_is_persisted_with_original_comment_and_song_rows(store, provider, monkeypatch):
     queue(store)
-    body = 'SETLIST\n01. 01:00 ~ 02:00\n┗ Song One / Original\n02. 03:00 ~ 04:00\n┗ Song Two / Another'
+    body = 'Timestamps\n01. 01:00 ~ 02:00\n┗ Song One / Original\n02. 03:00 ~ 04:00\n┗ Song Two / Another'
     provider.comments.return_value = ([comment(body)], False)
     d = SetlistDecision(decision='selected', selected_candidate_id='comment-id', reason='Fixture',
         judgments=[dict(candidate_id='comment-id', category='setlist', reason='Fixture')],

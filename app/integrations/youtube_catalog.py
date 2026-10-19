@@ -44,6 +44,15 @@ _COLON = r'[:：]'
 _SMALL = r'[0-5０-５]?[0-9０-９]'
 TIMESTAMP_PATTERN = rf'(?:{_DIGIT}{{1,2}}{_COLON}{_SMALL}{_COLON}[0-5０-５]{_DIGIT}|{_DIGIT}{{1,4}}{_COLON}[0-5０-５]{_DIGIT})'
 STAMP = re.compile(rf'(?<![0-9０-９:：])({TIMESTAMP_PATTERN})(?![0-9０-９:：])')
+TIME_ORDINAL = re.compile(rf'(?<![0-9０-９:：])({TIMESTAMP_PATTERN})(?=：[0-9０-９]{{1,3}}[.．、)]\s+)')
+
+
+def find_timestamps(content: str) -> list[re.Match]:
+    """Preserve offsets, including an explicit time：ordinal. boundary."""
+    matches = list(STAMP.finditer(content))
+    matches.extend(match for match in TIME_ORDINAL.finditer(content)
+                   if not any(match.start() < other.end() and other.start() < match.end() for other in matches))
+    return sorted(matches, key=lambda match: match.start())
 
 
 def timestamp_seconds(value: str) -> int:
@@ -196,7 +205,7 @@ class YouTubeClient:
                     content = comment['snippet'].get('textOriginal') or comment['snippet']['textDisplay']
                     # A timestamp is only a candidate signal, never proof of a song.
                     # Keep single-song streams and let the semantic comparison reject reactions.
-                    if STAMP.search(content):
+                    if find_timestamps(content):
                         result.append(Comment(id=comment['id'], text=content, captured_at=datetime.now(UTC)))
             except (KeyError, TypeError, ValueError):
                 raise YouTubeFailure('malformed_comment') from None

@@ -8,6 +8,7 @@ import re
 from app.core.config import settings
 from app.integrations.youtube_catalog import YouTubeClient, YouTubeFailure, purpose
 from app.services.youtube_setlist import POLICY, select_setlist
+from app.services.youtube_setlist_rules import RULE_POLICY
 from app.repositories import youtube_collection as repository
 from app.schemas.worker_jobs import JobRequest
 
@@ -94,9 +95,10 @@ async def collect_video(job, payload):
             return result
         result.update(await select_setlist(comments, video.duration_seconds))
         status = result['selection']['status']
-        result['selection']['model'] = settings.openai_model
+        rules_selected = result['selection'].get('method') == 'rules'
+        result['selection']['model'] = None if rules_selected else settings.openai_model
         if status == 'selected':
-            result.update(outcome='collected', extractor='openai:' + settings.openai_model)
+            result.update(outcome='collected', extractor=RULE_POLICY if rules_selected else 'openai:' + settings.openai_model)
         elif status == 'no_songs':
             result['outcome'] = 'waiting' if payload.wait_count < 168 else 'wait_exhausted'
         elif status in ('transient_error', 'invalid_response') and payload.selection_retry_count < 2:

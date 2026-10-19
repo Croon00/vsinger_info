@@ -3,13 +3,14 @@ from __future__ import annotations
 
 import re
 
-from app.integrations.youtube_catalog import STAMP, Comment, timestamp_seconds
+from app.integrations.youtube_catalog import Comment, timestamp_seconds, find_timestamps
 from app.integrations.youtube_setlist import ComparisonResult, compare_setlist_candidates
+from app.services.youtube_setlist_rules import RULE_POLICY, choose_rules
 
-POLICY = 'setlist-comparison-3'
+POLICY = 'setlist-rules-first-1'
 MAX_CONTEXT_CHARS = 20000
 MAX_EVIDENCE_LINES = 4
-HEADING = re.compile(r'set\s*list|セットリスト|セトリ|세트리스트|歌唱タイムスタンプ', re.I)
+HEADING = re.compile(r'(?:set|song)\s*list|セットリスト|セトリ|세트리스트|歌唱タイムスタンプ', re.I)
 PAIR = re.compile(r'\S\s*[/／|｜—]\s*\S')
 NUMBERED = re.compile(r'^\s*(?:M\.?\s*)?(?:[＃#]\s*)?[0-9０-９]+\s*[.．、)曲]')
 
@@ -21,7 +22,7 @@ def shortlist(comments: list[Comment]) -> list[dict]:
             continue
         seen.add(comment.id)
         lines = comment.text.splitlines()
-        indices = [i for i, line in enumerate(lines) if STAMP.search(line)]
+        indices = [i for i, line in enumerate(lines) if find_timestamps(line)]
         if not indices:
             continue
         heading = bool(HEADING.search(comment.text))
@@ -31,7 +32,7 @@ def shortlist(comments: list[Comment]) -> list[dict]:
         for i in indices:
             block = [lines[i]]
             for line in lines[i + 1:i + MAX_EVIDENCE_LINES]:
-                if STAMP.search(line) or not line.strip():
+                if find_timestamps(line) or not line.strip():
                     break
                 block.append(line)
             pairs += any(PAIR.search(re.sub(r'https?://\S+', '', line)) for line in block)
@@ -78,7 +79,7 @@ def verified_rows(decision, contexts: list[dict], duration: int | None) -> list[
         if not start <= end < start + MAX_EVIDENCE_LINES or any(n not in lines for n in range(start, end + 1)):
             raise ValueError('Invalid evidence span')
         span = [lines[n] for n in range(start, end + 1)]
-        stamps = [(i, list(STAMP.finditer(line))) for i, line in enumerate(span) if STAMP.search(line)]
+        stamps = [(i, matches) for i, line in enumerate(span) if (matches := find_timestamps(line))]
         # One timestamp line, with an optional end time. Never join adjacent songs.
         if len(stamps) != 1 or not 1 <= len(stamps[0][1]) <= 2:
             raise ValueError('Ambiguous evidence timestamps')
@@ -111,6 +112,15 @@ def verified_rows(decision, contexts: list[dict], duration: int | None) -> list[
 async def select_setlist(comments: list[Comment], duration: int | None) -> dict:
     candidates = shortlist(comments)
     contexts = [context_for(c['comment']) for c in candidates]
+    selected_index, rule_results = choose_rules(contexts, duration)
+    for rank, (candidate, context, rules) in enumerate(zip(candidates, contexts, rule_results), 1):
+        candidate.update(rank=rank, context_truncated=context['truncated'], rule_reason=rules.reason)
+    if selected_index is not None:
+        return dict(candidates=candidates, comment=candidates[selected_index]['comment'],
+                    rows=rule_results[selected_index].rows,
+                    selection=dict(policy=POLICY, method='rules', rule_policy=RULE_POLICY, status='selected',
+                        considered_count=len(comments), retained_count=len(candidates), comparison_calls=0,
+                        validation_error=None, retry_after_seconds=0, model_result=None))
     result = await compare_setlist_candidates(contexts) if contexts else ComparisonResult(status='unconfigured')
     rows, selected, validation_error = [], None, None
     status = ('no_songs' if not contexts else
@@ -123,10 +133,8 @@ async def select_setlist(comments: list[Comment], duration: int | None) -> dict:
         except ValueError as exc:
             status = 'invalid_response'
             validation_error = str(exc)
-    for rank, (candidate, context) in enumerate(zip(candidates, contexts), 1):
-        candidate.update(rank=rank, context_truncated=context['truncated'])
     return dict(candidates=candidates, comment=next((c['comment'] for c in candidates if c['comment'].id == selected), None),
-                rows=rows, selection=dict(policy=POLICY, status=status,
+                rows=rows, selection=dict(policy=POLICY, method='model', rule_policy=RULE_POLICY, status=status,
                     considered_count=len(comments), retained_count=len(candidates),
                     comparison_calls=0 if result.status == 'unconfigured' else 1,
                     validation_error=validation_error,

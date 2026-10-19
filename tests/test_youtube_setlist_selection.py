@@ -80,6 +80,7 @@ def test_5850_prefers_fourteen_songs_to_sixteen_chat_lines(monkeypatch):
     assert result['comment'].id == 'songs' and len(result['rows']) == 14
     assert result['rows'][0]['title'] == 'STAND-ALONE'
     assert result['rows'][-1]['original_artist'] == 'スピッツ'
+    assert result['selection']['method'] == 'model'
     assert len(result['candidates']) == 2 and compare.await_count == 1
 
 
@@ -140,11 +141,15 @@ def test_context_bound_does_not_cut_mid_line():
 
 
 def test_invalid_source_decision_is_recorded_without_partial_rows(monkeypatch):
-    contexts = [service.context_for(comment('songs', SONGS))]
+    # No explicit section heading: this exercises the model validation path.
+    source = SONGS.replace('SetList\n', '')
+    contexts = [service.context_for(comment('songs', source))]
     result = decision_for_5850(contexts)
+    for song in result.decision.songs:
+        song.line_number -= 1
     result.decision.songs[-1].title = 'Invented song'
     monkeypatch.setattr(service, 'compare_setlist_candidates', AsyncMock(return_value=result))
-    selected = asyncio.run(service.select_setlist([comment('songs', SONGS)], 12424))
+    selected = asyncio.run(service.select_setlist([comment('songs', source)], 12424))
     assert not selected['rows'] and selected['comment'] is None
     assert selected['selection']['status'] == 'invalid_response'
     assert selected['selection']['validation_error'] == 'Missing source evidence'
