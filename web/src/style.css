@@ -340,6 +340,21 @@ a:focus-visible {
   flex: 1 1 0;
   min-width: 0;
 }
+.artist-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+}
+.artist-name-row h3 { min-width: 0; }
+.compact .artist-name-row { justify-content: center; }
+.artist-subscribers {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 .artist-tile-caption > .favorite-button {
   flex-shrink: 0;
 }
@@ -1362,13 +1377,22 @@ a:focus-visible {
     gap: 16px 14px;
   }
   .artist-grid .artist-tile-caption {
-    flex-wrap: nowrap;
-    align-items: flex-start;
+    display: block;
+    position: relative;
     margin-top: 10px;
   }
   .artist-grid .artist-tile-caption > a {
-    flex: 1 1 0;
+    display: block;
     min-width: 0;
+  }
+  .artist-grid .artist-tile-caption > .favorite-button {
+    position: absolute;
+    right: 0;
+    top: 24px;
+  }
+  .artist-grid .artist-tile-caption p {
+    padding-right: 36px;
+    min-height: 32px;
   }
   .artist-grid .artist-tile-caption h3,
   .artist-grid .artist-tile-caption p {

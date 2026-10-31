@@ -5,6 +5,7 @@ import type { Artist } from '@/api/types'
 import ArtistAvatar from './ArtistAvatar.vue'
 import { cn } from '@/lib/utils'
 import FavoriteButton from './FavoriteButton.vue'
+import { formatSubscribers } from '@/lib/subscribers'
 const props = defineProps<{ artist: Artist; compact?: boolean }>()
 const route = useRoute()
 const artistTo = computed(() => {
@@ -26,7 +27,25 @@ const artistTo = computed(() => {
     </RouterLink>
     <div class="artist-tile-caption">
       <RouterLink :to="artistTo" class="artist-name-link">
-        <h3 class="truncate">{{ artist.name }}</h3>
+        <div class="artist-name-row">
+          <h3 class="truncate">{{ artist.name }}</h3>
+          <span
+            v-if="!compact"
+            class="artist-subscribers"
+            :aria-label="
+              artist.youtube_subscriber_count == null
+                ? '구독자 수 미확인'
+                : `구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
+            "
+            :title="
+              artist.youtube_subscriber_count == null
+                ? '구독자 수 미확인'
+                : `구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
+            "
+          >
+            {{ formatSubscribers(artist.youtube_subscriber_count) }}
+          </span>
+        </div>
         <p class="truncate">{{ artist.display_name }}</p>
       </RouterLink>
       <FavoriteButton v-if="!compact" :id="artist.id" :name="artist.name" />

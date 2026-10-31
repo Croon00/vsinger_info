@@ -1,5 +1,6 @@
 """Fetch statistics for registered catalog owners, preserving all unrelated state."""
 import asyncio
+import argparse
 from datetime import UTC, datetime
 import json
 from pathlib import Path
@@ -13,22 +14,25 @@ from app.integrations.youtube_channel_statistics import fetch_statistics
 from app.repositories.youtube_channel_statistics import targets, persist
 
 
-async def main():
+async def main(include_disabled=False):
     with catalog_runtime_session() as session:
-        accounts = targets(session)
+        accounts = targets(session, include_disabled=include_disabled)
     rows = await fetch_statistics(YouTubeClient(settings.youtube_api_key, interval=2),
                                   [a['platform_id'] for a in accounts], datetime.now(UTC))
     found = {r.channel_id: r for r in rows}
     with catalog_runtime_session() as session:
         for account in accounts:
             if account['platform_id'] in found:
-                persist(session, account['id'], found[account['platform_id']])
+                persist(session, account['id'], found[account['platform_id']], include_disabled=include_disabled)
     print(json.dumps(dict(requested=len(accounts), updated=len(rows), unavailable=len(accounts)-len(rows))))
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--all-registered', action='store_true', help='Refresh all registered official channels without enabling their video collection')
+    args = parser.parse_args()
     try:
-        asyncio.run(main())
+        asyncio.run(main(include_disabled=args.all_registered))
     except YouTubeFailure as exc:
         print(json.dumps(dict(stopped=exc.reason)))
         raise SystemExit(2) from None

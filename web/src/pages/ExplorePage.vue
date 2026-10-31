@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/select'
 import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
-import { favoriteIds } from '@/composables/preferences'
 import { normalize } from '@/lib/search'
 import { sortArtists, type ArtistSort } from '@/lib/artist-sort'
 import ArtistTile from '@/components/ArtistTile.vue'
@@ -27,9 +26,11 @@ const query = ref(String(route.query.q ?? ''))
 const agency = ref('all')
 const sort = computed<ArtistSort>({
   get: () =>
-    ['channel-created', 'subscribers', 'name'].includes(String(route.query.sort))
+    ['channel-created', 'channel-recent', 'subscribers', 'subscribers-low', 'name'].includes(
+      String(route.query.sort),
+    )
       ? (String(route.query.sort) as ArtistSort)
-      : '',
+      : 'name',
   set: (value) => {
     router.replace({ query: { ...route.query, sort: value || undefined } })
   },
@@ -73,7 +74,6 @@ const agencies = computed(() => {
   return [...counts.keys()].sort().sort((a, b) => counts.get(b)! - counts.get(a)!)
 })
 const hasIndependentArtists = computed(() => (data.value ?? []).some((a) => !a.agency))
-const favoritesForSort = new Set(favoriteIds.value)
 const filtered = computed(() => {
   return sortArtists(
     (data.value ?? []).filter(
@@ -85,7 +85,6 @@ const filtered = computed(() => {
         ),
     ),
     sort.value,
-    favoritesForSort,
   )
 })
 </script>
@@ -116,8 +115,10 @@ const filtered = computed(() => {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="channel-created">채널 생성일</SelectItem>
-              <SelectItem value="subscribers">구독자 순서</SelectItem>
+              <SelectItem value="subscribers">구독자 높은 순</SelectItem>
+              <SelectItem value="subscribers-low">구독자 낮은 순</SelectItem>
+              <SelectItem value="channel-created">채널 생성 오래 된 순</SelectItem>
+              <SelectItem value="channel-recent">채널 생성 최근 순</SelectItem>
               <SelectItem value="name">가나다 순</SelectItem>
             </SelectGroup>
           </SelectContent>
@@ -151,8 +152,16 @@ const filtered = computed(() => {
       </form>
       <p class="result-count" aria-live="polite">
         {{ filtered.length }}명의 아티스트
-        <template v-if="sort === 'channel-created'">· 채널 생성일이 빠른 순 · 미확인은 마지막</template>
+        <template v-if="sort === 'channel-created'">
+          · 채널 생성일이 빠른 순 · 미확인은 마지막
+        </template>
         <template v-else-if="sort === 'subscribers'">· 구독자가 많은 순 · 미확인은 마지막</template>
+        <template v-else-if="sort === 'subscribers-low'">
+          · 구독자가 적은 순 · 미확인은 마지막
+        </template>
+        <template v-else-if="sort === 'channel-recent'">
+          · 채널 생성일이 최근 순 · 미확인은 마지막
+        </template>
       </p>
     </div>
     <ResourceState

@@ -1,15 +1,54 @@
 import { test, expect } from '@playwright/test'
-test('sort selector matches agency control and combines with search and filters', async ({ page }, info) => {
+test('sort selector matches agency control and combines with search and filters', async ({
+  page,
+}, info) => {
   await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' })
-  await page.route(/^http:\/\/localhost:5196\/api\//, (route) => route.fulfill({ json: [
-    { id: 1, name: 'Zulu', display_name: '가수', name_latin: 'Zulu', agency: 'Group', sources: [], youtube_channel_created_at: '2022-01-01', youtube_subscriber_count: 10 },
-    { id: 2, name: 'Beta', display_name: '나비', name_latin: 'Beta', agency: 'Other', sources: [], youtube_channel_created_at: '2020-01-01', youtube_subscriber_count: 100 },
-    { id: 3, name: 'Alpha', display_name: '다솜', name_latin: 'Alpha', agency: 'Group', sources: [], youtube_channel_created_at: null, youtube_subscriber_count: null },
-  ] }))
+  await page.route(/^http:\/\/localhost:5196\/api\//, (route) =>
+    route.fulfill({
+      json: [
+        {
+          id: 1,
+          name: 'Zulu',
+          display_name: '가수',
+          name_latin: 'Zulu',
+          agency: 'Group',
+          sources: [],
+          youtube_channel_created_at: '2022-01-01',
+          youtube_subscriber_count: 121000,
+        },
+        {
+          id: 2,
+          name: 'Beta',
+          display_name: '나비',
+          name_latin: 'Beta',
+          agency: 'Other',
+          sources: [],
+          youtube_channel_created_at: '2020-01-01',
+          youtube_subscriber_count: 1000000,
+        },
+        {
+          id: 3,
+          name: 'Alpha',
+          display_name: '다솜',
+          name_latin: 'Alpha',
+          agency: 'Group',
+          sources: [],
+          youtube_channel_created_at: null,
+          youtube_subscriber_count: null,
+        },
+      ],
+    }),
+  )
   await page.goto('/explore')
   const sort = page.getByRole('combobox', { name: '정렬 기준' })
   const agency = page.getByRole('combobox', { name: '소속사 필터' })
-  await expect(sort).toContainText('정렬 기준')
+  await expect(sort).toContainText('가나다 순')
+  await expect(page.locator('.artist-name-link h3')).toHaveText(['Zulu', 'Beta', 'Alpha'])
+  await expect(page.locator('.artist-subscribers')).toHaveText(['12.1만', '100만', '—'])
+  await expect(page.locator('.artist-subscribers').first()).toHaveAttribute(
+    'aria-label',
+    '구독자 121,000명',
+  )
   const first = await agency.boundingBox()
   const second = await sort.boundingBox()
   expect(second!.x).toBeGreaterThan(first!.x)
@@ -20,14 +59,20 @@ test('sort selector matches agency control and combines with search and filters'
   await page.getByRole('option', { name: '가나다 순', exact: true }).click()
   await expect(titles).toHaveText(['Zulu', 'Beta', 'Alpha'])
   await sort.click()
-  await page.getByRole('option', { name: '구독자 순서', exact: true }).click()
+  await page.getByRole('option', { name: '구독자 높은 순', exact: true }).click()
   await expect(titles).toHaveText(['Beta', 'Zulu', 'Alpha'])
   await sort.click()
-  await page.getByRole('option', { name: '채널 생성일', exact: true }).click()
+  await page.getByRole('option', { name: '구독자 낮은 순', exact: true }).click()
+  await expect(titles).toHaveText(['Zulu', 'Beta', 'Alpha'])
+  await sort.click()
+  await page.getByRole('option', { name: '채널 생성 최근 순', exact: true }).click()
+  await expect(titles).toHaveText(['Zulu', 'Beta', 'Alpha'])
+  await sort.click()
+  await page.getByRole('option', { name: '채널 생성 오래 된 순', exact: true }).click()
   await expect(titles).toHaveText(['Beta', 'Zulu', 'Alpha'])
   await expect(page).toHaveURL(/sort=channel-created/)
   await page.reload()
-  await expect(sort).toContainText('채널 생성일')
+  await expect(sort).toContainText('채널 생성 오래 된 순')
   await agency.click()
   await page.getByRole('option', { name: 'Group', exact: true }).click()
   await expect(titles).toHaveText(['Zulu', 'Alpha'])
@@ -36,5 +81,8 @@ test('sort selector matches agency control and combines with search and filters'
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: '검색어 지우기' }).click()
   await sort.click()
-  await page.screenshot({ path: `../outputs/artist-sort-2026-11-01/${info.project.name}.png`, fullPage: true })
+  await page.screenshot({
+    path: `../outputs/artist-sort-2026-11-01/${info.project.name}.png`,
+    fullPage: true,
+  })
 })
