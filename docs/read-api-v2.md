@@ -29,7 +29,8 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /artists/{id}/lives | 대표·출연·가창 연결로 참여한 아카이브. 방송일/공개일 내림차순+ID, 세트리스트 곡 목록 없이 활성 곡 수 `performance_count`를 포함한 요약 |
 | GET /lives/{id} | 아카이브와 영상, ordinal+ID 순 세트리스트 |
 | GET /artists/{id}/statistics | 가창자 ID에 따른 곡·원곡 아티스트 순위와 월별 활동량. 곡의 `searchText`는 이름·곡 별칭·원곡자 검색용 문자열. `titleKo`·`artistKo`, 원곡 아티스트 순위의 `nameKo`는 저장된 한국어 이름이며 없으면 null |
-| GET /search?q=... | 원어/한국어/영문 곡명·곡 별칭, 아카이브 대표·가창 아티스트 이름·별칭, 원곡 아티스트 이름·별칭, 미매칭 원문 OR 검색. 날짜 내림차순+아카이브+ordinal+ID |
+| GET /search?q=... | 원어/한국어/영문 곡명·곡 별칭, 아카이브 대표·가창 아티스트 이름·별칭, 원곡 아티스트 이름·별칭, 미매칭 원문 OR 검색. 반복 artist_ids 합집합 및 start/end 방송일 범위(한국 시간, 양 끝 포함)를 페이지 계산 전에 적용. 날짜 내림차순+아카이브+ordinal+ID. [필터 계약](song-exploration.md#우타와꾸-리스트의-복수-가창자방송-날짜-필터) |
+| GET /search/performers?q=... | 전체 검색 결과의 공개 가창자 선택지. agency·단일 artist_id 범위 지원, 현재 페이지·복수 선택·날짜 범위에 한정하지 않음 |
 | GET /concerts | 보관/취소 제외 공연. artist_id, start(포함), end(제외) 선택 필터 |
 | GET /concerts/{id} | 공연·도시·장소·출처 링크·첫 티켓 정보 |
 | GET /artists/{id}/albums | 앨범 명의(album_artists) 또는 수록 녹음의 가창 명의(recording_artists)로 연결된 앨범. 발매 연월일 내림차순+ID. `is_primary`는 해당 아티스트가 앨범 명의에 있으면 true, 트랙 명의로만 연결된 참여 발매면 false |

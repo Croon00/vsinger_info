@@ -37,8 +37,16 @@ class CatalogRead:
     def covers(self, artist_id, offset, limit):
         return self.repository.covers(artist_id, offset, limit)
     def live(self, key): return self.repository.live(key)
-    def search(self, q, offset, limit, artist_id=None, song_key=None):
-        return self.repository.search(q,offset,limit,artist_id,song_key)
+    def explore_songs(self, **kwargs):
+        from app.repositories.song_explore import explore
+        return explore(self.repository.session, repository=self.repository, **kwargs)
+    def song_performers(self, song_key, agency):
+        from app.repositories.song_explore import performers
+        return performers(self.repository, song_key, agency)
+    def search_performers(self, q, agency='all', artist_id=None):
+        return self.repository.search_performers(q,agency,artist_id)
+    def search(self, q, offset, limit, artist_id=None, song_key=None, agency=None, artist_ids=None, start=None, end=None):
+        return self.repository.search(q,offset,limit,artist_id,song_key,agency,artist_ids,start,end)
     def concerts(self, offset, limit, artist_id=None, start=None, end=None):
         return self._concert_dates(self.repository.concerts(offset,limit,artist_id,start,end))
     def concert(self, key):

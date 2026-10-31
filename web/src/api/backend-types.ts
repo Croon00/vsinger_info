@@ -9,6 +9,7 @@ export interface BackendArtist {
   youtube_subscriber_count?: number | null
   youtube_channel_created_at?: string | null
   youtube_statistics_updated_at?: string | null
+  youtube_statistics_source?: string | null
   theme_color?: string | null
   agency?: string | null
   profile_intro?: string | null

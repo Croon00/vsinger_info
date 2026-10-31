@@ -10,6 +10,8 @@
 
 ## 저장 및 조회
 
+VESPERBELL의 ヨミ·カスカ와 KMNZ의 LITA·TINA·NERO는 사용자 지정 [공유 채널 규칙](shared-youtube-channels.md)에 따라 그룹 채널 통계와 링크를 사용한다. `youtube_statistics_source`와 구독자 툴팁에 그룹 출처를 표시하며 소유권을 바꾸지 않는다.
+
 정상 조회 `/api/artists`, `/api/artists/{id}`에 nullable 필드 `debut_date`, `youtube_subscriber_count`, `youtube_channel_created_at`, `youtube_statistics_updated_at`을 추가했다. 신규 DB의 기존 `artists.debut_date`와 `collection_states.provider_state.youtube_channel_statistics`를 읽으며 조회 시 provider를 호출하지 않는다. 대표 채널은 현재 owner 관계 중 `position`, 관계 ID가 빠른 YouTube 계정이다. 여러 채널의 구독자 수를 합산하지 않는다.
 
 채널 통계 namespace는 `channel_id`, `created_at`, `subscriber_count`, `subscribers_hidden`, `captured_at`을 저장한다. 공개 API의 구독자 수는 YouTube가 공개하는 반올림 값이며 정확한 실시간 수치나 과거 증가 추이는 제공하지 않는다. 개설일과 데뷔일은 독립적인 필드다.

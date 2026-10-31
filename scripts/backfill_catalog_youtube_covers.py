@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 import time
+from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from app.core.config import settings
@@ -19,12 +20,17 @@ def main():
     parser.add_argument('--interval', type=float, default=2, help='Minimum seconds between requests')
     parser.add_argument('--max-pages', type=int, default=2000, help='Per-channel pages per invocation')
     parser.add_argument('--until-complete', action='store_true', help='Wait for the import budget to renew and resume automatically')
+    parser.add_argument('--account-id', type=int, action='append', help='Backfill only these registered account IDs')
+    parser.add_argument('--rescan-completed',action='store_true',help='Rescan explicit accounts while preserving request budget and previous counters')
     args = parser.parse_args()
+    if args.rescan_completed and not args.account_id:
+        parser.error('--rescan-completed requires --account-id')
+    rescan_run=uuid4().hex if args.rescan_completed else None
     failures = 0
     while True:
         try:
             result = asyncio.run(backfill(settings.youtube_api_key, args.checkpoint,
-                budget=args.budget, interval=args.interval, max_pages=args.max_pages))
+                budget=args.budget, interval=args.interval, max_pages=args.max_pages,account_ids=args.account_id,rescan_run=rescan_run))
         except YouTubeFailure as exc:
             print(json.dumps(dict(stopped=exc.reason, retry_after=exc.retry_after)), flush=True)
             failures += 1

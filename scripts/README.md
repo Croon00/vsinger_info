@@ -1,5 +1,9 @@
 # 운영 도구
 
+커버 Shorts 형식 확인은 `python scripts/classify_youtube_cover_formats.py`를 사용한다. 기존 영상을 삭제하지 않고 공개 Shorts URL의 응답과 제목 표식을 기록하며, 조회 화면에는 일반 영상만 표시한다. 허용 URL·요청 간격·확인 대기는 [곡 탐색](../docs/song-exploration.md#shorts-제외)을 따른다.
+
+곡 탐색의 YouTube 조회수 갱신은 `python scripts/refresh_youtube_video_statistics.py`를 사용한다. 커버·연결된 발매 영상 중 최근 24시간 동안 갱신하지 않은 영상 최대 10,000개를 50개씩 조회한다. [곡 탐색 계약](../docs/song-exploration.md).
+
 프로젝트 루트에서 실행한다. 먼저 소스의 인자 처리와 기본 동작을 확인한다. `argparse`를 사용하는 도구는 `--help`로 인자를 확인할 수 있지만, `run_admin.py`처럼 바로 실행하는 파일도 있다. 아래 도구는 서버 시작이나 테스트에 자동 연결되지 않는다. 조회 API에서 호출하지 않는다.
 
 | 도구 | 역할·실행 영향 |

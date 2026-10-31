@@ -1,15 +1,17 @@
 """Refresh metadata in the existing provider namespace without disturbing leases."""
 import json
 from sqlalchemy import text
+from app.repositories.shared_youtube import SHARED_MEMBERS_CTE, SHARED_PARAMS
 
 
 def targets(session, *, include_disabled=False):
-    return [dict(r) for r in session.execute(text("""SELECT DISTINCT e.id,e.platform_id
+    return [dict(r) for r in session.execute(text(f"""WITH {SHARED_MEMBERS_CTE} SELECT DISTINCT e.id,e.platform_id
       FROM external_accounts e JOIN artist_external_accounts ae ON ae.account_id=e.id
       JOIN artists a ON a.id=ae.artist_id WHERE e.platform='youtube'
       AND (e.collection_enabled OR :include_disabled) AND e.archived_at IS NULL AND ae.relationship='owner'
-      AND a.archived_at IS NULL AND a.show_in_catalog AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
-      ORDER BY e.id"""), {'include_disabled': include_disabled}).mappings()]
+      AND a.archived_at IS NULL AND (a.show_in_catalog OR EXISTS(SELECT 1 FROM shared_members sm WHERE sm.group_id=a.id AND sm.account_id=e.id))
+      AND e.platform_id ~ '^UC[A-Za-z0-9_-]{{22}}$'
+      ORDER BY e.id"""), {'include_disabled': include_disabled, **SHARED_PARAMS}).mappings()]
 
 
 def persist(session, account, statistics, *, include_disabled=False):

@@ -26,6 +26,7 @@ class ArtistRead(BaseModel):
     youtube_subscriber_count: int | None = None
     youtube_channel_created_at: datetime | None = None
     youtube_statistics_updated_at: datetime | None = None
+    youtube_statistics_source: str | None = None
     theme_color: str | None = None
     agency: str | None = None
     profile_intro: str | None = None

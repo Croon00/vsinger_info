@@ -85,6 +85,7 @@ async def collect_video(job, payload):
             result['outcome'] = 'not_eligible'
             return result
         if payload.purpose == 'cover':
+            result['extractor'] = 'cover-title-v3'
             result['outcome'] = 'collected'
             return result
         due = video.ended_at + timedelta(hours=24)

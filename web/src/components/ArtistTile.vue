@@ -35,12 +35,12 @@ const artistTo = computed(() => {
             :aria-label="
               artist.youtube_subscriber_count == null
                 ? '구독자 수 미확인'
-                : `구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
+                : `${artist.youtube_statistics_source ? artist.youtube_statistics_source + ' 채널 ' : ''}구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
             "
             :title="
               artist.youtube_subscriber_count == null
                 ? '구독자 수 미확인'
-                : `구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
+                : `${artist.youtube_statistics_source ? artist.youtube_statistics_source + ' 채널 ' : ''}구독자 ${artist.youtube_subscriber_count.toLocaleString('ko-KR')}명`
             "
           >
             {{ formatSubscribers(artist.youtube_subscriber_count) }}

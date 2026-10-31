@@ -6,6 +6,10 @@
 
 ## 시작하기
 
+VESPERBELL·KMNZ 멤버의 공유 구독자 수와 커버 분리는 [공유 YouTube 채널](docs/shared-youtube-channels.md)을 따른다.
+
+탐색의 곡 탭은 우타와꾸·커버·오리지널/발매 음원을 소속사별로 조회한다. 커버·발매곡의 YouTube 조회수는 `python scripts/refresh_youtube_video_statistics.py`로 갱신하며, 화면의 조회는 저장된 값만 사용한다. 집계·분류 범위와 정렬 계약은 [곡 탐색](docs/song-exploration.md)을 따른다.
+
 아티스트 탐색의 채널 생성일·구독자·가나다 정렬과 채널 통계 갱신은 [아티스트 정렬](docs/artist-sorting.md)을 따른다. 구독자 수를 즉시 갱신하려면 `python scripts/refresh_youtube_channel_statistics.py`를 실행한다. 정상 YouTube poll도 기존 채널 조회 응답에서 통계를 함께 갱신한다.
 
 등록된 공식 YouTube 채널의 과거 커버 영상은 `python scripts/backfill_catalog_youtube_covers.py --until-complete`로 신규 DB에 수집한다. 요청 간격·예산·이어받기와 커버 탭의 조회 계약은 [YouTube 커버 수집](docs/youtube-covers.md)을 따른다.

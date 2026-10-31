@@ -1,6 +1,9 @@
 """New catalog SQL. All queries are reads; no collector or legacy identity heuristics."""
 from time import perf_counter
 from sqlalchemy import text
+from app.repositories.youtube_video_format import SHORT_MARKER, SHORT_VISIBILITY
+from app.repositories.youtube_cover_rules import COVER_TITLE_SQL, COVER_TITLE_PARAMS
+from app.repositories.shared_youtube import SHARED_MEMBERS_CTE, COVER_CREDITS_CTE, SHARED_PARAMS
 
 LIVE_FROM = """FROM live_archives l JOIN videos v ON v.id=l.video_id
  LEFT JOIN LATERAL (SELECT ar.id,ar.name_native FROM artists ar WHERE ar.archived_at IS NULL AND ar.show_in_catalog
@@ -98,11 +101,12 @@ class CatalogReadRepository:
         return {"items": rows, "total": total, "offset": offset, "limit": limit}
 
     def artists(self, artist_id=None):
-        return self.rows("""SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
+        return self.rows(f"""WITH {SHARED_MEMBERS_CTE} SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
         g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,a.debut_date,
         (yt.stats->>'subscriber_count')::bigint youtube_subscriber_count,
         (yt.stats->>'created_at')::timestamptz youtube_channel_created_at,
         (yt.stats->>'captured_at')::timestamptz youtube_statistics_updated_at,
+        yt.shared_from youtube_statistics_source,
         CASE WHEN a.birthday_month IS NOT NULL AND a.birthday_day IS NOT NULL THEN
           lpad(a.birthday_month::text,2,'0')||'-'||lpad(a.birthday_day::text,2,'0') END birthday,
         ARRAY[a.id] related_artist_ids,
@@ -111,18 +115,28 @@ class CatalogReadRepository:
           CASE WHEN e.platform='website' THEN 'official_site' ELSE e.platform END,
           'value',e.url,'label',ae.label,'is_active',true) ORDER BY ae.position,ae.id)
           FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
-          WHERE ae.artist_id=a.id AND e.archived_at IS NULL),'[]'::jsonb) sources
+          WHERE ae.artist_id=a.id AND e.archived_at IS NULL),'[]'::jsonb)
+        || CASE WHEN yt.shared_from IS NOT NULL AND NOT EXISTS (
+          SELECT 1 FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
+          WHERE ae.artist_id=a.id AND e.url=yt.url AND e.archived_at IS NULL)
+          THEN jsonb_build_array(jsonb_build_object('source_type','youtube','value',yt.url,'label','YouTube','is_active',true))
+          ELSE '[]'::jsonb END sources
         FROM artists a LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
         LEFT JOIN LATERAL (
-          SELECT cs.provider_state->'youtube_channel_statistics' stats
-          FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
-          LEFT JOIN collection_states cs ON cs.external_account_id=e.id
-          WHERE ae.artist_id=a.id AND ae.relationship='owner' AND e.platform='youtube' AND e.archived_at IS NULL
-          ORDER BY ae.position,ae.id LIMIT 1
+          SELECT cs.provider_state->'youtube_channel_statistics' stats,ch.shared_from,ch.url
+          FROM (
+            SELECT e.id account_id,e.url,NULL::text shared_from,1 priority,ae.position,ae.id link_id
+            FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
+            WHERE ae.artist_id=a.id AND ae.relationship='owner' AND e.platform='youtube' AND e.archived_at IS NULL
+            UNION ALL
+            SELECT sm.account_id,e.url,sm.group_name,0,sm.position,sm.link_id
+            FROM shared_members sm JOIN external_accounts e ON e.id=sm.account_id WHERE sm.member_id=a.id AND sm.is_statistics_source
+          ) ch LEFT JOIN collection_states cs ON cs.external_account_id=ch.account_id
+          ORDER BY ch.priority,ch.position,ch.link_id LIMIT 1
         ) yt ON true
         WHERE a.archived_at IS NULL AND a.show_in_catalog
         AND (CAST(:artist_id AS integer) IS NULL OR a.id=:artist_id)
-        ORDER BY lower(a.name_native),a.id""", {"artist_id": artist_id})
+        ORDER BY lower(a.name_native),a.id""", {"artist_id": artist_id, **SHARED_PARAMS})
 
     def lives(self, artist_id, offset, limit):
         return self.page(f"""SELECT {LIVE_COLUMNS},
@@ -131,17 +145,17 @@ class CatalogReadRepository:
                          {"artist":artist_id},offset,limit,"COALESCE(q.broadcast_at,q.published_at) DESC NULLS LAST,q.id DESC")
 
     def covers(self, artist_id, offset, limit):
-        return self.page("""SELECT c.id,v.platform_video_id youtube_video_id,
+        return self.page(f"""WITH {COVER_CREDITS_CTE} SELECT c.id,v.platform_video_id youtube_video_id,
           'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
           v.title,v.published_at,v.duration_seconds
           FROM covers c JOIN videos v ON v.id=c.video_id
+          LEFT JOIN collection_states cs ON cs.external_account_id=v.source_account_id
           WHERE c.archived_at IS NULL AND v.archived_at IS NULL AND v.platform='youtube'
           AND v.availability IN ('public','unlisted','unknown')
-          AND EXISTS (SELECT 1 FROM artist_external_accounts ae
-            JOIN external_accounts e ON e.id=ae.account_id
-            WHERE ae.artist_id=:artist AND ae.relationship='owner'
-              AND e.id=v.source_account_id AND e.archived_at IS NULL)""",
-          {'artist': artist_id}, offset, limit, 'q.published_at DESC NULLS LAST,q.id DESC')
+          AND {SHORT_VISIBILITY}
+          AND {COVER_TITLE_SQL}
+          AND EXISTS (SELECT 1 FROM cover_credits cc WHERE cc.cover_id=c.id AND cc.artist_id=:artist)""",
+          {'artist': artist_id, 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}, offset, limit, 'q.published_at DESC NULLS LAST,q.id DESC')
 
     def live(self, key):
         rows = self.rows(f"SELECT {LIVE_COLUMNS} {LIVE_FROM} WHERE {LIVE_VISIBLE} AND l.id=:id", {"id":key})
@@ -151,27 +165,59 @@ class CatalogReadRepository:
         row["performances"] = self.rows(f"SELECT * FROM ({PERFORMANCE_SQL}) p WHERE archive_id=:id ORDER BY ordinal,id", {"id":key})
         return row
 
-    def search(self, query, offset, limit, artist_id=None, song_key=None):
+    def search_performers(self, query, agency='all', artist_id=None):
+        pattern = '%' + query.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%'
+        return self.rows(SEARCH_CANDIDATES_SQL + """ SELECT DISTINCT a.id,a.name_native name,a.name_ko display_name
+          FROM candidates c JOIN performances p ON p.id=c.id JOIN live_archives l ON l.id=p.archive_id
+          LEFT JOIN performance_artists pa ON pa.performance_id=p.id
+          JOIN artists a ON a.id=COALESCE(pa.artist_id,l.primary_artist_id)
+          LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
+          WHERE a.archived_at IS NULL AND a.show_in_catalog
+            AND (CAST(:artist AS integer) IS NULL OR a.id=:artist)
+            AND (:agency='all' OR g.name_native=:agency OR (:agency='independent' AND g.id IS NULL))
+          ORDER BY a.name_native,a.id""", {'query':pattern,'agency':agency,'artist':artist_id})
+
+    def search(self, query, offset, limit, artist_id=None, song_key=None, agency=None, artist_ids=None, start=None, end=None):
         pattern = "%" + query.replace("\\","\\\\").replace("%","\\%").replace("_","\\_") + "%"
-        params = {"query":pattern,"offset":offset,"limit":limit,"artist":artist_id,"song_key":song_key}
+        params = {"query":pattern,"offset":offset,"limit":limit,"artist":artist_id,"song_key":song_key,"agency":agency,
+                  'artists':artist_ids or [],'start':start,'end':end}
         # Scope before pagination so other singers cannot fill the first page.
         scope = """ AND (CAST(:artist AS integer) IS NULL OR EXISTS (SELECT 1 FROM performance_artists pa
-          WHERE pa.performance_id=p.id AND pa.artist_id=:artist))
+          WHERE pa.performance_id=p.id AND pa.artist_id=:artist)
+          OR (NOT EXISTS(SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id) AND l.primary_artist_id=:artist))
+          AND (CAST(:agency AS text) IS NULL OR :agency='all' OR EXISTS (
+            SELECT 1 FROM artists ar LEFT JOIN agencies ag ON ag.id=ar.agency_id AND ag.archived_at IS NULL
+            WHERE ar.archived_at IS NULL AND ar.show_in_catalog AND
+              (EXISTS(SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id AND pa.artist_id=ar.id)
+               OR (NOT EXISTS(SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id) AND ar.id=l.primary_artist_id))
+              AND (ag.name_native=:agency OR (:agency='independent' AND ag.id IS NULL))))
           AND (CAST(:song_key AS text) IS NULL OR :song_key=CASE WHEN s.id IS NOT NULL THEN 'song:'||s.id::text
-          ELSE 'raw:'||md5(lower(btrim(p.raw_title))||'/'||lower(btrim(COALESCE(p.raw_artist,'')))) END)"""
+          ELSE 'raw:'||md5(lower(btrim(p.raw_title))||'/'||lower(btrim(COALESCE(p.raw_artist,'')))) END)
+          AND (cardinality(CAST(:artists AS integer[]))=0 OR EXISTS (
+            SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id AND pa.artist_id=ANY(CAST(:artists AS integer[])))
+            OR (NOT EXISTS(SELECT 1 FROM performance_artists pa WHERE pa.performance_id=p.id)
+                AND l.primary_artist_id=ANY(CAST(:artists AS integer[]))))
+          AND (CAST(:start AS date) IS NULL OR (COALESCE(l.broadcast_at,v.published_at) AT TIME ZONE 'Asia/Seoul')::date>=:start)
+          AND (CAST(:end AS date) IS NULL OR (COALESCE(l.broadcast_at,v.published_at) AT TIME ZONE 'Asia/Seoul')::date<=:end)"""
         candidates = SEARCH_CANDIDATES_SQL[:-1] + scope + ')'
         rows = self.rows(f"""{candidates}, page AS MATERIALIZED (
         SELECT candidates.*,count(*) OVER() _total FROM candidates
         ORDER BY broadcast_at DESC NULLS LAST,archive_id DESC,ordinal,id
         LIMIT :limit OFFSET :offset)
-        SELECT p.*,COALESCE(p.singer_id,l.primary_artist_id) artist_id,
-        COALESCE(p.singer_name,a.name_native,'') artist_name,p.singer_name_ko artist_name_ko,
+        SELECT p.*,COALESCE(:artist,selected_singer.id,p.singer_id,l.primary_artist_id) artist_id,
+        COALESCE((SELECT ar.name_native FROM artists ar WHERE ar.id=:artist),selected_singer.name_native,p.singer_name,a.name_native,'') artist_name,
+        CASE WHEN CAST(:artist AS integer) IS NOT NULL THEN (SELECT ar.name_ko FROM artists ar WHERE ar.id=:artist)
+          ELSE COALESCE(selected_singer.name_ko,p.singer_name_ko) END artist_name_ko,
         'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
         v.title video_title,page.broadcast_at,
         (page.broadcast_at AT TIME ZONE 'Asia/Seoul')::date performed_on,page._total
         FROM page JOIN LATERAL (SELECT * FROM ({PERFORMANCE_SQL}) detail
           WHERE detail.id=page.id) p ON true
         JOIN live_archives l ON l.id=page.archive_id
+        LEFT JOIN LATERAL (SELECT ar.id,ar.name_native,ar.name_ko FROM performance_artists pa
+          JOIN artists ar ON ar.id=pa.artist_id AND ar.archived_at IS NULL
+          WHERE pa.performance_id=page.id AND pa.artist_id=ANY(CAST(:artists AS integer[]))
+          ORDER BY pa.position,pa.id LIMIT 1) selected_singer ON true
         JOIN videos v ON v.id=l.video_id LEFT JOIN artists a ON a.id=l.primary_artist_id AND a.archived_at IS NULL
         ORDER BY page.broadcast_at DESC NULLS LAST,page.archive_id DESC,page.ordinal,page.id""",params)
         total = rows[0].pop("_total") if rows else (

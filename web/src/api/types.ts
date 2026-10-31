@@ -1,3 +1,11 @@
+export interface SearchOptions {
+  artistId?: number
+  artistIds?: number[]
+  songKey?: string
+  agency?: string
+  start?: string
+  end?: string
+}
 export interface Link {
   label: string
   url: string
@@ -23,6 +31,7 @@ export interface Artist {
   youtube_subscriber_count?: number | null
   youtube_channel_created_at?: string | null
   youtube_statistics_updated_at?: string | null
+  youtube_statistics_source?: string | null
   intro: string
 }
 export interface Performance {
@@ -62,6 +71,21 @@ export interface Page<T> {
   total: number
   offset: number
   limit: number
+}
+export type SongKind = 'utawaku' | 'cover' | 'original'
+export interface ExploredSong {
+  key: string
+  title: string
+  title_ko: string | null
+  artist_name: string
+  youtube_video_id: string | null
+  view_count: number | null
+  views_updated_at: string | null
+  performance_count: number | null
+  artist_count: number | null
+  archive_id: number | null
+  start_seconds: number | null
+  published_at: string | null
 }
 export interface Statistics extends ReturnType<
   typeof import('@/lib/artist-statistics').artistStatistics

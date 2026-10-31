@@ -1,6 +1,9 @@
 """Canonical unified-DB read API mounted at ``/api``."""
 from datetime import date
+from typing import Literal
+from app.schemas.song_explore import SongExploreRead, SongPerformerRead
 from typing import Annotated
+from pydantic import Field
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 from app.core.security import require_api_key
@@ -18,6 +21,20 @@ def catalog(response: Response, session: Annotated[Session, Depends(get_catalog_
 Catalog = Annotated[CatalogRead, Depends(catalog)]
 Offset = Annotated[int, Query(ge=0,le=100000)]
 Limit = Annotated[int, Query(ge=1,le=100)]
+
+@router.get('/explore/songs', response_model=Page[SongExploreRead])
+def explore_songs(service:Catalog,response:Response,
+                  kind:Literal['utawaku','cover','original']='utawaku',
+                  agency:Annotated[str,Query(min_length=1,max_length=200)]='all',
+                  q:Annotated[str,Query(max_length=200)]='',
+                  order:Literal['high','low','name','latest']='high',offset:Offset=0,limit:Limit=24):
+    return finish(response,service,service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit))
+
+@router.get('/explore/song-performers',response_model=list[SongPerformerRead])
+def song_performers(service:Catalog,response:Response,
+    song_key:Annotated[str,Query(pattern=r'^(song:[1-9][0-9]*|raw:[a-f0-9]{32})$')],
+    agency:Annotated[str,Query(min_length=1,max_length=200)]='all'):
+    return finish(response,service,service.song_performers(song_key,agency))
 
 def finish(response, service, value):
     response.headers['Server-Timing'] = f'db;dur={service.query_ms:.1f}, queries;desc="{service.query_count}"'
@@ -62,8 +79,20 @@ def statistics(artist_id:int,service:Catalog,response:Response):
 @router.get('/search',response_model=Page[SearchRead])
 def search(service:Catalog,response:Response,q:Annotated[str,Query(min_length=1,max_length=200)],offset:Offset=0,limit:Limit=50,
            artist_id:Annotated[int|None,Query(ge=1)]=None,
-           song_key:Annotated[str|None,Query(pattern=r'^(song:[1-9][0-9]*|raw:[a-f0-9]{32})$')]=None):
-    return finish(response,service,service.search(q.strip(),offset,limit,artist_id,song_key) if q.strip() else {'items':[],'total':0,'offset':offset,'limit':limit})
+           song_key:Annotated[str|None,Query(pattern=r'^(song:[1-9][0-9]*|raw:[a-f0-9]{32})$')]=None,
+           agency:Annotated[str|None,Query(min_length=1,max_length=200)]=None,
+           artist_ids:Annotated[list[Annotated[int,Field(ge=1)]]|None,Query(max_length=100)]=None,
+           start:date|None=None,end:date|None=None):
+    if start and end and start>end:
+        raise HTTPException(422,'시작일은 종료일보다 늦을 수 없습니다.')
+    return finish(response,service,service.search(q.strip(),offset,limit,artist_id,song_key,agency,
+        artist_ids=sorted(set(artist_ids or [])),start=start,end=end) if q.strip() else {'items':[],'total':0,'offset':offset,'limit':limit})
+
+@router.get('/search/performers',response_model=list[SongPerformerRead])
+def search_performers(service:Catalog,response:Response,q:Annotated[str,Query(min_length=1,max_length=200)],
+                      agency:Annotated[str,Query(min_length=1,max_length=200)]='all',
+                      artist_id:Annotated[int|None,Query(ge=1)]=None):
+    return finish(response,service,service.search_performers(q.strip(),agency,artist_id))
 
 @router.get('/concerts',response_model=Page[ConcertRead])
 def concerts(service:Catalog,response:Response,offset:Offset=0,limit:Limit=100,artist_id:int|None=None,start:date|None=None,end:date|None=None):

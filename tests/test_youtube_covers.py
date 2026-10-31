@@ -23,13 +23,33 @@ from app.services.catalog_read import CatalogRead
 CHANNEL = 'UC' + 'a' * 22
 
 
+def test_shared_uploads_route_to_exact_registered_origin_without_rewriting(monkeypatch):
+    primary='UCwuS0uY-Z2Gr_5OV2oFybFA'
+    origin='UC3cuxhq3Cv-9h5wNXvWHspg'
+    accounts=[dict(id=5,platform_id=primary),dict(id=105,platform_id=origin)]
+    @contextmanager
+    def session():
+        yield object()
+    saved=[]
+    monkeypatch.setattr(importer,'catalog_runtime_session',session)
+    monkeypatch.setattr(importer,'targets',lambda session:accounts)
+    def persist(session,account,videos):
+        saved.extend((account['id'],v.channel_id,v.id) for v in videos)
+        return len(videos)
+    monkeypatch.setattr(importer,'persist_page',persist)
+    video=Video(id='utHgT3i8Dj8',channel_id=origin,title='Revival (Cover) / KMNZ NERO')
+    foreign=video.model_copy(update={'id':'abcdefghijk','channel_id':CHANNEL})
+    assert importer.save_page(accounts[0],[video,foreign])==1
+    assert saved==[(105,origin,'utHgT3i8Dj8')]
+
+
 def test_cover_api_owner_scope_pagination_visibility_and_auth(store, monkeypatch):
     db, engine = store
     artist, guest, *_ = seed(db)
     account = db.execute('SELECT account_id FROM artist_external_accounts WHERE artist_id=%s', (artist,)).fetchone()[0]
     for index in range(3):
         video = row(db, 'videos', platform='youtube', platform_video_id=f'cover{index:06}', source_account_id=account,
-                    title=f'歌ってみた {index}', published_at=f'2026-01-0{index+1}T00:00:00Z',
+                    title=f'歌ってみた {index}', published_at=f'2026-01-0{index+1}T00:00:00Z', duration_seconds=240,
                     availability='private' if index == 2 else 'public')
         row(db, 'covers', video_id=video)
     db.commit()
@@ -75,6 +95,18 @@ def test_save_page_preserves_raw_source_deduplicates_and_excludes_live(store, mo
     assert db.execute('SELECT count(*) FROM covers').fetchone()[0] == 1
     assert db.execute('SELECT count(*) FROM cover_artists').fetchone()[0] == 0
     assert db.execute("SELECT content_text FROM source_documents WHERE external_id='abcdefghij1'").fetchone()[0] == 'original description'
+    # Earlier imports may have recorded a premiere as a live without provenance.
+    # Add the cover while preserving the live and its performances.
+    legacy=row(db,'videos',platform='youtube',platform_video_id='abcdefghij4',
+               title='Song cover',availability='public',duration_seconds=240)
+    row(db,'live_archives',video_id=legacy,primary_artist_id=artist)
+    db.commit()
+    premiere=video.model_copy(update=dict(id='abcdefghij4',duration_seconds=240,
+        started_at=datetime(2026,1,1,tzinfo=UTC),ended_at=datetime(2026,1,1,0,6,tzinfo=UTC)))
+    assert importer.save_page(target,[premiere])==1
+    assert importer.save_page(target,[premiere])==0
+    assert db.execute('SELECT source_account_id FROM videos WHERE id=%s',(legacy,)).fetchone()[0]==account
+    assert db.execute('SELECT count(*) FROM live_archives WHERE video_id=%s',(legacy,)).fetchone()[0]==1
 
 
 def test_budget_counts_failed_requests_and_stops_before_network():

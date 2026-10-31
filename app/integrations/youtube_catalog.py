@@ -8,6 +8,7 @@ from email.utils import parsedate_to_datetime
 from typing import Literal
 
 import httpx
+from app.integrations.youtube_cover_rules import is_cover_title
 from pydantic import BaseModel, Field
 
 
@@ -37,7 +38,6 @@ class Comment(BaseModel):
 
 
 SINGING = ('歌枠', '歌配信', 'カラオケ', '弾き語り', 'うたわく', 'singing', 'karaoke', 'acoustic')
-COVER = ('cover', '歌ってみた', '歌唱', 'カバー', 'covered by')
 # Colon timestamps, including full-width digits/colon and elapsed minutes >59.
 _DIGIT = r'[0-9０-９]'
 _COLON = r'[:：]'
@@ -64,10 +64,15 @@ def timestamp_seconds(value: str) -> int:
 
 def purpose(video: Video) -> str | None:
     if video.ended_at and video.started_at:
-        return 'archive' if any(k in video.title.casefold() for k in SINGING) else None
-    if video.started_at or video.scheduled:
+        if any(k in video.title.casefold() for k in SINGING):
+            return 'archive'
+        # Music-video premieres also contain completed liveStreamingDetails.
+        # Explicit cover titles stay eligible after completion; stream titles do not.
+        if re.search(r'livestream|live\s+stream|配信|生放送|雑談|耐久|切り抜き|同時視聴', video.title, re.I):
+            return None
+    if (video.started_at or video.scheduled) and not video.ended_at:
         return None
-    return 'cover' if any(k in (video.title + '\n' + video.description).casefold() for k in COVER) else None
+    return 'cover' if is_cover_title(video.title) else None
 
 
 def parse_setlist(content: str) -> list[dict]:
@@ -114,7 +119,7 @@ def _video(item) -> Video:
     return Video(id=item['id'], channel_id=snippet['channelId'], title=snippet['title'],
                  description=snippet.get('description', ''), published_at=_date(snippet.get('publishedAt')),
                  started_at=_date(live.get('actualStartTime')), ended_at=_date(live.get('actualEndTime')),
-                 scheduled=bool(live.get('scheduledStartTime')) or snippet.get('liveBroadcastContent') in ('live', 'upcoming'),
+                 scheduled=not bool(live.get('actualEndTime')) and (bool(live.get('scheduledStartTime')) or snippet.get('liveBroadcastContent') in ('live', 'upcoming')),
                  duration_seconds=seconds, availability=item.get('status', {}).get('privacyStatus', 'unknown'))
 
 
