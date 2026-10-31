@@ -19,6 +19,10 @@ export interface Artist {
   official_url: string
   links: Link[]
   birthday: string | null
+  debut_date?: string | null
+  youtube_subscriber_count?: number | null
+  youtube_channel_created_at?: string | null
+  youtube_statistics_updated_at?: string | null
   intro: string
 }
 export interface Performance {
@@ -129,4 +133,12 @@ export interface CalendarEvent {
   kind: 'concert' | 'birthday'
   concert?: Concert
   person?: string
+}
+export interface Cover {
+  id: number
+  youtube_video_id: string
+  youtube_url: string
+  title: string
+  published_at: string | null
+  duration_seconds: number | null
 }

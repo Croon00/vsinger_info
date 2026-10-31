@@ -137,17 +137,29 @@ def claim(session: Session, kinds: tuple[str, ...], *, owner: str, lease_seconds
         WHERE job_type IN :kinds AND status IN ('pending','retry') AND attempt_count >= max_attempts
           AND (CAST(:request_run AS text) IS NULL OR payload->>'request_run'=CAST(:request_run AS text))
     ''').bindparams(bindparam('kinds', expanding=True)), params)
+    # Advisory locks serialize provider claims. Check activity once per provider
+    # after lease/account cleanup, instead of scanning its entire job history
+    # for every queued candidate in a correlated subquery.
+    idle_platforms = []
+    for platform in {kind.split('_', 1)[0] for kind in available}:
+        busy = session.execute(text('''
+            SELECT 1 FROM worker_jobs
+            WHERE split_part(job_type,'_',1)=:platform AND attempt_count > 0
+              AND ((status='running' AND lease_expires_at > clock_timestamp())
+                   OR updated_at > clock_timestamp()-(:interval * interval '1 second'))
+            LIMIT 1
+        '''), {'platform': platform, 'interval': params['interval']}).first()
+        if not busy:
+            idle_platforms.append(platform)
+    params['kinds'] = tuple(kind for kind in available if kind.split('_', 1)[0] in idle_platforms)
+    if not params['kinds']:
+        return None
     row = session.execute(text('''
         SELECT j.* FROM worker_jobs j JOIN external_accounts a ON a.id=j.external_account_id
         WHERE j.job_type IN :kinds AND j.status IN ('pending','retry')
           AND (CAST(:request_run AS text) IS NULL OR j.payload->>'request_run'=CAST(:request_run AS text))
           AND (j.next_attempt_at IS NULL OR j.next_attempt_at <= clock_timestamp())
           AND a.collection_enabled AND a.archived_at IS NULL
-          AND NOT EXISTS (
-            SELECT 1 FROM worker_jobs busy
-            WHERE split_part(busy.job_type,'_',1)=a.platform AND busy.attempt_count > 0
-              AND ((busy.status='running' AND busy.lease_expires_at > clock_timestamp())
-                   OR busy.updated_at > clock_timestamp()-(:interval * interval '1 second')))
         ORDER BY j.next_attempt_at NULLS FIRST,j.id
         FOR UPDATE OF j SKIP LOCKED LIMIT 1
     ''').bindparams(bindparam('kinds', expanding=True)), params).mappings().one_or_none()

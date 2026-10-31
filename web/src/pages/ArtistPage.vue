@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowUpRight,
   Play,
+  Music2,
   Disc3,
   CalendarDays,
   ChevronDown,
@@ -18,6 +19,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { todayKey } from '@/lib/dates'
 import ArtistDiscography from '@/components/ArtistDiscography.vue'
+import ArtistCovers from '@/components/ArtistCovers.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
 import ResourceState from '@/components/ResourceState.vue'
@@ -46,7 +48,7 @@ watch(
 )
 const id = computed(() => String(route.params.artistId))
 const tab = computed(() =>
-  ['lives', 'statistics', 'originals', 'concerts'].includes(String(route.query.tab))
+  ['lives', 'covers', 'statistics', 'originals', 'concerts'].includes(String(route.query.tab))
     ? String(route.query.tab)
     : 'lives',
 )
@@ -199,10 +201,14 @@ function returnToList() {
           </div>
         </section>
         <Tabs :model-value="tab" @update:model-value="changeTab" class="artist-tabs">
-          <TabsList variant="line" class="h-13">
+          <TabsList variant="line" class="h-13 max-w-full overflow-x-auto justify-start">
             <TabsTrigger value="lives">
               <Play />
               라이브
+            </TabsTrigger>
+            <TabsTrigger value="covers">
+              <Music2 />
+              커버
             </TabsTrigger>
             <TabsTrigger value="statistics">
               <ChartNoAxesColumnIncreasing />
@@ -270,6 +276,9 @@ function returnToList() {
                 {{ moreError }}
               </p>
             </ResourceState>
+          </TabsContent>
+          <TabsContent value="covers" class="pt-4 min-[769px]:pt-6">
+            <ArtistCovers :key="id" :artist-id="Number(id)" />
           </TabsContent>
           <TabsContent value="statistics" class="pt-4 min-[769px]:pt-6">
             <ResourceState :loading="statsLoading" :error="statsError" @retry="reloadStats">

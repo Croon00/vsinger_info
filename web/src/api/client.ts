@@ -1,4 +1,4 @@
-import type { Album, Artist, Concert, Live, Lyrics, SearchResults } from './types'
+import type { Album, Artist, Concert, Cover, Live, Lyrics, Page, SearchResults } from './types'
 
 import { request } from './http'
 import { isMock } from './config'
@@ -34,6 +34,8 @@ const mockApi = {
 export const api = isMock
   ? {
       ...mockApi,
+      coverPage: async (_artistId: number, offset = 0, limit = 12, _signal?: AbortSignal): Promise<Page<Cover>> =>
+        ({ items: [], total: 0, offset, limit }),
       concert: async (id: string, signal?: AbortSignal) => {
         const result = (await mockApi.concerts(signal)).find((c) => String(c.id) === id)
         if (!result) throw new Error('찾으시는 공연이 없어요.')

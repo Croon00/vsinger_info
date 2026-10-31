@@ -80,6 +80,8 @@ def persist_poll(session, job, payload, value):
                 'youtube_window_truncated': value['truncated'],
                 'youtube_poll_gap': bool(state.get('youtube_poll_gap')) or value['gap'] or len(pending) > 200,
                 'youtube_pending_video_ids': pending[:200],
+                **({'youtube_channel_statistics': value['channel_statistics']}
+                   if value.get('channel_statistics') else {}),
             })})
     for video in value['videos']:
         kind = value['purposes'].get(video.id)
@@ -161,9 +163,11 @@ def persist_collect(session, job, payload, value):
     resume_archive = False
     if (archive_id and current['archive'] and not conflict and payload.purpose == 'archive'
             and value['rows'] and current['archive']['setlist_state'] in ('unprocessed', 'unavailable', 'partial')):
+        # Archived entries retain their ordinals and may represent manual removal.
+        # Preserve them and keep new evidence as a review candidate instead.
         resume_archive = bool(session.execute(text('''UPDATE live_archives SET setlist_state='partial'
             WHERE id=:id AND version=:version AND archived_at IS NULL
-              AND NOT EXISTS (SELECT 1 FROM performances WHERE archive_id=:id AND archived_at IS NULL)
+              AND NOT EXISTS (SELECT 1 FROM performances WHERE archive_id=:id)
             RETURNING id'''), dict(id=archive_id, version=current['archive']['version'])).scalar_one_or_none())
     disposition = 'version_conflict' if conflict else ('applied' if new_archive or resume_archive else 'review_candidate')
     metadata = dict(collector='youtube-catalog', video_id=payload.youtube_video_id, outcome=outcome,

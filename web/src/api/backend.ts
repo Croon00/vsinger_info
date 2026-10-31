@@ -1,5 +1,6 @@
 import type {
   Album,
+  Cover,
   Artist,
   Concert,
   Live,
@@ -87,6 +88,10 @@ export function mapArtist(row: BackendArtist): Artist {
     official_url: links.find((l) => l.label === '공식 사이트')?.url ?? '',
     links,
     birthday: row.birthday ?? null,
+    debut_date: row.debut_date ?? null,
+    youtube_subscriber_count: row.youtube_subscriber_count ?? null,
+    youtube_channel_created_at: row.youtube_channel_created_at ?? null,
+    youtube_statistics_updated_at: row.youtube_statistics_updated_at ?? null,
     intro: row.profile_intro ?? '',
   }
 }
@@ -186,6 +191,9 @@ async function artist(id: string, signal?: AbortSignal) {
 export const backendApi = {
   artists,
   artist,
+  coverPage(artistId: number, offset = 0, limit = 12, signal?: AbortSignal): Promise<Page<Cover>> {
+    return cachedRead<Page<Cover>>(`/api/artists/${artistId}/covers?offset=${offset}&limit=${limit}`, signal)
+  },
   async livePage(
     artistId: number,
     offset = 0,

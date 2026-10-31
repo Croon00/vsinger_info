@@ -173,7 +173,7 @@ class YouTubeClient:
         return result
 
     async def recent(self, channel: str) -> tuple[str, list[Video], bool]:
-        data = await self.get('channels', part='contentDetails', id=channel)
+        data = await self.get('channels', part='contentDetails,snippet,statistics', id=channel)
         try:
             item = data['items'][0]
             if item['id'] != channel:
@@ -181,6 +181,14 @@ class YouTubeClient:
             playlist = item['contentDetails']['relatedPlaylists']['uploads']
         except (IndexError, KeyError, TypeError, ValueError):
             raise YouTubeFailure('channel_unavailable') from None
+        from app.integrations.youtube_channel_statistics import ChannelStatistics
+        self.channel_statistics = None
+        if 'statistics' in item:
+            stats = item['statistics']
+            self.channel_statistics = ChannelStatistics(channel_id=channel,
+                created_at=item.get('snippet', {}).get('publishedAt'),
+                subscriber_count=None if stats.get('hiddenSubscriberCount') else stats.get('subscriberCount'),
+                subscribers_hidden=stats.get('hiddenSubscriberCount', False), captured_at=datetime.now(UTC))
         ids, token = [], None
         for _ in range(4):
             data = await self.get('playlistItems', part='contentDetails', playlistId=playlist, maxResults=50,

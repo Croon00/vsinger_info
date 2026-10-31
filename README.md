@@ -6,6 +6,10 @@
 
 ## 시작하기
 
+아티스트 탐색의 채널 생성일·구독자·가나다 정렬과 채널 통계 갱신은 [아티스트 정렬](docs/artist-sorting.md)을 따른다. 구독자 수를 즉시 갱신하려면 `python scripts/refresh_youtube_channel_statistics.py`를 실행한다. 정상 YouTube poll도 기존 채널 조회 응답에서 통계를 함께 갱신한다.
+
+등록된 공식 YouTube 채널의 과거 커버 영상은 `python scripts/backfill_catalog_youtube_covers.py --until-complete`로 신규 DB에 수집한다. 요청 간격·예산·이어받기와 커버 탭의 조회 계약은 [YouTube 커버 수집](docs/youtube-covers.md)을 따른다.
+
 곡별 YouTube 연결과 미연결 URL 목록 생성은 [디스코그래피 YouTube 연결 도구](docs/discography-youtube-links.md)를 따른다. 조회 API는 저장된 링크만 반환한다.
 
 프로젝트 루트에서 백엔드를 준비한다. 이미 `.env`가 있으면 덮어쓰지 않는다.

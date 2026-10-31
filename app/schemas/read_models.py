@@ -22,6 +22,10 @@ class ArtistRead(BaseModel):
     display_name: str | None = None
     name_latin: str | None = None
     birthday: str | None = None
+    debut_date: date | None = None
+    youtube_subscriber_count: int | None = None
+    youtube_channel_created_at: datetime | None = None
+    youtube_statistics_updated_at: datetime | None = None
     theme_color: str | None = None
     agency: str | None = None
     profile_intro: str | None = None
@@ -51,6 +55,14 @@ class LiveRead(BaseModel):
     duration_seconds: int | None = None
     performance_count: int | None = None
     performances: list[PerformanceRead] = Field(default_factory=list)
+
+class CoverRead(BaseModel):
+    id: int
+    youtube_video_id: str
+    youtube_url: str
+    title: str
+    published_at: datetime | None = None
+    duration_seconds: int | None = None
 
 class SearchRead(PerformanceRead):
     archive_id: int

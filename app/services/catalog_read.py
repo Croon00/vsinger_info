@@ -34,6 +34,8 @@ class CatalogRead:
         for row in result["items"]:
             row["artist_id"] = artist_id
         return result
+    def covers(self, artist_id, offset, limit):
+        return self.repository.covers(artist_id, offset, limit)
     def live(self, key): return self.repository.live(key)
     def search(self, q, offset, limit, artist_id=None, song_key=None):
         return self.repository.search(q,offset,limit,artist_id,song_key)

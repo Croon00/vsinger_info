@@ -99,7 +99,10 @@ class CatalogReadRepository:
 
     def artists(self, artist_id=None):
         return self.rows("""SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
-        g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,
+        g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,a.debut_date,
+        (yt.stats->>'subscriber_count')::bigint youtube_subscriber_count,
+        (yt.stats->>'created_at')::timestamptz youtube_channel_created_at,
+        (yt.stats->>'captured_at')::timestamptz youtube_statistics_updated_at,
         CASE WHEN a.birthday_month IS NOT NULL AND a.birthday_day IS NOT NULL THEN
           lpad(a.birthday_month::text,2,'0')||'-'||lpad(a.birthday_day::text,2,'0') END birthday,
         ARRAY[a.id] related_artist_ids,
@@ -110,6 +113,13 @@ class CatalogReadRepository:
           FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
           WHERE ae.artist_id=a.id AND e.archived_at IS NULL),'[]'::jsonb) sources
         FROM artists a LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
+        LEFT JOIN LATERAL (
+          SELECT cs.provider_state->'youtube_channel_statistics' stats
+          FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
+          LEFT JOIN collection_states cs ON cs.external_account_id=e.id
+          WHERE ae.artist_id=a.id AND ae.relationship='owner' AND e.platform='youtube' AND e.archived_at IS NULL
+          ORDER BY ae.position,ae.id LIMIT 1
+        ) yt ON true
         WHERE a.archived_at IS NULL AND a.show_in_catalog
         AND (CAST(:artist_id AS integer) IS NULL OR a.id=:artist_id)
         ORDER BY lower(a.name_native),a.id""", {"artist_id": artist_id})
@@ -119,6 +129,19 @@ class CatalogReadRepository:
           (SELECT count(*) FROM performances p WHERE p.archive_id=l.id AND p.archived_at IS NULL) performance_count
           {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}""",
                          {"artist":artist_id},offset,limit,"COALESCE(q.broadcast_at,q.published_at) DESC NULLS LAST,q.id DESC")
+
+    def covers(self, artist_id, offset, limit):
+        return self.page("""SELECT c.id,v.platform_video_id youtube_video_id,
+          'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
+          v.title,v.published_at,v.duration_seconds
+          FROM covers c JOIN videos v ON v.id=c.video_id
+          WHERE c.archived_at IS NULL AND v.archived_at IS NULL AND v.platform='youtube'
+          AND v.availability IN ('public','unlisted','unknown')
+          AND EXISTS (SELECT 1 FROM artist_external_accounts ae
+            JOIN external_accounts e ON e.id=ae.account_id
+            WHERE ae.artist_id=:artist AND ae.relationship='owner'
+              AND e.id=v.source_account_id AND e.archived_at IS NULL)""",
+          {'artist': artist_id}, offset, limit, 'q.published_at DESC NULLS LAST,q.id DESC')
 
     def live(self, key):
         rows = self.rows(f"SELECT {LIVE_COLUMNS} {LIVE_FROM} WHERE {LIVE_VISIBLE} AND l.id=:id", {"id":key})

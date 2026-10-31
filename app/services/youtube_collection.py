@@ -54,8 +54,11 @@ async def collect_poll(job, payload):
     videos = [video for video in videos if video.channel_id == payload.channel_id]
     last = state['last_polled_at']
     gap = bool(truncated and last and all(v.published_at and v.published_at > last for v in videos))
+    from app.integrations.youtube_channel_statistics import ChannelStatistics
+    statistics = getattr(provider, 'channel_statistics', None)
     return dict(state=state, captured_at=captured, playlist=playlist, truncated=truncated, gap=gap,
-                videos=videos, purposes={v.id: purpose(v) for v in videos})
+                videos=videos, purposes={v.id: purpose(v) for v in videos},
+                channel_statistics=statistics.model_dump(mode='json') if isinstance(statistics, ChannelStatistics) else None)
 
 
 async def collect_video(job, payload):

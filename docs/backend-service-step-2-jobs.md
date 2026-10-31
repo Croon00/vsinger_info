@@ -22,6 +22,8 @@
 
 ## 실행·복구
 
+2026-10-30 대량 대기열 조회에서 provider 작업 이력의 반복 스캔을 제거했다. provider별 실행/간격 검사는 만료 lease 정리 후 한 번 수행하며 동시 실행·간격 정책은 유지한다. 실데이터 조사와 제한된 테스트 범위는 [빈 세트리스트 갱신 기록](setlist-refresh-2026-10-30.md)에 있다.
+
 - 한 번에 한 작업을 `FOR UPDATE SKIP LOCKED`로 선점하고, 고유 claim token·시도 횟수·lease를 기록한다.
 - provider별 advisory transaction lock과 실행 중 작업 검사로 DB 전체에서 같은 provider의 동시 작업을 1개로 제한한다. 서로 다른 provider는 병행할 수 있다. 기본 작업 간 최소 간격은 1초다. 개별 handler 안의 HTTP 호출량·API quota 조절은 3·4단계 provider adapter의 책임이다.
 - provider 조회는 transaction 밖에서 비동기로 수행한다. handler의 `collect`는 외부 읽기만 수행하고 DB 저장·메시지 전송 등 부작용을 만들지 않는 계약이다.

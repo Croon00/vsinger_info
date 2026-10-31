@@ -5,6 +5,10 @@ export interface BackendArtist {
   display_name?: string | null
   name_latin?: string | null
   birthday?: string | null
+  debut_date?: string | null
+  youtube_subscriber_count?: number | null
+  youtube_channel_created_at?: string | null
+  youtube_statistics_updated_at?: string | null
   theme_color?: string | null
   agency?: string | null
   profile_intro?: string | null

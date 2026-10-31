@@ -189,6 +189,20 @@ def test_reprocessing_and_manual_changes_are_never_replaced(store, provider):
     assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->>'disposition'='review_candidate'").fetchone()[0] == 1
 
 
+def test_reprocessing_preserves_soft_deleted_performances(store, provider):
+    req, _ = queue(store)
+    assert run()['status'] == 'succeeded'
+    store.execute('UPDATE performances SET archived_at=clock_timestamp()')
+    store.commit()
+    provider.comments.return_value = ([comment('00:30 Changed title\n02:10 Another title')], False)
+    asyncio.run(music_jobs.enqueue(req.model_copy(update={
+        'payload': {**req.payload, 'request_run': 'after-removal'}})))
+    assert run()['status'] == 'succeeded'
+    assert store.execute('SELECT count(*) FROM performances').fetchone()[0] == 2
+    assert store.execute('SELECT count(*) FROM performances WHERE archived_at IS NULL').fetchone()[0] == 0
+    assert store.execute("SELECT count(*) FROM source_documents WHERE source_metadata->>'disposition'='review_candidate'").fetchone()[0] == 1
+
+
 def test_pending_archive_can_fill_existing_empty_catalog_archive(store, provider):
     req, _ = queue(store, wait_count=3)
     video_id = row(store, 'videos', platform='youtube', platform_video_id='abcdefghijk',

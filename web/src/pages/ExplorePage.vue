@@ -18,12 +18,22 @@ import { api } from '@/api/client'
 import { useResource } from '@/composables/useResource'
 import { favoriteIds } from '@/composables/preferences'
 import { normalize } from '@/lib/search'
+import { sortArtists, type ArtistSort } from '@/lib/artist-sort'
 import ArtistTile from '@/components/ArtistTile.vue'
 import ResourceState from '@/components/ResourceState.vue'
 const route = useRoute()
 const router = useRouter()
 const query = ref(String(route.query.q ?? ''))
 const agency = ref('all')
+const sort = computed<ArtistSort>({
+  get: () =>
+    ['channel-created', 'subscribers', 'name'].includes(String(route.query.sort))
+      ? (String(route.query.sort) as ArtistSort)
+      : '',
+  set: (value) => {
+    router.replace({ query: { ...route.query, sort: value || undefined } })
+  },
+})
 const { data, loading, error, reload } = useResource(api.artists)
 watch(
   [loading, pendingExploreScroll],
@@ -60,29 +70,23 @@ const agencies = computed(() => {
       counts.set(artist.agency, (counts.get(artist.agency) ?? 0) + 1)
     }
   }
-  return [...counts.keys()]
-    .sort()
-    .sort((a, b) => counts.get(b)! - counts.get(a)!)
+  return [...counts.keys()].sort().sort((a, b) => counts.get(b)! - counts.get(a)!)
 })
 const hasIndependentArtists = computed(() => (data.value ?? []).some((a) => !a.agency))
-const nameCollator = new Intl.Collator('en', { sensitivity: 'base', numeric: true })
 const favoritesForSort = new Set(favoriteIds.value)
 const filtered = computed(() => {
-  return (data.value ?? [])
-    .filter(
+  return sortArtists(
+    (data.value ?? []).filter(
       (a) =>
         (agency.value === 'all' ||
           (agency.value === 'independent' ? !a.agency : a.agency === agency.value)) &&
         [a.name, a.display_name, a.roman, ...(a.aliases ?? [])].some((s) =>
           normalize(s).includes(normalize(query.value)),
         ),
-    )
-    .sort(
-      (a, b) =>
-        Number(favoritesForSort.has(b.id)) - Number(favoritesForSort.has(a.id)) ||
-        nameCollator.compare(a.roman || a.name, b.roman || b.name) ||
-        a.id - b.id,
-    )
+    ),
+    sort.value,
+    favoritesForSort,
+  )
 })
 </script>
 <template>
@@ -91,20 +95,34 @@ const filtered = computed(() => {
       <h1>아티스트 탐색</h1>
     </div>
     <div class="explore-toolbar">
-      <Select v-model="agency">
-        <SelectTrigger aria-label="소속사 필터" class="explore-filter">
-          <SelectValue placeholder="소속사 전체" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value="all">소속사 전체</SelectItem>
-            <SelectItem v-if="hasIndependentArtists" value="independent">개인세</SelectItem>
-            <SelectItem v-for="name in agencies" :key="name" :value="name">
-              {{ name }}
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <div class="explore-filters">
+        <Select v-model="agency">
+          <SelectTrigger aria-label="소속사 필터" class="explore-filter">
+            <SelectValue placeholder="소속사 전체" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">소속사 전체</SelectItem>
+              <SelectItem v-if="hasIndependentArtists" value="independent">개인세</SelectItem>
+              <SelectItem v-for="name in agencies" :key="name" :value="name">
+                {{ name }}
+              </SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select v-model="sort">
+          <SelectTrigger aria-label="정렬 기준" class="explore-filter">
+            <SelectValue placeholder="정렬 기준" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="channel-created">채널 생성일</SelectItem>
+              <SelectItem value="subscribers">구독자 순서</SelectItem>
+              <SelectItem value="name">가나다 순</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
       <form role="search" aria-label="아티스트 검색" class="explore-search" @submit.prevent>
         <FieldGroup>
           <Field>
@@ -131,7 +149,11 @@ const filtered = computed(() => {
           </Field>
         </FieldGroup>
       </form>
-      <p class="result-count" aria-live="polite">{{ filtered.length }}명의 아티스트</p>
+      <p class="result-count" aria-live="polite">
+        {{ filtered.length }}명의 아티스트
+        <template v-if="sort === 'channel-created'">· 채널 생성일이 빠른 순 · 미확인은 마지막</template>
+        <template v-else-if="sort === 'subscribers'">· 구독자가 많은 순 · 미확인은 마지막</template>
+      </p>
     </div>
     <ResourceState
       loading-layout="artists"

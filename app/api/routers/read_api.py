@@ -7,7 +7,7 @@ from app.core.security import require_api_key
 from app.db.catalog_session import get_catalog_session
 from app.services.catalog_read import CatalogRead
 from app.schemas.read_models import ArtistRead, LiveRead, SearchRead, Page, StatisticsRead, ConcertRead
-from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead
+from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead, CoverRead
 
 router = APIRouter(tags=['frontend-read'],dependencies=[Depends(require_api_key)])
 def catalog(response: Response, session: Annotated[Session, Depends(get_catalog_session)]):
@@ -41,6 +41,11 @@ def artist(artist_id:int,service:Catalog,response:Response):
 def lives(artist_id:int,service:Catalog,response:Response,offset:Offset=0,limit:Limit=12):
     require_artist(service,artist_id)
     return finish(response,service,service.lives(artist_id,offset,limit))
+
+@router.get('/artists/{artist_id}/covers', response_model=Page[CoverRead])
+def covers(artist_id:int,service:Catalog,response:Response,offset:Offset=0,limit:Limit=12):
+    require_artist(service,artist_id)
+    return finish(response,service,service.covers(artist_id,offset,limit))
 
 @router.get('/lives/{archive_id}',response_model=LiveRead)
 def live(archive_id:int,service:Catalog,response:Response):
