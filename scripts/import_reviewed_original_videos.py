@@ -30,7 +30,8 @@ def run(path,apply=False):
             v=Video.model_validate(item['video'])
             if is_cover_title(v.title) or 'official music video' not in v.title.lower():
                 raise ValueError('Reviewed original MV evidence required')
-            if v.channel_id not in COVER_SOURCE_CHANNELS['kmnz']+COVER_SOURCE_CHANNELS['vesperbell']:
+            if v.channel_id not in (COVER_SOURCE_CHANNELS['kmnz']+COVER_SOURCE_CHANNELS['vesperbell']
+                                    + ['UCQXuGcIoseWY5HmW6-U7teg','UCuvYHCPdMxfvjW_F9w5LmRA']):
                 raise ValueError('Unapproved publisher')
             account=s.execute(text("SELECT id FROM external_accounts WHERE platform='youtube' AND platform_id=:channel AND archived_at IS NULL"),{'channel':v.channel_id}).scalar_one_or_none()
             if account is None and apply:

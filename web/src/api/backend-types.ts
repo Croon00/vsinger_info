@@ -1,5 +1,6 @@
 // Read contracts verified against app/api/routers and their response builders.
 export interface BackendArtist {
+  original_song_group?: { id: number; name: string; agency: string | null } | null
   id: number
   name: string
   display_name?: string | null

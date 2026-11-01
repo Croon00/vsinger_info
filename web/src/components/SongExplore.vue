@@ -78,7 +78,13 @@ const {
   reload: reloadArtists,
 } = useResource((signal) => api.artists(signal))
 const artistOptions = computed(() =>
-  (artistCatalog.value ?? [])
+  [...new Map((artistCatalog.value ?? []).map((artist) => {
+    const group = kind.value === 'original' ? artist.original_song_group : null
+    const option = group
+      ? { ...artist, id: group.id, name: group.name, display_name: '', agency: group.agency ?? '' }
+      : artist
+    return [option.id, option] as const
+  })).values()]
     .filter(
       (a) =>
         agency.value === 'all' ||

@@ -1,5 +1,6 @@
 """New catalog SQL. All queries are reads; no collector or legacy identity heuristics."""
 from time import perf_counter
+from app.repositories.original_song_groups import ORIGINAL_GROUPS_CTE
 from sqlalchemy import text
 from app.repositories.youtube_video_format import SHORT_MARKER, SHORT_VISIBILITY
 from app.repositories.youtube_cover_rules import COVER_TITLE_SQL, COVER_TITLE_PARAMS
@@ -101,12 +102,16 @@ class CatalogReadRepository:
         return {"items": rows, "total": total, "offset": offset, "limit": limit}
 
     def artists(self, artist_id=None):
-        return self.rows(f"""WITH {SHARED_MEMBERS_CTE} SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
+        return self.rows(f"""WITH {SHARED_MEMBERS_CTE}, {ORIGINAL_GROUPS_CTE} SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
         g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,a.debut_date,
         (yt.stats->>'subscriber_count')::bigint youtube_subscriber_count,
         (yt.stats->>'created_at')::timestamptz youtube_channel_created_at,
         (yt.stats->>'captured_at')::timestamptz youtube_statistics_updated_at,
         yt.shared_from youtube_statistics_source,
+        (SELECT jsonb_build_object('id',og.group_id,'name',og.group_name,'agency',ga.name_native)
+         FROM original_groups og JOIN artists grp ON grp.id=og.group_id
+         LEFT JOIN agencies ga ON ga.id=grp.agency_id AND ga.archived_at IS NULL
+         WHERE og.member_id=a.id) original_song_group,
         CASE WHEN a.birthday_month IS NOT NULL AND a.birthday_day IS NOT NULL THEN
           lpad(a.birthday_month::text,2,'0')||'-'||lpad(a.birthday_day::text,2,'0') END birthday,
         ARRAY[a.id] related_artist_ids,

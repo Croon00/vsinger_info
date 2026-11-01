@@ -100,3 +100,47 @@ test('all song tabs multi-select artists within agency and reset on agency chang
     )
   }
 })
+
+test('original songs offer each group once and keep cover members separate', async ({ page }) => {
+  const requests: URL[] = []
+  const groups = [
+    { id: 13, name: 'KMNZ', members: ['LITA', 'TINA', 'NERO'] },
+    { id: 17, name: 'VESPERBELL', members: ['YOMI', 'KASUKA'] },
+    { id: 39, name: 'HONK THE HORN', members: ['MOCO', 'BAMBI'] },
+    { id: 24, name: 'NUROJUNK', members: ['KAGURA', 'SAKUYA'] },
+  ]
+  const artists = groups.flatMap((group) => group.members.map((name, i) => ({
+    id: group.id * 100 + i, name, display_name: '', agency: 'RK Music', sources: [],
+    original_song_group: { id: group.id, name: group.name, agency: 'RK Music' },
+  })))
+  await page.route(/^http:\/\/localhost:5196\/api\//, (route) => {
+    const url = new URL(route.request().url())
+    if (url.pathname === '/api/artists') return route.fulfill({ json: artists })
+    requests.push(url)
+    return route.fulfill({ json: { items: [], total: 0, offset: 0, limit: 24 } })
+  })
+  await page.goto('/explore?view=songs&kind=original&song_agency=RK%20Music')
+  const filter = page.getByRole('combobox', { name: '곡 아티스트 필터' })
+  await filter.click()
+  for (const group of groups) {
+    await expect(page.getByRole('option', { name: group.name, exact: true })).toHaveCount(1)
+    for (const member of group.members) {
+      await expect(page.getByRole('option', { name: member, exact: true })).toHaveCount(0)
+    }
+  }
+  await page.getByRole('option', { name: 'KMNZ', exact: true }).click()
+  await page.getByRole('option', { name: 'VESPERBELL', exact: true }).click()
+  await page.keyboard.press('Escape')
+  await expect.poll(() => requests.at(-1)?.searchParams.getAll('artist_ids')).toEqual(['13', '17'])
+  await page.getByRole('tab', { name: '커버 곡', exact: true }).click()
+  await expect(filter).toContainText('아티스트 전체')
+  await filter.click()
+  for (const group of groups) {
+    await expect(page.getByRole('option', { name: group.name, exact: true })).toHaveCount(0)
+    for (const member of group.members) {
+      await expect(page.getByRole('option', { name: member, exact: true })).toHaveCount(1)
+    }
+  }
+  await page.keyboard.press('Escape')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})

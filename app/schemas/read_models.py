@@ -16,7 +16,13 @@ class SourceRead(BaseModel):
     label: str | None = None
     is_active: bool
 
+class OriginalSongGroupRead(BaseModel):
+    id: int
+    name: str
+    agency: str | None = None
+
 class ArtistRead(BaseModel):
+    original_song_group: OriginalSongGroupRead | None = None
     id: int
     name: str
     display_name: str | None = None

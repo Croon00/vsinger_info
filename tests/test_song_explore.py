@@ -17,6 +17,7 @@ from test_new_catalog_read import store, seed
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.repositories.song_explore import explore, performers
+from app.repositories.catalog_read import CatalogReadRepository
 
 
 def test_view_counts_preserve_unknown_zero_and_validate_identity():
@@ -229,3 +230,25 @@ def test_approved_group_originals_visible_and_filterable_without_fake_member_cre
         assert page([member,group])['total']==1
         assert page([hidden])['total']==0
         assert db.execute('SELECT count(*) FROM recording_artists WHERE artist_id=%s',(member,)).fetchone()[0]==0
+
+
+@pytest.mark.parametrize('group_slug,member_slug,group_name',[
+    ('kmnz','kmnz-tina','KMNZ'),('vesperbell','vesperbell-yomi','VESPERBELL'),
+    ('honk-the-horn','moco','HONK THE HORN'),('nurojunk','kagura','NUROJUNK'),
+])
+def test_original_member_credits_display_as_approved_group_without_youtube_account(store,group_slug,member_slug,group_name):
+    db,engine=store
+    group=row(db,'artists',slug=group_slug,name_native=group_name,show_in_catalog=False)
+    member=row(db,'artists',slug=member_slug,name_native='Member',show_in_catalog=True)
+    row(db,'artist_group_members',group_id=group,member_id=member)
+    recording=row(db,'recordings',title_native='Solo original')
+    row(db,'recording_artists',recording_id=recording,artist_id=member,role='primary')
+    db.commit()
+    with Session(engine) as s:
+        def page(ids):return explore(s,kind='original',agency='all',q='',order='high',offset=0,limit=24,artist_ids=ids)
+        assert page([group])['items'][0]['artist_name']==group_name
+        assert page([group,member])['total']==1
+        assert page([member])['total']==1
+        artists=CatalogReadRepository(s).artists()
+        assert next(a for a in artists if a['id']==member)['original_song_group']['id']==group
+        assert db.execute('SELECT artist_id FROM recording_artists WHERE recording_id=%s',(recording,)).fetchone()[0]==member

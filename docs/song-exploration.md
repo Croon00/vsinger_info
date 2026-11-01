@@ -94,3 +94,25 @@ fixture 검증은 provider의 0·미확인·잘못된 영상 ID 처리와 HTTP �
 기간 달력 검증: PC·모바일 브라우저 fixture 테스트 4개 통과. 실제 달력 셀 선택, 적용 전 요청 없음, 한 날짜 범위, 빠른 90일 선택, 취소·초기화·새로고침, 팝오버 화면 경계와 어두운 테마의 선택 날짜 대비를 확인했다. 두 화면 스크린샷도 직접 확인했다. 프론트 타입 검사·빌드 통과. backend 데이터 변경·재수집·provider 호출은 날짜 UI 검증에서 하지 않았다.
 
 2026-11-01 검증: API fixture·기존 관련 테스트 3개 통과, 로컬 PostgreSQL이 필요한 18개는 미설치로 건너뛰었다. PC·모바일 브라우저 fixture 테스트 4개와 프론트 빌드를 통과했다. 실제 신규 DB에서는 少女レイ 검색의 전체 가창자 67명과 선택한 두 사람의 10·7가창이 중복 없이 17건으로 합쳐짐, 빈 페이지의 전체 건수 유지, 동일 날짜 양 끝 포함 1건과 날짜 범위를 확인했다. 신규 facet과 필터 검색의 로컬 HTTP 200을 확인했다. 실제 DB·HTTP 검증은 fixture 테스트와 별개다.
+
+## 오리지널 곡의 그룹 표시 — 2026-11-01
+
+오리지널 곡 탭의 목록 명의와 아티스트 선택지는 다음 단위로 통일한다. VESPERBELL=ヨミ·カスカ, KMNZ=LITA·TINA·NERO, HONK THE HORN=MOCO·BAMBI, NUROJUNK=KAGURA·SAKUYA. 등록된 정확한 slug와 활성 `artist_group_members` 관계를 함께 확인하며, 동명이인(예: 神楽めあ)을 포함하지 않는다. 오리지널 곡에서만 적용하며 원본 recording·명의·소유권은 수정하지 않는다.
+
+`original_song_groups.py`의 명시적 그룹은 YouTube 계정 유무와 무관하게 읽기 표시 대상으로 사용한다. 발매곡의 표시 명의·소속사·선택 필터는 그룹 기준이며 그룹명/멤버명 검색을 지원한다. 그룹과 멤버 크레딧이 같은 영상에 함께 있어도 기존 영상 ID 중복 제거를 유지한다. 이전 URL의 멤버 ID로도 해당 그룹 범위를 조회할 수 있다. 협업 상대의 명의는 유지한다. 조회수·영상 등록일·날짜 범위·정렬·페이지 계약은 동일하다.
+
+`GET /api/artists`와 상세 응답에 nullable `original_song_group: {id,name,agency}`를 제공한다. 프론트는 오리지널 탭에서 이 메타데이터로 선택지를 그룹 ID별 중복 제거하고, 커버·우타와꾸에서는 개인 선택지를 사용한다. 소속사나 곡 종류 변경 시 선택 초기화는 동일하다.
+
+검증(2026-11-01): Python fixture 16개 통과, 로컬 PostgreSQL이 필요한 14개는 건너뛰었다. 별도 실제 신규 DB 읽기 확인에서 9명→4개 그룹 매핑과 KMNZ 51개·VESPERBELL 18개 표시 명의를 확인했다. HONK THE HORN·NUROJUNK는 현재 연결된 발매곡 0개로 확인했으며 이번 표시 변경에서 발매 데이터를 생성하지 않았다. PC·모바일 브라우저 테스트 4개 및 프론트 타입 검사·빌드가 통과했다.
+
+## HONK THE HORN·NUROJUNK 오리지널 MV 추가 — 2026-11-01
+
+사용자 요청으로 두 그룹의 기존 공식 YouTube 계정(HONK THE HORN 57, NUROJUNK 25)을 확인하고 전체 업로드 7페이지·310개를 검토했다. 공식 아티스트/발매 안내와 MV 제목·원본 설명을 대조해 HONK THE HORN 5곡(NO LEASH, SLOW FLAME, WILD SIDE, 808, DIM LIGHT), NUROJUNK 3곡(DEMOLISHER, Rising a Tide, Chase the Sun)을 등록했다. 검토 manifest는 `migrations/catalog/duo-original-videos-2026-11-01.json`이며 원본 채널 ID·영상 ID·제목·설명·등록일과 공식 출처 URL을 보존한다. 일반 로그·프로모션·커버는 등록하지 않았다.
+
+기존 `import_reviewed_original_videos.py`의 허용 publisher에 정확한 두 채널 ID만 추가했다. 신규 DB 감사 기록 7504로 recording 8개와 그룹 명의를 추가했고, 조회수 8개를 실제 API로 연결했다. 반복 적용은 `already_applied`로 0개다. 계정 소유권·멤버 크레딧·기존 발매 행은 변경하지 않았다. 이번 실행은 검토된 MV의 명시적 수집이며 모든 신규 오리지널이 주기적으로 자동 분류되는 것으로 간주하지 않는다.
+
+실데이터 읽기 검증에서 그룹별 5개/3개, 합집합 8개, 영상 ID 중복 없음, 8개 전부 조회수·등록일 존재, NO LEASH의 2026년 3월 영상 등록일 검색 1개를 확인했다. 조회 API fixture 2개는 통과했고 로컬 PostgreSQL이 필요한 12개는 건너뛰었다. 이 fixture 결과와 실제 신규 DB·YouTube API 검증은 별도다(2026-11-01).
+
+```powershell
+.venv\Scripts\python.exe scripts/import_reviewed_original_videos.py migrations/catalog/duo-original-videos-2026-11-01.json
+```

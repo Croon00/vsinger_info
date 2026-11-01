@@ -11,6 +11,7 @@ export interface Link {
   url: string
 }
 export interface Artist {
+  original_song_group?: { id: number; name: string; agency: string | null } | null
   theme_color?: string
   id: number
   name: string
