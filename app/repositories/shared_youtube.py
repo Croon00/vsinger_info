@@ -42,7 +42,7 @@ COVER_SOURCE_CHANNELS = {
              'UCqSPZz3gDBxJP-xaME8w-yA', 'UCnwnKd78qy2Txjs1WlfwkxA',
              'UCsT7GTwoXE0tatNnDhcE58Q', 'UCRMpIxnySp7Fy5SbZ8dBv2w'],
     'vesperbell': ['UCPd0Z22gF43dUidPYEQO5-w', 'UCjGsOnj8SPL7CWVTgXDmm3g',
-                   'UCREUB-PjfMdI0KziJy-u0TQ'],
+                   'UCREUB-PjfMdI0KziJy-u0TQ', 'UCKaDMw10CmbE22XJhaunoiQ'],
 }
 
 SHARED_PARAMS = {'shared_rules': json.dumps([

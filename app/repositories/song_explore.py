@@ -2,7 +2,7 @@
 from app.repositories.catalog_read import CatalogReadRepository
 from app.repositories.youtube_video_format import SHORT_MARKER, SHORT_VISIBILITY
 from app.repositories.youtube_cover_rules import COVER_TITLE_SQL, COVER_TITLE_PARAMS
-from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_PARAMS
+from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_MEMBERS_CTE, SHARED_PARAMS
 
 
 def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None):
@@ -75,19 +75,30 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
             # Singles and albums can reference different recordings of the
             # same YouTube upload. Collapse those before counting/pagination;
             # recordings without a visible video keep their own identity.
-            sql = f"""SELECT 'recording:'||min(r.id)::text key,min(r.title_native) title,min(r.title_ko) title_ko,
+            # Group catalog membership is a read filter, never a fabricated
+            # individual vocal credit. Keep the recorded group name on the row.
+            original_scope = scope.replace('a.show_in_catalog',
+                '(a.show_in_catalog OR EXISTS(SELECT 1 FROM shared_members sm WHERE sm.group_id=a.id))')
+            sql = f"""WITH {SHARED_MEMBERS_CTE} SELECT 'recording:'||min(r.id)::text key,min(r.title_native) title,min(r.title_ko) title_ko,
               string_agg(DISTINCT a.name_native,' · ' ORDER BY a.name_native) artist_name,{common},
               string_agg(DISTINCT concat_ws(' ',r.title_native,r.title_ko,a.name_native,a.name_ko,a.name_latin,
-                (SELECT string_agg(al.alias,' ') FROM artist_aliases al WHERE al.artist_id=a.id)),' ') search_text
+                (SELECT string_agg(al.alias,' ') FROM artist_aliases al WHERE al.artist_id=a.id),
+                (SELECT string_agg(concat_ws(' ',member.name_native,member.name_ko,member.name_latin),' ')
+                 FROM artists member WHERE member.id IN
+                   (SELECT sm.member_id FROM shared_members sm WHERE sm.group_id=a.id)),
+                (SELECT string_agg(DISTINCT sm.group_name,' ') FROM shared_members sm WHERE sm.member_id=a.id)),' ') search_text
               FROM recordings r JOIN recording_artists ra ON ra.recording_id=r.id
               JOIN artists a ON a.id=ra.artist_id LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
               LEFT JOIN videos v ON v.id=r.official_video_id AND v.archived_at IS NULL
                 AND v.availability IN ('public','unlisted','unknown') AND v.platform='youtube'
               LEFT JOIN collection_states cs ON cs.external_account_id=v.source_account_id
-              WHERE r.archived_at IS NULL AND {scope}
+              WHERE r.archived_at IS NULL AND {original_scope}
                 AND NOT EXISTS(SELECT 1 FROM covers c WHERE c.video_id=r.official_video_id AND c.archived_at IS NULL AND {COVER_TITLE_SQL})
               GROUP BY CASE WHEN v.id IS NULL THEN r.id END,v.id,cs.external_account_id
-              HAVING cardinality(CAST(:artists AS integer[]))=0 OR bool_or(a.id=ANY(CAST(:artists AS integer[])))"""
+              HAVING cardinality(CAST(:artists AS integer[]))=0 OR bool_or(
+                a.id=ANY(CAST(:artists AS integer[])) OR EXISTS(
+                  SELECT 1 FROM shared_members sm WHERE sm.group_id=a.id
+                    AND sm.member_id=ANY(CAST(:artists AS integer[]))))"""
     sql = f"SELECT * FROM ({sql}) entries WHERE concat_ws(' ',title,title_ko,artist_name,search_text) ILIKE :query"
     if kind == 'utawaku':
         sql += " AND NULLIF(btrim(artist_name),'') IS NOT NULL"

@@ -204,3 +204,28 @@ def test_song_publication_range_includes_both_korean_calendar_dates_before_pagin
             assert explore(s,offset=9,limit=1,**kwargs)['total']==1
             kwargs['end']=date(2026,10,3)
             assert explore(s,offset=0,limit=1,**kwargs)['total']==2
+
+
+def test_approved_group_originals_visible_and_filterable_without_fake_member_credits(store):
+    db,engine=store
+    agency=row(db,'agencies',name_native='RK Music')
+    group=row(db,'artists',slug='vesperbell',name_native='VESPERBELL',show_in_catalog=False,agency_id=agency)
+    member=row(db,'artists',slug='vesperbell-yomi',name_native='YOMI',show_in_catalog=True,agency_id=agency)
+    hidden=row(db,'artists',slug='unrelated-hidden',name_native='Hidden',show_in_catalog=False,agency_id=agency)
+    row(db,'artist_group_members',group_id=group,member_id=member)
+    account=row(db,'external_accounts',platform='youtube',platform_id='UCPd0Z22gF43dUidPYEQO5-w',url='https://youtube.com/@VESPERBELL')
+    row(db,'artist_external_accounts',artist_id=group,account_id=account,relationship='owner')
+    for artist,title in [(group,'Group original'),(hidden,'Hidden original')]:
+        recording=row(db,'recordings',title_native=title)
+        row(db,'recording_artists',recording_id=recording,artist_id=artist,role='primary')
+    db.commit()
+    with Session(engine) as s:
+        def page(ids=[],agency='all'):
+            return explore(s,kind='original',agency=agency,q='',order='high',offset=0,limit=24,artist_ids=ids)
+        assert page()['total']==1
+        assert page([member])['items'][0]['artist_name']=='VESPERBELL'
+        assert page([member],agency='RK Music')['total']==1
+        assert page([member],agency='Other agency')['total']==0
+        assert page([member,group])['total']==1
+        assert page([hidden])['total']==0
+        assert db.execute('SELECT count(*) FROM recording_artists WHERE artist_id=%s',(member,)).fetchone()[0]==0

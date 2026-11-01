@@ -1,0 +1,906 @@
+{
+  "policy": "reviewed-shared-original-mvs-2026-11-01",
+  "items": [
+    {
+      "title": "RELOAD",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "ZEhcGNJgc6Q",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "RELOAD（Prod. by in the blue shirt） / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/UEX7DrM2\n\n------------------------\nLyrics - KMNZ\nMusic - in the blue shirt\nArranged - in the blue shirt\nRecorded by - Yuhi Sumino\nMixed by - in the blue shirt\n\nIllustration Animation - Mana（ (https://x.com/MANAARTWORK ）, Asa,  Yumi\nMovie - 金子開発（ https://x.com/kanekokaihatu ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n    / @kmnz  \n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/page...\n\n------------------------\n\n#KMNZ #KMNZMiMiMi",
+        "published_at": "2026-10-17T12:00:07Z",
+        "started_at": "2026-10-17T12:00:07Z",
+        "ended_at": "2026-10-17T12:05:37Z",
+        "scheduled": false,
+        "duration_seconds": 212,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "MiMiMi",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "UCs1CQ59uoE",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "MiMiMi（Prod. by RainyBlueBell） / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/UEX7DrM2\n\n------------------------\n\nMusic & Lyrics : RainyBlueBell (雨天決行, TOPHAMHAT-KYO, ill.bell)\nTrack by TOPHAMHAT-KYO\nRecorded by - Yuhi Sumino\nMixed by - TOPHAMHAT-KYO\n\nIllustration - 鉄坊や（ https://x.com/bebop_sensen ）\nMovie - あげは（ https://x.com/ageage_kaza ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #KMNZMiMiMi",
+        "published_at": "2026-09-28T11:00:06Z",
+        "started_at": "2026-09-28T11:00:06Z",
+        "ended_at": "2026-09-28T11:05:07Z",
+        "scheduled": false,
+        "duration_seconds": 181,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "METRO",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "BhgelQ0WLHQ",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "METRO（Prod. by ケンモチヒデフミ）  / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/fEfZ9g8h\n\n------------------------\n\nLyrics - ケンモチヒデフミ\nMusic  - ケンモチヒデフミ\nArranged  - ケンモチヒデフミ\nRecorded by - Yuhi Sumino\nMixed by - NNZN\n\nIllustration - 研そうげん（ https://x.com/ken_sogen ）\nMovie - 金子開発（ https://x.com/kanekokaihatu ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #METRO",
+        "published_at": "2026-08-14T11:00:16Z",
+        "started_at": "2026-08-14T11:00:16Z",
+        "ended_at": "2026-08-14T11:05:07Z",
+        "scheduled": false,
+        "duration_seconds": 182,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Synchronizer",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "TsILoCA8Mm4",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Synchronizer（Prod. by Moe Shop）  / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/fEfZ9g8h\n\n------------------------\n\nMC ＆ Lyrics - KMNZ\nMusic - Moe Shop\nArranged - Moe Shop\nRecorded by - Yuhi Sumino\nMixed by - Moe Shop\n\nIllustration -研そうげん（ https://x.com/ken_sogen ）\nMovie - ねむ ( https://x.com/nemu404_ ）、PPRPS（ https://x.com/peperopes ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #Synchronizer",
+        "published_at": "2026-08-07T12:00:06Z",
+        "started_at": "2026-08-07T12:00:06Z",
+        "ended_at": "2026-08-07T12:05:24Z",
+        "scheduled": false,
+        "duration_seconds": 198,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Cont‘d",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "I5ldJc-T7vE",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Cont‘d（Prod. by Neko Hacker） / KMNZ  [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/fEfZ9g8h\n\n------------------------\n\nMC - KMNZ\nLyrics - Yaca\nMusic - Neko Hacker\nArranged - Neko Hacker\nRecorded by - Yuhi Sumino\nMixed by - Neko Hacker\n\nMovie&Direction - Shinnosuke Enomoto（ https://x.com/ak4_m3 ）\nGraphic design - Risako Inui（ https://x.com/Risako_designui  ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #Contd",
+        "published_at": "2026-07-31T12:00:06Z",
+        "started_at": "2026-07-31T12:00:06Z",
+        "ended_at": "2026-07-31T12:05:30Z",
+        "scheduled": false,
+        "duration_seconds": 204,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "POPSTA",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "G_Le1WrMu0g",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "POPSTA / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/shdFMUzp\n\n------------------------\n\nMC - KMNZ\nLyrics - lilbesh ramko\nMusic & Arranged by - lilbesh ramko,hirihiri\nRecorded by - Yuhi Sumino\nMixed by - hirihiri\n\nIllustration：麦茶（ https://x.com/_mugi_com2?lang=ja ）\nMovie：ねむ ( https://x.com/nemu404_ ）、PPRPS（https://x.com/peperopes）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #POPSTA",
+        "published_at": "2026-06-10T12:00:06Z",
+        "started_at": "2026-06-10T12:00:06Z",
+        "ended_at": "2026-06-10T12:04:42Z",
+        "scheduled": false,
+        "duration_seconds": 156,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "WANTED",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "2QWD8NbEGac",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "WANTED / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/shdFMUzp\n\nMC - KMNZ\nLyrics - IKUTO\nMusic & Arranged by - Oddy lozy, VOLTA\nRecorded by - Yuhi Sumino\nMixed by - VOLTA\n\nillustration - nest ( https://x.com/nest_virgo/media )\nMovie - DdatG ( https://x.com/ddatg_artwork/media )\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #WANTED",
+        "published_at": "2026-06-05T12:00:06Z",
+        "started_at": "2026-06-05T12:00:06Z",
+        "ended_at": "2026-06-05T12:04:23Z",
+        "scheduled": false,
+        "duration_seconds": 138,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Moon Engine",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "pVn8V2kEvmQ",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Moon Engine （Prod. by Fuma no KTR） / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/shdFMUzp\n\n------------------------\n\nMC：KMNZ\nLyrics - Fuma no KTR\nMusic - Fuma no KTR\nArranged by - 八王子P\nBeat by - Oddy lozy\nRecorded by - Yuhi Sumino\nMixed by - Akihiro Furuichi(studio MSR)\n\nIllustration・MV：キケン( https://x.com/WARNING_71?s=20 )\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #Moonengine",
+        "published_at": "2026-05-29T11:00:06Z",
+        "started_at": "2026-05-29T11:00:06Z",
+        "ended_at": "2026-05-29T11:05:16Z",
+        "scheduled": false,
+        "duration_seconds": 191,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Banger!!!",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "o5NxNNLT-q4",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Banger!!! / KMNZ [Official Music Video]",
+        "description": "Download & Streaming\nhttps://linkco.re/N35ys8hu\n\n------------------------\n\nMC：KMNZ\nLyrics：佐高陵平(Hifumi,inc.)\nMusic：佐高陵平(Hifumi,inc.)\nArrangement：佐高陵平(Hifumi,inc.)\nMix：石塚陽大\n\nIllustration：こむぎ（ https://x.com/kmgs_illust?s=20 ）\nMovie：らる ( https://x.com/rc2lx )\n\n------------------------\n\n🐾KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔈KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #Banger!!!",
+        "published_at": "2026-05-06T12:00:06Z",
+        "started_at": "2026-05-06T12:00:06Z",
+        "ended_at": "2026-05-06T12:05:49Z",
+        "scheduled": false,
+        "duration_seconds": 224,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "THE AFTER",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "0_BmqKhNtF8",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "THE AFTER / KMNZ [Official Music Video]",
+        "description": "MC：KMNZ\nLyrics：nyankobrq\nMusic：nyankobrq\nArrangement：nyankobrq\nMix：nyankobrq\n\nIllustration：スドウ創太（ https://x.com/sota_96?s=20 ）\nMovie：kotose（ https://x.com/ro_kotose?s=20 ）\n\n------------------------\n\nSingle「OPENER」\nM1. OPENER\nM2. THE AFTER\nM3. Banger!!!\n\nStreaming / Download\nhttps://linkco.re/N35ys8hu\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://shop.reality-studios.inc/pages/rk-music\n\n------------------------\n\n#KMNZ #THEAFTER #nyankobrq",
+        "published_at": "2026-03-25T12:00:06Z",
+        "started_at": "2026-03-25T12:00:06Z",
+        "ended_at": "2026-03-25T12:06:11Z",
+        "scheduled": false,
+        "duration_seconds": 240,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "OPENER",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "SJcnSAK-pak",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "OPENER（Prod. by YACA IN DA HOUSE） / KMNZ [Official Music Video]",
+        "description": "「モノローグを書き留めたら　ダイアログにしよう朝まで」\n\nDownload & Streaming\nhttps://linkco.re/N35ys8hu\n\nNew Single「OPENER」\nデジタルリリース開始⚡️\n\nM1. OPENER（Prod. by YACA IN DA HOUSE）\nM2. Banger!!!（Prod. by 佐高陵平(Hifumi,inc.) ）\nM3. THE AFTER（Prod. by nyankobrq）\n\n------------------------\n\nMC：KMNZ\nLyrics：YACA IN DA HOUSE\nMusic：YACA IN DA HOUSE\nArrangement：YACA IN DA HOUSE\n\nMovie：\nみやざわえそら（スタジオまいにち）\nhttps://x.com/miyazawano\no2bo（スタジオまいにち）\nhttps://x.com/o2bo1871\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #OPENER",
+        "published_at": "2026-01-10T11:00:06Z",
+        "started_at": "2026-01-10T11:00:06Z",
+        "ended_at": "2026-01-10T11:05:06Z",
+        "scheduled": false,
+        "duration_seconds": 180,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "THREE,TWO,WAN!",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "jZssphmSVww",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "THREE,TWO,WAN! / KMNZ [Official Music Video]",
+        "description": "Streaming / Download\nhttps://linkco.re/uxsEs3eh\n\nSingle「POSSE」\n\nM1. POSSE（Prod.by Fuma no KTR / Oddy lozy）\nM2. Ride On\nM3. THREE,TWO,WAN!\n\n------------------------\n\nMC：KMNZ\nLyrics：ryona\nMusic：nerdwitchkomugichan\nArrangement：nerdwitchkomugichan\n\nIllustration：おくいあむ（ https://x.com/maiandkoh ）\nMovie：koshi-kun（ https://x.com/koshi_kun ）\nLyric Design：NINE（ https://x.com/nines_work ）\n\n------------------------\n\n🎉KMNZ 5th ONE-MAN LIVE \"GOIN'UP\" 開催決定🎉\n\n📅：2026年1月12日（月・祝）\n📍：Zepp Shinjuku (TOKYO)\n⏰：開場 16:00 / 開演 17:00\n\n🎟️チケット情報\n・プレミアムチケット\n15,000円 (特典付/優先入場/整理番号/税込)\nプレミアムチケット特典グッズとして、当日「キービジュアルポストカード入りスタンド (KMNZ直筆サインメッセージ入り)」をお渡しいたします。\n\n・スタンダードチケット\n7,000円 (整理番号/税込)\n\n※会場にて入場時1ドリンク代が別途必要です。\n※未就学児入場不可となります。\n\n🐾メンバーシップ限定先行抽選販売\n2025年11月14日(金) 22:00 〜2025年11月30日(日) 23:59\n\n※KMNZメンバーシップ「KMNCLUB Members」以上に入会している方が対象となります。\n※チケット購入URLはYouTubeコミュニティー投稿およびDiscordサーバー内にてご案内させていただきます。\n\n👇メンバーシップは下記より入会いただけます。\nhttps://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #THREETWOWAN",
+        "published_at": "2025-11-21T12:00:06Z",
+        "started_at": "2025-11-21T12:00:06Z",
+        "ended_at": "2025-11-21T12:05:21Z",
+        "scheduled": false,
+        "duration_seconds": 196,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Ride On",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "4KulaqIoHhs",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Ride On / KMNZ [Official Music Video]",
+        "description": "Streaming / Download\nhttps://linkco.re/uxsEs3eh\n\nSingle「POSSE」\n\nM1. POSSE（Prod.by Fuma no KTR / Oddy lozy）\nM2. Ride On\nM3. THREE,TWO,WAN!\n\n------------------------\n\nMC：KMNZ\nLyrics：Takumi Sudo\nMusic：TAXON\nArrangement：TAXON\n\nIllustration・Animation：がーこ（ https://x.com/Gaako_illust ）\nMovie：梶木（ https://x.com/ymblr_work ）\n\n------------------------\n\n🎉KMNZ 5th ONE-MAN LIVE \"GOIN'UP\" 開催決定🎉\n\n📅：2026年1月12日（月・祝）\n📍：Zepp Shinjuku (TOKYO)\n⏰：開場 16:00 / 開演 17:00\n\n🎟️チケット情報\n・プレミアムチケット\n15,000円 (特典付/優先入場/整理番号/税込)\nプレミアムチケット特典グッズとして、当日「キービジュアルポストカード入りスタンド (KMNZ直筆サインメッセージ入り)」をお渡しいたします。\n\n・スタンダードチケット\n7,000円 (整理番号/税込)\n\n※会場にて入場時1ドリンク代が別途必要です。\n※未就学児入場不可となります。\n\n🐾メンバーシップ限定先行抽選販売\n2025年11月14日(金) 22:00 〜2025年11月30日(日) 23:59\n\n※KMNZメンバーシップ「KMNCLUB Members」以上に入会している方が対象となります。\n※チケット購入URLはYouTubeコミュニティー投稿およびDiscordサーバー内にてご案内させていただきます。\n\n👇メンバーシップは下記より入会いただけます。\nhttps://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #RideOn",
+        "published_at": "2025-11-11T11:30:06Z",
+        "started_at": "2025-11-11T11:30:06Z",
+        "ended_at": "2025-11-11T11:34:20Z",
+        "scheduled": false,
+        "duration_seconds": 135,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "POSSE",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "tR4jmnavtDk",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "POSSE（Prod. by Fuma no KTR , Oddy lozy ）/ KMNZ [Official Music Video]",
+        "description": "MC：KMNZ\nLyrics：Fuma no KTR\nMusic：Fuma no KTR , Oddy lozy\nArrangement：Oddy lozy\nMixing Engineer：NNZN\n\nIllustration：研そうげん（ https://x.com/ken_sogen ）\nMovie：あげは（ https://x.com/ageage_kaza ）\n\n------------------------\n\nSingle「POSSE」\n\nM1. POSSE（Prod.by Fuma no KTR / Oddy lozy）\nM2. Ride On\nM3. THREE,TWO,WAN!\n\nStreaming / Download\nhttps://linkco.re/uxsEs3eh\n\n------------------------\n\n🎉KMNZ 5th ONE-MAN LIVE \"GOIN'UP\" 開催決定🎉\n\n📅：2026年1月12日（月・祝）\n📍：Zepp Shinjuku (TOKYO)\n⏰：開場 16:00 / 開演 17:00\n\n🎟️チケット情報\n・プレミアムチケット\n15,000円 (特典付/優先入場/整理番号/税込)\nプレミアムチケット特典グッズとして、当日「キービジュアルポストカード入りスタンド (KMNZ直筆サインメッセージ入り)」をお渡しいたします。\n\n・スタンダードチケット\n7,000円 (整理番号/税込)\n\n※会場にて入場時1ドリンク代が別途必要です。\n※未就学児入場不可となります。\n\n🐾メンバーシップ限定先行抽選販売\n2025年11月14日(金) 22:00 〜2025年11月30日(日) 23:59\n\n※KMNZメンバーシップ「KMNCLUB Members」以上に入会している方が対象となります。\n※チケット購入URLはYouTubeコミュニティー投稿およびDiscordサーバー内にてご案内させていただきます。\n\n👇メンバーシップは下記より入会いただけます。\nhttps://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #POSSE",
+        "published_at": "2025-09-30T12:00:06Z",
+        "started_at": "2025-09-30T12:00:06Z",
+        "ended_at": "2025-09-30T12:05:35Z",
+        "scheduled": false,
+        "duration_seconds": 205,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "TOKONATSU STYLE 2025",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "Av_lAz5s_Ic",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "TOKONATSU STYLE 2025/ KMNZ [Official Music Video]",
+        "description": "いつでも始まりはワクワクするね\n\n------------------------\n\nMC：KMNZ\nMusic：やじまたくま\nLyrics：ザ・おめでたズ, KMNZ LITA\nMixing Engineer：NNZN ( https://x.com/NNZNsss )\nRecording Studio：ホムラサウンド\n\nIllustration：Bata零 ( https://x.com/bata_zero )\nMovie：あげは ( https://x.com/ageage_kaza )\n\nTOKONATSU STYLE\nhttps://www.youtube.com/watch?v=NrQ9fEWmVmE&list=RDNrQ9fEWmVmE&start_radio=1\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #TOKONATSYSTYLE #おめでたズ",
+        "published_at": "2025-07-04T12:00:06Z",
+        "started_at": "2025-07-04T12:00:06Z",
+        "ended_at": "2025-07-04T12:05:08Z",
+        "scheduled": false,
+        "duration_seconds": 181,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "WAVE",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "MehG9Ms8ygU",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "WAVE（Prod. by TAK ）/ KMNZ [Official Music Video]",
+        "description": "W-A-V-E\n\n------------------------\n\nMC：KMNZ\nComposition：TAK, Corbin\nLyrics：q*Left\nArrangement：TAK, Corbin\nChorus：ARRAN, Corbin\nAll Instruments Programming：TAK\nVocal Direction：Yaca\nMixing Engineer：TAK\n\nIllustration：しゅがお（ https://x.com/haru_sugar02 ）\nMovie：cappu（ https://x.com/c4ppu ）\n\n------------------------\n\nKMNZ 4th ONE-MAN LIVE AREA111\n\n🛍️ライブグッズ事後受注販売中！\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n受注期間：7月31日(木)21:00まで\n\n------------------------------------------------\n\n🐶NEW Single「WAVE」& NEW Album「KMNREVIVAl」受注販売中！🎧\n\nNEW Single「WAVE」\nhttps://rkmusic.booth.pm/items/7099717\n\n💿収録曲\nM1. WAVE\nM2. Get Ur lit on\nM3. Hero in the heart\nM4. WAVE（instrumental）※フィジカル版限定収録\nM5. Get Ur lit on（instrumental）※フィジカル版限定収録\nM6. Hero in the heart（instrumental）※フィジカル版限定収録\n\nNEW Album「KMNREVIVAL」\nhttps://rkmusic.booth.pm/items/7099752\n\n💿収録曲\nM1. Augmentation 2025\nM2. R U GAME? 2025\nM3. TOKONATSU STYLE 2025\nM4. SKOOL 2025\nM5. WE ARE BACK 2025\nM6. OVERNIGHT 2025\nM7. Kickin The Pride 2025\nM8. STAR-LIGHT 2025\n\n------------------------------------------------\n\n🌊KMNSUPPLY SUMMER COLLECTION 2025 🌊\nKMNZの今年の夏は中華デザイン🍥\n\n現在受注受付中！\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n受注期間：6月30日(月)23:59\n\n------------------------------------------------\n\n👇メンバーシップ入会はこちらから\nhttps://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n------------------------------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #WAVE",
+        "published_at": "2025-06-24T09:00:06Z",
+        "started_at": "2025-06-24T09:00:06Z",
+        "ended_at": "2025-06-24T09:05:28Z",
+        "scheduled": false,
+        "duration_seconds": 193,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "GROWL",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "nzxSbWcePIk",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "GROWL / KMNZ [Official Music Video]",
+        "description": "我々磨いてる BADな牙 is SAW 切り裂いて GROWL\n\n------------------------\n\n🐶 Credit 🐾\nMC：KMNZ\nLyrics：nyankobrq,YACA IN DA HOUSE \nComposition：nyankobrq,YACA IN DA HOUSE \nArrangement：nyankobrq,YACA IN DA HOUSE \n\nIllustration：しゅがお（ https://x.com/haru_sugar02 ）\nMovie：kotose（ https://x.com/ro_kotose ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ  #GROWL #yacaindahouse #nyankobrq",
+        "published_at": "2025-04-29T12:00:06Z",
+        "started_at": "2025-04-29T12:00:06Z",
+        "ended_at": "2025-04-29T12:05:23Z",
+        "scheduled": false,
+        "duration_seconds": 187,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "DROP IN",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "RQumQQBVCao",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "DROP IN（Prod. by E TICKET PRODUCTION ）/ KMNZ [Official Music Video]",
+        "description": "Drop in the World\n\nStreaming / Download\nhttps://linkco.re/dGtXnmUG\n\n------------------------\n\n🐶 Credit 🐾\nMC：KMNZ\nLyrics：E TICKET PRODUCTION\nComposition：E TICKET PRODUCTION\nArrangement：E TICKET PRODUCTION\n\nIllustration：PORO（ https://x.com/apom6n ）\nMovie：Heetami（ https://x.com/heetami_ ）\n\n------------------------\n\n🐾 KMNZ LITA X\n https://x.com/kmnzlita\n\n 🐾 KMNZ TINA X\nhttps://x.com/kmnztina_\n\n🐾 KMNZ NERO X\nhttps://x.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://x.com/kmnstreet\n\n🏠KMNCLUB - KMNZ YouTube Membership\n https://www.youtube.com/channel/UC68J5pWEshmwhDH45qnpIsg/join\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #DROPIN  #ETICKETPRODUCTION",
+        "published_at": "2025-04-24T12:00:06Z",
+        "started_at": "2025-04-24T12:00:06Z",
+        "ended_at": "2025-04-24T12:06:59Z",
+        "scheduled": false,
+        "duration_seconds": 268,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "META FICTION",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "0fhRwHwNCX8",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "META FICTION (Prod. by ☆Taku Takahashi (m-flo)) / KMNZ [Official Music Video]",
+        "description": "もしも願いが叶うなら\n君とメタの先へ\n\nStreaming / Download\nhttps://linkco.re/QxVnYFHp?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: kotose\nIllustration: しゅがお\nMusic by ☆Taku Takahashi (m-flo)\nLyrics by Itaq, ☆Taku Takahashi (m-flo)\nArrangement by ☆Taku Takahashi (m-flo),Yackle\nMIX by Mitsunori Ikeda (Tachytelic Inc.)\n\nProduced by ☆Taku Takahashi (m-flo)\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #METAFICTION #mflo",
+        "published_at": "2024-12-25T11:45:06Z",
+        "started_at": "2024-12-25T11:45:06Z",
+        "ended_at": "2024-12-25T11:51:02Z",
+        "scheduled": false,
+        "duration_seconds": 217,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "NEW DAYS",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "L2rDaGCCXSE",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "NEW DAYS (Prod. by ミツキヨ) / KMNZ [Official Music Video]",
+        "description": "踏み出す勇気を歌うから \n今はただグルーヴで踊ろうよ\n\nStreaming / Dowonload\nhttps://linkco.re/QxVnYFHp?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: よし, 404\nIllustration: zest\nMusic and Arrangement by ミツキヨ\nLyrics by kotono\nMIX and Mastering by 999\nGuitar by kaon\n\nProduced by ミツキヨ\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #NEWDAYS  #ミツキヨ",
+        "published_at": "2024-12-18T12:00:06Z",
+        "started_at": "2024-12-18T12:00:06Z",
+        "ended_at": "2024-12-18T12:06:00Z",
+        "scheduled": false,
+        "duration_seconds": 205,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "BE NOISY!",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "mkp_QPtwSVc",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "BE NOISY! (Prod. by 水槽) / KMNZ [Official Music Video]",
+        "description": "集大成のこの瞬間をただ\n味わったら明日も生きていける\n最前線の僕らが今一番だ、絶対！\n\nStreaming  / Download\nhttps://linkco.re/9D34YCTy?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: kotose\nIllustration: しゅがお\nMusic,Lyrics,Arrangement by 水槽\nGuiter by Hylen\nMIX by NNZN\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #BENOISY! #水槽",
+        "published_at": "2024-09-16T11:30:07Z",
+        "started_at": "2024-09-16T11:30:07Z",
+        "ended_at": "2024-09-16T11:34:14Z",
+        "scheduled": false,
+        "duration_seconds": 188,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "MID JOURNEY",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "SsywhDWUS_Q",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "MID JOURNEY / KMNZ [Official Music Video]",
+        "description": "君の元へきっと辿り着く\n\nStreaming / Download\nhttps://linkco.re/frGztMb0?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: よし,404\nIllustration: けけ\n\nMusic by Lil Matsuda, Yuka Goto\nArrange by Lil Matsuda\nLyrics by LITA,KMNCREW\nMIX by Taiki Fudanotsuji (TAgAT LLC.)\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #MIDJOURNEY #original",
+        "published_at": "2024-06-23T12:00:07Z",
+        "started_at": "2024-06-23T12:00:07Z",
+        "ended_at": "2024-06-23T12:05:31Z",
+        "scheduled": false,
+        "duration_seconds": 205,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "CALLING",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "mSmcimGZZqM",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "CALLING / KMNZ [Official Music Video]",
+        "description": "教えてよ Calling\n気付いてるんでしょ？\n\nStreaming / Download\nhttps://linkco.re/frGztMb0?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: kotose\nIllustration: PORO\n\nMusic by Masaki Tomiyama, RIKE, Funk Uchino, nozomi*\nArrange by Masaki Tomiyama\nLyrics by LITA,KMNCREW\nMIX by Taiki Fudanotsuji (TAgAT LLC.)\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #CALLING #original",
+        "published_at": "2024-06-12T12:00:07Z",
+        "started_at": "2024-06-12T12:00:07Z",
+        "ended_at": "2024-06-12T12:04:30Z",
+        "scheduled": false,
+        "duration_seconds": 204,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "VERSE",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "ZGlm8HqSkkU",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "VERSE (Prod. by Snail's House) / KMNZ [Official Music Video]",
+        "description": "3人ってそんなに簡単じゃないけど\n辿り着くなら順番は\n3、2、1ではなく 1 、1 、1\n3人まとめてNo. 1  \n\nStreaming / Download\nhttps://linkco.re/frGztMb0?lang=ja\n\n------------------------\n\n🐶 Credit 🐾\nMovie: 臼水（しろいろモード）\nIllustration: しゅがお\nProduced by Snail's House\nLyrics by Yaca, LITA\nMIX by NNZN\n\n------------------------\n\n🐾 KMNZ LITA X（旧Twitter）\nhttps://twitter.com/kmnzlita\n\n 🐾 KMNZ TINA X（旧Twitter）\nhttps://twitter.com/kmnztina_\n\n🐾 KMNZ NERO X（旧Twitter）\nhttps://twitter.com/kmnznero_\n\n🔊KMNSTREET - OfficialX（旧Twitter）\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://rkmusic.booth.pm/item_lists/rooT4603\n\n------------------------\n\n#KMNZ #VERSE #SnailsHouse",
+        "published_at": "2024-05-25T14:00:07Z",
+        "started_at": "2024-05-25T14:00:07Z",
+        "ended_at": "2024-05-25T14:05:28Z",
+        "scheduled": false,
+        "duration_seconds": 263,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "STAR-LIGHT",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "tQmVd75MMXY",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "STAR-LIGHT (Prod. by Baja) / KMNZ [Official Music Video]",
+        "description": "Starlight Starlight 今輝くよ \n\n------------------------\n\n『STAR-LIGHT』\nMC：KMNZ\nMusic：Baja\nLyrics：カンタロー\nmix：EJINA\nSound Engineer：NNZN\n\nIllustration：玲汰\nMovie：ハセガワ\n\n------------------------\n\n🐶 KMNZ LITA Twitter\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ Twitter\nhttps://twitter.com/kmnzliz\n\n🔊KMNSTREET - Official Twitter\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://kmnsupply.stores.jp/\n\n------------------------\n\n#KMNZ #STARLIGHT #Baja",
+        "published_at": "2023-11-04T12:00:10Z",
+        "started_at": "2023-11-04T12:00:10Z",
+        "ended_at": "2023-11-04T12:06:07Z",
+        "scheduled": false,
+        "duration_seconds": 242,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "OUR DAYS",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "NFTnvgDcI2E",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "KMNZ - OUR DAYS (prod. by nerdwitchkomugichan) [Official Music Video]",
+        "description": "I know I'm not alone and our days.\n\nProduced by nerdwitchkomugichan ( https://twitter.com/n17nAgeFactory )\nMovie: 涼白はく( https://twitter.com/szsr_hk )\nStory＆Art: 研そうげん( https://twitter.com/ken_sogen )\n\n------------------------\n\n🐶 KMNZ LITA Twitter\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ Twitter\nhttps://twitter.com/kmnzliz\n\n🔊KMNSTREET - Official Twitter\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://kmnsupply.stores.jp/\n\n------------------------\n\n#KMNZ #OURDAYS #nerdwitchkomugichan",
+        "published_at": "2023-07-29T12:50:08Z",
+        "started_at": "2023-07-29T12:50:08Z",
+        "ended_at": "2023-07-29T12:55:26Z",
+        "scheduled": false,
+        "duration_seconds": 201,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "WE ARE BACK",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "mz5l0NHfj3Q",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "WE ARE BACK (Prod. by E TICKET PRODUCTION) / KMNZ [Official Music Video]",
+        "description": "We are back in the KMNSTREET.\n------------------------\n\n『WE ARE BACK』\nMC：KMNZ\nMusic ＆ Lyrics ＆ Arrangement：E TICKET PRODUCTION\nmix：NNZN\n\nStarring：Kyoka Imamura\nDirector：Hidemasa Jinguji\nProduction Manager：Amane Fukuzawa\nStylist：yoshiii\nHair & Make：Misaki\n\nMonster Casting：Monster Party\nCast：Monaka / RAMUNE / Bib / TANEMAN\nIrukaborg H1-c0 / Kinu / Noir\ntoromi / Bukufuyou / Kii / ANKO\nyabutama / niku / ChiwaOmurice / Ambitake\nHead Gear Creative：DangoOzawa / ♠️NoMuR(XXV-100)\nHyunsik Kim\n\nSpecial Thanks Roppongi club CUBE\n------------------------\n\n🐶 KMNZ LITA Twitter\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ Twitter\nhttps://twitter.com/kmnzliz\n\n🔊KMNSTREET - Official Twitter\nhttps://twitter.com/KMNSTREET\n\n🏠KMNCLUB - KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n💻KMNZ OFFICIAL SITE\nhttps://kmnz.jp\n\n👕KMNSUPPLY - KMNZ Official merchandise store\nhttps://kmnsupply.stores.jp/\n\n------------------------\n\n#KMNZ #WEAREBACK #ETICKETPRODUCTION",
+        "published_at": "2023-04-15T12:00:08Z",
+        "started_at": "2023-04-15T12:00:08Z",
+        "ended_at": "2023-04-15T12:05:57Z",
+        "scheduled": false,
+        "duration_seconds": 231,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "OVERNIGHT",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "FJ1X-R9V2fA",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "KMNZ - OVERNIGHT (prod. by ケンモチヒデフミ)  [Official Music Video]",
+        "description": "このまま野生の姿に戻れ 今夜だけ\n------------------------\n🐶Credit 🐱\nProduced by ケンモチヒデフミ / kenmochi hidefumi (https://twitter.com/h_kenmochi )\nLyrics by ケンモチヒデフミ / kenmochi hidefumi(https://twitter.com/h_kenmochi )\nMovie: 涼白はく( https://twitter.com/szsr_hk )\nMain Art: しゅがお( https://twitter.com/haru_sugar02 )\n\n🐶Music Download🐱\nhttps://linkco.re/mVYZQHM0\n------------------------\n\n🐶ライブ告知🐱\nKMNZ 3rd ALBUM LIVE\n『KMNSTREETLIVE』開催決定‼️\n2022.10.8(Sat.) 20:00 ON AIR⚡\n\n🔻ライブ詳細・チケットご購入はこちら！\nhttps://www.zan-live.com/live/detail/10192\n------------------------\n\n★チャンネル登録お願いします！★\n★Subscribe our channel★\n\n🐶 KMNZ LITA\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ\nhttps://twitter.com/kmnzliz\n\n🔻『KMNCLUB』KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n👕『KMNSUPPLY』KMNZ Official merchandise store\nhttps://kmnsupply.stores.jp/\n\n------------------------\n\n#KMNZ #KMNSTREET #ケンモチヒデフミ",
+        "published_at": "2022-10-02T12:00:14Z",
+        "started_at": "2022-10-02T12:00:14Z",
+        "ended_at": "2022-10-02T12:05:53Z",
+        "scheduled": false,
+        "duration_seconds": 228,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "driving",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "45T9N21JuOE",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "KMNZ - driving [Official Music Video]",
+        "description": "風の誘いに身を委ねながら どこまででも行こうか driving driving\n\n------------------------\n\nMC: KMNZ\nMain Art: ききゆ( https://twitter.com/atatame_m )\nMusic : Batsu( https://onl.tw/cjR58nW )\nMIX: KMNZ LIZ\nMovie: KMNZ LITA\nSpecial Thanks： KMNHZ\n\n------------------------\n\n🐶 KMNZ新曲＆アイテム販売中！🐱\n\nPRACTICEも収録されるNew Single\"\"KMNSKOOL\"\"に加え、2022年の干支である虎モチーフのグッズ、CAP/HATのNewモデル、1stアルバム\"\"KMNVERSE\"\"の通常版がKMNSUPPLYに新登場！🔥\n\n2021/12/17(金)22:00-2022/1/16(日) 23:59\nHZの皆さま、お見逃し無く！✨\nhttps://kmnsupply.stores.jp/\n\n#KMNZ \n\n------------------------\n\n★チャンネル登録お願いします！★\n★Subscribe our channel★\n\n🐶 KMNZ LITA\nhttps://www.youtube.com/KMNZLITA?sub_confirmation=1\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ\nhttps://www.youtube.com/KMNZLIZ?sub_confirmation=1\nhttps://twitter.com/kmnzliz\n\n🔻『KMNCLUB』KMNZ Official fanclub\nhttps://kmnz.fanbox.cc/\n\n------------------------\n\n#driving #ケモノズ",
+        "published_at": "2021-12-31T12:50:11Z",
+        "started_at": null,
+        "ended_at": null,
+        "scheduled": false,
+        "duration_seconds": 220,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "PRACTICE",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "ZEActnTQ68M",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "PRACTICE / KMNZ [Official Music Video] #KMNSKOOL",
+        "description": "歌うから何度でもこのステージで\n\n------------------------\n🐶Credit 🐱\nPRACTICE\nProduced by YACA IN DA HOUSE\nLyrics by KMNZ LITA & C.YACA\nMovie: Saka-niki\n------------------------\n\n🐶BREAKING NEWS🐱\n\nPRACTICEも収録されるNew Single\"\"KMNSKOOL\"\"に加え、2022年の干支である虎モチーフのグッズ、CAP/HATのNewモデル、1stアルバム\"\"KMNVERSE\"\"の通常版がKMNSUPPLYに新登場！🔥\n\n2021/12/17(金)22:00-2022/1/16(日) 23:59\nHZの皆さま、お見逃し無く！✨\nhttps://kmnsupply.stores.jp/\n#KMNZ #KMNSKOOL #KMNSUPPLY\n\n------------------------\n\n★チャンネル登録お願いします！★\n★Subscribe our channel★\n\n🐶 KMNZ LITA\nhttps://www.youtube.com/KMNZLITA?sub_confirmation=1\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ\nhttps://www.youtube.com/KMNZLIZ?sub_confirmation=1\nhttps://twitter.com/kmnzliz\n\n🔻『KMNCLUB』KMNZ Official fanclub\nhttps://kmnz.fanbox.cc/\n\n------------------------\n\n#KMNZ #ケモノズ #KMNSKOOL",
+        "published_at": "2021-12-17T12:45:14Z",
+        "started_at": "2021-12-17T12:45:14Z",
+        "ended_at": "2021-12-17T12:50:21Z",
+        "scheduled": false,
+        "duration_seconds": 195,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Augmentation (feat. Moe Shop)",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "PbGddpIfXeQ",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "Augmentation (feat. Moe Shop) / KMNZ [Official Music Video]",
+        "description": "Augmentしよう 君と僕の新しい街 \n\n------------------------\n\niTunes & Apple Music\nhttps://itunes.apple.com/jp/album/1458803765\n\n他、Amazon, YouTube Music, Spotifyにて配信\n------------------------\n\nMusic & Produce: Moe Shop\nLyrics: KMNCREW(NINO&LITA)\nMC: KMNZ LITA, LIZ\n\n------------------------\n\n★チャンネル登録お願いします！★\n★Subscribe our channel★\n\n🐶 KMNZ LITA\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ\nhttps://twitter.com/kmnzliz\n\n🔻『KMNCLUB』KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n★Moe Shop★\n✚ YouTube :  https://www.youtube.com/c/MoeShopMusic\n✚ SoundCloud :  https://www.soundcloud.com/moeshop\n✚ Twitter :  https://www.twitter.com/korewamoe\n✚ Bandcamp :  https://moeshop.bandcamp.com\n\n------------------------\n\nMC LITA（リタ）・LIZ（リズ）からなる話題のバーチャルガールズユニット「KMNZ（ケモノズ）」が放つ2nd single 「Augmentation(feat. Moe Shop)」。\n\n仮想と融合し拡張された新しい街を歌う、Moe Shopによる珠玉のダンストラックが誕生。\n\n- - - - - - - - - - \n\n#KMNZ #moeshop #Augmentation  #ケモノズ",
+        "published_at": "2019-04-08T08:00:04Z",
+        "started_at": null,
+        "ended_at": null,
+        "scheduled": false,
+        "duration_seconds": 242,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "VR - Virtual Reality",
+      "artist_slugs": [
+        "kmnz"
+      ],
+      "video": {
+        "id": "nhFgmVDPNlo",
+        "channel_id": "UCqSPZz3gDBxJP-xaME8w-yA",
+        "title": "VR - Virtual Reality (prod.by Snail's House) / KMNZ [Official Music Video] #KMNZVR",
+        "description": "Virtual Reality\n君との夢が叶う パラレルワールド\nあと１ビット 繋がる世界 溶け出すの\n\n- - - - - - - - - - \n\niTunes\nhttps://itunes.apple.com/jp/album/1417091553?app=itunes\n\nApple Music\nhttps://itunes.apple.com/jp/album/1417091553?app=music\n\nSpotify\nhttp://open.spotify.com/track/2enLz8bnJCG9Ffn1cVjpOD\n\nOther Store\nhttps://linkco.re/ecph0e2H\n\nKMNZ OFFICIAL GOODS STORE\nhttps://kmnsupply.stores.jp\n\n- - - - - - - - - - \nMusic: Snail's House\nLyrics: KMNCREW\nMC: KMNZ LITA, LIZ\n\nCast：一ノ瀬みか（神宿）\nDirector：Kona Ryohei（NIN）&  ヲタきち（@wotakichii）\nProducer：Miyakoshi Tatsuya（ACHERON Inc.）\nCinematographer：Matsuda Makoto（ACHERON Inc.）\nProduction：ACHERON Inc.\nCosplayer：ぽち(@gs_pochi) & 伊月ろこむ(@kitsui_xo)\n- - - - - - - - - - \n\n★チャンネル登録お願いします！★\n★Subscribe our channel★\n\n🐶 KMNZ LITA\nhttps://twitter.com/kmnzlita\n\n🐱 KMNZ LIZ\nhttps://twitter.com/kmnzliz\n\n🔻『KMNCLUB』KMNZ YouTube Membership\nhttps://www.youtube.com/@KMNZ\n\n★Snail's House\nhttps://www.youtube.com/channel/UCYxBY8mhJ7R2rMIcQ28H_Zw\n\nhttps://twitter.com/loudnessfete\n\n- - - - - - - - - - \n\nMC LITA（リタ）・LIZ（リズ）からなる話題のバーチャルガールズユニット「KMNZ（ケモノズ）」が放つ1st single 「VR - Virtual Reality」。Virtual Cultureの多様な輝きを描き出したかのようなサウンドはSnail’s Houseが手がける。ふたつの世界を繋ぎ合わせる極上のHip Hop Tuneが今誕生。\n\nThe hottest virtual-female-duo KMNZ releases their 1st single, VR - Virtual Reality. The music provided by Snail’s House ingeniously expresses the fascinating world of the Japanese Virtual Pop Culture. The best hip hop song from the world of Virtual-Reality is here! You can’t miss it!\n\n- - - - - - - - - - \n\n#KMNZVR #KMNZ  #神宿 #VTuber",
+        "published_at": "2019-03-01T13:28:42Z",
+        "started_at": "2019-03-01T13:30:08Z",
+        "ended_at": "2019-03-01T13:35:40Z",
+        "scheduled": false,
+        "duration_seconds": 196,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "放-HANATE-",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "QRscoNqSCRg",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VESPERBELL「放-HANATE-」Official Music Video",
+        "description": "Streaming / Download\nhttps://linkco.re/qEZ2ntam\n\n「放-HANATE-」\nLyrics：有馬えみり(GOLDTAIL)\nMusic：ミツル\n\nMusic Video\nMovie：がむ（ https://x.com/gamu_MAD ）\nIllust：アカネグモ（ https://x.com/Akanegumo315）\n\n————————————\n\n👇メンバーシップ加入はこちらから！\n   / @vesperbell_membership  \n\n参加することでこんな特典が得られます🔥\n・ヨミ、カスカや拡声器の三面図公開中👀\n・限定Discordコミュニティーへの参加\n・メン限配信\n・ワンマンライブの先行抽選申し込み\n※参加するプランにより特典は異なります\n\n————————————\n\n◆ Official SNS\nX(OFFICIAL)：https://twitter.com/vesperbell_info\nX(YOMI)：https://twitter.com/vesper_yomi\nX(KASUKA)：https://twitter.com/vesper_kasuka\nInstagram：https://www.instagram.com/vesperbell_official/\nTikTok：https://www.tiktok.com/@vesperbell\n\n◆ YouTube Membership\nhttps://www.youtube.com/channel/UCIZdHFI1j5glJBzYJrH99pw/join\n\n————————————\n\n#VESPERBELL",
+        "published_at": "2026-06-01T11:00:06Z",
+        "started_at": "2026-06-01T11:00:06Z",
+        "ended_at": "2026-06-01T11:05:53Z",
+        "scheduled": false,
+        "duration_seconds": 227,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "MACH",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "ajk1-WYk_Ls",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VESPERBELL「MACH」Official Music Video",
+        "description": "Streaming / Download\nhttps://linkco.re/r5ZrpMGH\n\n「MACH」\nVocal：VESPERBELL\nLyrics：鬱P\nMusic：鬱P\n\nMusic Video\nMovie：がむ（ https://x.com/gamu_MAD ）\nIllust：ろるあ（ https://x.com/Rolua_N ）\n\n————————————\n\n👇メンバーシップ加入はこちらから！\nhttps://www.youtube.com/channel/UCIZdHFI1j5glJBzYJrH99pw/join\n\n参加することでこんな特典が得られます🔥\n・ヨミ、カスカや拡声器の三面図公開中👀\n・限定Discordコミュニティーへの参加\n・メン限配信\n・ワンマンライブの先行抽選申し込み\n※参加するプランにより特典は異なります\n\n————————————\n\n◆ Official SNS\nX(OFFICIAL)：https://twitter.com/vesperbell_info\nX(YOMI)：https://twitter.com/vesper_yomi\nX(KASUKA)：https://twitter.com/vesper_kasuka\nInstagram：https://www.instagram.com/vesperbell_official/\nTikTok：https://www.tiktok.com/@vesperbell\n\n◆ Official Goods\nhttps://shop.reality-studios.inc/collections/rkmusic-all\n\n◆ YouTube Membership\nhttps://www.youtube.com/channel/UCIZdHFI1j5glJBzYJrH99pw/join\n\n————————————\n\n#MACH  #VESPERBELL",
+        "published_at": "2026-02-11T10:30:07Z",
+        "started_at": "2026-02-11T10:30:07Z",
+        "ended_at": "2026-02-11T10:35:21Z",
+        "scheduled": false,
+        "duration_seconds": 194,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "WINGS",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "IyzdBGxsICo",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VESPERBELL「WINGS」Official Music Video",
+        "description": "Streaming / Download\nhttps://linkco.re/SNXmmG47\n\n「WINGS」\nVocal：VESPERBELL\nLyrics：IORI・SHVNA\nMusic：Rockwell\nArrangement：Rockwell\n\nMusic Video\nMovie：YAMADA( https://x.com/ryma2357 )\nIllustration：レルビィ（ https://x.com/reluvy5213 ）\n\n————————————\n\n◆ Official SNS\nX(OFFICIAL)：https://twitter.com/vesperbell_info\nX(YOMI)：https://twitter.com/vesper_yomi\nX(KASUKA)：https://twitter.com/vesper_kasuka\nInstagram：https://www.instagram.com/vesperbell_official/\nTikTok：https://www.tiktok.com/@vesperbell\n\n◆ Official Goods\nhttps://rkmusic.booth.pm/item_lists/nlkToYEv\n\n◆ YouTube Membership\nhttps://www.youtube.com/channel/UCIZdHFI1j5glJBzYJrH99pw/join\n\n————————————\n\n#WINGS  #VESPERBELL",
+        "published_at": "2025-11-12T11:00:06Z",
+        "started_at": "2025-11-12T11:00:06Z",
+        "ended_at": "2025-11-12T11:05:03Z",
+        "scheduled": false,
+        "duration_seconds": 177,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "NO MORE!!",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "8THyRCLv7CA",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VESPERBELL「NO MORE!!」Official Music Video",
+        "description": "Streaming / Download\nhttps://linkco.re/SNXmmG47\n\n「NO MORE!!」\nVocal：VESPERBELL\nLyrics：ゆよゆっぺ\nMusic：ゆよゆっぺ\nArrangement：ゆよゆっぺ\n\nMusic Video\nDirection / Composition ：みやざわえそら（スタジオまいにち）( https://x.com/miyazawano )\nDirection / 3DCG：o2bo（スタジオまいにち）（ https://x.com/o2bo1871 ）\nIllustration：S H I( https://x.com/fujfjio )\n\n————————————\n\n◆ Official SNS\nX(OFFICIAL)：https://twitter.com/vesperbell_info\nX(YOMI)：https://twitter.com/vesper_yomi\nX(KASUKA)：https://twitter.com/vesper_kasuka\nInstagram：https://www.instagram.com/vesperbell_official/\nTikTok：https://www.tiktok.com/@vesperbell\n\n◆ Official Goods\nhttps://rkmusic.booth.pm/item_lists/nlkToYEv\n\n◆ YouTube Membership\nhttps://www.youtube.com/channel/UCIZdHFI1j5glJBzYJrH99pw/join\n\n————————————\n\n#NOMORE!!  #VESPERBELL",
+        "published_at": "2025-11-08T10:00:06Z",
+        "started_at": "2025-11-08T10:00:06Z",
+        "ended_at": "2025-11-08T10:05:18Z",
+        "scheduled": false,
+        "duration_seconds": 192,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "一閃",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "KV8PXOqfstA",
+        "channel_id": "UCKaDMw10CmbE22XJhaunoiQ",
+        "title": "VESPERBELL「一閃」Official Music Video",
+        "description": "VESPERBELL「一閃」（アニメ『暗殺者である俺のステータスが勇者よりも明らかに強いのだが』OP）\nVESPERBELL “ISSEN” (Opening Theme for Anime ‘My Status as an Assassin Obviously Exceeds the Hero's’)\n\nStreaming / DL\nhttps://VESPERBELL.lnk.to/issen\n\n————————————\n\nMusic Video\nDirector：奈良瀬 (https://x.com/narase_05)\n\n「一閃」\nVocal：VESPERBELL\nLyrics：VEENA\nComposition：VEENA\nArrangement：Powerless\n\n————————————\n\nVESPERBELL\nOFFICIAL：https://x.com/vesperbell_info\nYOMI：https://x.com/vesper_yomi\nKASUKA：https://x.com/vesper_kasuka\nOFFICIAL GOODS：https://rkmusic.booth.pm/\nMEMBERSHIP：‪@VESPERBELL_MEMBERSHIP \n\n#VESPERBELL #一閃 #ステつよ",
+        "published_at": "2025-10-07T11:00:06Z",
+        "started_at": "2025-10-07T11:00:06Z",
+        "ended_at": "2025-10-07T11:06:29Z",
+        "scheduled": false,
+        "duration_seconds": 235,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Bell Ringer",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "wAgQ_Lr884w",
+        "channel_id": "UCKaDMw10CmbE22XJhaunoiQ",
+        "title": "VESPERBELL「Bell Ringer」Official Music Video",
+        "description": "※映像内にフラッシュ点滅を含む表現があり、光過敏性発作(てんかん)を起こす場合があります。ご覧になる際は注意してご視聴下さい。\n\n————————————\n\nMajor 1st EP「RUMBLING」\nStreaming / DL\nhttps://vesperbell.lnk.to/RUMBLING\n\n「Bell Ringer」\nVocal：VESPERBELL\nLyrics：VEENA\nComposition：KSUKE\nArrangement：KSUKE\n\nMusic Video\nMovie / 3DCG：筆者( https://x.com/ohissya )\nLive 2D Animation：お菊( https://x.com/__Lizel )\nIllustration：あんりふれ( https://x.com/unrefle )\n\n————————————\n\nVESPERBELL\nOFFICIAL：https://x.com/vesperbell_info\nYOMI：https://x.com/vesper_yomi\nKASUKA：https://x.com/vesper_kasuka\nOFFICIAL GOODS：https://rkmusic.booth.pm/item_lists/nlkToYEv\nMEMBERSHIP： @VESPERBELL_MEMBERSHIP \n\n#BellRinger #VESPERBELL #RUMBLING",
+        "published_at": "2024-12-13T11:00:06Z",
+        "started_at": "2024-12-13T11:00:06Z",
+        "ended_at": "2024-12-13T11:05:28Z",
+        "scheduled": false,
+        "duration_seconds": 191,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "羽化",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "kqQ8TJ5hw0E",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VESPERBELL「羽化」Official Music Video",
+        "description": "I'm in about to emerge, in pain\nI'm in about fly into the rain\n\n————————————\n\nStreaming / DL\nhttps://vesperbell.lnk.to/emergence\nドラマ「私の死体を探してください。」主題歌\n\n「羽化」\n（VESPERBELL - Emergence）\nVocal：VESPERBELL\nLyrics：VEENA\nComposition：Misty mint\nArrangement：Misty mint, VEENA\nMix：Gregory Germain\n\nMusic Video\nDirector：Nihe,sowiti\nIllustration/Animation：sowiti( https://x.com/huseso )\nComposition/3DCG：Nihe( https://x.com/niheranone )\nGraphic Design：Katsuki Yoshinaga( https://x.com/_Quga )\n\n————————————\n\nVESPERBELL\nOFFICIAL：https://x.com/vesperbell_info\nYOMI：https://x.com/vesper_yomi\nKASUKA：https://x.com/vesper_kasuka\nOFFICIAL GOODS：https://rkmusic.booth.pm/\nMEMBERSHIP：@VESPERBELL_MEMBERSHIP   \n\n#羽化 #VESPERBELL #私の死体を探してください",
+        "published_at": "2024-09-11T11:00:07Z",
+        "started_at": "2024-09-11T11:00:07Z",
+        "ended_at": "2024-09-11T11:06:16Z",
+        "scheduled": false,
+        "duration_seconds": 250,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Dear",
+      "artist_slugs": [
+        "vesperbell-yomi"
+      ],
+      "video": {
+        "id": "MZYiY26Pkoc",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "Dear / VESPERBELL ヨミ [Official Music Video]",
+        "description": "あなたが見てる世界に花束を贈るわ\n\n————————————\n\n◆ Streaming / DL\n　 VESPERBELL 1st ALBUM「革命」収録\n　 https://linkco.re/QUEsPd4b\n\n◆ 楽曲 / Music\n　 Vocal & Lyrics：VESPERBELL ヨミ\n　 Music：井上 幹\n\n◆ イラスト / Illustration\n　 村カルキ　https://twitter.com/murakaruki\n\n◆ 映像 / Movie\n　 PRISM STUDIO https://twitter.com/PRISM_CloA\n\n　 映像ディレクション / Movie Director\n　 CloA https://twitter.com/CloA_Planetaria\n\n　 デザイン / Graphic Design\n 　Binn https://twitter.com/binn_n0\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH　https://vesperbell.booth.pm/\n\n◆ メンバーシップ / YouTube Membership\n　 https://www.youtube.com/channel/UCtjs6Il4qich76H23BaiU3Q/join\n\n————————————\n\n#Dear #ヨミ #VESPERBELL",
+        "published_at": "2023-11-18T11:00:11Z",
+        "started_at": "2023-11-18T11:00:11Z",
+        "ended_at": "2023-11-18T11:05:48Z",
+        "scheduled": false,
+        "duration_seconds": 223,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "RAMPAGE",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "Q11fH9-s7kg",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "RAMPAGE / VESPERBELL [Official Music Video]",
+        "description": "魂聴かせてほしい\n準備はOK？\n\n————————————\n\n◆ Streaming / DL\n　 https://linkco.re/bBEdqZEd\n\n◆ 楽曲 / Music\n 　Vocal：VESPERBELL\n　 Lyrics：Spirit Garden\n　 Music：日高 勇輝(Elements Garden)\n\n◆ イラスト / Illustration\n　 ろるあ　https://twitter.com/Rolua_N/media\n\n◆ 動画 / Movie\n　 Lye　https://twitter.com/Lye_xX\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH　https://vesperbell.booth.pm/\n\n◆ メンバーシップ / YouTube Membership\n　 https://www.youtube.com/channel/UCtjs6Il4qich76H23BaiU3Q/join\n\n————————————\n\n#RAMPAGE #VESPERBELL",
+        "published_at": "2023-10-20T11:00:10Z",
+        "started_at": "2023-10-20T11:00:10Z",
+        "ended_at": "2023-10-20T11:05:50Z",
+        "scheduled": false,
+        "duration_seconds": 224,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "メイビス",
+      "artist_slugs": [
+        "vesperbell-kasuka"
+      ],
+      "video": {
+        "id": "Fd3WCqGc8_w",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "メイビス / VESPERBELL カスカ [Official Music Video]",
+        "description": "先の見えないこんな暗い道でも\n不思議だな　君がいるそれだけで\n強く優しくなれるの\n散ってしまわないで　もう迷わないから\n\n————————————\n\n◆ Streaming / DL\n　 VESPERBELL 1st ALBUM「革命」収録\n　 https://linkco.re/QUEsPd4b\n\n◆ 楽曲 / Music\n　 Vocal & Lyrics：VESPERBELL カスカ\n　 Music：井上 幹\n\n◆ イラスト / Illustration\n　 緜　https://twitter.com/wttn3tpkt\n\n◆ 動画 / Movie\n　 CloA　https://twitter.com/CloA_Planetaria\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH　https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX　https://vesperbell.fanbox.cc/\n\n————————————\n\n#メイビス #カスカ #VESPERBELL",
+        "published_at": "2023-06-15T11:00:10Z",
+        "started_at": "2023-06-15T11:00:10Z",
+        "ended_at": "2023-06-15T11:06:14Z",
+        "scheduled": false,
+        "duration_seconds": 248,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Admit",
+      "artist_slugs": [
+        "vesperbell-yomi",
+        "hachi"
+      ],
+      "video": {
+        "id": "gSfMlRurni8",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "Admit / VESPERBELLヨミ × HACHI [Official Music Video]",
+        "description": "いつかあかりが灯るその時を\n信じて今を生きてくしかないんだよ\n\n————————————\n\n◆ Streaming / DL\n　 Coming soon\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ, HACHI @HACHIVSinger \n　 Music & Lyrics & Arrangement：*Luna　https://twitter.com/Luna_miko00\n　 MIX：はるお\n\n◆ イラスト / Illustration\n　 LOWRISE　https://twitter.com/L0WR15E\n\n◆ 動画 / Movie\n　涼白はく　https://twitter.com/szsr_hk\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n\n#Admit #HARMONICSvol1 #VESPERBELL",
+        "published_at": "2023-05-11T11:00:09Z",
+        "started_at": "2023-05-11T11:00:09Z",
+        "ended_at": "2023-05-11T11:06:10Z",
+        "scheduled": false,
+        "duration_seconds": 245,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "RISE (2022 ver.)",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "_pxvP0JNPDg",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "RISE (2022 ver.) / VESPERBELL [Official Music Video]",
+        "description": "2022/12/29 22:00\n\n————————————\n\n◆ Streaming / DL\n　 VESPERBELL 1st ALBUM「革命」収録\n　 https://linkco.re/QUEsPd4b\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Story & Lyrics：ハル\n　 Music & Bass：井上 幹　https://twitter.com/kan7666\n　 Guitar：竹之内 一彌　https://twitter.com/kazuyandrix\n　 Drum：伊吹 文裕　https://twitter.com/fumihiro_ibuki\n\n◆ イラスト / Illustration \n　 ろるあ　https://twitter.com/Rolua_N\n\n◆ 動画 / Movie \n　Lye　https://twitter.com/Lye_xX\n\n◆ 公式ツイッター / Official Twitter \n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info \n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n\n#RISE #VESPERBELL_革命 #VESPERBELL",
+        "published_at": "2022-12-29T13:00:07Z",
+        "started_at": "2022-12-29T13:00:07Z",
+        "ended_at": "2022-12-29T13:06:07Z",
+        "scheduled": false,
+        "duration_seconds": 242,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Revelation",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "kYEhRrDnLD4",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "Revelation / VESPERBELL  [Official Music Video]",
+        "description": "誰にも渡さない　僕らの信念\n\n————————————\n\n◆ Streaming / DL\n　 VESPERBELL 1st ALBUM「革命」収録\n　 https://linkco.re/QUEsPd4b\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Music & Lyrics：FUKUSHIGE MARI　https://twitter.com/mari_crimson\n\n◆ 動画 / Movie\n　 nooby saurus　https://twitter.com/m_o__y_a\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH　https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX　https://vesperbell.fanbox.cc/\n\n————————————\n\n#Revelation #FUKUSHIGEMARI #VESPERBELL",
+        "published_at": "2022-09-29T11:00:11Z",
+        "started_at": "2022-09-29T11:00:11Z",
+        "ended_at": "2022-09-29T11:05:40Z",
+        "scheduled": false,
+        "duration_seconds": 215,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "Eclipse",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "9QmnQbnXxdQ",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "Eclipse / VESPERBELL [Official Music Video]",
+        "description": "哭いても間違っても\n何度でも立ち上がれ\n世界中が闇に飲まれても\n\nコンピレーションアルバム「SPOTLIGHT vol.2」収録楽曲\n\n————————————\n\n◆ Streaming / DL\n　 https://linkco.re/FU3DdTYd\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Music & Lyrics：柊マグネタイト　https://twitter.com/hiiragi_magne\n\n◆ 動画 / Movie\n　 reiya　https://twitter.com/_eiya\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH　https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX　https://vesperbell.fanbox.cc/\n\n————————————\n\n#Eclipse #柊マグネタイト #VESPERBELL",
+        "published_at": "2022-03-19T11:00:12Z",
+        "started_at": "2022-03-19T11:00:12Z",
+        "ended_at": "2022-03-19T11:05:07Z",
+        "scheduled": false,
+        "duration_seconds": 181,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "EX MACHINA",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "E7KrCJOxLNA",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "EX MACHINA / VESPERBELL [Official Music Video]",
+        "description": "Chapter.01-03\nMovie from \"1st ANNIVERSARY LIVE:[EX MACHINA]\"\n\n————————————\n\n⚡️VESPERBELL 2nd ONE-MAN RUMBLINGチケット一般販売のお知らせ⚡️\n\n📅：2025年1月16日(木)\n📍：渋谷 Spotify O-EAST\n⏰：OPEN 18時30分 / START 19時30分\n\n🎫一般チケット\n2024年12月12日20:00より先着順にて受付開始\n※チケットの枚数には限りがあります\n※規定の枚数に達し次第、チケットは販売終了となります\n\nVESPERBELL 2nd ONE-MAN LIVE RUMBLING\nhttps://eplus.jp/vesperbell/\nKMNZ/VESPERBELL 2DAYS通しチケット\nhttps://eplus.jp/kmnz-vesperbell/\n\n詳細はこちら\nhttps://rkmusic.jp/info/20241110_1.html\n\n————————————\n\n⚡️VESPERBELL 2nd ONE-MAN RUMBLING General Sales Announcement⚡️\n\n📅：Thursday, January 16, 2025\n📍：Shibuya Spotify O-EAST\n⏰：OPEN 18:30 / START 19:30\n\n🎫General Tickets\nAccepted on a first-come, first-served basis from 20:00 on December 12, 2024\n*Tickets are limited.\n*Applications will be closed when the number of tickets reaches the limit.\n\nVESPERBELL 2nd ONE-MAN LIVE RUMBLING\nhttps://ib.eplus.jp/vesperbell\nKMNZ/VESPERBELL 2DAYS tickets\nhttps://ib.eplus.jp/kmnz-vesperbell\n\nFor more information\nhttps://rkmusic.jp/info/20241208_1.html\n\n————————————\n\n◆ Streaming / DL\n　 https://linkco.re/X5z0s810\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Story & Lyrics：ハル\n　 Music & Bass & Guitar & MIX：井上 幹　https://twitter.com/kan7666\n　 Drums：大津 惇　https://twitter.com/freedomakoto_ds\n　 Drums Recording：石野洋一郎（Crunch Studio）\n\n◆ 動画 / Movie\n　from 1st ANNIVERSARY LIVE:[EX MACHINA]\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n\n#EXMACHINA #VESPERBELL",
+        "published_at": "2021-08-06T11:00:11Z",
+        "started_at": "2021-08-06T11:00:11Z",
+        "ended_at": "2021-08-06T11:06:46Z",
+        "scheduled": false,
+        "duration_seconds": 279,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "ignition",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "bsMGG4aJ6EI",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "ignition / VESPERBELL [Official Music Video]",
+        "description": "Chapter.01-01\nignition from EX MACHINA\n\n————————————\n\n◆ Streaming / DL\n　 https://linkco.re/X5z0s810\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Story & Lyrics：ハル\n　 Music & Bass & Guitar & MIX：井上 幹　https://twitter.com/kan7666\n　 Drums：大津 惇　https://twitter.com/freedomakoto_ds\n　 Drums Recording：石野洋一郎（Crunch Studio）\n\n◆ イラスト / Illustration\n　 ろるあ　https://twitter.com/Rolua_N\n\n◆ 動画 / Movie\n　yujureal works　https://twitter.com/yujureal_works\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n\n#ignition #VESPERBELL",
+        "published_at": "2021-06-24T11:00:14Z",
+        "started_at": "2021-06-24T11:00:14Z",
+        "ended_at": "2021-06-24T11:06:07Z",
+        "scheduled": false,
+        "duration_seconds": 240,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "VERSUS",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "_5RW17PWB8E",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "VERSUS / VESPERBELL [Official Music Video]",
+        "description": "00.Epilogue\n\n————————————\n◆ Streaming / DL\n　 https://linkco.re/A2aYXzNy\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Story & Lyrics：ハル\n　 Music & MIX：井上 幹　https://twitter.com/kan7666\n\n◆ イラスト / Illustration\n　 LOWRISE　https://twitter.com/L0WR15E\n\n◆ 動画 / Movie\n　Lye　https://twitter.com/Lye_xX\n\n◆ 公式ツイッター / Official Twitter\n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info\n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n#VERSUS​ #VESPERBELL",
+        "published_at": "2021-02-28T13:00:15Z",
+        "started_at": "2021-02-28T13:00:15Z",
+        "ended_at": "2021-02-28T13:06:31Z",
+        "scheduled": false,
+        "duration_seconds": 263,
+        "availability": "public"
+      }
+    },
+    {
+      "title": "RISE",
+      "artist_slugs": [
+        "vesperbell"
+      ],
+      "video": {
+        "id": "rCr-htZopFk",
+        "channel_id": "UCPd0Z22gF43dUidPYEQO5-w",
+        "title": "RISE / VESPERBELL [Official Music Video]",
+        "description": "00.Prologue\n\n————————————\n\n◆ Streaming / DL\n　 https://linkco.re/43URBANm\n\n◆ 楽曲 / Music\n　 Vocals：VESPERBELL ヨミ カスカ\n　 Story & Lyrics：ハル\n　 Music & Bass：井上 幹　https://twitter.com/kan7666\n　 Guitar：竹之内 一彌　https://twitter.com/kazuyandrix\n　 Drum：伊吹 文裕　https://twitter.com/fumihiro_ibuki\n　 MIX：﨑本 正俊\n\n◆ イラスト / Illustration \n　 ろるあ　https://twitter.com/Rolua_N\n\n◆ 動画 / Movie \n　Lye　https://twitter.com/Lye_xX\n\n◆ 公式ツイッター / Official Twitter \n　VESPERBELL OFFICIAL　https://twitter.com/vesperbell_info \n　YOMI / ヨミ　https://twitter.com/vesper_yomi\n　KASUKA / カスカ　https://twitter.com/vesper_kasuka\n\n◆ 公式グッズ / Official Goods\n　 BOOTH https://vesperbell.booth.pm/\n\n◆ 公式ファンクラブ / Official Fanclub\n　 FANBOX https://vesperbell.fanbox.cc/\n\n————————————\n\n#RISE #VESPERBELL",
+        "published_at": "2020-11-13T12:00:33Z",
+        "started_at": "2020-11-13T12:00:33Z",
+        "ended_at": "2020-11-13T12:06:09Z",
+        "scheduled": false,
+        "duration_seconds": 242,
+        "availability": "public"
+      }
+    }
+  ]
+}

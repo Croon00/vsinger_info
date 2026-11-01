@@ -52,3 +52,25 @@
 규칙·회귀 Python 테스트 21개 통과, 로컬 PostgreSQL이 필요한 6개는 건너뛰었다. PC·모바일 기존 아티스트 정렬·곡 탐색·가창자 선택 브라우저 테스트 6개와 프론트 단위 테스트 56개 및 빌드를 검증했다. fixture 테스트와 실제 DB·provider 확인은 구분한다.
 
 같은 날짜의 전역 커버 목록 보완 후 관련 Python 테스트 16개 통과, 로컬 PostgreSQL이 필요한 5개는 건너뛰었다. 실제 신규 DB에서 그룹명 검색·RK Music 필터·중복 없는 영상 키를 확인하고 개인 멤버별 건수는 유지됨을 확인했다.
+
+## 오리지널 발매곡 누락 보완 — 2026-11-01
+
+커버 전체 수집 완료는 오리지널 발매곡 수집 완료를 뜻하지 않는다. 확인 당시 그룹 명의 recording은 KMNZ·VESPERBELL 모두 0개였고, 오리지널 탐색의 공개 아티스트 조건도 숨겨진 그룹 명의를 제외했다. Spotify 연결은 토큰 발급 단계에서 실패했다.
+
+두 본채널의 전체 업로드 27페이지(1,322개)를 공식 API로 대조하고, 검토한 오리지널 MV 50개를 `migrations/catalog/shared-original-videos-2026-11-01.json`에 원본 제목·채널 ID·등록일·설명과 함께 보존했다. 커버·Shorts·라이브 발췌를 일괄 오리지널로 분류하지 않는다. 그룹 MV는 그룹 명의로, 명시적인 ヨミ·カスカ 솔로와 HACHI 협업은 확인한 실제 명의로 등록한다. MV 없는 앨범 수록곡과 이번 검토에서 제외한 외부 협업은 완전 수집으로 간주하지 않는다.
+
+오리지널 곡 탐색은 승인된 두 그룹 명의도 표시한다. 현재 멤버를 선택하거나 이름으로 검색하면 소속 그룹의 발매곡도 조회하지만, 표시 명의와 저장된 가창 크레딧은 그룹 그대로 유지한다. 과거 발매에 현재 멤버가 모두 참여했다는 의미는 아니다. 다른 숨김 아티스트는 계속 제외하며 소속사·날짜·중복 제거·페이지 조건도 유지한다.
+
+`UCKaDMw10CmbE22XJhaunoiQ`는 `channels.list`의 VESPERBELL 채널과 본채널 업로드 목록에 포함된 「一閃」「Bell Ringer」의 실제 publisher를 함께 확인한 추가 음악 출처다. 본채널 구독자 통계 우선순위는 유지한다.
+
+검토된 원본만 신규 DB에 적용하는 도구는 기본 dry-run이며 재실행 시 같은 import operation을 반복 적용하지 않는다. 조회 API에서 수집을 시작하지 않고, 원본 영상과 기존 명의를 보존한다.
+
+```powershell
+.venv\Scripts\python.exe scripts/import_reviewed_original_videos.py migrations/catalog/shared-original-videos-2026-11-01.json
+# 검토된 manifest 적용
+.venv\Scripts\python.exe scripts/import_reviewed_original_videos.py migrations/catalog/shared-original-videos-2026-11-01.json --apply
+```
+
+실제 신규 DB 반영: 공식 MV 50개·recording 50개를 감사 기록 7501로 등록하고 각 영상의 조회수와 등록일을 연결했다. 기존 HACHI 「Admit (VESPERBELL ヨミ ＆ HACHI）」 발매는 실제 협업 명의와 길이 차이 1.392초를 대조해 같은 공식 MV에 연결했다(감사 기록 7502). 기존 발매 행·크레딧은 보존하고 탐색의 영상 ID 중복 제거를 적용한다. 반복 실행은 `already_applied`로 추가 0개다.
+
+2026-11-01 검증: fixture 테스트 16개 통과, 로컬 PostgreSQL이 없는 DB fixture 10개는 건너뛰었다. 별도 실제 신규 DB 읽기 검증에서 KMNZ 멤버별 공식 MV 32개, ヨミ 17개, カスカ 16개와 중복 없는 영상 ID를 확인했다. VESPERBELL 검색 18개 모두 조회수·등록일이 있으며, 로컬 API는 ヨミ 선택 시 HTTP 200·17개를 반환했다. KMNZ 멤버의 기존 MV 미연결 발매 행은 보존했다. 이 보완은 검토한 공식 MV 반영이며, Spotify 토큰 발급 문제와 MV 없는 수록곡 보완은 남아 있다. 일반 YouTube 수집이 모든 오리지널을 자동 분류·신규 등록하는 것으로 문서화하지 않는다.
