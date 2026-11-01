@@ -5,8 +5,7 @@ import { ChevronRight } from '@lucide/vue'
 import { api } from '@/api/client'
 import type { SearchPerformance, SearchResults } from '@/api/types'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import BroadcastPeriodFilter from '@/components/BroadcastPeriodFilter.vue'
 import { useResource } from '@/composables/useResource'
 import { formatDate } from '@/lib/dates'
 import { displayName } from '@/lib/display-name'
@@ -63,6 +62,14 @@ const end = computed({
   set: (value: string) => updateFilter('end', value),
 })
 const invalidRange = computed(() => !!start.value && !!end.value && start.value > end.value)
+function applyPeriod(period: { start: string; end: string }) {
+  const next = { ...route.query }
+  if (period.start) next.start = period.start
+  else delete next.start
+  if (period.end) next.end = period.end
+  else delete next.end
+  router.replace({ query: next })
+}
 const scope = computed(() => ({
   ...baseScope.value,
   artistIds: selectedPerformers.value.map(Number),
@@ -217,30 +224,7 @@ function search(q: string) {
             </SelectGroup>
           </SelectContent>
         </Select>
-        <FieldGroup class="grid w-full max-w-sm grid-cols-2 gap-3 sm:w-auto">
-          <Field class="min-w-0 gap-1">
-            <FieldLabel for="search-start">방송 시작일</FieldLabel>
-            <Input
-              id="search-start"
-              v-model="start"
-              type="date"
-              :max="end || undefined"
-              :aria-invalid="invalidRange"
-              class="min-w-0"
-            />
-          </Field>
-          <Field class="min-w-0 gap-1">
-            <FieldLabel for="search-end">방송 종료일</FieldLabel>
-            <Input
-              id="search-end"
-              v-model="end"
-              type="date"
-              :min="start || undefined"
-              :aria-invalid="invalidRange"
-              class="min-w-0"
-            />
-          </Field>
-        </FieldGroup>
+        <BroadcastPeriodFilter :start="start" :end="end" @apply="applyPeriod" />
         <Button
           v-if="selectedPerformers.length || start || end"
           variant="ghost"

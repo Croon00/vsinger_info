@@ -15,12 +15,12 @@ from app.integrations.youtube_video_statistics import fetch_statistics
 from app.repositories.youtube_video_statistics import targets, persist
 
 
-async def main(account_ids=None):
+async def main(account_ids=None, provider=None):
     with catalog_runtime_session() as session:
         requested = targets(session)
         if account_ids:
             requested = [r for r in requested if r['account_id'] in account_ids]
-    provider = YouTubeClient(settings.youtube_api_key, interval=2)
+    provider = provider or YouTubeClient(settings.youtube_api_key, interval=2)
     updated = 0
     for offset in range(0, len(requested), 50):
         batch = requested[offset:offset+50]

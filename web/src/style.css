@@ -403,6 +403,15 @@ a:focus-visible {
   width: 100%;
   justify-self: stretch;
 }
+.explore-filters.song-explore-filters {
+  display: flex;
+  flex-wrap: wrap;
+}
+.song-explore-filters > [data-slot='select-trigger'] {
+  flex: 1 1 150px;
+  min-width: 0;
+  width: auto;
+}
 .explore-search {
   grid-area: search;
   width: 100%;

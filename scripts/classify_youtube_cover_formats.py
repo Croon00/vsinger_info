@@ -14,7 +14,7 @@ from app.integrations.youtube_video_format import robots, is_short
 from app.repositories.youtube_video_format import targets, persist
 
 
-async def main(account_ids=None):
+async def main(account_ids=None, max_checks=None):
     with catalog_runtime_session() as session:
         rows = targets(session)
         if account_ids:
@@ -29,7 +29,11 @@ async def main(account_ids=None):
     with catalog_runtime_session() as session:
         for account, values in marked.items():
             persist(session,account,values)
+    if max_checks is not None:
+        remaining=remaining[:max_checks]
     print(json.dumps(dict(marked_shorts=sum(len(v) for v in marked.values()),url_checks=len(remaining))),flush=True)
+    if not remaining:
+        return
     async with httpx.AsyncClient(timeout=20, follow_redirects=False) as client:
         policy = await robots(client)
         for start in range(0,len(remaining),20):

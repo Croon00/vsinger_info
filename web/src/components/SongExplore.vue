@@ -7,6 +7,7 @@ import type { ExploredSong, SongKind } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import { formatSubscribers } from '@/lib/subscribers'
 import { formatDate } from '@/lib/dates'
+import { displayName } from '@/lib/display-name'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -20,6 +21,7 @@ import {
 import { InputGroup, InputGroupInput, InputGroupAddon } from '@/components/ui/input-group'
 import ResourceState from '@/components/ResourceState.vue'
 import SongVideoDialog from '@/components/SongVideoDialog.vue'
+import BroadcastPeriodFilter from '@/components/BroadcastPeriodFilter.vue'
 const route = useRoute()
 const router = useRouter()
 const kind = computed<SongKind>(() =>
@@ -34,9 +36,59 @@ const order = computed(() =>
     : 'high',
 )
 const query = ref(String(route.query.song_q ?? ''))
-function update(key: string, value: string | number) {
-  router.replace({ query: { ...route.query, [key]: value } })
+const period = computed(() =>
+  kind.value === 'utawaku'
+    ? {}
+    : {
+        start: typeof route.query.song_start === 'string' ? route.query.song_start : undefined,
+        end: typeof route.query.song_end === 'string' ? route.query.song_end : undefined,
+      },
+)
+function applyPeriod(value: { start: string; end: string }) {
+  const next = { ...route.query }
+  if (value.start) next.song_start = value.start
+  else delete next.song_start
+  if (value.end) next.song_end = value.end
+  else delete next.song_end
+  router.replace({ query: next })
 }
+function update(key: string, value: string | number) {
+  const next = { ...route.query, [key]: value }
+  if (key === 'song_agency' || key === 'kind') delete next.song_artists
+  router.replace({ query: next })
+}
+const selectedArtists = computed(() => [
+  ...new Set(
+    (Array.isArray(route.query.song_artists)
+      ? route.query.song_artists
+      : [route.query.song_artists]
+    ).filter((id): id is string => typeof id === 'string' && /^[1-9]\d*$/.test(id)),
+  ),
+])
+function selectArtists(value: unknown) {
+  const ids = Array.isArray(value) ? value.map(String) : []
+  const next = { ...route.query }
+  if (!ids.length || ids.includes('all')) delete next.song_artists
+  else next.song_artists = ids
+  router.replace({ query: next })
+}
+const {
+  data: artistCatalog,
+  error: artistsError,
+  reload: reloadArtists,
+} = useResource((signal) => api.artists(signal))
+const artistOptions = computed(() =>
+  (artistCatalog.value ?? [])
+    .filter(
+      (a) =>
+        agency.value === 'all' ||
+        (agency.value === 'independent' ? !a.agency : a.agency === agency.value),
+    )
+    .slice()
+    .sort((a, b) =>
+      displayName(a.name, a.display_name).localeCompare(displayName(b.name, b.display_name), 'ko'),
+    ),
+)
 let timer: ReturnType<typeof setTimeout> | undefined
 watch(query, (value) => {
   clearTimeout(timer)
@@ -54,20 +106,19 @@ const moreError = ref('')
 let moreController: AbortController | undefined
 const { data, loading, error, reload } = useResource(
   async (signal) => {
-    const [artists, page] = await Promise.all([
-      api.artists(signal),
-      api.songPage(
-        kind.value,
-        agency.value,
-        String(route.query.song_q ?? ''),
-        order.value,
-        0,
-        signal,
-      ),
-    ])
-    return { artists, page }
+    const page = await api.songPage(
+      kind.value,
+      agency.value,
+      String(route.query.song_q ?? ''),
+      order.value,
+      0,
+      signal,
+      selectedArtists.value.map(Number),
+      period.value,
+    )
+    return { page }
   },
-  [kind, agency, order, () => route.query.song_q],
+  [kind, agency, order, () => route.query.song_q, selectedArtists, period],
 )
 watch(data, () => {
   moreController?.abort()
@@ -80,7 +131,7 @@ onScopeDispose(() => {
   moreController?.abort()
 })
 const agencies = computed(() =>
-  [...new Set((data.value?.artists ?? []).map((a) => a.agency).filter(Boolean))].sort(),
+  [...new Set((artistCatalog.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
 )
 const songs = computed(() => [...(data.value?.page.items ?? []), ...extra.value])
 const playingSong = shallowRef<ExploredSong | null>(null)
@@ -96,7 +147,7 @@ function closePlayer() {
     if (playerTrigger?.isConnected) playerTrigger.focus()
   })
 }
-watch([kind, agency, order, () => route.query.song_q], () => {
+watch([kind, agency, order, () => route.query.song_q, selectedArtists, period], () => {
   playingSong.value = null
 })
 async function loadMore() {
@@ -114,6 +165,8 @@ async function loadMore() {
       order.value,
       songs.value.length,
       controller.signal,
+      selectedArtists.value.map(Number),
+      period.value,
     )
     if (!controller.signal.aborted && data.value === current) extra.value.push(...page.items)
   } catch (e) {
@@ -139,7 +192,7 @@ function videoUrl(song: ExploredSong) {
       </TabsList>
     </Tabs>
     <div class="explore-toolbar">
-      <div class="explore-filters">
+      <div class="explore-filters song-explore-filters">
         <Select :model-value="agency" @update:model-value="(v) => update('song_agency', String(v))">
           <SelectTrigger class="explore-filter" aria-label="곡 소속사 필터">
             <SelectValue placeholder="소속사 전체" />
@@ -149,6 +202,29 @@ function videoUrl(song: ExploredSong) {
               <SelectItem value="all">소속사 전체</SelectItem>
               <SelectItem value="independent">개인세</SelectItem>
               <SelectItem v-for="name in agencies" :key="name" :value="name">{{ name }}</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+        <Select :model-value="selectedArtists" multiple @update:model-value="selectArtists">
+          <SelectTrigger class="explore-filter" aria-label="곡 아티스트 필터">
+            <SelectValue>
+              {{
+                selectedArtists.length
+                  ? `아티스트 ${selectedArtists.length}명 선택`
+                  : '아티스트 전체'
+              }}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="all">아티스트 전체</SelectItem>
+              <SelectItem
+                v-for="artist in artistOptions"
+                :key="artist.id"
+                :value="String(artist.id)"
+              >
+                {{ displayName(artist.name, artist.display_name) }}
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -175,6 +251,13 @@ function videoUrl(song: ExploredSong) {
             </SelectGroup>
           </SelectContent>
         </Select>
+        <BroadcastPeriodFilter
+          v-if="kind !== 'utawaku'"
+          title="영상 등록 기간"
+          :start="period.start"
+          :end="period.end"
+          @apply="applyPeriod"
+        />
       </div>
       <form
         class="explore-search"
@@ -197,6 +280,10 @@ function videoUrl(song: ExploredSong) {
         {{ kind === 'utawaku' ? '수집된 세트리스트 기준' : 'YouTube 조회수 · 미확인은 마지막' }}
       </p>
     </div>
+    <p v-if="artistsError" role="alert" class="mb-4 text-sm text-destructive">
+      아티스트 목록을 불러오지 못했어요.
+      <Button variant="ghost" size="sm" @click="reloadArtists">다시 시도</Button>
+    </p>
     <p v-if="kind === 'cover'" class="mb-5 text-xs text-muted-foreground">
       Shorts 제외 · 짧은 영상은 일반 영상으로 확인된 뒤 표시됩니다.
     </p>
@@ -267,7 +354,15 @@ function videoUrl(song: ExploredSong) {
           </div>
           <Button v-if="kind === 'utawaku'" as-child variant="outline" size="sm">
             <RouterLink
-              :to="{ path: '/search', query: { q: song.title, song_key: song.key, agency } }"
+              :to="{
+                path: '/search',
+                query: {
+                  q: song.title,
+                  song_key: song.key,
+                  agency,
+                  artist_ids: selectedArtists.length ? selectedArtists : undefined,
+                },
+              }"
             >
               리스트 열기
             </RouterLink>

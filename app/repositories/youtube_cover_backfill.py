@@ -9,16 +9,16 @@ from app.integrations.youtube_catalog import purpose
 from app.repositories.shared_youtube import SHARED_MEMBERS_CTE, SHARED_PARAMS
 
 
-def save_page(session, account, videos):
+def save_page(session, account, videos, *, include_disabled=False):
     videos = [video for video in videos if video.channel_id == account['platform_id']
               and is_cover_title(video.title) and purpose(video)=='cover']
     active = session.execute(text(f"""WITH {SHARED_MEMBERS_CTE} SELECT e.id FROM external_accounts e
       WHERE e.id=:id AND e.platform='youtube' AND e.platform_id=:platform_id
-        AND e.collection_enabled AND e.archived_at IS NULL
+        AND (e.collection_enabled OR :include_disabled) AND e.archived_at IS NULL
         AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
           WHERE ae.account_id=e.id AND ae.relationship='owner' AND a.archived_at IS NULL
             AND (a.show_in_catalog OR EXISTS(SELECT 1 FROM shared_members sm WHERE sm.group_id=a.id AND sm.account_id=e.id)))
-      FOR SHARE OF e"""), {**account, **SHARED_PARAMS}).scalar_one_or_none()
+      FOR SHARE OF e"""), {**account, **SHARED_PARAMS,'include_disabled':include_disabled}).scalar_one_or_none()
     if active is None:
         raise ValueError('Account disabled or ownership changed during import')
     if not videos:
@@ -39,10 +39,14 @@ def save_page(session, account, videos):
       ON CONFLICT (platform,platform_video_id) DO NOTHING"""), params)
     # Fill only absent provenance after the caller verifies the video's exact
     # channel ID. Never replace a previously assigned source or archive record.
-    session.execute(text("""UPDATE videos v SET source_account_id=:account
-      FROM jsonb_to_recordset(CAST(:rows AS jsonb)) x(external text)
+    session.execute(text("""UPDATE videos v SET source_account_id=COALESCE(v.source_account_id,:account),
+        published_at=COALESCE(v.published_at,x.published),duration_seconds=COALESCE(v.duration_seconds,x.duration),
+        updated_at=clock_timestamp(),version=v.version+1
+      FROM jsonb_to_recordset(CAST(:rows AS jsonb)) x(external text,published timestamptz,duration integer)
       WHERE v.platform='youtube' AND v.platform_video_id=x.external
-        AND v.source_account_id IS NULL AND v.archived_at IS NULL"""), params)
+        AND (v.source_account_id IS NULL OR v.source_account_id=:account) AND v.archived_at IS NULL
+        AND (v.source_account_id IS NULL OR (v.published_at IS NULL AND x.published IS NOT NULL)
+          OR (v.duration_seconds IS NULL AND x.duration IS NOT NULL))"""), params)
     added = session.execute(text("""INSERT INTO covers(video_id)
       SELECT v.id FROM videos v JOIN jsonb_to_recordset(CAST(:rows AS jsonb)) x(external text,completed_music_premiere boolean)
         ON v.platform_video_id=x.external

@@ -30,9 +30,14 @@ for rule in RULES:
     rule['any_member_pattern'] = '|'.join(r['title_pattern'] for r in RULES if r['group_slug']==rule['group_slug'])
     rule['all_named_pattern'] = '|'.join(r['title_pattern'] for r in RULES)
 
-# Exact source IDs verified in the primary channel's uploads playlist and
-# videos.list. Subscriber statistics continue to use the primary channel only.
+# Exact source IDs reviewed against the primary uploads playlist and videos.list.
+# CONA/Nono are alternate publishers of the same solo artist; only RULES above
+# assign group-member credits. Existing primary statistics priorities are kept.
 COVER_SOURCE_CHANNELS = {
+    'cona': ['UCbJYvStAmq5Jm3nSDNSLT4A','UCk-fI6YLoGLpl1u8MBhWXXQ'],
+    'nonono-nono': ['UCqe0-vqZwAvZUb22wCMu1fA','UCsGWiDe1iLkhvbBGurUP2tg'],
+    'rim': ['UCfBkUgaJ6eqYA9_TX2cmq9A','UCHQUt5__hWQDuuadRdDqV1g'],
+    'azki': ['UC0TXe_LYZ4scaW2XMyi5_kw','UC5g0kkbZtBX6_rwRcDSqZBQ'],
     'kmnz': ['UCwuS0uY-Z2Gr_5OV2oFybFA', 'UC3cuxhq3Cv-9h5wNXvWHspg',
              'UCqSPZz3gDBxJP-xaME8w-yA', 'UCnwnKd78qy2Txjs1WlfwkxA',
              'UCsT7GTwoXE0tatNnDhcE58Q', 'UCRMpIxnySp7Fy5SbZ8dBv2w'],

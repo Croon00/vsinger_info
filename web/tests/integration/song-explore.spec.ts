@@ -156,24 +156,74 @@ test('song list reuses home search rows and selects singers beyond the first pag
     .poll(() => searchRequests.at(-1)?.searchParams.getAll('artist_ids'))
     .toEqual(['3', '1'])
   await expect(page.locator('.performance-result')).toHaveCount(2)
-  await page.getByLabel('방송 시작일', { exact: true }).fill('2026-10-01')
-  await page.getByLabel('방송 종료일', { exact: true }).fill('2026-11-01')
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' })
+  await page.getByRole('button', { name: '방송 기간 선택', exact: true }).click()
+  await page.getByLabel('기간 연도', { exact: true }).selectOption('2026')
+  await page.getByLabel('기간 월', { exact: true }).selectOption('10')
+  const requestsBeforeDates = searchRequests.length
+  await page.locator('[data-slot="range-calendar-trigger"][data-value="2026-10-01"]').click()
+  await expect(page.getByRole('button', { name: '적용', exact: true })).toBeDisabled()
+  await page.getByLabel('기간 월', { exact: true }).selectOption('11')
+  await page.locator('[data-slot="range-calendar-trigger"][data-value="2026-11-01"]').click()
+  await expect
+    .poll(() =>
+      page.locator('[data-slot="range-calendar-trigger"][data-selection-end]').evaluate((el) => {
+        const probe = document.createElement('span')
+        probe.style.backgroundColor = 'var(--primary)'
+        document.body.appendChild(probe)
+        const expected = getComputedStyle(probe).backgroundColor
+        probe.remove()
+        return getComputedStyle(el).backgroundColor === expected
+      }),
+    )
+    .toBe(true)
+  expect(searchRequests.length).toBe(requestsBeforeDates)
+  const calendarBounds = await page.locator('[data-slot="popover-content"]').boundingBox()
+  expect(calendarBounds!.x).toBeGreaterThanOrEqual(0)
+  expect(calendarBounds!.x + calendarBounds!.width).toBeLessThanOrEqual(page.viewportSize()!.width)
+  await page.screenshot({
+    path: `../outputs/broadcast-period-2026-11-01/${info.project.name}.png`,
+    fullPage: true,
+  })
+  await page.getByRole('button', { name: '적용', exact: true }).click()
   await expect.poll(() => searchRequests.at(-1)?.searchParams.get('start')).toBe('2026-10-01')
   await expect.poll(() => searchRequests.at(-1)?.searchParams.get('end')).toBe('2026-11-01')
   await page.reload()
   await expect(page.getByRole('combobox', { name: '부른 아티스트', exact: true })).toContainText(
     '2명',
   )
-  await expect(page.getByLabel('방송 시작일', { exact: true })).toHaveValue('2026-10-01')
-  await expect(page.getByLabel('방송 종료일', { exact: true })).toHaveValue('2026-11-01')
+  await expect(page.getByRole('button', { name: '방송 기간 선택', exact: true })).toContainText(
+    '2026.10.01 ~ 2026.11.01',
+  )
   await expect(page.locator('.performance-result')).toHaveCount(2)
-  await page.getByLabel('방송 시작일', { exact: true }).fill('')
-  await page.getByLabel('방송 종료일', { exact: true }).fill('2020-01-01')
+  await page.getByRole('button', { name: '방송 기간 선택', exact: true }).click()
+  await page.getByRole('button', { name: '최근 30일', exact: true }).click()
+  await page.getByRole('button', { name: '취소', exact: true }).click()
+  expect(searchRequests.at(-1)?.searchParams.get('start')).toBe('2026-10-01')
+  await page.getByRole('button', { name: '방송 기간 선택', exact: true }).click()
+  await page.getByLabel('기간 연도', { exact: true }).selectOption('2020')
+  await page.getByLabel('기간 월', { exact: true }).selectOption('1')
+  await page.locator('[data-slot="range-calendar-trigger"][data-value="2020-01-01"]').click()
+  await page.locator('[data-slot="range-calendar-trigger"][data-value="2020-01-01"]').click()
+  await page.getByRole('button', { name: '적용', exact: true }).click()
   await expect(page.locator('.performance-result')).toHaveCount(0)
   await expect(page.getByRole('combobox', { name: '부른 아티스트', exact: true })).toBeVisible()
   await page.getByRole('button', { name: '필터 초기화', exact: true }).click()
-  await expect(page.getByLabel('방송 종료일', { exact: true })).toHaveValue('')
+  await expect(page.getByRole('button', { name: '방송 기간 선택', exact: true })).toContainText(
+    '방송 기간 전체',
+  )
   await expect(page.locator('.performance-result')).toHaveCount(1)
+  await page.getByRole('button', { name: '방송 기간 선택', exact: true }).click()
+  await page.getByRole('button', { name: '최근 90일', exact: true }).click()
+  await page.getByRole('button', { name: '적용', exact: true }).click()
+  await expect.poll(() => searchRequests.at(-1)?.searchParams.get('start')).toBeTruthy()
+  const recent = searchRequests.at(-1)!.searchParams
+  expect((Date.parse(recent.get('end')!) - Date.parse(recent.get('start')!)) / 86400000).toBe(89)
+  await page.getByRole('button', { name: '방송 기간 선택', exact: true }).click()
+  await page.getByRole('button', { name: '전체 기간', exact: true }).click()
+  await expect(page.getByRole('button', { name: '방송 기간 선택', exact: true })).toContainText(
+    '방송 기간 전체',
+  )
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.screenshot({
     path: `../outputs/song-list-2026-11-01/${info.project.name}.png`,

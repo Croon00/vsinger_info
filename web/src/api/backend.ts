@@ -233,6 +233,8 @@ export const backendApi = {
     order: string,
     offset = 0,
     signal?: AbortSignal,
+    artistIds: number[] = [],
+    period: { start?: string; end?: string } = {},
   ): Promise<Page<ExploredSong>> {
     const params = new URLSearchParams({
       kind,
@@ -242,6 +244,9 @@ export const backendApi = {
       offset: String(offset),
       limit: '24',
     })
+    for (const id of artistIds) params.append('artist_ids', String(id))
+    if (period.start) params.set('start', period.start)
+    if (period.end) params.set('end', period.end)
     return cachedRead<Page<ExploredSong>>(`/api/explore/songs?${params}`, signal)
   },
   artists,

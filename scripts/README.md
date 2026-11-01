@@ -8,6 +8,7 @@
 
 | 도구 | 역할·실행 영향 |
 | --- | --- |
+| `audit_youtube_covers.py` | 전체 커버 순환 재검사. 기본 dry-run, `--apply`는 기존 체크포인트·호출 예산을 유지하며 채널별 1페이지씩 저장하고 조회수·Shorts 후속 처리. 명시적 `--include-disabled`도 정기 활성 설정은 변경하지 않음. [전체 재검사](../docs/youtube-cover-audit-2026-11-01.md) |
 | `discover_spotify_accounts.py` | 미연결 아티스트의 저장된 이름으로 Spotify 후보 조사. 기본 읽기 전용 보고서, `--apply`는 단일 정확 이름 후보만 계정·owner 연결·기존 수집 작업 등록. [이름 일치 연결](../docs/spotify-exact-name-discovery.md) |
 | `link_discography_youtube.py` | 공식 owner 채널 업로드 API와 곡명·버전·길이로 녹음별 영상 조사. 기본 보고서/미연결 URL 목록, `--apply`는 검증된 링크를 감사 이력과 함께 저장. [YouTube 연결 기준](../docs/discography-youtube-links.md) |
 | `music_jobs.py` | 신규 DB 음악 작업 요청 검증·등록·상태·취소·단일 실행·readiness. [2단계 계약](../docs/backend-service-step-2-jobs.md), [YouTube URL/범위 지정 수집](../docs/backend-service-step-3-youtube.md), [Spotify 계정 명시 수집](../docs/backend-service-step-4-spotify.md). 관리자 앱 없이 실행 |

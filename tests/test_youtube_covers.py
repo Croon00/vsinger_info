@@ -98,7 +98,7 @@ def test_save_page_preserves_raw_source_deduplicates_and_excludes_live(store, mo
     # Earlier imports may have recorded a premiere as a live without provenance.
     # Add the cover while preserving the live and its performances.
     legacy=row(db,'videos',platform='youtube',platform_video_id='abcdefghij4',
-               title='Song cover',availability='public',duration_seconds=240)
+               title='Song cover',availability='public')
     row(db,'live_archives',video_id=legacy,primary_artist_id=artist)
     db.commit()
     premiere=video.model_copy(update=dict(id='abcdefghij4',duration_seconds=240,
@@ -106,7 +106,13 @@ def test_save_page_preserves_raw_source_deduplicates_and_excludes_live(store, mo
     assert importer.save_page(target,[premiere])==1
     assert importer.save_page(target,[premiere])==0
     assert db.execute('SELECT source_account_id FROM videos WHERE id=%s',(legacy,)).fetchone()[0]==account
+    assert db.execute('SELECT duration_seconds FROM videos WHERE id=%s',(legacy,)).fetchone()[0]==240
     assert db.execute('SELECT count(*) FROM live_archives WHERE video_id=%s',(legacy,)).fetchone()[0]==1
+    db.execute('UPDATE external_accounts SET collection_enabled=false WHERE id=%s',(account,));db.commit()
+    disabled_video=video.model_copy(update={'id':'abcdefghij5'})
+    assert importer.save_page(target,[disabled_video])==0
+    assert importer.save_page(target,[disabled_video],include_disabled=True)==1
+    assert db.execute('SELECT collection_enabled FROM external_accounts WHERE id=%s',(account,)).fetchone()[0] is False
 
 
 def test_budget_counts_failed_requests_and_stops_before_network():
@@ -149,3 +155,65 @@ def test_backfill_resumes_page_and_skips_completed_channel(tmp_path, monkeypatch
     assert asyncio.run(importer.backfill('fake', path))['completed'] == 1
     assert len(seen) == count
     assert json.loads(path.read_text())['channels'][CHANNEL]['done']
+
+
+def test_full_audit_round_robin_and_stable_label_preserve_budget(tmp_path,monkeypatch):
+    class Result:
+        def scalar_one(self):return True
+    class Guard:
+        def execute(self,*args,**kwargs):return Result()
+    @contextmanager
+    def session():yield Guard()
+    channels=[CHANNEL,'UC'+'b'*22]
+    selected=[]
+    monkeypatch.setattr(importer,'catalog_runtime_session',session)
+    monkeypatch.setattr(importer,'verify_catalog_identity',lambda _:'fixture')
+    monkeypatch.setattr(importer,'targets',lambda _,**kwargs:[dict(id=i,platform_id=c) for i,c in enumerate(channels,1)])
+    monkeypatch.setattr(importer,'save_page',lambda account,videos,**kwargs:selected.append(account['id']) or 0)
+    async def get(self,resource,**params):
+        if resource=='channels':
+            return {'items':[{'id':params['id'],'contentDetails':{'relatedPlaylists':{'uploads':params['id']}}}]}
+        return {'items':[],**({'nextPageToken':'next'} if 'pageToken' not in params else {})}
+    monkeypatch.setattr(importer.BudgetClient,'get',get)
+    path=tmp_path/'audit.json'
+    path.write_text(json.dumps({'catalog_id':'fixture','requests':[123],
+        'channels':{c:{'done':True,'pages':9,'covers_saved':4} for c in channels}}))
+    args=dict(max_pages=1,rescan_run='stable',rescan_all=True,include_disabled=True)
+    first=asyncio.run(importer.backfill('fake',path,**args))
+    assert first['paused'] and selected==[1,2]
+    second=asyncio.run(importer.backfill('fake',path,**args))
+    assert second['completed']==2 and selected==[1,2,1,2]
+    asyncio.run(importer.backfill('fake',path,**args))
+    assert selected==[1,2,1,2]
+    state=json.loads(path.read_text())
+    assert state['requests']==[123]
+    assert all(len(p['rescan_history'])==1 for p in state['channels'].values())
+
+
+def test_audit_records_unregistered_publisher_instead_of_silently_dropping():
+    video=Video(id='abcdefghijk',channel_id='UC'+'b'*22,title='Song (Cover)')
+    audit=importer.page_audit({'platform_id':CHANNEL},[video])
+    assert audit['candidates']==1
+    assert audit['foreign']==[dict(id=video.id,channel_id=video.channel_id,title=video.title,duration_seconds=None)]
+
+
+def test_checkpoint_retries_temporary_file_lock_and_keeps_previous_on_failure(tmp_path,monkeypatch):
+    from pathlib import Path
+    path=tmp_path/'checkpoint.json'
+    path.write_text('{"previous":true}')
+    replace=Path.replace
+    calls=[]
+    def transient(source,target):
+        calls.append(source)
+        if len(calls)<3:raise PermissionError('fixture file lock')
+        return replace(source,target)
+    monkeypatch.setattr(Path,'replace',transient)
+    monkeypatch.setattr(importer.time,'sleep',lambda _:None)
+    importer.save_checkpoint(path,{'requests':[1,2],'done':True})
+    assert json.loads(path.read_text())=={'requests':[1,2],'done':True}
+    assert len(calls)==3
+    def locked(*args):raise PermissionError('fixture file lock')
+    monkeypatch.setattr(Path,'replace',locked)
+    with pytest.raises(PermissionError):importer.save_checkpoint(path,{'lost':True})
+    assert json.loads(path.read_text())=={'requests':[1,2],'done':True}
+    assert list(tmp_path.glob('*.tmp'))==[]

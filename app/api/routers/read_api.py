@@ -27,8 +27,14 @@ def explore_songs(service:Catalog,response:Response,
                   kind:Literal['utawaku','cover','original']='utawaku',
                   agency:Annotated[str,Query(min_length=1,max_length=200)]='all',
                   q:Annotated[str,Query(max_length=200)]='',
-                  order:Literal['high','low','name','latest']='high',offset:Offset=0,limit:Limit=24):
-    return finish(response,service,service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit))
+                  order:Literal['high','low','name','latest']='high',offset:Offset=0,limit:Limit=24,
+                  artist_ids:Annotated[list[Annotated[int,Field(ge=1)]]|None,Query(max_length=100)]=None,
+                  start:date|None=None,end:date|None=None):
+    if start and end and start>end:
+        raise HTTPException(422,'시작일은 종료일보다 늦을 수 없습니다.')
+    if kind=='utawaku' and (start or end):
+        raise HTTPException(422,'영상 등록일 범위는 커버·오리지널 탐색에서 사용합니다.')
+    return finish(response,service,service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit,artist_ids=sorted(set(artist_ids or [])),start=start,end=end))
 
 @router.get('/explore/song-performers',response_model=list[SongPerformerRead])
 def song_performers(service:Catalog,response:Response,

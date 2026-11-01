@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 import time
+import re
 from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -22,15 +23,21 @@ def main():
     parser.add_argument('--until-complete', action='store_true', help='Wait for the import budget to renew and resume automatically')
     parser.add_argument('--account-id', type=int, action='append', help='Backfill only these registered account IDs')
     parser.add_argument('--rescan-completed',action='store_true',help='Rescan explicit accounts while preserving request budget and previous counters')
+    parser.add_argument('--rescan-all',action='store_true',help='Explicitly recheck all eligible catalog channels')
+    parser.add_argument('--rescan-run',help='Stable audit label; reuse it to resume without restarting completed pages')
+    parser.add_argument('--include-disabled',action='store_true',help='Explicit cover-only scan of disabled accounts; does not enable routine collection')
     args = parser.parse_args()
-    if args.rescan_completed and not args.account_id:
+    if args.rescan_completed and not (args.account_id or args.rescan_all):
         parser.error('--rescan-completed requires --account-id')
-    rescan_run=uuid4().hex if args.rescan_completed else None
+    if args.rescan_run and (not re.fullmatch(r'[A-Za-z0-9._-]{1,80}',args.rescan_run) or not (args.rescan_completed or args.rescan_all)):
+        parser.error('--rescan-run requires an explicit rescan and a safe label')
+    rescan_run=(args.rescan_run or uuid4().hex) if args.rescan_completed or args.rescan_all else None
     failures = 0
     while True:
         try:
             result = asyncio.run(backfill(settings.youtube_api_key, args.checkpoint,
-                budget=args.budget, interval=args.interval, max_pages=args.max_pages,account_ids=args.account_id,rescan_run=rescan_run))
+                budget=args.budget, interval=args.interval, max_pages=args.max_pages,account_ids=args.account_id,rescan_run=rescan_run,
+                rescan_all=args.rescan_all,include_disabled=args.include_disabled))
         except YouTubeFailure as exc:
             print(json.dumps(dict(stopped=exc.reason, retry_after=exc.retry_after)), flush=True)
             failures += 1
