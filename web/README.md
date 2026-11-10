@@ -46,7 +46,17 @@ npm run dev:mock
 
 프로필·라이브·앨범·공연은 오류와 로딩을 분리했습니다. 새 DB에 저장된 한국어 이름과 생일을 표시합니다. 미등록 값을 임의 생성하지 않으며 앨범·가사도 외부 API 대신 새 DB에서 읽습니다. 상세 제한과 미구현 작업은 [백엔드 연결 TO-DO](../docs/backend-roadmap.md)에 정리했습니다.
 
-## 검증
+## 모바일 앱 설치 (PWA)
+
+실제 모드의 운영 빌드는 manifest와 앱 아이콘을 제공하고 Service Worker를 등록합니다. HTTPS 배포가 필요하며 로컬 검증에는 localhost를 사용할 수 있습니다. Android Chrome에서는 브라우저 메뉴의 앱 설치/홈 화면 추가, iPhone Safari에서는 공유 → 홈 화면에 추가로 설치합니다. 설치 후 독립 창으로 실행됩니다. 브라우저별 설치 메뉴와 노출 조건은 다릅니다.
+
+곡·영상 조회는 인터넷 연결이 필요합니다. Service Worker는 오프라인 안내 페이지만 저장하며 API 응답·영상·앱 번들은 캐시하지 않습니다. 연결이 끊긴 상태에서 앱을 열거나 페이지를 새로고침하면 안내가 표시됩니다. 연결한 뒤 다시 시도하면 같은 주소로 복귀합니다. 기존에 열린 화면의 API 오류는 기존 오류 UI가 처리합니다. 개발 서버·mock 모드에서는 PWA worker를 등록하지 않습니다. PWA 검증은 mock과 다른 출처에서 수행합니다.
+
+`server.mjs`는 해시가 붙은 `assets/`만 장기 캐시하고 manifest·Service Worker·HTML·아이콘은 재검증합니다. 별도 CDN/정적 서버도 이 정책과 MIME(`application/manifest+json`, JavaScript, PNG)을 유지해야 합니다. 업데이트는 열려 있는 기존 앱 창을 닫고 다시 열 때 적용됩니다. 강제 새로고침·푸시 알림·백그라운드 수집은 추가하지 않습니다.
+
+`npm run build` 후 `node scripts/check-pwa.mjs`로 운영 빌드의 모바일 Chrome fixture 검증을 실행합니다. 운영 서버나 실제 DB를 호출하지 않습니다.
+
+## 검증 명령
 
 ```powershell
 npm test                  # API 변환 및 검색/날짜/통계 단위 테스트
