@@ -1,6 +1,7 @@
 export interface YouTubePlayer {
   playVideo(): void
   mute(): void
+  unMute(): void
   seekTo(seconds: number, allowSeekAhead: boolean): void
   getCurrentTime(): number
   getDuration(): number

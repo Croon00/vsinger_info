@@ -6,6 +6,8 @@
 
 ## 구성과 데이터 경로
 
+생방송 멀티뷰(2026-11-14)는 `youtube_live_monitor`의 독립 loop에서 10분마다 최근 방송 후보를 찾고 예정·진행 후보를 1분마다 묶음 확인해 `collection_states.provider_state.youtube_live_snapshot`에 기록한다. 일일 아카이브 수집과 생방송 확인의 DB lease·기한을 분리하며, `music_worker_loop` 또는 전용 모듈로 실행한다. `GET /api/streams`는 15분 내 관측을 읽기만 하고 `/api/stream-groups`는 등록 소속사·그룹별 채널 묶음을 조회한다. 상세 설정과 제한은 [멀티뷰 계약](read-api-v2.md#생방송-멀티뷰)을 따른다.
+
 ```text
 새 프론트 → /api → CatalogRead → CatalogReadRepository → 신규 통합 DB (읽기 전용)
 기존 API router → 정상 app에서 미마운트, legacy 코드로 보존

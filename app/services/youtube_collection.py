@@ -142,5 +142,6 @@ def url_request(*, account_id: int, channel_id: str, url: str, purpose: str = 'a
 
 def handlers():
     from app.services.music_jobs import Handler
-    return {'youtube_poll': Handler(collect_poll, repository.persist_poll, timeout_seconds=600),
+    return {'youtube_poll': Handler(collect_poll, repository.persist_poll, timeout_seconds=600,
+                                   poll_interval_seconds=settings.youtube_poll_interval_seconds),
             'youtube_collect': Handler(collect_video, repository.persist_collect, timeout_seconds=180)}

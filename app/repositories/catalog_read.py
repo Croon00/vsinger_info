@@ -101,6 +101,56 @@ class CatalogReadRepository:
             row.pop("_total", None)
         return {"items": rows, "total": total, "offset": offset, "limit": limit}
 
+    def stream_groups(self):
+        return self.rows('''WITH channels AS (
+            SELECT e.id account_id,a.id artist_id,a.agency_id,a.entity_kind
+            FROM external_accounts e JOIN artist_external_accounts ae ON ae.account_id=e.id
+            JOIN artists a ON a.id=ae.artist_id
+            WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
+              AND a.archived_at IS NULL AND a.show_in_catalog
+        ), grouped AS (
+            SELECT 'agency:'||g.id::text key,g.name_native name,'agency' kind,c.account_id
+            FROM channels c JOIN agencies g ON g.id=c.agency_id AND g.archived_at IS NULL
+            UNION
+            SELECT 'group:'||g.id::text,COALESCE(g.name_ko,g.name_native),'group',c.account_id
+            FROM channels c JOIN artists g ON g.entity_kind='group' AND g.archived_at IS NULL AND g.show_in_catalog
+              AND (g.id=c.artist_id OR EXISTS (SELECT 1 FROM artist_group_members m
+                   WHERE m.group_id=g.id AND m.member_id=c.artist_id AND m.left_on IS NULL))
+        ) SELECT key,name,kind,array_agg(DISTINCT account_id ORDER BY account_id) account_ids
+          FROM grouped GROUP BY key,name,kind ORDER BY kind,lower(name),key''')
+
+    def live_streams(self, offset, limit, include_upcoming=False):
+        # A worker-owned snapshot; GET never contacts YouTube or starts a job.
+        # Expired observations must not appear as currently live.
+        return self.page('''SELECT e.id account_id,e.platform_id channel_id,
+            a.id artist_id,COALESCE(a.name_ko,a.name_native) artist_name,COALESCE(a.avatar_url,'') avatar_url,
+            s.video_id,s.title,s.started_at,s.scheduled_at,s.status,
+            (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz checked_at
+            FROM external_accounts e JOIN collection_states cs ON cs.external_account_id=e.id
+            JOIN LATERAL (
+                SELECT ar.id,ar.name_native,ar.name_ko,ar.avatar_url FROM artist_external_accounts ae
+                JOIN artists ar ON ar.id=ae.artist_id
+                WHERE ae.account_id=e.id AND ar.archived_at IS NULL AND ar.show_in_catalog
+                ORDER BY (ae.relationship='owner') DESC,ae.is_primary DESC,ae.position,ar.id LIMIT 1
+            ) a ON true
+            CROSS JOIN LATERAL (
+              SELECT x.*,'live' status FROM jsonb_to_recordset(
+                COALESCE(cs.provider_state->'youtube_live_snapshot'->'streams','[]'::jsonb)
+              ) AS x(video_id text,title text,started_at timestamptz,scheduled_at timestamptz)
+              UNION ALL
+              SELECT x.*,'upcoming' status FROM jsonb_to_recordset(
+                COALESCE(cs.provider_state->'youtube_live_snapshot'->'upcoming','[]'::jsonb)
+              ) AS x(video_id text,title text,started_at timestamptz,scheduled_at timestamptz)
+              WHERE :include_upcoming
+            ) s
+            WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
+              AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
+              AND s.video_id ~ '^[A-Za-z0-9_-]{11}$'
+              AND (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz
+                    BETWEEN clock_timestamp()-interval '15 minutes' AND clock_timestamp()
+            ''', {'include_upcoming': include_upcoming}, offset, limit,
+            "CASE WHEN q.status='live' THEN 0 ELSE 1 END,q.started_at DESC NULLS LAST,q.scheduled_at ASC NULLS LAST,q.account_id,q.video_id")
+
     def artists(self, artist_id=None):
         return self.rows(f"""WITH {SHARED_MEMBERS_CTE}, {ORIGINAL_GROUPS_CTE} SELECT a.id,a.name_native name,a.name_ko display_name,a.name_latin,
         g.name_native agency,a.bio profile_intro,a.avatar_url spotify_image_url,a.theme_color,a.debut_date,

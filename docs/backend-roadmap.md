@@ -1,5 +1,10 @@
 # 백엔드 후속 작업
 
+## 생방송 멀티뷰 운영 연결 (2026-11-14)
+
+- `/multiview`, `/api/streams`, `/api/stream-groups`와 생방송 전용 monitor를 구현했다. 사용자 지정으로 새 방송 검색은 10분, 후보 상태 확인은 1분이며 일일 아카이브 poll은 유지한다. DB lease와 후보 ID를 저장하므로 독립 실행 인스턴스도 동일 채널을 중복 claim하지 않는다.
+- 로컬 조회 API와 전용 monitor 실행을 운영 배포와 구분한다. 운영 worker/API/프론트 배포, 채널 수에 따른 YouTube quota 점검, 실제 브라우저에서 생방송·채팅·자동재생 검증은 남아 있다. 최근 10개 업로드 밖의 미발견 예약 방송을 보완하는 별도 discovery는 후속 작업이다.
+
 갱신: 2026-10-04. 현재 계약은 [통합 조회 API](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 웹 검증은 [QA](../web/docs/qa.md)에 있다. 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이다. **운영 DB 선택 이전은 완료했으나 전체 서비스 활성화·검증은 미완료**이며 [운영 DB 이전 기록](backend-cutover-2026-09-23.md)에 현재 상태를 적었다. 최신 결함·누락 기능·개발 순서는 [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 모은다.
 
 통합 `/api`는 새 Neon의 아티스트·라이브·검색·통계·공연·앨범·가사를 조회한다. X poller와 최소 Discord sender의 신규 DB 코드는 구현됐고 선택 상태 이전도 수행했다. Discord 활성화와 실제 전송 검증은 남아 있다. 미지원 데이터는 실제 화면에서 목업으로 보충하지 않는다.

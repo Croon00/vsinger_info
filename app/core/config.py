@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     webshare_proxy_locations: str | None = None
     ytdlp_proxy_url: str | None = None
     youtube_api_key: str | None = None
+    youtube_poll_interval_seconds: int = Field(default=86400, ge=60)
+    youtube_live_discovery_seconds: int = Field(default=600, ge=60)
+    youtube_live_check_seconds: int = Field(default=60, ge=30)
     youtube_auto_link_max_tracks: int = 50
     youtube_auto_link_concurrency: int = 4
     lyrics_context_extract_max_chars: int = 15000

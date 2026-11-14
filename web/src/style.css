@@ -2303,3 +2303,38 @@ a:focus-visible {
     height: max(calc(348px / var(--calendar-week-count, 6)), var(--calendar-row-height, 58px));
   }
 }
+
+/* Multiview keeps players mounted while channel/chat controls change. */
+#main-content:has(.multiview-page) { padding-bottom: 0; }
+.multiview-page { min-height: 100dvh; display: flex; flex-direction: column; background: var(--background); color: var(--foreground); }
+.multiview-page:fullscreen { overflow: auto; }
+.multiview-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.multiview-filters { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 16px; padding: 10px 16px; }
+.multiview-filters > [data-slot="field"] { width: auto; }
+.multiview-channels { display: flex; gap: 6px; align-items: center; overflow-x: auto; padding: 6px 16px 10px; }
+.multiview-channels .stream-channel { position: relative; width: 48px; height: 54px; padding: 0; flex-shrink: 0; overflow: visible; }
+.stream-channel[aria-pressed="true"] [data-slot="avatar"] { outline: 2px solid var(--primary); outline-offset: 2px; }
+.stream-channel-time { position: absolute; right: -2px; bottom: 0; pointer-events: none; }
+.multiview-channels [data-slot="empty"] { padding: 16px; }
+.multiview-workspace { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-height: 65dvh; }
+.multiview-workspace.has-chat { grid-template-columns: minmax(0, 1fr) 360px; }
+.multiview-videos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 8px; min-width: 0; padding: 8px; }
+.multiview-videos[data-count="0"], .multiview-videos[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+.multiview-videos.focus-first .multiview-tile:first-of-type { grid-column: 1 / -1; }
+.multiview-tile { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); }
+.multiview-tile-heading { display: flex; align-items: center; gap: 4px; min-width: 0; padding: 4px 8px; font-size: 13px; }
+.stream-player { position: relative; aspect-ratio: 16 / 9; min-height: 200px; background: var(--youtube-background); }
+.stream-player-host, .stream-player-host > iframe { width: 100%; height: 100%; }
+.stream-player-host { position: absolute; inset: 0; }
+.stream-player-error { position: absolute; inset: 8px; width: auto; overflow: auto; }
+.multiview-chat { display: flex; flex-direction: column; min-width: 0; border-left: 1px solid var(--border); }
+.multiview-chat > iframe { width: 100%; min-height: 480px; flex: 1; border: 0; }
+@media (max-width: 1100px) {
+  .multiview-workspace.has-chat { grid-template-columns: minmax(0, 1fr) 320px; }
+  .multiview-videos { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 768px) {
+  .multiview-workspace.has-chat { grid-template-columns: minmax(0, 1fr); }
+  .multiview-toolbar { padding-inline: 8px; }
+  .multiview-chat { border-left: 0; border-top: 1px solid var(--border); }
+}

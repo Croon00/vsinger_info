@@ -217,6 +217,8 @@ async def music_worker_loop():
     if not (settings.runtime_cutover_enabled and settings.agent_enabled):
         return
     async with asyncio.TaskGroup() as group:
+        from app.services.youtube_live_monitor import monitor_loop
+        group.create_task(monitor_loop())
         group.create_task(_provider_loop('youtube'))
         group.create_task(_provider_loop('spotify'))
 

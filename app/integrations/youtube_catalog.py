@@ -25,6 +25,7 @@ class Video(BaseModel):
     description: str = ''
     published_at: datetime | None = None
     started_at: datetime | None = None
+    scheduled_at: datetime | None = None
     ended_at: datetime | None = None
     scheduled: bool = False
     duration_seconds: int | None = Field(default=None, ge=0)
@@ -119,6 +120,7 @@ def _video(item) -> Video:
     return Video(id=item['id'], channel_id=snippet['channelId'], title=snippet['title'],
                  description=snippet.get('description', ''), published_at=_date(snippet.get('publishedAt')),
                  started_at=_date(live.get('actualStartTime')), ended_at=_date(live.get('actualEndTime')),
+                 scheduled_at=_date(live.get('scheduledStartTime')),
                  scheduled=not bool(live.get('actualEndTime')) and (bool(live.get('scheduledStartTime')) or snippet.get('liveBroadcastContent') in ('live', 'upcoming')),
                  duration_seconds=seconds, availability=item.get('status', {}).get('privacyStatus', 'unknown'))
 
@@ -206,6 +208,26 @@ class YouTubeClient:
             if not token:
                 break
         return playlist, await self.videos(list(dict.fromkeys(ids))), bool(token)
+
+    async def discover_live_ids(self, channel: str, playlist: str | None = None) -> tuple[str, list[str]]:
+        """One uploads page only; video status is fetched separately in batches."""
+        if not playlist:
+            data = await self.get('channels', part='contentDetails', id=channel)
+            try:
+                item = data['items'][0]
+                if item['id'] != channel:
+                    raise ValueError()
+                playlist = item['contentDetails']['relatedPlaylists']['uploads']
+            except (IndexError, KeyError, TypeError, ValueError):
+                raise YouTubeFailure('channel_unavailable') from None
+        data = await self.get('playlistItems', part='contentDetails', playlistId=playlist, maxResults=10)
+        try:
+            ids = list(dict.fromkeys(item['contentDetails']['videoId'] for item in data['items']))
+            if any(not isinstance(id, str) or not re.fullmatch(r'[A-Za-z0-9_-]{11}', id) for id in ids):
+                raise ValueError()
+        except (KeyError, TypeError, ValueError):
+            raise YouTubeFailure('malformed_playlist') from None
+        return playlist, ids
 
     async def comments(self, video: str) -> tuple[list[Comment], bool]:
         result, token = [], None

@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useMediaQuery } from '@vueuse/core'
 import { ConfigProvider } from 'reka-ui'
-import { AudioLines, House, Compass, CalendarDays, Settings2, Heart } from '@lucide/vue'
+import { AudioLines, House, Compass, CalendarDays, Settings2, Heart, PanelsTopLeft } from '@lucide/vue'
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +25,7 @@ const mobile = useMediaQuery('(max-width: 768px)')
 const nav = [
   { title: '홈', href: '/', icon: House },
   { title: '탐색', href: '/explore', icon: Compass },
+  { title: '멀티뷰', href: '/multiview', icon: PanelsTopLeft },
   { title: '캘린더', href: '/calendar', icon: CalendarDays },
   { title: '설정', href: '/settings', icon: Settings2 },
 ]
@@ -40,7 +41,8 @@ const activeIndex = computed(() => nav.findIndex((item) => item.href === active.
 <template>
   <ConfigProvider :scroll-body="false">
   <a href="#main-content" class="skip-link">본문으로 이동</a>
-  <SidebarProvider :open="wide" style="--sidebar-width: 232px; --sidebar-width-icon: 80px">
+  <main v-if="route.path === '/multiview'" id="main-content" tabindex="-1"><RouterView /></main>
+  <SidebarProvider v-else :open="wide" style="--sidebar-width: 232px; --sidebar-width-icon: 80px">
     <Sidebar v-if="!mobile" collapsible="icon">
       <SidebarHeader class="px-5 pt-8 pb-10 group-data-[collapsible=icon]:px-3">
         <RouterLink

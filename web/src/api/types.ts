@@ -1,3 +1,25 @@
+export interface StreamGroup {
+  key: string
+  name: string
+  kind: 'agency' | 'group'
+  account_ids: number[]
+}
+
+export interface LiveStream {
+  account_id: number
+  channel_id: string
+  artist_id: number
+  artist_name: string
+  video_id: string
+  title: string
+  status?: 'live' | 'upcoming'
+  started_at: string | null
+  scheduled_at?: string | null
+  avatar_url?: string
+  avatar_variants?: Record<string, string>
+  checked_at: string
+}
+
 export interface SearchOptions {
   artistId?: number
   artistIds?: number[]

@@ -1,9 +1,29 @@
 """Public read contracts. No collection/translation payloads or private raw text."""
 from datetime import date, datetime
-from typing import Generic, TypeVar
+from typing import Generic, TypeVar, Literal
 from pydantic import BaseModel, Field
 
 T = TypeVar('T')
+class StreamGroupRead(BaseModel):
+    key: str
+    name: str
+    kind: Literal['agency', 'group']
+    account_ids: list[int]
+
+class LiveStreamRead(BaseModel):
+    account_id: int
+    channel_id: str = Field(pattern=r'^UC[A-Za-z0-9_-]{22}$')
+    artist_id: int
+    artist_name: str
+    video_id: str = Field(pattern=r'^[A-Za-z0-9_-]{11}$')
+    title: str
+    status: Literal['live', 'upcoming'] = 'live'
+    started_at: datetime | None = None
+    scheduled_at: datetime | None = None
+    avatar_url: str = ''
+    avatar_variants: dict[str, str] = Field(default_factory=dict)
+    checked_at: datetime
+
 class Page(BaseModel, Generic[T]):
     items: list[T]
     total: int

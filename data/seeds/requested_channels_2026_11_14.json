@@ -1,0 +1,59 @@
+{
+  "reviewed_on": "2026-11-14",
+  "artists": [
+    {
+      "slug": "otonose-raco",
+      "name_native": "音ノ瀬らこ",
+      "name_ko": null,
+      "name_latin": "Otonose Raco",
+      "channel_url": "https://www.youtube.com/channel/UCH-SLA_jpPhM2lzdZjZDxjQ",
+      "channel_id": "UCH-SLA_jpPhM2lzdZjZDxjQ",
+      "channel_title": "音ノ瀬らこ / Otonose Raco",
+      "agency": "ミリプロ",
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://milpr.com/talents",
+      "source_url": "https://www.youtube.com/@OtonoseRaco",
+      "reviewed_on": "2026-11-14"
+    },
+    {
+      "slug": "maisaki-berry",
+      "name_native": "苺咲べりぃ",
+      "name_ko": null,
+      "name_latin": "Maisaki Berry",
+      "channel_url": "https://www.youtube.com/channel/UC7A7bGRVdIwo93nqnA3x-OQ",
+      "channel_id": "UC7A7bGRVdIwo93nqnA3x-OQ",
+      "channel_title": "苺咲べりぃ / Maisaki Berry",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@MaisakiBerry/streams",
+      "reviewed_on": "2026-11-14"
+    },
+    {
+      "slug": "aoi-neno",
+      "name_native": "碧生ねの",
+      "name_ko": null,
+      "name_latin": "Neonoah",
+      "channel_url": "https://www.youtube.com/channel/UC9XmtaWbavinTxsZPEvgzlg",
+      "channel_id": "UC9XmtaWbavinTxsZPEvgzlg",
+      "channel_title": "Neonoah Ch. 碧生ねの",
+      "agency": "チャレパ",
+      "affiliation_status": "verified",
+      "affiliation_source_url": "https://challepa.jp/topics/detail/6a0c2a3a-94cb-46a7-b92d-7832a46e5c8d",
+      "source_url": "https://www.youtube.com/@aoineno",
+      "reviewed_on": "2026-11-14"
+    },
+    {
+      "slug": "suiu-shino",
+      "name_native": "翠雨しの",
+      "name_ko": null,
+      "name_latin": null,
+      "channel_url": "https://www.youtube.com/channel/UCrPzeqsIo-_W95TXuExqckw",
+      "channel_id": "UCrPzeqsIo-_W95TXuExqckw",
+      "channel_title": "翠雨 しの",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@suiu_shino/streams",
+      "reviewed_on": "2026-11-14"
+    }
+  ]
+}

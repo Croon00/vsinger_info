@@ -33,6 +33,7 @@ uvicorn app.main:app --reload
 - 프로세스 상태: http://127.0.0.1:8000/health — DB 연결까지 검사하는 주소는 아니다.
 - 준비 상태: http://127.0.0.1:8000/ready — 신규 DB와 음악 worker 상태 조회. worker가 활성화됐는데 필수 provider 인증 설정, handler 또는 heartbeat가 빠지면 ready=false다.
 - `app.main:app`과 `app.api.main:app`은 같은 API다.
+- 멀티뷰 생방송 확인만 로컬에서 실행하려면 `.venv\Scripts\python.exe -m app.services.youtube_live_monitor`를 사용한다. 새 방송·예약 검색은 10분, 후보 상태 확인은 1분이며 기존 아카이브 수집·Discord·LLM은 시작하지 않는다. `python -m app.runtime`의 음악 worker에도 연결돼 있다. [설정·범위](docs/read-api-v2.md#생방송-멀티뷰)를 따른다.
 - 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않으며 구 SQL 연결은 차단되어 있다.
 
 다른 터미널에서 새 프론트를 실행한다.

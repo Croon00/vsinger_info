@@ -18,6 +18,8 @@ async function respond(value: unknown, empty?: unknown) {
   })
 }
 export const handlers = [
+  http.get('/api/draft/stream-groups', () => respond([])),
+  http.get('/api/draft/streams', () => respond({ items: [], total: 0, offset: 0, limit: 100 })),
   http.get('/api/draft/artists', () =>
     respond(
       scenario() === 'broken-images'

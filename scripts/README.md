@@ -1,5 +1,14 @@
 # 운영 도구
 
+2026-11-14 요청한 音ノ瀬らこ·苺咲べりぃ·碧生ねの·翠雨しの의 등록·커버 수집과 요청 전용 노래 방송 worker 진행 조회는
+[등록·수집 기록](../docs/requested-channels-2026-11-14.md)을 따른다.
+
+Re:AcT 신규 16개 채널의 과거 영상 수집 범위·진행 조회·재개 방법은
+[2026-11-07 수집 기록](../docs/react-collection-2026-11-07.md)을 참고한다.
+
+쿠로쿠모의 채널 등록·영상 수집 결과와 요청 전용 worker 재개 방법은
+[2026-11-07 기록](../docs/kurokumo-2026-11-07.md)을 참고한다.
+
 커버 Shorts 형식 확인은 `python scripts/classify_youtube_cover_formats.py`를 사용한다. 기존 영상을 삭제하지 않고 공개 Shorts URL의 응답과 제목 표식을 기록하며, 조회 화면에는 일반 영상만 표시한다. 허용 URL·요청 간격·확인 대기는 [곡 탐색](../docs/song-exploration.md#shorts-제외)을 따른다.
 
 곡 탐색의 YouTube 조회수 갱신은 `python scripts/refresh_youtube_video_statistics.py`를 사용한다. 커버·연결된 발매 영상 중 최근 24시간 동안 갱신하지 않은 영상 최대 10,000개를 50개씩 조회한다. [곡 탐색 계약](../docs/song-exploration.md).
@@ -45,7 +54,7 @@
 | `register_nakamachi_arale.py` | 나카마치 아라레 등록 및 조사한 우타와꾸 후보의 요청별 수집. `register/plan/status/verify`와 `enqueue --apply`, 해당 요청만 실행하는 `worker`. `broadcasts --apply`는 검증한 종료 방송의 메타데이터·출처·감사 기록 저장. `resume-setlists`는 현재 키의 영상·댓글 조회 성공 뒤 이번 요청만 과거 한도 기록에서 재개하며 새 실패에 중단. [등록 및 저장 결과](../docs/nakamachi-arale-2026-10-07.md) |
 | `update_requested_affiliations.py` | 아라레(BanG Dream!)·마치타 치마(にじさんじ)의 요청된 소속 교정. `python -m scripts.update_requested_affiliations`는 읽기 전용, `--apply`는 신규 DB에 감사 기록과 함께 적용. 같은 소속이면 변경 없음 |
 | `register_mair.py` | MaiR(호시노 메아) 요청 채널 등록·방송 저장·세트리스트 수집. 검증한 요청별 수집 경로를 seed·report·request_run·slug 지정으로 재사용. [등록 및 수집 기록](../docs/mair-2026-10-07.md) |
-| `register_requested_vsingers.py` | 요청한 채널의 카탈로그·확인된 소속·YouTube owner 연결 등록. 미란은 확인 전 제외. 기본 읽기 전용, `--apply`는 신규 DB에 한 transaction과 감사 기록으로 저장. 기존 이름·소유권 보존, 신규 계정의 음악 수집은 비활성. [2026-10-03 검증](../docs/requested-vsingers-2026-10-02.md) |
+| `register_requested_vsingers.py` | 요청한 채널의 카탈로그·확인된 소속·YouTube owner 연결 등록. 미란은 확인 전 제외. 기본 읽기 전용, `--apply`는 신규 DB에 한 transaction과 감사 기록으로 저장. 기존 이름·소유권 보존, 신규 계정의 음악 수집은 비활성. [2026-10-03 검증](../docs/requested-vsingers-2026-10-02.md), [Re:AcT 20명 등록 검증](../docs/react-members-2026-11-07.md) (`--seed data/seeds/react_members_2026_11_07.json`) |
 | `backfill_requested_utawaku.py` | `plan/status`는 읽기 전용. `enqueue --apply`는 요청한 34개 YouTube 계정의 수집 활성화와 제목 후보별 typed 작업을 200개 이하 transaction으로 등록(기본 quota 대기 24시간). `worker`는 이번 request_run만 실행하며 시작/종료·채널·공개 여부는 기존 수집기가 검증. cutover/agent guard를 적용하고 Discord·Spotify·Calendar는 실행하지 않음. [현재 대기 상태](../docs/requested-vsingers-2026-10-02.md) |
 | `audit_spotify_collection.py` | Spotify 수집 결과 읽기 전용 점검(작업 결과, 합계, 검토 필요 기록, 녹음 0 계정, 제목 일치가 없는 계정). 상세는 Git 제외 `db-migration/reports/spotify-collection/audit.json` |
 | `migrate_avatars.py` | 프로필 이미지 준비·검수 보고서·명시적 반영. [프로필 이미지 저장](../docs/avatar-storage.md) |

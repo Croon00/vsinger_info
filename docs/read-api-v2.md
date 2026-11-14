@@ -20,6 +20,28 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 
 ## HTTP 계약
 
+### 생방송 멀티뷰
+
+2026-11-14: `GET /api/streams?offset=0&limit=100`는 `Page[LiveStreamRead]`를 반환한다. offset 0~100000, limit 1~100이며 기존 API 키 인증을 유지한다. 항목은 `account_id`, `channel_id`, `artist_id`, `artist_name`, `video_id`, `title`, `started_at`, `checked_at`이다. 시작 시각 내림차순·계정 ID·영상 ID순이며, 채널 공유 연결은 대표 아티스트(owner 우선·is_primary·position·ID) 하나로 표시한다.
+
+프로필·시간 표시 확장: `avatar_url`, `avatar_variants`, `status`(`live`/`upcoming`), `scheduled_at`을 추가했으며 `started_at`은 예정 방송에서 null이다. 기본 응답은 기존처럼 생방송만 포함한다. `include_upcoming=true`를 주면 같은 snapshot의 `upcoming`도 포함하며 생방송(시작 내림차순) 다음에 예정 방송(예정 시각 오름차순)을 표시한다. 아티스트 이미지는 기존 저장 프로필/해상도 variant를 사용하고 별도 이미지 수집을 시작하지 않는다. 시작 시각이 없는 예정 방송은 예정 시각이 지나도 실제 시작이 확인될 때까지 `upcoming`으로 유지한다.
+
+새 DB `collection_states.provider_state.youtube_live_snapshot`의 `checked_at`과 `streams`만 읽는다. 생방송 전용 `youtube_live_monitor`가 실제 시작·미종료·공개 영상을 기록하며, 성공한 빈 조회는 기존 목록을 비운다. 계정은 활성 YouTube 수집 대상이고 공개 카탈로그 아티스트 연결이 있어야 하며, 15분이 지난 관측은 현재 생방송 목록에서 제외한다. API는 새 수집·외부 요청·DB 변경을 시작하지 않는다.
+
+2026-11-14 사용자 지정: 새 방송·예약 방송 검색은 `YOUTUBE_LIVE_DISCOVERY_SECONDS=600`(10분), 알고 있는 예정/진행 방송 상태 확인은 `YOUTUBE_LIVE_CHECK_SECONDS=60`(1분)이다. 기존 아카이브 `YOUTUBE_POLL_INTERVAL_SECONDS=86400`(하루)와 별개다. 전용 loop는 5초마다 DB의 기한을 확인하며 기존 worker의 15분 유휴 대기에 묶이지 않는다. `music_worker_loop`에서 함께 실행되며, 로컬에서 이것만 실행하려면 `python -m app.services.youtube_live_monitor`를 사용한다. API만 실행하면 수집기는 시작하지 않는다.
+
+검색은 채널 uploads playlist를 캐시하고 한 페이지의 최근 10개 ID만 읽는다. 처음 본 ID·예약/진행 후보 ID를 계정 간 합쳐 `videos.list`의 50개 단위로 확인한다. 최근 확인한 일반 업로드는 재검사를 생략하고 후보는 종료/비공개/조회 불가까지 추적한다. 오래전에 게시되어 최근 창 밖으로 밀려난 미발견 예약이나 API가 uploads에 표시하지 않는 영상은 놓칠 수 있다. 10분/1분은 기한 기준이며 계정 수·네트워크 지연·provider 제한에 따라 실제 반영이 늦어질 수 있다.
+
+할당량 산정 시 채널당 uploads 검색 요청은 별도로 필요하다. 활성 135채널을 10분마다 모두 조회하면 playlistItems 호출만 이론상 일 19,440회이며, 상태 묶음/최초 채널 조회가 추가된다. [`playlistItems.list`](https://developers.google.com/youtube/v3/docs/playlistItems/list)와 [`videos.list`](https://developers.google.com/youtube/v3/docs/videos/list)는 각각 요청당 1 unit이다. 실제 프로젝트 할당량은 별도로 확인해야 하며 제한 응답 시 이를 우회하지 않고 유예한다.
+
+작업 상태/playlist/최근 ID/후보 ID/다음 기한/180초 lease는 `provider_state.youtube_live_monitor`에 보존한다. 25채널씩 원자적으로 claim하고 네트워크 처리에는 150초 제한을 둔다. 저장 전에 계정 활성·채널 ID·lease token/만료를 재검사한다. 일일 수집/backfill은 이 namespace와 live snapshot을 덮어쓰지 않는다. 오류 시 이전 snapshot을 보존하고 재시도하며, quota/Retry-After는 모든 생방송 채널에 유예를 적용한다. 알림·LLM·댓글·아카이브/커버 저장을 시작하지 않는다.
+
+snapshot의 `upcoming`은 `{video_id,title,scheduled_at}` 배열이다. 예정 시각은 YouTube `liveStreamingDetails.scheduledStartTime` 원문 시각으로 저장하며 없으면 null이다. 기존 snapshot은 다음 후보 상태 확인 때 점진 갱신되고 마이그레이션/재수집 작업을 요구하지 않는다.
+
+`GET /api/stream-groups`는 `{key,name,kind,account_ids}[]`를 반환한다. kind는 `agency` 또는 `group`, key는 `agency:ID`/`group:ID`다. 활성 수집 계정과 공개 아티스트의 명시적 연결만 사용하고, 그룹 멤버는 `artist_group_members`의 `left_on IS NULL` 연결을 사용한다. 해당 조건만으로 실제 현재 재적 여부를 새로 검증했다고 간주하지 않는다. 그룹 자체 채널과 멤버 채널을 모으되 같은 계정 ID는 중복하지 않으며 숨김/보관된 그룹은 제외한다. 방송이 없는 그룹도 선택지에 남는다. 정렬은 kind·이름·key 순이다. 기존 인증을 유지한다.
+
+프론트는 `/multiview`에서 최대 4개 공식 YouTube 플레이어와 선택한 방송의 공식 채팅 iframe을 사용한다. 채팅 `embed_domain`은 현재 hostname이며 YouTube 모바일 웹 채팅 임베드는 미지원이다. 외부 재생 제한·자동재생 정책·채팅 비활성화·브라우저 로그인 제한은 원본 링크로 안내한다.
+
 목록 페이지는 `{items,total,offset,limit}`, offset 0~100000, limit 1~100이다. 없는 상세는 404, 잘못된 범위는 422, DB 연결 실패는 503이다. 빈 DB/관계는 정상적인 빈 목록·0 통계를 반환한다. `Server-Timing`은 SQL 처리 시간과 쿼리 수를 제공한다.
 
 | 경로 (`/api` 아래) | 응답과 기준 |

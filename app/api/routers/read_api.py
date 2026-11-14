@@ -10,7 +10,7 @@ from app.core.security import require_api_key
 from app.db.catalog_session import get_catalog_session
 from app.services.catalog_read import CatalogRead
 from app.schemas.read_models import ArtistRead, LiveRead, SearchRead, Page, StatisticsRead, ConcertRead
-from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead, CoverRead
+from app.schemas.read_models import CatalogAlbumRead, CatalogLyricsRead, CoverRead, LiveStreamRead, StreamGroupRead
 
 router = APIRouter(tags=['frontend-read'],dependencies=[Depends(require_api_key)])
 def catalog(response: Response, session: Annotated[Session, Depends(get_catalog_session)]):
@@ -50,6 +50,14 @@ def finish(response, service, value):
 def require_artist(service, artist_id):
     if not service.artist(artist_id):
         raise HTTPException(404,'Artist not found')
+
+@router.get('/streams', response_model=Page[LiveStreamRead])
+def streams(service:Catalog,response:Response,offset:Offset=0,limit:Limit=100,include_upcoming:bool=False):
+    return finish(response,service,service.live_streams(offset,limit,include_upcoming))
+
+@router.get('/stream-groups', response_model=list[StreamGroupRead])
+def stream_groups(service:Catalog,response:Response):
+    return finish(response,service,service.stream_groups())
 
 @router.get('/artists',response_model=list[ArtistRead])
 def artists(service: Catalog,response: Response):

@@ -29,6 +29,16 @@ class CatalogRead:
                 artist["avatar_variants"] = avatar_variants(artist.get("spotify_image_url"), public_base())
             self._artist_by_id[artist_id] = artist
         return self._artist_by_id[artist_id]
+    def stream_groups(self):
+        return self.repository.stream_groups()
+
+    def live_streams(self, offset, limit, include_upcoming=False):
+        result = self.repository.live_streams(offset, limit, include_upcoming)
+        image_base = public_base()
+        for row in result['items']:
+            row['avatar_variants'] = avatar_variants(row.get('avatar_url'), image_base)
+        return result
+
     def lives(self, artist_id, offset, limit):
         result = self.repository.lives(artist_id,offset,limit)
         for row in result["items"]:
