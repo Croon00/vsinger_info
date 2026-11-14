@@ -31,6 +31,12 @@ async function start() {
   const app = createApp(App).use(router)
   await router.isReady()
   app.mount('#app')
+  if (import.meta.env.PROD && !isMock && 'serviceWorker' in navigator) {
+    // Installation failure must not prevent the online app from starting.
+    void navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).catch(() => {
+      console.warn('PWA service worker registration failed.')
+    })
+  }
 }
 start().catch(() => {
   const element = document.querySelector('#app')!

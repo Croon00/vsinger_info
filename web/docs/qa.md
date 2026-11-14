@@ -165,3 +165,6 @@ Playwright는 설치된 Chrome을 사용하며 다른 경로는 CHROME_PATH로 �
 ## 2026-09-30 아티스트 상세 발매곡 탭 개편
 
 백엔드 `/artists/{id}/albums`에 `is_primary`를 추가했다. 임시 로컬 PostgreSQL fixture로 `test_new_catalog_read.py`·`test_spotify_catalog_collection.py` 51개 통과(본인 앨범 true, 트랙 명의만 있는 참여 앨범 false, 단일 앨범 조회 null). 프론트는 단위 테스트 41개(발매 분류·문구·길이·디스크·명의 비교), 실제 모드 빌드(vue-tsc 포함), 실제 계약 HTTP fixture PC·모바일(필터·`group` query·참여 상세·Disc 구분·참여 곡 강조·가사) 통과. 목업 e2e 전체 실행에서 46개 중 42개 통과, 실패 2건(PC·모바일)은 실제 버튼 이름 `더보기`와 다른 옛 선택자 `라이브 더 보기` 때문이었다. 선택자를 고친 두 테스트는 PC·모바일에서 통과했다(발매 카드→팝업·새로고침·Escape, 가사→뒤로가기 시 앨범 팝업과 가사 버튼 포커스 복귀 포함). 통합 테스트 `search filters ignore missing artist credits and keep navigation clickable`은 변경 전 HEAD 사본에서도 같은 pointer-events 단언으로 실패하는 기존 실패라 이번 범위에서 고치지 않았다. 운영 DB를 읽는 실제 화면 확인은 하지 않았다.
+# 2026-11-10 PWA 설치 지원
+
+실제 모드 운영 빌드(TypeScript 포함) 통과. `node scripts/check-pwa.mjs`로 로컬 운영 서버와 모바일 크기 Chrome에서 manifest·192/512 PNG 크기·MIME·Service Worker 등록/제어·HTML/manifest/worker 재검증 헤더·상세 주소 오프라인 안내·API 요청 캐시 제외·재연결 후 같은 주소 복귀를 확인했다. 외부 요청은 차단하고 실제 DB·API·미디어는 호출하지 않았다. 기존 `tests/unit/server.test.ts` 1개 통과. 실제 Android/iPhone 홈 화면 설치, 운영 HTTPS·CDN 배포 및 업데이트 수명주기는 미검증이다. 개발/mock 모드에서는 PWA worker를 등록하지 않는다.

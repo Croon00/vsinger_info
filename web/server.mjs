@@ -14,6 +14,9 @@ const mimeTypes = {
   '.ico': 'image/x-icon',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
   '.map': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.webp': 'image/webp',
@@ -23,7 +26,8 @@ const mimeTypes = {
 function serveFile(response, filePath) {
   response.writeHead(200, {
     'Content-Type': mimeTypes[extname(filePath)] || 'application/octet-stream',
-    'Cache-Control': filePath.endsWith('index.html') ? 'no-cache' : 'public, max-age=31536000, immutable',
+    'Cache-Control': filePath.startsWith(resolve(distDir, 'assets') + sep)
+      ? 'public, max-age=31536000, immutable' : 'no-cache',
   })
   createReadStream(filePath).pipe(response)
 }
