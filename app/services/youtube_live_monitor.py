@@ -123,7 +123,9 @@ async def run_holodex_once(provider=None):
                 discover = account.get('discover', True)
                 previous = account.get('snapshot') or {}
                 if not discover:
-                    known_ids = {v['video_id'] for v in previous.get('streams', [])}
+                    due_upcoming = {v['video_id'] for v in previous.get('upcoming', [])
+                        if v.get('scheduled_at') and datetime.fromisoformat(v['scheduled_at']) <= captured}
+                    known_ids = {v['video_id'] for v in previous.get('streams', [])} | due_upcoming
                     candidates = [v for v in candidates if v.id in known_ids]
                 streams = [dict(video_id=v.id, title=v.title,
                     started_at=v.start_actual.isoformat() if v.start_actual else None)
@@ -132,7 +134,10 @@ async def run_holodex_once(provider=None):
                     scheduled_at=v.start_scheduled.isoformat() if v.start_scheduled else None)
                     for v in candidates if v.status == 'upcoming']
                 if not discover:
-                    upcoming = previous.get('upcoming', [])
+                    # Preserve future/unknown schedules, but replace due entries
+                    # with provider state so live promotion cannot leave a duplicate.
+                    upcoming = [v for v in previous.get('upcoming', [])
+                                if v['video_id'] not in due_upcoming] + upcoming
                 state = {k: v for k, v in (account.get('state') or {}).items()
                          if k not in ('lease_token', 'lease_until', 'retry_at')}
                 state['next_live_check_at'] = (captured+timedelta(seconds=settings.holodex_live_check_seconds)).isoformat()

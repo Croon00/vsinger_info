@@ -85,7 +85,11 @@ def claim_holodex(session, token, limit=500, *, poll_seconds=3600, live_check_se
                        '-infinity'::timestamptz) <= clock_timestamp()
           AND ({discovery_due}
             OR (cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'
-                AND jsonb_array_length(COALESCE(cs.provider_state->'youtube_live_snapshot'->'streams','[]'::jsonb)) > 0
+                AND (jsonb_array_length(COALESCE(cs.provider_state->'youtube_live_snapshot'->'streams','[]'::jsonb)) > 0
+                     OR EXISTS (SELECT 1 FROM jsonb_to_recordset(
+                         COALESCE(cs.provider_state->'youtube_live_snapshot'->'upcoming','[]'::jsonb)
+                       ) AS pending(scheduled_at timestamptz)
+                       WHERE pending.scheduled_at <= clock_timestamp()))
                 AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'next_live_check_at')::timestamptz,
                              '-infinity'::timestamptz) <= clock_timestamp()
                 AND COALESCE((cs.provider_state->'youtube_live_snapshot'->>'live_checked_at')::timestamptz,

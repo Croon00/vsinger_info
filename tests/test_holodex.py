@@ -106,10 +106,12 @@ def test_saves_holodex_snapshot_without_any_youtube_request(monkeypatch):
     assert datetime.fromisoformat(updates[0]['state']['next_live_check_at']) - datetime.fromisoformat(snapshot['live_checked_at']) == timedelta(minutes=3)
 
 
-def test_three_minute_check_only_updates_existing_live_ids_and_preserves_discovery(monkeypatch):
+def test_three_minute_check_promotes_due_upcoming_and_preserves_discovery(monkeypatch):
     checked = (NOW-timedelta(minutes=30)).isoformat()
     discovery_due = (NOW+timedelta(minutes=30)).isoformat()
-    upcoming = [dict(video_id='eeeeeeeeeee', title='Scheduled', scheduled_at=NOW.isoformat())]
+    upcoming = [dict(video_id='eeeeeeeeeee', title='Scheduled', scheduled_at=NOW.isoformat()),
+        dict(video_id='fffffffffff', title='Future', scheduled_at=(NOW+timedelta(hours=2)).isoformat()),
+        dict(video_id='ggggggggggg', title='Unknown', scheduled_at=None)]
     accounts = [dict(id=1, channel_id=CHANNEL, discover=False,
         state={'next_check_at': discovery_due, 'lease_token': 'old-token'},
         snapshot=dict(provider='holodex', checked_at=checked, upcoming=upcoming,
@@ -120,16 +122,40 @@ def test_three_minute_check_only_updates_existing_live_ids_and_preserves_discove
     provider = AsyncMock()
     provider.live.return_value = [HolodexStream.model_validate(stream()),
         HolodexStream.model_validate(stream(id='ddddddddddd')),
+        HolodexStream.model_validate(stream(id='fffffffffff')),
         HolodexStream.model_validate(stream(id='eeeeeeeeeee', status='live'))]
     result = asyncio.run(service.run_holodex_once(provider))
     provider.live.assert_awaited_once_with([CHANNEL, OTHER])
-    assert result == dict(accounts=2, live=1, scheduled=1, failed=0)
+    assert result == dict(accounts=2, live=2, scheduled=2, failed=0)
     updates = next(args[1] for name, args, _ in calls if name == 'save_holodex_batch')
-    assert [v['video_id'] for v in updates[0]['snapshot']['streams']] == ['aaaaaaaaaaa']
-    assert updates[0]['snapshot']['upcoming'] == upcoming
+    assert [v['video_id'] for v in updates[0]['snapshot']['streams']] == ['aaaaaaaaaaa', 'eeeeeeeeeee']
+    assert updates[0]['snapshot']['upcoming'] == upcoming[1:]
     assert updates[1]['snapshot']['streams'] == []
     assert all(u['snapshot']['checked_at'] == checked and u['state']['next_check_at'] == discovery_due for u in updates)
     assert all('lease_token' not in u['state'] for u in updates)
+
+
+@pytest.mark.parametrize('response', ['waiting', 'rescheduled', 'missing'])
+def test_due_upcoming_status_refresh_handles_delay_reschedule_and_removal(monkeypatch, response):
+    checked = (NOW-timedelta(minutes=30)).isoformat()
+    upcoming = [dict(video_id='aaaaaaaaaaa', title='Waiting', scheduled_at=NOW.isoformat())]
+    accounts = [dict(id=1, channel_id=CHANNEL, discover=False, state={},
+        snapshot=dict(provider='holodex', checked_at=checked, upcoming=upcoming, streams=[]))]
+    calls = fake_db(monkeypatch, accounts)
+    provider = AsyncMock()
+    scheduled = NOW+timedelta(hours=1) if response == 'rescheduled' else NOW
+    provider.live.return_value = [] if response == 'missing' else [HolodexStream.model_validate(
+        stream(status='upcoming', start_actual=None, start_scheduled=scheduled.isoformat()))]
+    result = asyncio.run(service.run_holodex_once(provider))
+    snapshot = next(args[1][0]['snapshot'] for name, args, _ in calls if name == 'save_holodex_batch')
+    assert result['live'] == 0
+    assert snapshot['checked_at'] == checked
+    assert snapshot['streams'] == []
+    if response == 'missing':
+        assert snapshot['upcoming'] == []
+    else:
+        assert len(snapshot['upcoming']) == 1
+        assert snapshot['upcoming'][0]['scheduled_at'] == scheduled.isoformat()
 
 
 def test_no_due_accounts_makes_no_holodex_requests(monkeypatch):
@@ -250,8 +276,23 @@ def test_holodex_leases_ignore_youtube_quota_and_recheck_account_on_save(databas
                     state=json.dumps({'next_check_at': (NOW-timedelta(minutes=1)).isoformat()}),
                     checked=(NOW-timedelta(minutes=10)).isoformat()))
             assert repository.claim_holodex(session, 'hourly', poll_seconds=3600) == []
-            # Live checks run between full hourly discoveries, but never for
-            # upcoming-only or empty snapshots.
+            # Only known live or scheduled-at/past upcoming entries qualify
+            # between full discoveries. Unknown/future schedules must wait.
+            for scheduled, expected in [(None, False),
+                    ((NOW+timedelta(minutes=5)).isoformat(), False),
+                    ((NOW-timedelta(seconds=1)).isoformat(), True)]:
+                snapshot = dict(provider='holodex', checked_at=(NOW-timedelta(minutes=10)).isoformat(),
+                    live_checked_at=(NOW-timedelta(minutes=5)).isoformat(), streams=[],
+                    upcoming=[dict(video_id='aaaaaaaaaaa', title='Waiting', scheduled_at=scheduled)])
+                session.execute(text("UPDATE collection_states SET provider_state=jsonb_set(provider_state,'{youtube_live_snapshot}',CAST(:snapshot AS jsonb)) WHERE external_account_id=:id"),
+                    dict(id=ids[0], snapshot=json.dumps(snapshot)))
+                session.flush()
+                with session.begin_nested() as savepoint:
+                    due = repository.claim_holodex(session, 'scheduled', poll_seconds=3600, live_check_seconds=180)
+                    assert bool(due) is expected
+                    if expected:
+                        assert due[0]['discover'] is False
+                    savepoint.rollback()
             snapshot = dict(provider='holodex', checked_at=(NOW-timedelta(minutes=10)).isoformat(),
                 live_checked_at=(NOW-timedelta(minutes=5)).isoformat(), upcoming=[],
                 streams=[dict(video_id='aaaaaaaaaaa', title='Live', started_at=NOW.isoformat())])
