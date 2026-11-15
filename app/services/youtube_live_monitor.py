@@ -1,4 +1,4 @@
-"""Independent discovery (10 min) and known stream checks (1 min), no LLM/notify."""
+"""Independent discovery (30 min) and known stream checks (1 min), no LLM/notify."""
 import asyncio
 import logging
 import re
@@ -8,6 +8,7 @@ from uuid import uuid4
 from app.core.config import settings
 from app.db.catalog_session import catalog_runtime_session
 from app.integrations.youtube_catalog import YouTubeClient, YouTubeFailure
+from app.integrations.holodex import HolodexClient, HolodexFailure
 from app.repositories import youtube_live_monitor as repository
 
 logger = logging.getLogger(__name__)
@@ -99,17 +100,61 @@ async def run_once(provider=None):
     return result
 
 
+async def run_holodex_once(provider=None):
+    token = str(uuid4())
+    accounts = await db_call(repository.claim_holodex, token)
+    result = dict(accounts=len(accounts), live=0, scheduled=0, failed=0)
+    if not accounts:
+        return result
+    try:
+        async with asyncio.timeout(150):
+            provider = provider or HolodexClient(settings.holodex_api_key)
+            videos = await provider.live([a['channel_id'] for a in accounts])
+            captured = datetime.now(UTC)
+            by_channel = {}
+            for video in videos:
+                by_channel.setdefault(video.channel_id, []).append(video)
+            updates = []
+            for account in accounts:
+                candidates = by_channel.get(account['channel_id'], [])
+                streams = [dict(video_id=v.id, title=v.title,
+                    started_at=v.start_actual.isoformat() if v.start_actual else None)
+                    for v in candidates if v.status == 'live']
+                upcoming = [dict(video_id=v.id, title=v.title,
+                    scheduled_at=v.start_scheduled.isoformat() if v.start_scheduled else None)
+                    for v in candidates if v.status == 'upcoming']
+                state = dict(next_check_at=(captured+timedelta(seconds=settings.holodex_poll_seconds)).isoformat())
+                updates.append(dict(id=account['id'], channel_id=account['channel_id'], state=state,
+                    snapshot=dict(provider='holodex', checked_at=captured.isoformat(), streams=streams, upcoming=upcoming)))
+            saved = await db_call(repository.save_holodex_batch, token, updates)
+            for update in updates:
+                if update['id'] in saved:
+                    result['live'] += len(update['snapshot']['streams'])
+                    result['scheduled'] += len(update['snapshot']['upcoming'])
+                else:
+                    result['failed'] += 1
+    except HolodexFailure as exc:
+        await db_call(repository.defer, token, seconds=exc.retry_after,
+                      all_accounts=True, namespace='holodex_live_monitor')
+        result['failed'] = len(accounts)
+        logger.warning('Holodex live monitor deferred: %s', exc.reason)
+    except BaseException:
+        await db_call(repository.defer, token, namespace='holodex_live_monitor')
+        raise
+    return result
+
+
 async def monitor_loop():
     # httpx INFO request URLs contain the provider API key query parameter.
     logging.getLogger('httpx').setLevel(logging.WARNING)
-    if not settings.youtube_api_key:
-        logger.warning('Live monitor is disabled: missing YouTube API key')
+    if not (settings.holodex_api_key or settings.youtube_api_key):
+        logger.warning('Live monitor is disabled: missing Holodex and YouTube API keys')
         return
     while True:
         try:
-            result = await run_once()
+            result = await (run_holodex_once() if settings.holodex_api_key else run_once())
             if result['accounts']:
-                logger.info('YouTube live monitor: %s', result)
+                logger.info('%s live monitor: %s', 'Holodex' if settings.holodex_api_key else 'YouTube', result)
         except asyncio.CancelledError:
             raise
         except Exception as exc:

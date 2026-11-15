@@ -44,8 +44,10 @@ class Settings(BaseSettings):
     webshare_proxy_locations: str | None = None
     ytdlp_proxy_url: str | None = None
     youtube_api_key: str | None = None
+    holodex_api_key: str | None = Field(default=None, repr=False)
+    holodex_poll_seconds: int = Field(default=60, ge=60, le=900)
     youtube_poll_interval_seconds: int = Field(default=86400, ge=60)
-    youtube_live_discovery_seconds: int = Field(default=600, ge=60)
+    youtube_live_discovery_seconds: int = Field(default=1800, ge=60)
     youtube_live_check_seconds: int = Field(default=60, ge=30)
     youtube_auto_link_max_tracks: int = 50
     youtube_auto_link_concurrency: int = 4
@@ -83,6 +85,7 @@ class Settings(BaseSettings):
         "webshare_proxy_locations",
         "ytdlp_proxy_url",
         "youtube_api_key",
+        "holodex_api_key",
         "spotify_client_id",
         "spotify_client_secret",
         "aws_endpoint_url_s3",

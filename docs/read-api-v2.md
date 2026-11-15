@@ -22,17 +22,23 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 
 ### 생방송 멀티뷰
 
+2026-11-15 Holodex 연결: 서버 전용 `HOLODEX_API_KEY`가 있으면 전용 monitor가 `GET https://holodex.net/api/v2/users/live`에 등록된 공개 아티스트의 활성 YouTube 채널 ID를 50개씩 묶어 보낸다. `X-APIKEY` 헤더로 인증하며 `HOLODEX_POLL_SECONDS=60`(최소 60초, 최대 900초)마다 갱신한다. 채널은 최대 500개씩 180초 lease로 claim한다. 기한·lease·재시도는 `provider_state.holodex_live_monitor`에서 별도 관리하므로 기존 YouTube 할당량 유예를 변경하지 않는다. 같은 `youtube_live_snapshot`에 `provider=holodex`와 정규화된 생방송/예정 방송을 저장하므로 기존 API 계약은 유지된다. `status`, `start_actual`, `start_scheduled`를 사용하고 예정 시각만으로 생방송 시작을 추정하지 않는다.
+
+Holodex 실패/429/잘못된 응답은 snapshot을 보존하고 최소 60초 및 더 긴 `Retry-After`를 존중한다. 인증 실패는 최소 15분 유예한다. 성공한 빈 응답은 해당 채널 목록을 비우며, Holodex가 추적하지 않는 채널은 나오지 않을 수 있다. Holodex 모드에서는 YouTube API로 자동 fallback하지 않으며 키가 없을 때만 아래 YouTube 전용 경로를 사용한다. 원문 영상·채널 ID를 유지하며 아카이브·알림·LLM을 실행하지 않는다. 멀티뷰의 Holodex 링크와 adapter 소스의 라이선스·면책 링크로 [출처와 이용 조건](https://docs.holodex.net/)을 표시한다.
+
 2026-11-14: `GET /api/streams?offset=0&limit=100`는 `Page[LiveStreamRead]`를 반환한다. offset 0~100000, limit 1~100이며 기존 API 키 인증을 유지한다. 항목은 `account_id`, `channel_id`, `artist_id`, `artist_name`, `video_id`, `title`, `started_at`, `checked_at`이다. 시작 시각 내림차순·계정 ID·영상 ID순이며, 채널 공유 연결은 대표 아티스트(owner 우선·is_primary·position·ID) 하나로 표시한다.
 
 프로필·시간 표시 확장: `avatar_url`, `avatar_variants`, `status`(`live`/`upcoming`), `scheduled_at`을 추가했으며 `started_at`은 예정 방송에서 null이다. 기본 응답은 기존처럼 생방송만 포함한다. `include_upcoming=true`를 주면 같은 snapshot의 `upcoming`도 포함하며 생방송(시작 내림차순) 다음에 예정 방송(예정 시각 오름차순)을 표시한다. 아티스트 이미지는 기존 저장 프로필/해상도 variant를 사용하고 별도 이미지 수집을 시작하지 않는다. 시작 시각이 없는 예정 방송은 예정 시각이 지나도 실제 시작이 확인될 때까지 `upcoming`으로 유지한다.
 
-새 DB `collection_states.provider_state.youtube_live_snapshot`의 `checked_at`과 `streams`만 읽는다. 생방송 전용 `youtube_live_monitor`가 실제 시작·미종료·공개 영상을 기록하며, 성공한 빈 조회는 기존 목록을 비운다. 계정은 활성 YouTube 수집 대상이고 공개 카탈로그 아티스트 연결이 있어야 하며, 15분이 지난 관측은 현재 생방송 목록에서 제외한다. API는 새 수집·외부 요청·DB 변경을 시작하지 않는다.
+새 DB `collection_states.provider_state.youtube_live_snapshot`의 `checked_at`과 방송 배열을 읽는다. 전용 `youtube_live_monitor`가 위 Holodex 경로 또는 아래 YouTube 경로의 결과를 저장하며, 성공한 빈 조회는 기존 목록을 비운다. 계정은 활성 YouTube 수집 대상이고 공개 카탈로그 아티스트 연결이 있어야 하며, 15분이 지난 관측은 현재 생방송 목록에서 제외한다. API는 새 수집·외부 요청·DB 변경을 시작하지 않는다.
 
-2026-11-14 사용자 지정: 새 방송·예약 방송 검색은 `YOUTUBE_LIVE_DISCOVERY_SECONDS=600`(10분), 알고 있는 예정/진행 방송 상태 확인은 `YOUTUBE_LIVE_CHECK_SECONDS=60`(1분)이다. 기존 아카이브 `YOUTUBE_POLL_INTERVAL_SECONDS=86400`(하루)와 별개다. 전용 loop는 5초마다 DB의 기한을 확인하며 기존 worker의 15분 유휴 대기에 묶이지 않는다. `music_worker_loop`에서 함께 실행되며, 로컬에서 이것만 실행하려면 `python -m app.services.youtube_live_monitor`를 사용한다. API만 실행하면 수집기는 시작하지 않는다.
+2026-11-15 사용자 지정: 새 방송·예약 방송 검색은 `YOUTUBE_LIVE_DISCOVERY_SECONDS=1800`(30분), 알고 있는 예정/진행 방송 상태 확인은 `YOUTUBE_LIVE_CHECK_SECONDS=60`(1분)이다. 기존 아카이브 `YOUTUBE_POLL_INTERVAL_SECONDS=86400`(하루)와 별개다. 전용 loop는 5초마다 DB의 기한을 확인하며 기존 worker의 15분 유휴 대기에 묶이지 않는다. `music_worker_loop`에서 함께 실행되며, 로컬에서 이것만 실행하려면 `python -m app.services.youtube_live_monitor`를 사용한다. API만 실행하면 수집기는 시작하지 않는다.
 
-검색은 채널 uploads playlist를 캐시하고 한 페이지의 최근 10개 ID만 읽는다. 처음 본 ID·예약/진행 후보 ID를 계정 간 합쳐 `videos.list`의 50개 단위로 확인한다. 최근 확인한 일반 업로드는 재검사를 생략하고 후보는 종료/비공개/조회 불가까지 추적한다. 오래전에 게시되어 최근 창 밖으로 밀려난 미발견 예약이나 API가 uploads에 표시하지 않는 영상은 놓칠 수 있다. 10분/1분은 기한 기준이며 계정 수·네트워크 지연·provider 제한에 따라 실제 반영이 늦어질 수 있다.
+YouTube 경로의 검색은 채널 uploads playlist를 캐시하고 한 페이지의 최근 10개 ID만 읽는다. 처음 본 ID·예약/진행 후보 ID를 계정 간 합쳐 `videos.list`의 50개 단위로 확인한다. 최근 확인한 일반 업로드는 재검사를 생략하고 후보는 종료/비공개/조회 불가까지 추적한다. 오래전에 게시되어 최근 창 밖으로 밀려난 미발견 예약이나 API가 uploads에 표시하지 않는 영상은 놓칠 수 있다. 30분/1분은 기한 기준이며 계정 수·네트워크 지연·provider 제한에 따라 실제 반영이 늦어질 수 있다.
 
-할당량 산정 시 채널당 uploads 검색 요청은 별도로 필요하다. 활성 135채널을 10분마다 모두 조회하면 playlistItems 호출만 이론상 일 19,440회이며, 상태 묶음/최초 채널 조회가 추가된다. [`playlistItems.list`](https://developers.google.com/youtube/v3/docs/playlistItems/list)와 [`videos.list`](https://developers.google.com/youtube/v3/docs/videos/list)는 각각 요청당 1 unit이다. 실제 프로젝트 할당량은 별도로 확인해야 하며 제한 응답 시 이를 우회하지 않고 유예한다.
+할당량 산정 시 채널당 uploads 검색 요청은 별도로 필요하다. 활성 139채널을 30분마다 모두 조회하면 playlistItems 호출만 이론상 일 6,672회이며, 상태 묶음/최초 채널 조회와 아카이브 수집이 추가된다. [`playlistItems.list`](https://developers.google.com/youtube/v3/docs/playlistItems/list)와 [`videos.list`](https://developers.google.com/youtube/v3/docs/videos/list)는 각각 요청당 1 unit이다. 30분 주기만으로 총량이 한도 안이라고 보장하지 않으며 실제 프로젝트 할당량·전체 사용량은 별도로 확인해야 한다.
+
+2026-11-15 할당량 유예 보완: `quotaExceeded`/`dailyLimitExceeded`는 고정 24시간 대신 [YouTube 일일 할당량 초기화](https://developers.google.com/youtube/data/determine_quota_cost) 시각인 미국 태평양 자정 다음 1분까지 기다린다. 서머타임을 반영하며 더 긴 `Retry-After`가 있으면 그 값을 지킨다. 기존 DB에 기록된 `retry_at`은 자동 단축하지 않는다. fixture 검증은 생방송 monitor·YouTube adapter·멀티뷰 관련 45개 통과, 로컬 PostgreSQL 의존 39개 skip이다. 운영 읽기 전용 확인에서는 전체 활성 139채널에 유예가 걸려 있고 최근 15분 관측이 0개여서 운영 방송 목록이 비어 있었다. provider 오류 로그는 확보하지 못했으므로 실제 할당량 오류 여부는 추정이며 운영 배포·DB 유예 변경·실제 재수집은 수행하지 않았다.
 
 작업 상태/playlist/최근 ID/후보 ID/다음 기한/180초 lease는 `provider_state.youtube_live_monitor`에 보존한다. 25채널씩 원자적으로 claim하고 네트워크 처리에는 150초 제한을 둔다. 저장 전에 계정 활성·채널 ID·lease token/만료를 재검사한다. 일일 수집/backfill은 이 namespace와 live snapshot을 덮어쓰지 않는다. 오류 시 이전 snapshot을 보존하고 재시도하며, quota/Retry-After는 모든 생방송 채널에 유예를 적용한다. 알림·LLM·댓글·아카이브/커버 저장을 시작하지 않는다.
 

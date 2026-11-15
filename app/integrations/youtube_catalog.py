@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import asyncio
 import re
-from datetime import UTC, datetime
+from datetime import UTC, datetime, time, timedelta
 from email.utils import parsedate_to_datetime
 from typing import Literal
+from zoneinfo import ZoneInfo
 
 import httpx
 from app.integrations.youtube_cover_rules import is_cover_title
@@ -16,6 +17,15 @@ class YouTubeFailure(Exception):
     def __init__(self, reason: str, *, retry: bool = False, retry_after: float = 0):
         super().__init__(reason)
         self.reason, self.retry, self.retry_after = reason, retry, retry_after
+
+
+def quota_retry_seconds(now: datetime) -> float:
+    """Daily YouTube quota resets at Pacific midnight, including DST changes."""
+    pacific = ZoneInfo('America/Los_Angeles')
+    next_day = now.astimezone(pacific).date() + timedelta(days=1)
+    reset = datetime.combine(next_day, time.min, pacific).astimezone(UTC)
+    # Leave a minute for the provider's quota counter to roll over.
+    return max(60, (reset - now.astimezone(UTC)).total_seconds() + 60)
 
 
 class Video(BaseModel):
@@ -155,7 +165,7 @@ class YouTubeClient:
                 reason = ''
             safe = reason if reason in ('commentsDisabled', 'videoNotFound', 'quotaExceeded', 'dailyLimitExceeded') else 'provider_error'
             retry = response.status_code == 429 or response.status_code >= 500 or safe in ('quotaExceeded', 'dailyLimitExceeded')
-            delay = 86400 if safe in ('quotaExceeded', 'dailyLimitExceeded') else 0
+            delay = quota_retry_seconds(datetime.now(UTC)) if safe in ('quotaExceeded', 'dailyLimitExceeded') else 0
             header = response.headers.get('Retry-After', '')
             try:
                 delay = max(delay, float(header))

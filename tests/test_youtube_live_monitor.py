@@ -6,11 +6,41 @@ from unittest.mock import AsyncMock
 import httpx
 import pytest
 
-from app.integrations.youtube_catalog import Video, YouTubeClient, YouTubeFailure
+from app.integrations.youtube_catalog import Video, YouTubeClient, YouTubeFailure, quota_retry_seconds
 from app.services import youtube_live_monitor as service
 
 CHANNEL = 'UC' + 'a' * 22
 NOW = datetime.now(UTC)
+
+
+@pytest.mark.parametrize('now,reset', [
+    ('2026-11-15T03:00:00+00:00', '2026-11-15T08:01:00+00:00'),
+    ('2026-07-15T03:00:00+00:00', '2026-07-15T07:01:00+00:00'),
+    ('2026-03-08T08:00:00+00:00', '2026-03-09T07:01:00+00:00'),
+    ('2026-11-01T07:00:00+00:00', '2026-11-02T08:01:00+00:00'),
+    ('2026-11-15T07:59:59+00:00', '2026-11-15T08:01:00+00:00'),
+])
+def test_quota_retry_waits_for_next_pacific_midnight_including_dst(now, reset):
+    captured = datetime.fromisoformat(now)
+    assert captured + timedelta(seconds=quota_retry_seconds(captured)) == datetime.fromisoformat(reset)
+
+
+@pytest.mark.parametrize('reason', ['quotaExceeded', 'dailyLimitExceeded'])
+@pytest.mark.parametrize('header,expected', [('120', 18060), ('90000', 90000),
+    ('Sun, 15 Nov 2026 09:00:00 GMT', 21600)])
+def test_quota_response_uses_reset_time_and_respects_longer_retry_after(monkeypatch, reason, header, expected):
+    from app.integrations import youtube_catalog
+    class Clock(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2026, 11, 15, 3, tzinfo=UTC)
+    monkeypatch.setattr(youtube_catalog, 'datetime', Clock)
+    provider = YouTubeClient('fixture', interval=0, transport=httpx.MockTransport(lambda _: httpx.Response(
+        403, json={'error': {'errors': [{'reason': reason}]}}, headers={'Retry-After': header})))
+    with pytest.raises(YouTubeFailure) as failure:
+        asyncio.run(provider.get('videos', id='aaaaaaaaaaa'))
+    assert failure.value.retry and failure.value.reason == reason
+    assert failure.value.retry_after == expected
 
 
 def account(id=1, *, discover=True, state=None):
@@ -46,7 +76,7 @@ def test_discovery_is_separate_from_status_checks_and_only_keeps_current_public_
     assert snapshot['streams'] == [dict(video_id=ids[0], title='Stream', started_at=NOW.isoformat())]
     assert snapshot['upcoming'] == [dict(video_id=ids[1], title='Stream', scheduled_at=(NOW+timedelta(hours=2)).isoformat())]
     checked = datetime.fromisoformat(snapshot['checked_at'])
-    assert datetime.fromisoformat(state['next_discovery_at']) - checked == timedelta(minutes=10)
+    assert datetime.fromisoformat(state['next_discovery_at']) - checked == timedelta(minutes=30)
     assert datetime.fromisoformat(state['next_check_at']) - checked == timedelta(minutes=1)
 
 

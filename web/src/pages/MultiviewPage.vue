@@ -173,6 +173,9 @@ onBeforeUnmount(() => {
       </Button>
       <h1 class="text-base font-semibold">멀티뷰</h1>
       <Badge variant="secondary">{{ selected.length }} / 4</Badge>
+      <Button as-child variant="link" size="xs">
+        <a href="https://holodex.net/" target="_blank" rel="noopener noreferrer">Holodex</a>
+      </Button>
       <div class="flex-1" />
       <Button
         variant="ghost"

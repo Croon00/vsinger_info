@@ -2,7 +2,8 @@
 
 ## 생방송 멀티뷰 운영 연결 (2026-11-14)
 
-- `/multiview`, `/api/streams`, `/api/stream-groups`와 생방송 전용 monitor를 구현했다. 사용자 지정으로 새 방송 검색은 10분, 후보 상태 확인은 1분이며 일일 아카이브 poll은 유지한다. DB lease와 후보 ID를 저장하므로 독립 실행 인스턴스도 동일 채널을 중복 claim하지 않는다.
+- 2026-11-15: `.env`의 `HOLODEX_API_KEY`로 1분 주기 Holodex 조회를 연결했다. 공개 아티스트에 연결된 활성 122채널의 snapshot 갱신에서 생방송 7개·예정 169개, 실패 0개를 확인했고 기존 운영 API에서 총 176개를 반환했다(조회 시점 수치). 로컬 전용 monitor를 백그라운드로 실행 중이다. Railway에 키 설정·새 코드 배포를 통한 상시 운영 전환은 남아 있으며, 로컬 프로세스가 종료되면 이 갱신도 중단된다. Holodex 미등록 채널 보완 수집은 후속 작업이다.
+- `/multiview`, `/api/streams`, `/api/stream-groups`와 생방송 전용 monitor를 구현했다. 2026-11-15 사용자 지정으로 새 방송 검색은 30분, 후보 상태 확인은 1분이며 일일 아카이브 poll은 유지한다. DB lease와 후보 ID를 저장하므로 독립 실행 인스턴스도 동일 채널을 중복 claim하지 않는다.
 - 로컬 조회 API와 전용 monitor 실행을 운영 배포와 구분한다. 운영 worker/API/프론트 배포, 채널 수에 따른 YouTube quota 점검, 실제 브라우저에서 생방송·채팅·자동재생 검증은 남아 있다. 최근 10개 업로드 밖의 미발견 예약 방송을 보완하는 별도 discovery는 후속 작업이다.
 
 갱신: 2026-10-04. 현재 계약은 [통합 조회 API](read-api-v2.md), 실행 구조는 [백엔드 구조](backend-architecture.md), 웹 검증은 [QA](../web/docs/qa.md)에 있다. 구조 변경의 기준은 [백엔드 통합 최종 계획](backend-consolidation-plan.md)이다. **운영 DB 선택 이전은 완료했으나 전체 서비스 활성화·검증은 미완료**이며 [운영 DB 이전 기록](backend-cutover-2026-09-23.md)에 현재 상태를 적었다. 최신 결함·누락 기능·개발 순서는 [서비스 검증과 보완 개발 계획](backend-service-readiness-plan.md)에 모은다.
