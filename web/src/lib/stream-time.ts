@@ -6,7 +6,9 @@ export function isStreamWithinUpcomingWindow(
 ) {
   if (stream.status !== 'upcoming') return true
   const scheduled = stream.scheduled_at ? Date.parse(stream.scheduled_at) : NaN
-  return Number.isFinite(scheduled) && scheduled >= now && scheduled <= now + 24 * 3600000
+  // The provider may still report upcoming after the scheduled start. Keep
+  // these waiting entries until the API expires or updates the snapshot.
+  return Number.isFinite(scheduled) && scheduled <= now + 24 * 3600000
 }
 
 export function streamTime(
