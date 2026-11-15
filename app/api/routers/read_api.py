@@ -2,6 +2,8 @@
 from datetime import date
 from typing import Literal
 from app.schemas.song_explore import SongExploreRead, SongPerformerRead
+from app.schemas.music_tags import GenreTag, MoodTag, MusicTagOptions
+from app.services.music_tags import options as music_tag_options
 from typing import Annotated
 from pydantic import Field
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -29,12 +31,21 @@ def explore_songs(service:Catalog,response:Response,
                   q:Annotated[str,Query(max_length=200)]='',
                   order:Literal['high','low','name','latest']='high',offset:Offset=0,limit:Limit=24,
                   artist_ids:Annotated[list[Annotated[int,Field(ge=1)]]|None,Query(max_length=100)]=None,
+                  genres:Annotated[list[GenreTag]|None,Query(max_length=16)]=None,
+                  moods:Annotated[list[MoodTag]|None,Query(max_length=10)]=None,
                   start:date|None=None,end:date|None=None):
     if start and end and start>end:
         raise HTTPException(422,'시작일은 종료일보다 늦을 수 없습니다.')
+    if kind != 'original' and (genres or moods):
+        raise HTTPException(422,'장르·분위기 필터는 오리지널 곡에서 사용합니다.')
     if kind=='utawaku' and (start or end):
         raise HTTPException(422,'영상 등록일 범위는 커버·오리지널 탐색에서 사용합니다.')
-    return finish(response,service,service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit,artist_ids=sorted(set(artist_ids or [])),start=start,end=end))
+    return finish(response,service,service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit,artist_ids=sorted(set(artist_ids or [])),start=start,end=end,genres=sorted(set(genres or [])),moods=sorted(set(moods or []))))
+
+@router.get('/explore/music-tags', response_model=MusicTagOptions)
+def music_tags(response: Response):
+    response.headers['Cache-Control'] = 'private, no-store'
+    return music_tag_options()
 
 @router.get('/explore/song-performers',response_model=list[SongPerformerRead])
 def song_performers(service:Catalog,response:Response,

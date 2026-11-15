@@ -6,7 +6,7 @@ export function isStreamWithinUpcomingWindow(
 ) {
   if (stream.status !== 'upcoming') return true
   const scheduled = stream.scheduled_at ? Date.parse(stream.scheduled_at) : NaN
-  return Number.isFinite(scheduled) && scheduled >= now && scheduled <= now + 2 * 3600000
+  return Number.isFinite(scheduled) && scheduled >= now && scheduled <= now + 24 * 3600000
 }
 
 export function streamTime(

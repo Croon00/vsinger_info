@@ -9,6 +9,7 @@ import { formatSubscribers } from '@/lib/subscribers'
 import { formatDate } from '@/lib/dates'
 import { displayName } from '@/lib/display-name'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Select,
@@ -55,6 +56,10 @@ function applyPeriod(value: { start: string; end: string }) {
 function update(key: string, value: string | number) {
   const next = { ...route.query, [key]: value }
   if (key === 'song_agency' || key === 'kind') delete next.song_artists
+  if (key === 'kind') {
+    delete next.song_genres
+    delete next.song_moods
+  }
   router.replace({ query: next })
 }
 const selectedArtists = computed(() => [
@@ -65,6 +70,36 @@ const selectedArtists = computed(() => [
     ).filter((id): id is string => typeof id === 'string' && /^[1-9]\d*$/.test(id)),
   ),
 ])
+const {
+  data: tagOptions,
+  error: tagsError,
+  reload: reloadTags,
+} = useResource((signal) => api.musicTags(signal))
+function selectedTags(key: string) {
+  if (kind.value !== 'original') return []
+  const value = route.query[key]
+  return [
+    ...new Set(
+      (Array.isArray(value) ? value : [value]).filter(
+        (tag): tag is string => typeof tag === 'string' && /^[a-z-]+$/.test(tag),
+      ),
+    ),
+  ].sort()
+}
+const musicFilters = computed(() => ({
+  genres: selectedTags('song_genres'),
+  moods: selectedTags('song_moods'),
+}))
+function selectTags(key: string, value: unknown) {
+  const tags = Array.isArray(value) ? value.map(String) : []
+  const next = { ...route.query }
+  if (!tags.length || tags.includes('all')) delete next[key]
+  else next[key] = [...new Set(tags)].sort()
+  router.replace({ query: next })
+}
+function tagLabel(dimension: 'genres' | 'moods', value: string) {
+  return tagOptions.value?.[dimension].find((option) => option.value === value)?.label ?? value
+}
 function selectArtists(value: unknown) {
   const ids = Array.isArray(value) ? value.map(String) : []
   const next = { ...route.query }
@@ -78,13 +113,23 @@ const {
   reload: reloadArtists,
 } = useResource((signal) => api.artists(signal))
 const artistOptions = computed(() =>
-  [...new Map((artistCatalog.value ?? []).map((artist) => {
-    const group = kind.value === 'original' ? artist.original_song_group : null
-    const option = group
-      ? { ...artist, id: group.id, name: group.name, display_name: '', agency: group.agency ?? '' }
-      : artist
-    return [option.id, option] as const
-  })).values()]
+  [
+    ...new Map(
+      (artistCatalog.value ?? []).map((artist) => {
+        const group = kind.value === 'original' ? artist.original_song_group : null
+        const option = group
+          ? {
+              ...artist,
+              id: group.id,
+              name: group.name,
+              display_name: '',
+              agency: group.agency ?? '',
+            }
+          : artist
+        return [option.id, option] as const
+      }),
+    ).values(),
+  ]
     .filter(
       (a) =>
         agency.value === 'all' ||
@@ -121,10 +166,11 @@ const { data, loading, error, reload } = useResource(
       signal,
       selectedArtists.value.map(Number),
       period.value,
+      musicFilters.value,
     )
     return { page }
   },
-  [kind, agency, order, () => route.query.song_q, selectedArtists, period],
+  [kind, agency, order, () => route.query.song_q, selectedArtists, period, musicFilters],
 )
 watch(data, () => {
   moreController?.abort()
@@ -153,9 +199,12 @@ function closePlayer() {
     if (playerTrigger?.isConnected) playerTrigger.focus()
   })
 }
-watch([kind, agency, order, () => route.query.song_q, selectedArtists, period], () => {
-  playingSong.value = null
-})
+watch(
+  [kind, agency, order, () => route.query.song_q, selectedArtists, period, musicFilters],
+  () => {
+    playingSong.value = null
+  },
+)
 async function loadMore() {
   if (moreLoading.value) return
   const current = data.value
@@ -173,6 +222,7 @@ async function loadMore() {
       controller.signal,
       selectedArtists.value.map(Number),
       period.value,
+      musicFilters.value,
     )
     if (!controller.signal.aborted && data.value === current) extra.value.push(...page.items)
   } catch (e) {
@@ -264,6 +314,41 @@ function videoUrl(song: ExploredSong) {
           :end="period.end"
           @apply="applyPeriod"
         />
+        <template v-if="kind === 'original'">
+          <Select
+            v-for="dimension in ['genres', 'moods'] as const"
+            :key="dimension"
+            multiple
+            :model-value="musicFilters[dimension]"
+            @update:model-value="(value) => selectTags(`song_${dimension}`, value)"
+          >
+            <SelectTrigger
+              class="explore-filter"
+              :aria-label="dimension === 'genres' ? '장르 분류' : '분위기 분류'"
+            >
+              <SelectValue>
+                {{ dimension === 'genres' ? '장르' : '분위기' }}
+                {{
+                  musicFilters[dimension].length
+                    ? `${musicFilters[dimension].length}개 선택`
+                    : '전체'
+                }}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">전체 · 선택 해제</SelectItem>
+                <SelectItem
+                  v-for="option in tagOptions?.[dimension] ?? []"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </template>
       </div>
       <form
         class="explore-search"
@@ -290,11 +375,16 @@ function videoUrl(song: ExploredSong) {
       아티스트 목록을 불러오지 못했어요.
       <Button variant="ghost" size="sm" @click="reloadArtists">다시 시도</Button>
     </p>
+    <p v-if="kind === 'original' && tagsError" role="alert" class="mb-4 text-sm text-destructive">
+      분류 목록을 불러오지 못했어요.
+      <Button variant="ghost" size="sm" @click="reloadTags">다시 시도</Button>
+    </p>
     <p v-if="kind === 'cover'" class="mb-5 text-xs text-muted-foreground">
       Shorts 제외 · 짧은 영상은 일반 영상으로 확인된 뒤 표시됩니다.
     </p>
     <p v-if="kind === 'original'" class="mb-5 text-xs text-muted-foreground">
-      등록된 발매곡 기준이며, 커버 여부가 확인되지 않은 곡이 포함될 수 있어요.
+      등록된 발매곡 기준이며, 커버 여부가 확인되지 않은 곡이 포함될 수 있어요. 장르·분위기는 공식
+      소개에서 확인된 곡부터 표시합니다. 각 분류 안에서는 하나라도 일치하는 곡을 찾습니다.
     </p>
     <ResourceState
       :loading="loading"
@@ -340,6 +430,39 @@ function videoUrl(song: ExploredSong) {
             </h3>
             <p v-if="song.title_ko">{{ song.title }}</p>
             <p>{{ song.artist_name || '아티스트 미확인' }}</p>
+            <div v-if="kind === 'original'" class="mt-2 flex flex-wrap items-center gap-1.5">
+              <Badge
+                v-for="tag in song.genres ?? []"
+                :key="`genre-${tag}`"
+                variant="secondary"
+                aria-label="장르"
+              >
+                {{ tagLabel('genres', tag) }}
+              </Badge>
+              <Badge
+                v-for="tag in song.moods ?? []"
+                :key="`mood-${tag}`"
+                variant="outline"
+                aria-label="분위기"
+              >
+                {{ tagLabel('moods', tag) }}
+              </Badge>
+              <span
+                v-if="!song.genres?.length && !song.moods?.length"
+                class="text-xs text-muted-foreground"
+              >
+                미분류
+              </span>
+              <a
+                v-if="song.music_tag_sources?.length"
+                :href="song.music_tag_sources[0]?.source_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xs text-muted-foreground underline"
+              >
+                분류 근거
+              </a>
+            </div>
           </div>
           <div class="song-explore-metric">
             <strong>

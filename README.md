@@ -6,6 +6,8 @@
 
 ## 시작하기
 
+오리지널 곡의 장르·분위기 태그, 복수 선택과 공식 근거 수집 범위는 [음악 분류](docs/original-music-tags.md)를 따른다.
+
 VESPERBELL·KMNZ 멤버의 공유 구독자 수와 커버 분리는 [공유 YouTube 채널](docs/shared-youtube-channels.md)을 따른다.
 
 탐색의 곡 탭은 우타와꾸·커버·오리지널/발매 음원을 소속사별로 조회한다. 커버·발매곡의 YouTube 조회수는 `python scripts/refresh_youtube_video_statistics.py`로 갱신하며, 화면의 조회는 저장된 값만 사용한다. 집계·분류 범위와 정렬 계약은 [곡 탐색](docs/song-exploration.md)을 따른다.

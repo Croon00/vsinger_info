@@ -51,6 +51,12 @@ test('selects streams, switches chat and audio, preserves players on refresh, an
       ...items[5]!,
       video_id: 'future00000',
       artist_name: 'Far future',
+      scheduled_at: new Date(now + 25 * 3600000).toISOString(),
+    },
+    {
+      ...items[5]!,
+      video_id: 'today000000',
+      artist_name: 'Later today',
       scheduled_at: new Date(now + 3 * 3600000).toISOString(),
     },
     { ...items[5]!, video_id: 'unknown0000', artist_name: 'Unknown schedule', scheduled_at: null },
@@ -115,6 +121,7 @@ test('selects streams, switches chat and audio, preserves players on refresh, an
     page.getByRole('button', { name: 'Upcoming FreeChat 예정', exact: true }),
   ).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Far future 예정', exact: true })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Later today 예정', exact: true })).toBeVisible()
   await expect(
     page.getByRole('button', { name: 'Unknown schedule 예정', exact: true }),
   ).toHaveCount(0)

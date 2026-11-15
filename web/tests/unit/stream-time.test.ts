@@ -3,14 +3,16 @@ import { isStreamWithinUpcomingWindow, streamTime } from '@/lib/stream-time'
 
 const now = Date.parse('2026-11-14T12:00:00Z')
 describe('stream time badges', () => {
-  it('only includes upcoming streams from now through exactly two hours', () => {
+  it('only includes upcoming streams from now through exactly 24 hours', () => {
     const upcoming = (scheduled_at: string | null) => ({
       status: 'upcoming' as const,
       scheduled_at,
     })
     expect(isStreamWithinUpcomingWindow(upcoming('2026-11-14T12:00:00Z'), now)).toBe(true)
     expect(isStreamWithinUpcomingWindow(upcoming('2026-11-14T14:00:00Z'), now)).toBe(true)
-    expect(isStreamWithinUpcomingWindow(upcoming('2026-11-14T14:00:00.001Z'), now)).toBe(false)
+    expect(isStreamWithinUpcomingWindow(upcoming('2026-11-14T15:00:00Z'), now)).toBe(true)
+    expect(isStreamWithinUpcomingWindow(upcoming('2026-11-15T12:00:00Z'), now)).toBe(true)
+    expect(isStreamWithinUpcomingWindow(upcoming('2026-11-15T12:00:00.001Z'), now)).toBe(false)
     expect(isStreamWithinUpcomingWindow(upcoming('2026-11-14T11:59:59Z'), now)).toBe(false)
     expect(isStreamWithinUpcomingWindow(upcoming(null), now)).toBe(false)
     expect(isStreamWithinUpcomingWindow(upcoming('invalid'), now)).toBe(false)

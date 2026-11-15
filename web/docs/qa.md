@@ -1,5 +1,9 @@
 # 검증 가이드와 결과
 
+## 2026-11-15 대기 방송 노출 범위
+
+예정 방송 표시 범위를 시작 24시간 전부터로 확대했다. 시간 표시 단위 테스트 6개와 PC/모바일 멀티뷰 fixture 2개가 통과했다. 정확히 24시간 경계 포함·경계 초과 제외를 단위 검증하고, 3시간 후 방송 표시·25시간 후 방송 제외 및 기존 그룹 필터·재생 유지 흐름을 fixture로 확인했다. 실데이터 검증은 수행하지 않았다.
+
 ## 2026-11-14 생방송 멀티뷰
 
 FreeChat 제외: `【FreeChat】` 생방송과 `FREE CHAT` 예정 방송이 프로필 목록에 나타나지 않는 것을 PC/모바일 fixture 2개로 확인했다. 기존 그룹 필터·표시된 방송 담기·영상 재생 유지 경로도 통과했다. 프론트 표시 조건만 변경했으며 원문·DB·worker 수집 범위는 유지한다.
@@ -168,3 +172,6 @@ Playwright는 설치된 Chrome을 사용하며 다른 경로는 CHROME_PATH로 �
 # 2026-11-10 PWA 설치 지원
 
 실제 모드 운영 빌드(TypeScript 포함) 통과. `node scripts/check-pwa.mjs`로 로컬 운영 서버와 모바일 크기 Chrome에서 manifest·192/512 PNG 크기·MIME·Service Worker 등록/제어·HTML/manifest/worker 재검증 헤더·상세 주소 오프라인 안내·API 요청 캐시 제외·재연결 후 같은 주소 복귀를 확인했다. 외부 요청은 차단하고 실제 DB·API·미디어는 호출하지 않았다. 기존 `tests/unit/server.test.ts` 1개 통과. 실제 Android/iPhone 홈 화면 설치, 운영 HTTPS·CDN 배포 및 업데이트 수명주기는 미검증이다. 개발/mock 모드에서는 PWA worker를 등록하지 않는다.
+# 2026-11-15 오리지널 장르·분위기
+
+fixture 브라우저 테스트 `song-music-tags.spec.ts`, `song-artist-filters.spec.ts` 6개 통과. 데스크톱·390px 모바일에서 복수 선택, 두 분류 조합, 페이지 추가, 새로고침, 분류별 해제, 탭 전환 초기화, 가로 넘침 없음을 검증했다. 스크린샷은 `outputs/song-music-tags/`다. 프론트 빌드 통과. 실데이터와 수집 검증은 [음악 분류](../../docs/original-music-tags.md)에 별도로 기록한다.

@@ -113,3 +113,6 @@ artists 응답에 avatar_variants(128/256/512 URL 객체)를 제공한다. 대�
 Verification on 2026-10-06: frontend build passed; backend adapter unit tests 12 passed; desktop browser drilldown 1 passed. PostgreSQL fixture tests 12 skipped because the local PostgreSQL fixture server is unavailable. A separate read-only live catalog check confirmed scoped results, out-of-range pagination totals, and ordinary unscoped search; no collection or data writes were performed. Deploy both API and frontend to enable this feature on the public site.
 
 아티스트 응답의 `original_song_group`은 `{id,name,agency}` 또는 null이며, 승인된 4개 그룹의 현재 멤버에 대해 오리지널 곡 탐색의 그룹 선택지를 제공한다. 일반 아티스트 목록의 공개 조건이나 원본 명의를 변경하지 않는다. [그룹 표시 계약](song-exploration.md#오리지널-곡의-그룹-표시--2026-11-01)을 따른다.
+# 오리지널 장르·분위기 확장 (2026-11-15)
+
+`GET /api/explore/music-tags`, 오리지널 곡의 반복 `genres,moods` 필터와 배열 응답은 [음악 분류 계약](original-music-tags.md)을 따른다. 같은 분류 안 OR·분류 간 AND를 페이지 계산 전에 적용하며 조회에서 수집하지 않는다.

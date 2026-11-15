@@ -1,5 +1,6 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from app.schemas.music_tags import GenreTag, MoodTag, MusicTagSource
 
 
 class SongPerformerRead(BaseModel):
@@ -9,6 +10,9 @@ class SongPerformerRead(BaseModel):
 
 
 class SongExploreRead(BaseModel):
+    genres: list[GenreTag] = Field(default_factory=list)
+    moods: list[MoodTag] = Field(default_factory=list)
+    music_tag_sources: list[MusicTagSource] = Field(default_factory=list)
     key: str
     title: str
     title_ko: str | None = None

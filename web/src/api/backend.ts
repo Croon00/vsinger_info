@@ -1,6 +1,7 @@
 import type {
   Album,
   ExploredSong,
+  MusicTagOptions,
   SongKind,
   Cover,
   Artist,
@@ -227,6 +228,8 @@ export const backendApi = {
     if (artistId) params.set('artist_id', String(artistId))
     return cachedRead(`/api/search/performers?${params}`, signal)
   },
+  musicTags: (signal?: AbortSignal) =>
+    cachedRead<MusicTagOptions>('/api/explore/music-tags', signal),
   songPage(
     kind: SongKind,
     agency: string,
@@ -236,6 +239,7 @@ export const backendApi = {
     signal?: AbortSignal,
     artistIds: number[] = [],
     period: { start?: string; end?: string } = {},
+    tags: { genres?: string[]; moods?: string[] } = {},
   ): Promise<Page<ExploredSong>> {
     const params = new URLSearchParams({
       kind,
@@ -248,6 +252,10 @@ export const backendApi = {
     for (const id of artistIds) params.append('artist_ids', String(id))
     if (period.start) params.set('start', period.start)
     if (period.end) params.set('end', period.end)
+    if (kind === 'original') {
+      for (const tag of tags.genres ?? []) params.append('genres', tag)
+      for (const tag of tags.moods ?? []) params.append('moods', tag)
+    }
     return cachedRead<Page<ExploredSong>>(`/api/explore/songs?${params}`, signal)
   },
   artists,

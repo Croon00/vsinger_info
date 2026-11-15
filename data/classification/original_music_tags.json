@@ -1,0 +1,863 @@
+{
+  "schema_version": 1,
+  "policy": "original-music-explicit-sources-v1",
+  "reviewed_on": "2026-11-15",
+  "items": [
+    {
+      "youtube_video_id": "lGXgYHlR8ww",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "rock",
+        "hard-rock"
+      ],
+      "moods": [
+        "upbeat"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/fake-fake-fake/",
+          "excerpt": "疾走感溢れるハードなロックチューン"
+        },
+        {
+          "dimension": "genre",
+          "tag": "hard-rock",
+          "source_url": "https://hololive.hololivepro.com/music/fake-fake-fake/",
+          "excerpt": "疾走感溢れるハードなロックチューン"
+        },
+        {
+          "dimension": "mood",
+          "tag": "upbeat",
+          "source_url": "https://hololive.hololivepro.com/music/fake-fake-fake/",
+          "excerpt": "疾走感溢れるハードなロックチューン"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "5QJfWQrdQEY",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "ballad"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "ballad",
+          "source_url": "https://www.youtube.com/watch?v=5QJfWQrdQEY",
+          "excerpt": "AZKi WHiTEの4曲目ははじめてのバラードです。"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9528",
+      "recording_title": "nanawari enemy",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%83%8A%E3%83%8A%E3%83%AF%E3%83%AA%E3%82%A8%E3%83%8D%E3%83%9F%E3%83%BC/",
+          "excerpt": "ロックなサウンド"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9526",
+      "recording_title": "Gamen no nakano kimi ga suki",
+      "recording_artist": "AZKi",
+      "genres": [
+        "pop",
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%94%BB%E9%9D%A2%E3%81%AE%E4%B8%AD%E3%81%AE%E5%90%9B%E3%81%8C%E5%A5%BD%E3%81%8D/",
+          "excerpt": "ポップでロックなサウンド"
+        },
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%94%BB%E9%9D%A2%E3%81%AE%E4%B8%AD%E3%81%AE%E5%90%9B%E3%81%8C%E5%A5%BD%E3%81%8D/",
+          "excerpt": "ポップでロックなサウンド"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9562",
+      "recording_title": "hikari no machi",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock",
+        "hard-rock"
+      ],
+      "moods": [
+        "upbeat"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%B2%E3%81%8B%E3%82%8A%E3%81%AE%E3%81%BE%E3%81%A1/",
+          "excerpt": "疾走感溢れ、エモーショナルかつラウドでハードなロック楽曲"
+        },
+        {
+          "dimension": "genre",
+          "tag": "hard-rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%B2%E3%81%8B%E3%82%8A%E3%81%AE%E3%81%BE%E3%81%A1/",
+          "excerpt": "疾走感溢れ、エモーショナルかつラウドでハードなロック楽曲"
+        },
+        {
+          "dimension": "mood",
+          "tag": "upbeat",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%B2%E3%81%8B%E3%82%8A%E3%81%AE%E3%81%BE%E3%81%A1/",
+          "excerpt": "疾走感溢れ、エモーショナルかつラウドでハードなロック楽曲"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9464",
+      "recording_title": "neko naraba ikeru",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock"
+      ],
+      "moods": [
+        "upbeat"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%8C%AB%E3%81%AA%E3%82%89%E3%81%B0%E3%81%84%E3%81%91%E3%82%8B/",
+          "excerpt": "軽快な四つ打ちサウンドが特徴的なダンスロックチューン"
+        },
+        {
+          "dimension": "mood",
+          "tag": "upbeat",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%8C%AB%E3%81%AA%E3%82%89%E3%81%B0%E3%81%84%E3%81%91%E3%82%8B/",
+          "excerpt": "軽快な四つ打ちサウンドが特徴的なダンスロックチューン"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9545",
+      "recording_title": "neko naraba ikeru",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock"
+      ],
+      "moods": [
+        "upbeat"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%8C%AB%E3%81%AA%E3%82%89%E3%81%B0%E3%81%84%E3%81%91%E3%82%8B/",
+          "excerpt": "軽快な四つ打ちサウンドが特徴的なダンスロックチューン"
+        },
+        {
+          "dimension": "mood",
+          "tag": "upbeat",
+          "source_url": "https://hololive.hololivepro.com/music/%E7%8C%AB%E3%81%AA%E3%82%89%E3%81%B0%E3%81%84%E3%81%91%E3%82%8B/",
+          "excerpt": "軽快な四つ打ちサウンドが特徴的なダンスロックチューン"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9554",
+      "recording_title": "kurogane no moribito",
+      "recording_artist": "AZKi",
+      "genres": [
+        "piano",
+        "ballad"
+      ],
+      "moods": [
+        "warm"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "piano",
+          "source_url": "https://hololive.hololivepro.com/music/%E9%BB%92%E9%89%84%E3%81%AE%E5%AE%88%E3%82%8A%E4%BA%BA/",
+          "excerpt": "ピアノの優しげな旋律が特徴的なエモーショナルなバラード曲"
+        },
+        {
+          "dimension": "genre",
+          "tag": "ballad",
+          "source_url": "https://hololive.hololivepro.com/music/%E9%BB%92%E9%89%84%E3%81%AE%E5%AE%88%E3%82%8A%E4%BA%BA/",
+          "excerpt": "ピアノの優しげな旋律が特徴的なエモーショナルなバラード曲"
+        },
+        {
+          "dimension": "mood",
+          "tag": "warm",
+          "source_url": "https://hololive.hololivepro.com/music/%E9%BB%92%E9%89%84%E3%81%AE%E5%AE%88%E3%82%8A%E4%BA%BA/",
+          "excerpt": "ピアノの優しげな旋律が特徴的なエモーショナルなバラード曲"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9561",
+      "recording_title": "inochi",
+      "recording_artist": "AZKi",
+      "genres": [
+        "pop",
+        "piano"
+      ],
+      "moods": [
+        "melancholic"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%84%E3%81%AE%E3%81%A1/",
+          "excerpt": "優しげなピアノ音・ストリングスとAZKiのエモーショナルな歌声が合わさった、少しセンチメンタルなポップソング"
+        },
+        {
+          "dimension": "genre",
+          "tag": "piano",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%84%E3%81%AE%E3%81%A1/",
+          "excerpt": "優しげなピアノ音・ストリングスとAZKiのエモーショナルな歌声が合わさった、少しセンチメンタルなポップソング"
+        },
+        {
+          "dimension": "mood",
+          "tag": "melancholic",
+          "source_url": "https://hololive.hololivepro.com/music/%E3%81%84%E3%81%AE%E3%81%A1/",
+          "excerpt": "優しげなピアノ音・ストリングスとAZKiのエモーショナルな歌声が合わさった、少しセンチメンタルなポップソング"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "wzygAKsIqk0",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "electronic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "electronic",
+          "source_url": "https://hololive.hololivepro.com/music/take-me-to-heaven/",
+          "excerpt": "メロウでエモーショナルなトラックが印象的なクラブサウンド"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9468",
+      "recording_title": "コトノハ",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/events/repeat-this-life-with-u/",
+          "excerpt": "『コトノハ』はBLaCKに分類されるロックナンバー"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9471",
+      "recording_title": "虹を駆け抜けて",
+      "recording_artist": "AZKi",
+      "genres": [
+        "rock"
+      ],
+      "moods": [
+        "upbeat"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/events/3rd-live/",
+          "excerpt": "「虹を駆け抜けて」はアップテンポなロックチューン"
+        },
+        {
+          "dimension": "mood",
+          "tag": "upbeat",
+          "source_url": "https://hololive.hololivepro.com/events/3rd-live/",
+          "excerpt": "「虹を駆け抜けて」はアップテンポなロックチューン"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9457",
+      "recording_title": "Rotate repeated",
+      "recording_artist": "AZKi",
+      "genres": [
+        "jazz"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "jazz",
+          "source_url": "https://hololive.hololivepro.com/events/recreating-world/",
+          "excerpt": "jazzyな演奏"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:9458",
+      "recording_title": "yamanai ame",
+      "recording_artist": "AZKi",
+      "genres": [
+        "ballad"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "ballad",
+          "source_url": "https://hololive.hololivepro.com/events/recreating-world/",
+          "excerpt": "『止まない雨』もAZKi至高のバラード曲"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "BP59Bm6T3_I",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/music/%E6%94%BE%E9%80%81%E5%AE%A4/",
+          "excerpt": "スローテンポなロック調"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "mRgslQ5Z-kU",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/events/hoshimachi-suisei_shout-in-crisis/",
+          "excerpt": "爽やかなロックチューン"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "r1ZVPTCOCSQ",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/events/hoshimachi-suisei_shout-in-crisis/",
+          "excerpt": "ロックチューン『灼熱にて純情(wii-wii-woo)』"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "eZWjYWcQ4Xo",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [],
+      "moods": [
+        "calm"
+      ],
+      "sources": [
+        {
+          "dimension": "mood",
+          "tag": "calm",
+          "source_url": "https://hololive.hololivepro.com/music/242/",
+          "excerpt": "しっとりとしたメロディー"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "d3UTywBDSW4",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "electronic",
+        "jazz"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "electronic",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "リズミカルなエレクトロスイング"
+        },
+        {
+          "dimension": "genre",
+          "tag": "jazz",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "リズミカルなエレクトロスイング"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "ZMLJMxKgjLU",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "electronic"
+      ],
+      "moods": [
+        "calm"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "electronic",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "ゆったりした４つ打ちハウスミュージック"
+        },
+        {
+          "dimension": "mood",
+          "tag": "calm",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "ゆったりした４つ打ちハウスミュージック"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "B3rZm2cN5ZY",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "pop"
+      ],
+      "moods": [
+        "calm"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "しっとりめのポップソング"
+        },
+        {
+          "dimension": "mood",
+          "tag": "calm",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "しっとりめのポップソング"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8842",
+      "recording_title": "Beautiful Circle",
+      "recording_artist": "角巻わため",
+      "genres": [
+        "pop"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hololive.hololivepro.com/events/watame-2nd-live/",
+          "excerpt": "ポジティブな思いをつづるポップソング"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "RMZNjFkJK7E",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "pop"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hololive.hololivepro.com/events/watame1stlive/",
+          "excerpt": "ポップな楽曲"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": "mmTmdMGbk_M",
+      "recording_key": null,
+      "recording_title": null,
+      "recording_artist": null,
+      "genres": [
+        "rock"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rock",
+          "source_url": "https://hololive.hololivepro.com/news/20250313-01-328/",
+          "excerpt": "軽快な横揺れロック"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8732",
+      "recording_title": "fragment",
+      "recording_artist": "HACHI",
+      "genres": [
+        "band"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "band",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "サビで広がるバンドサウンド"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8723",
+      "recording_title": "Brand New Episode",
+      "recording_artist": "HACHI",
+      "genres": [
+        "electronic",
+        "pop"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "electronic",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "エレクトロポップ"
+        },
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "エレクトロポップ"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8729",
+      "recording_title": "√64",
+      "recording_artist": "HACHI",
+      "genres": [
+        "rnb",
+        "pop"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "rnb",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "モダンR&B風のプロダクションがひとつになったメロウなポップソング「√64」"
+        },
+        {
+          "dimension": "genre",
+          "tag": "pop",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "モダンR&B風のプロダクションがひとつになったメロウなポップソング「√64」"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8717",
+      "recording_title": "Empty Town",
+      "recording_artist": "HACHI",
+      "genres": [
+        "ballad"
+      ],
+      "moods": [
+        "calm"
+      ],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "ballad",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "メロウなバラード「Empty Town」"
+        },
+        {
+          "dimension": "mood",
+          "tag": "calm",
+          "source_url": "https://hachi-official.jp/news/914/",
+          "excerpt": "メロウなバラード「Empty Town」"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8737",
+      "recording_title": "Rainy proof - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8738",
+      "recording_title": "さよならfrequency - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8739",
+      "recording_title": "ばいばい、テディベア - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8740",
+      "recording_title": "まなざし - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8741",
+      "recording_title": "Greyword - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8742",
+      "recording_title": "Twilight Line - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8743",
+      "recording_title": "HONEY BEES - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8744",
+      "recording_title": "光の向こうへ - Acoustic Live",
+      "recording_artist": "HACHI",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://linkco.re/1fpBXqZ0?lang=ja",
+          "excerpt": "Acoustic Live"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:8789",
+      "recording_title": "光の向こうへ - Piano ver.",
+      "recording_artist": "HACHI",
+      "genres": [
+        "piano"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "piano",
+          "source_url": "https://linkco.re/rAA0E00e?lang=ja",
+          "excerpt": "光の向こうへ (Piano ver.)"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:7716",
+      "recording_title": "ソラゴト - Piano arr.",
+      "recording_artist": "明透",
+      "genres": [
+        "piano"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "piano",
+          "source_url": "https://kamitsubaki.jp/discography/asu/2278/",
+          "excerpt": "ソラゴト – Piano arr. –"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:7229",
+      "recording_title": "Fly By - Acoustic Rearrange",
+      "recording_artist": "水瀬凪",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://rkmusic.jp/release/page/2/?release_cat=live-union",
+          "excerpt": "Fly By (Acoustic Rearrange)"
+        }
+      ]
+    },
+    {
+      "youtube_video_id": null,
+      "recording_key": "recording:7230",
+      "recording_title": "ノスタルジー・ステップ - Acoustic Rearrange",
+      "recording_artist": "水瀬凪",
+      "genres": [
+        "acoustic"
+      ],
+      "moods": [],
+      "sources": [
+        {
+          "dimension": "genre",
+          "tag": "acoustic",
+          "source_url": "https://rkmusic.jp/release/page/2/?release_cat=live-union",
+          "excerpt": "ノスタルジー・ステップ (Acoustic Rearrange)"
+        }
+      ]
+    }
+  ]
+}

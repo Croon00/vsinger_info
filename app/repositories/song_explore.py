@@ -4,9 +4,10 @@ from app.repositories.youtube_video_format import SHORT_MARKER, SHORT_VISIBILITY
 from app.repositories.youtube_cover_rules import COVER_TITLE_SQL, COVER_TITLE_PARAMS
 from app.repositories.original_song_groups import ORIGINAL_GROUPS_CTE
 from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_PARAMS
+import json
 
 
-def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None):
+def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None, genres=None, moods=None, music_tags=None):
     repo = repository or CatalogReadRepository(session)
     params = {'agency': agency, 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}
     scope = """a.archived_at IS NULL AND a.show_in_catalog AND
@@ -104,6 +105,17 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
                 a.id=ANY(CAST(:artists AS integer[])) OR ra.source_artist_id=ANY(CAST(:artists AS integer[])) OR EXISTS(
                   SELECT 1 FROM original_groups sm WHERE sm.group_id=a.id
                     AND sm.member_id=ANY(CAST(:artists AS integer[]))))"""
+    if kind == 'original':
+        params.update(music_tags=json.dumps(music_tags or []), genres=genres or [], moods=moods or [])
+        sql = f"""SELECT entries.*,COALESCE(tags.genres,'{{}}'::text[]) genres,
+          COALESCE(tags.moods,'{{}}'::text[]) moods,COALESCE(tags.sources,'[]'::jsonb) music_tag_sources
+          FROM ({sql}) entries LEFT JOIN jsonb_to_recordset(CAST(:music_tags AS jsonb))
+            tags(youtube_video_id text,recording_key text,recording_title text,recording_artist text,genres text[],moods text[],sources jsonb)
+            ON tags.youtube_video_id=entries.youtube_video_id OR
+              (entries.youtube_video_id IS NULL AND tags.recording_key=entries.key
+                AND tags.recording_title=entries.title AND tags.recording_artist=entries.artist_name)
+          WHERE (cardinality(CAST(:genres AS text[]))=0 OR tags.genres && CAST(:genres AS text[]))
+            AND (cardinality(CAST(:moods AS text[]))=0 OR tags.moods && CAST(:moods AS text[]))"""
     sql = f"SELECT * FROM ({sql}) entries WHERE concat_ws(' ',title,title_ko,artist_name,search_text) ILIKE :query"
     if kind == 'utawaku':
         sql += " AND NULLIF(btrim(artist_name),'') IS NOT NULL"

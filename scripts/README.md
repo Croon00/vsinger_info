@@ -83,3 +83,6 @@ Re:AcT 신규 16개 채널의 과거 영상 수집 범위·진행 조회·재개
 실행 전 각 도구의 dry-run/apply 기본값과 사용할 DB를 확인한다. 정상 실행은 단일 `DATABASE_URL`의 신규 DB만 사용한다. 이전 조사 도구에만 `LEGACY_DATABASE_URL`을 별도로 준다. [백엔드 구조](../docs/backend-architecture.md)를 따른다.
 
 프론트 화면 점검·성능 측정 스크립트는 `web/scripts/`에서 유지한다. 일회성 데이터 조사 스크립트와 출력은 `.tmp/`에, 보존할 원본은 `db-migration/archive/`에 둔다.
+# 오리지널 음악 태그 조사
+
+`collect_original_music_tags.py`는 기존 오리지널 목록 JSON을 입력받아 공식 YouTube 설명을 보고서로 수집한다. DB 변경 없이 이어받기를 지원하며 `--review`는 LLM 제안만 만든다. 실행·출처 검수·현재 수집 범위는 [음악 분류](../docs/original-music-tags.md)를 따른다.

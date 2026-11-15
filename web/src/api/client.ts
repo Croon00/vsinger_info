@@ -61,6 +61,7 @@ const mockApi = {
 export const api = isMock
   ? {
       ...mockApi,
+      musicTags: async () => ({ genres: [], moods: [] }),
       songPerformers: async (..._args: Parameters<typeof backendApi.songPerformers>) => [],
       searchPerformers: async (..._args: Parameters<typeof backendApi.searchPerformers>) => [],
       songPage: async (

@@ -96,7 +96,14 @@ export interface Page<T> {
   limit: number
 }
 export type SongKind = 'utawaku' | 'cover' | 'original'
+export interface MusicTagOptions {
+  genres: { value: string; label: string }[]
+  moods: { value: string; label: string }[]
+}
 export interface ExploredSong {
+  genres?: string[]
+  moods?: string[]
+  music_tag_sources?: { dimension: string; tag: string; source_url: string; excerpt: string }[]
   key: string
   title: string
   title_ko: string | null
