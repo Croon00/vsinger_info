@@ -102,10 +102,13 @@ async def run_once(provider=None):
 
 async def run_holodex_once(provider=None):
     token = str(uuid4())
-    accounts = await db_call(repository.claim_holodex, token)
+    accounts = await db_call(repository.claim_holodex, token, poll_seconds=settings.holodex_poll_seconds,
+                            live_check_seconds=settings.holodex_live_check_seconds)
     result = dict(accounts=len(accounts), live=0, scheduled=0, failed=0)
     if not accounts:
         return result
+    retry_seconds = min(settings.holodex_poll_seconds if a.get('discover', True)
+                        else settings.holodex_live_check_seconds for a in accounts)
     try:
         async with asyncio.timeout(150):
             provider = provider or HolodexClient(settings.holodex_api_key)
@@ -117,15 +120,35 @@ async def run_holodex_once(provider=None):
             updates = []
             for account in accounts:
                 candidates = by_channel.get(account['channel_id'], [])
+                discover = account.get('discover', True)
+                previous = account.get('snapshot') or {}
+                if not discover:
+                    known_ids = {v['video_id'] for v in previous.get('streams', [])}
+                    candidates = [v for v in candidates if v.id in known_ids]
                 streams = [dict(video_id=v.id, title=v.title,
                     started_at=v.start_actual.isoformat() if v.start_actual else None)
                     for v in candidates if v.status == 'live']
                 upcoming = [dict(video_id=v.id, title=v.title,
                     scheduled_at=v.start_scheduled.isoformat() if v.start_scheduled else None)
                     for v in candidates if v.status == 'upcoming']
-                state = dict(next_check_at=(captured+timedelta(seconds=settings.holodex_poll_seconds)).isoformat())
+                if not discover:
+                    upcoming = previous.get('upcoming', [])
+                state = {k: v for k, v in (account.get('state') or {}).items()
+                         if k not in ('lease_token', 'lease_until', 'retry_at')}
+                state['next_live_check_at'] = (captured+timedelta(seconds=settings.holodex_live_check_seconds)).isoformat()
+                if discover:
+                    state['next_check_at'] = (captured+timedelta(seconds=settings.holodex_poll_seconds)).isoformat()
+                else:
+                    # Retain the hourly discovery deadline even if an older
+                    # collector left a one-minute deadline in shared state.
+                    hourly_due = datetime.fromisoformat(previous['checked_at']) + timedelta(seconds=settings.holodex_poll_seconds)
+                    previous_due = datetime.fromisoformat(state.get('next_check_at') or previous['checked_at'])
+                    state['next_check_at'] = max(hourly_due, previous_due).isoformat()
+                snapshot = dict(previous, provider='holodex', live_checked_at=captured.isoformat(),
+                    checked_at=captured.isoformat() if discover else previous['checked_at'],
+                    streams=streams, upcoming=upcoming)
                 updates.append(dict(id=account['id'], channel_id=account['channel_id'], state=state,
-                    snapshot=dict(provider='holodex', checked_at=captured.isoformat(), streams=streams, upcoming=upcoming)))
+                    snapshot=snapshot))
             saved = await db_call(repository.save_holodex_batch, token, updates)
             for update in updates:
                 if update['id'] in saved:
@@ -134,12 +157,12 @@ async def run_holodex_once(provider=None):
                 else:
                     result['failed'] += 1
     except HolodexFailure as exc:
-        await db_call(repository.defer, token, seconds=exc.retry_after,
+        await db_call(repository.defer, token, seconds=max(retry_seconds, exc.retry_after),
                       all_accounts=True, namespace='holodex_live_monitor')
         result['failed'] = len(accounts)
         logger.warning('Holodex live monitor deferred: %s', exc.reason)
     except BaseException:
-        await db_call(repository.defer, token, namespace='holodex_live_monitor')
+        await db_call(repository.defer, token, seconds=retry_seconds, namespace='holodex_live_monitor')
         raise
     return result
 

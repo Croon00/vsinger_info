@@ -125,7 +125,10 @@ class CatalogReadRepository:
         return self.page('''SELECT e.id account_id,e.platform_id channel_id,
             a.id artist_id,COALESCE(a.name_ko,a.name_native) artist_name,COALESCE(a.avatar_url,'') avatar_url,
             s.video_id,s.title,s.started_at,s.scheduled_at,s.status,
-            (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz checked_at
+            CASE WHEN s.status='live' AND cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'
+                 THEN COALESCE(cs.provider_state->'youtube_live_snapshot'->>'live_checked_at',
+                               cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz
+                 ELSE (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz END checked_at
             FROM external_accounts e JOIN collection_states cs ON cs.external_account_id=e.id
             JOIN LATERAL (
                 SELECT ar.id,ar.name_native,ar.name_ko,ar.avatar_url FROM artist_external_accounts ae
@@ -146,8 +149,14 @@ class CatalogReadRepository:
             WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
               AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
               AND s.video_id ~ '^[A-Za-z0-9_-]{11}$'
-              AND (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz
-                    BETWEEN clock_timestamp()-interval '15 minutes' AND clock_timestamp()
+              AND CASE WHEN s.status='live' AND cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'
+                       THEN COALESCE(cs.provider_state->'youtube_live_snapshot'->>'live_checked_at',
+                                     cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz
+                       ELSE (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz END
+                    BETWEEN clock_timestamp() - CASE
+                        WHEN s.status='upcoming' AND cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'
+                        THEN interval '75 minutes' ELSE interval '15 minutes' END
+                    AND clock_timestamp()
             ''', {'include_upcoming': include_upcoming}, offset, limit,
             "CASE WHEN q.status='live' THEN 0 ELSE 1 END,q.started_at DESC NULLS LAST,q.scheduled_at ASC NULLS LAST,q.account_id,q.video_id")
 

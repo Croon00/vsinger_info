@@ -64,7 +64,7 @@ def test_stream_endpoint_validates_paging_and_preserves_auth(monkeypatch):
 def test_snapshot_read_filters_stale_hidden_disabled_accounts_and_pages(database):
     apply(database)
     now = datetime.now(UTC)
-    for index in range(6):
+    for index in range(10):
         artist = row(database, 'artists', slug=f'stream-{index}', entity_kind='solo', name_native=f'Singer {index}', show_in_catalog=index != 4)
         account = row(database, 'external_accounts', platform='youtube', platform_id='UC' + str(index) * 22,
                       url=f'https://youtube.com/channel/UC{str(index) * 22}', collection_enabled=index != 3)
@@ -73,8 +73,12 @@ def test_snapshot_read_filters_stale_hidden_disabled_accounts_and_pages(database
         if index == 0:
             other = row(database, 'artists', slug='second-owner', entity_kind='solo', name_native='Other', show_in_catalog=True)
             row(database, 'artist_external_accounts', artist_id=other, account_id=account, relationship='member')
-        checked = now - timedelta(minutes=20 if index == 2 else 1)
+        checked = now - timedelta(minutes={2: 20, 6: 60, 7: 80, 8: 20, 9: -5}.get(index, 1))
         snapshot = dict(checked_at=checked.isoformat(), streams=[dict(video_id=str(index)*11, title='Live', started_at=(now-timedelta(hours=index)).isoformat())])
+        if index in (6, 7, 9):
+            snapshot['provider'] = 'holodex'
+        if index == 6:
+            snapshot['live_checked_at'] = (now-timedelta(minutes=1)).isoformat()
         database.execute('INSERT INTO collection_states(external_account_id,provider_state) VALUES (%s,%s::jsonb)',
                          (account, json.dumps({'youtube_live_snapshot': snapshot})))
         if index == 5:
@@ -86,9 +90,10 @@ def test_snapshot_read_filters_stale_hidden_disabled_accounts_and_pages(database
         with Session(engine) as session:
             service = CatalogRead(session)
             result = service.live_streams(0, 1)
-            assert result['total'] == 2
+            assert result['total'] == 3
             assert result['items'][0]['artist_name'] == 'Singer 0'
             assert service.live_streams(1, 1)['items'][0]['artist_name'] == 'Singer 1'
-            assert service.live_streams(2, 1)['total'] == 2
+            assert service.live_streams(2, 1)['items'][0]['artist_name'] == 'Singer 6'
+            assert service.live_streams(3, 1)['total'] == 3
     finally:
         engine.dispose()

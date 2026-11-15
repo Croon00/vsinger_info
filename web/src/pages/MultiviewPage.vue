@@ -243,6 +243,7 @@ onBeforeUnmount(() => {
         </NativeSelect>
       </Field>
       <span v-if="lastRead" class="text-xs text-muted-foreground">목록 갱신 {{ lastRead }}</span>
+      <span class="text-xs text-muted-foreground">새 방송 검색 1시간 · 진행 중인 방송 확인 3분</span>
     </FieldGroup>
 
     <TooltipProvider :delay-duration="150">
@@ -252,7 +253,7 @@ onBeforeUnmount(() => {
           :error="error"
           :empty="!visibleStreams.length"
           title="확인된 생방송·예정 방송이 없어요"
-          description="최근 15분 내 수집기가 확인한 방송을 표시합니다. 잠시 후 새로고침해 주세요."
+          description="새 방송은 1시간마다 검색하고, 진행 중인 방송은 3분마다 상태를 확인합니다."
           @retry="refresh"
         >
           <Tooltip v-for="stream in visibleStreams" :key="stream.video_id">

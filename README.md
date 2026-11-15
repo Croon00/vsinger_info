@@ -36,7 +36,7 @@ uvicorn app.main:app --reload
 - 준비 상태: http://127.0.0.1:8000/ready — 신규 DB와 음악 worker 상태 조회. worker가 활성화됐는데 필수 provider 인증 설정, handler 또는 heartbeat가 빠지면 ready=false다.
 - `app.main:app`과 `app.api.main:app`은 같은 API다.
 - 멀티뷰 생방송 확인만 로컬에서 실행하려면 `.venv\Scripts\python.exe -m app.services.youtube_live_monitor`를 사용한다. 새 방송·예약 검색은 30분, 후보 상태 확인은 1분이며 기존 아카이브 수집·Discord·LLM은 시작하지 않는다. `python -m app.runtime`의 음악 worker에도 연결돼 있다. [설정·범위](docs/read-api-v2.md#생방송-멀티뷰)를 따른다.
-- 서버 전용 `HOLODEX_API_KEY`를 설정하면 멀티뷰 전용 수집기는 Holodex의 등록 채널별 생방송·예정 방송을 `HOLODEX_POLL_SECONDS=60`마다 조회한다. 이 모드는 YouTube Data API를 호출하지 않으며 일일 아카이브 수집은 기존대로 유지한다. Railway에서도 백엔드 Variables에 키를 따로 설정하고 변경 코드를 배포해야 지속 실행된다. 로컬 `.env`는 배포되지 않는다.
+- 서버 전용 `HOLODEX_API_KEY`를 설정하면 멀티뷰 전용 수집기는 전체 생방송·예정 방송을 `HOLODEX_POLL_SECONDS=3600`(1시간)마다 조회하고, 이미 생방송으로 확인한 영상이 있는 채널만 `HOLODEX_LIVE_CHECK_SECONDS=180`(3분)마다 묶음 확인한다. 3분 확인은 기존 영상의 유지·종료만 갱신하며 예정 방송과 전체 검색 기한은 유지한다. 새 방송·예정 방송의 시작 발견은 최대 약 1시간, 기존 생방송의 종료 반영은 약 3분과 provider 지연만큼 늦어질 수 있다. 실패 시 해당 주기와 더 긴 provider 유예를 존중한다. 이 모드는 YouTube Data API를 호출하지 않으며 일일 아카이브 수집은 기존대로 유지한다. Railway에서도 백엔드 Variables에 키·주기를 따로 설정하고 변경 코드를 배포해야 지속 실행된다. 로컬 `.env`는 배포되지 않는다.
 - 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않으며 구 SQL 연결은 차단되어 있다.
 
 다른 터미널에서 새 프론트를 실행한다.

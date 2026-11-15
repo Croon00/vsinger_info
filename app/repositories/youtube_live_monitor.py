@@ -60,31 +60,45 @@ def defer(session, token, *, seconds=60, all_accounts=False, account_id=None, na
         dict(token=token, seconds=max(1, seconds), all_accounts=all_accounts, account_id=account_id, namespace=namespace))
 
 
-def claim_holodex(session, token, limit=500):
+def claim_holodex(session, token, limit=500, *, poll_seconds=3600, live_check_seconds=180):
     """Separate provider lease/retry; YouTube quota never blocks Holodex reads."""
     session.execute(text('''INSERT INTO collection_states(external_account_id)
         SELECT id FROM external_accounts WHERE platform='youtube' AND collection_enabled
           AND archived_at IS NULL ON CONFLICT DO NOTHING'''))
-    rows = session.execute(text('''WITH due AS (SELECT e.id,e.platform_id channel_id,
-        COALESCE(cs.provider_state->'holodex_live_monitor','{}'::jsonb) state
+    discovery_due = """(COALESCE((cs.provider_state->'holodex_live_monitor'->>'next_check_at')::timestamptz,
+                       '-infinity'::timestamptz) <= clock_timestamp()
+          AND (cs.provider_state->'youtube_live_snapshot'->>'provider' IS DISTINCT FROM 'holodex'
+               OR COALESCE((cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz,
+                           '-infinity'::timestamptz) + (:poll_seconds * interval '1 second') <= clock_timestamp()))"""
+    rows = session.execute(text(f'''WITH due AS (SELECT e.id,e.platform_id channel_id,
+        COALESCE(cs.provider_state->'holodex_live_monitor','{{}}'::jsonb) state,
+        COALESCE(cs.provider_state->'youtube_live_snapshot','{{}}'::jsonb) snapshot,
+        {discovery_due} discover
         FROM external_accounts e JOIN collection_states cs ON cs.external_account_id=e.id
         WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
-          AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
+          AND e.platform_id ~ '^UC[A-Za-z0-9_-]{{22}}$'
           AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
                       WHERE ae.account_id=e.id AND a.archived_at IS NULL AND a.show_in_catalog)
           AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'lease_until')::timestamptz,
                        '-infinity'::timestamptz) <= clock_timestamp()
           AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'retry_at')::timestamptz,
                        '-infinity'::timestamptz) <= clock_timestamp()
-          AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'next_check_at')::timestamptz,
-                       '-infinity'::timestamptz) <= clock_timestamp()
+          AND ({discovery_due}
+            OR (cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'
+                AND jsonb_array_length(COALESCE(cs.provider_state->'youtube_live_snapshot'->'streams','[]'::jsonb)) > 0
+                AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'next_live_check_at')::timestamptz,
+                             '-infinity'::timestamptz) <= clock_timestamp()
+                AND COALESCE((cs.provider_state->'youtube_live_snapshot'->>'live_checked_at')::timestamptz,
+                             (cs.provider_state->'youtube_live_snapshot'->>'checked_at')::timestamptz,
+                             '-infinity'::timestamptz) + (:live_check_seconds * interval '1 second') <= clock_timestamp()))
         ORDER BY cs.provider_state->'holodex_live_monitor'->>'next_check_at' NULLS FIRST,e.id
         FOR UPDATE OF cs SKIP LOCKED LIMIT :limit)
         UPDATE collection_states cs SET provider_state=jsonb_set(cs.provider_state,
-            '{holodex_live_monitor}',COALESCE(cs.provider_state->'holodex_live_monitor','{}'::jsonb)
+            '{{holodex_live_monitor}}',COALESCE(cs.provider_state->'holodex_live_monitor','{{}}'::jsonb)
               || jsonb_build_object('lease_token',CAST(:token AS text),'lease_until',clock_timestamp()+interval '180 seconds'))
         FROM due WHERE cs.external_account_id=due.id
-        RETURNING due.id,due.channel_id,due.state'''), {'limit': limit, 'token': token}).mappings().all()
+        RETURNING due.id,due.channel_id,due.state,due.snapshot,due.discover'''),
+        {'limit': limit, 'token': token, 'poll_seconds': poll_seconds, 'live_check_seconds': live_check_seconds}).mappings().all()
     return [dict(row) for row in rows]
 
 

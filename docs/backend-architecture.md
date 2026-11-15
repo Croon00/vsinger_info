@@ -6,7 +6,7 @@
 
 ## 구성과 데이터 경로
 
-생방송 멀티뷰(2026-11-15)는 `youtube_live_monitor`의 독립 loop에서 `HOLODEX_API_KEY`가 있으면 Holodex에 등록 채널을 50개씩 묶어 1분마다 조회한다. 키가 없으면 YouTube에서 30분마다 최근 방송 후보를 찾고 예정·진행 후보를 1분마다 묶음 확인한다. 두 경로는 별도 provider lease·재시도 상태를 사용하고 같은 `collection_states.provider_state.youtube_live_snapshot`에 저장한다. 일일 아카이브 수집과 분리하며, `music_worker_loop` 또는 전용 모듈로 실행한다. `GET /api/streams`는 15분 내 관측을 읽기만 하고 `/api/stream-groups`는 등록 소속사·그룹별 채널 묶음을 조회한다. 상세 설정과 제한은 [멀티뷰 계약](read-api-v2.md#생방송-멀티뷰)을 따른다.
+생방송 멀티뷰(2026-11-15)는 `youtube_live_monitor`의 독립 loop에서 `HOLODEX_API_KEY`가 있으면 Holodex에 등록 채널을 50개씩 묶어 1시간마다 전체 조회하고, 이미 생방송인 영상의 채널만 3분마다 확인한다. 진행 방송 확인은 기존 생방송 ID의 상태만 반영하며 예정 목록과 전체 검색 기한을 보존한다. 키가 없으면 YouTube에서 30분마다 최근 방송 후보를 찾고 예정·진행 후보를 1분마다 묶음 확인한다. 두 provider는 별도 lease·재시도 상태를 사용하고 같은 `collection_states.provider_state.youtube_live_snapshot`에 저장한다. 일일 아카이브 수집과 분리하며, `music_worker_loop` 또는 전용 모듈로 실행한다. `GET /api/streams`는 Holodex 예정 방송은 전체 조회 후 75분, 생방송은 마지막 상태 확인 후 15분 이내 자료를 읽기만 하고 `/api/stream-groups`는 등록 소속사·그룹별 채널 묶음을 조회한다. 상세 설정과 제한은 [멀티뷰 계약](read-api-v2.md#생방송-멀티뷰)을 따른다.
 
 ```text
 새 프론트 → /api → CatalogRead → CatalogReadRepository → 신규 통합 DB (읽기 전용)
