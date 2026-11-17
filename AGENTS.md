@@ -41,6 +41,10 @@ FastAPI + PostgreSQL 백엔드, 기존 관리 웹 `web.bak/`, 새 조회 프론�
 
 ## 검증과 문서
 
+사용자가 검토하는 스펙·설계·작업 목록·점검·분석 결과는 제목과 본문을 한국어로 작성한다. 파일명, 명령어, API 경로, 코드 식별자와 FR/SC/US/T 식별자는 실제 표기를 사용한다. 인수 시나리오는 전제·동작·기대 결과로 기술한다.
+
+Spec Kit 작업은 [작업 안내](docs/spec-driven-development.md)와 [기능 목록](specs/README.md)을 따른다. 공통 원칙은 [.specify/memory/constitution.md](.specify/memory/constitution.md)에 반영한다. 기능 변경은 해당 spec.md의 요구사항·완료 조건, plan.md의 설계, tasks.md의 작업을 연결하고 현재 계약·검증 기록·roadmap도 갱신한다. 기존 문서에서 옮긴 완료 기록은 당시 날짜와 근거를 유지한다.
+
 핵심 검증은 원문 중복 방지, 허용 분류, source/route 접근 권한, 전송 생략·중복 방지, 기존 API 호환성이다. 변경에 맞는 테스트를 실행하고 fixture 테스트와 실데이터 검증을 구분해 기록한다.
 
 실행법은 README, 현재 구조·계약은 docs, 남은 작업은 roadmap에 유지한다. 폐기된 계획과 중복 SQL/타입 초안을 AGENTS에 쌓지 않는다. 테스트 통과 기록에는 날짜와 검증 범위를 명시한다.

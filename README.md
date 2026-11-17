@@ -1,5 +1,7 @@
 # UtaMowa (우타모와)
 
+스펙 기반 작업은 [Spec Kit 작업 안내](docs/spec-driven-development.md)와 [기능 스펙 목록](specs/README.md)에서 시작한다. 프로젝트 원칙은 [.specify/memory/constitution.md](.specify/memory/constitution.md)를 따른다.
+
 아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 조회 프론트(`web/`), 새 카탈로그 관리자(`admin-web/`), 기존 관리 웹(`web.bak/`), Discord 봇과 수집 worker로 구성된다.
 
 전체 디렉터리 역할과 코드·자료 보관 기준은 [파일 구조 안내](docs/repository-structure.md), 운영 도구 목록은 [scripts 안내](scripts/README.md)를 따른다.
