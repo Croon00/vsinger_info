@@ -72,12 +72,16 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 
 ### 음악·아티스트 기능 계약
 
-다음 자료는 해당 기능의 specify·plan 입력으로 사용한다. 전체 미완료 목록에서 요청된 기능을 선택해 새 스펙으로 구체화한다.
+2026-11-18 기존 작업을 다음 spec.md·plan.md·tasks.md로 정리했다. 과거 완료 기록은 원본 문서에 보존하고 날짜별 근거와 후속 확인을 연결한다.
 
-- [아티스트 이름](artist-names.md), [아티스트 정렬](artist-sorting.md), [이미지 저장](avatar-storage.md), [공유 YouTube 채널](shared-youtube-channels.md)
-- [곡 탐색](song-exploration.md), [오리지널 음악 분류](original-music-tags.md), [디스코그래피 YouTube 연결](discography-youtube-links.md)
-- [Spotify 이름 일치 조사](spotify-exact-name-discovery.md), [YouTube 커버 수집](youtube-covers.md), [세트리스트 후보 선택](youtube-setlist-selection.md)
-- [채널 수집 범위](youtube-channel-coverage.md), [세트리스트 이전 결과](setlist-migration-report.md)
+- [아티스트 명의·공유 채널·탐색 정렬](../specs/003-artist-catalog/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [프로필 이미지 저장·초기 이미지 작업](../specs/004-avatar-storage/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [아티스트·공식 채널 등록과 자료 보완](../specs/005-catalog-registration/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [Spotify 계정 탐색과 발매곡 YouTube 연결](../specs/006-discography-links/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [YouTube 커버 분류·과거 수집·조회](../specs/007-youtube-covers/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [세트리스트 이전·후보 선택·가창 정정과 복구](../specs/008-setlist-quality/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [곡 탐색·세트리스트 검색과 조회 최적화](../specs/009-song-exploration/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
+- [오리지널 음원의 근거 기반 장르·분위기 필터](../specs/010-original-music-tags/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
 
 ### 날짜별 조사·적용·검증 근거
 
@@ -100,3 +104,12 @@ web/docs와 scripts/README.md 등 영역 문서는 해당 영역 AGENTS.md와 �
 - roadmap의 병합 충돌 표시를 제거하고 양쪽 기록을 2026-10-03 이력과 2026-10-04 후속 기록으로 연결했다. git diff --check를 실행했다.
 
 이번 검증 범위는 문서·설치 구조다. 애플리케이션 테스트·실제 provider·운영 배포 확인은 각 기능의 미완료 작업으로 추적한다.
+
+## 기존 작업 이관 검증 (2026-11-18)
+
+003~010의 8개 기능에 spec.md·plan.md·tasks.md 24개를 작성하고 기능 목록·문서 지도·roadmap에 연결했다. 분류 단위는 기존 계약과 날짜별 작업의 관련 범위로 정했다. 과거 완료 기록은 원본 날짜를 유지했으며, fixture·실데이터·배포 상태를 구분했다.
+
+- Windows PowerShell 환경에서 8개 디렉터리 각각에 check-prerequisites.ps1 -Json -RequireSpec -RequireTasks -IncludeTasks를 실행해 종료 코드 0을 확인했다.
+- 신규 문서 24개와 연결 문서 3개의 UTF-8 문자·상대 링크 대상, 신규 문서의 명시적 코드 경로와 US/FR/SC 식별자를 검사해 오류 0건을 확인했다. git diff --check를 통과했다.
+- 애플리케이션 테스트·DB 조회 및 변경·실제 provider 호출·배포 확인은 이번 문서 이관에서 실행하지 않았다. Git 제외 보고서의 존재·내용은 재검증하지 않았다.
+- requested-vsingers-2026-10-02.md에 남은 병합 충돌 표시와 상태 불일치는 005의 T003에서 추적한다. 세트리스트의 10월 초 상태는 10월 말 복구 기록과 대조할 후속 작업으로 008에 연결했다.
