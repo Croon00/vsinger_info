@@ -11,3 +11,18 @@
 각 디렉터리의 spec.md → plan.md → tasks.md 순서로 읽는다. 기존 검증의 건수는 기록 시점 값이다. 이번 도입의 검증 범위는 [스펙 작업 안내](../docs/spec-driven-development.md)에 기록한다.
 
 다른 기능과 과거 기록의 연결은 [문서 지도](../docs/spec-driven-development.md), 전체 미완료 항목은 [roadmap](../docs/backend-roadmap.md)을 따른다. 새 기능은 별도 번호의 스펙을 만든다.
+
+## 기존 작업 범위별 스펙 (2026-11-18)
+
+기존 작업을 003~010으로 묶었다. 번호는 정리 순서이며 실행 우선순위·과거 작업 시점을 나타내지 않는다. 완료 기록은 원본 날짜의 근거이며 이번 정리에서 실데이터·배포를 재검증하지 않았다. 각 디렉터리의 spec.md → plan.md → tasks.md 순서로 읽는다.
+
+| 스펙 | 범위 | 상태 |
+| --- | --- | --- |
+| [003-artist-catalog](003-artist-catalog/spec.md) | 아티스트 명의·공유 채널·탐색 정렬 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [004-avatar-storage](004-avatar-storage/spec.md) | 프로필 이미지 저장·초기 이미지 작업 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [005-catalog-registration](005-catalog-registration/spec.md) | 아티스트·공식 채널 등록과 자료 보완 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [006-discography-links](006-discography-links/spec.md) | Spotify 계정 탐색과 발매곡 YouTube 연결 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [007-youtube-covers](007-youtube-covers/spec.md) | YouTube 커버 분류·과거 수집·조회 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [008-setlist-quality](008-setlist-quality/spec.md) | 세트리스트 이전·후보 선택·가창 정정과 복구 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [009-song-exploration](009-song-exploration/spec.md) | 곡 탐색·세트리스트 검색과 조회 최적화 | 과거 근거 이관, 후속 확인은 tasks.md |
+| [010-original-music-tags](010-original-music-tags/spec.md) | 오리지널 음원의 근거 기반 장르·분위기 필터 | 과거 근거 이관, 후속 확인은 tasks.md |

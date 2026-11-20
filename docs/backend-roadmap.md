@@ -7,7 +7,18 @@
 
 ## 스펙 기반 작업 연결 (2026-11-17)
 
-서비스 운영 전환은 [001-service-readiness](../specs/001-service-readiness/spec.md), 생방송 멀티뷰 운영 연결은 [002-live-multiview](../specs/002-live-multiview/spec.md)의 spec.md·plan.md·tasks.md에서 추적한다. 다른 항목은 요청 범위가 정해질 때 기능 스펙으로 구체화한다. [문서 지도와 명령 안내](spec-driven-development.md)를 함께 읽는다.
+서비스 운영 전환은 [001-service-readiness](../specs/001-service-readiness/spec.md), 생방송 멀티뷰 운영 연결은 [002-live-multiview](../specs/002-live-multiview/spec.md)의 spec.md·plan.md·tasks.md에서 추적한다. 추가 범위는 아래 기능 스펙에 연결하고 새 요구는 범위가 정해질 때 구체화한다. [문서 지도와 명령 안내](spec-driven-development.md)를 함께 읽는다.
+
+2026-11-18 기존 작업의 추적 범위를 추가했다. 원본 날짜별 완료 근거와 후속 확인은 각 스펙의 tasks.md에 연결했다. 기존 시점별 기록은 해당 날짜의 근거로 읽는다.
+
+- [아티스트 명의·공유 채널·탐색 정렬](../specs/003-artist-catalog/spec.md)
+- [프로필 이미지 저장·초기 이미지 작업](../specs/004-avatar-storage/spec.md)
+- [아티스트·공식 채널 등록과 자료 보완](../specs/005-catalog-registration/spec.md)
+- [Spotify 계정 탐색과 발매곡 YouTube 연결](../specs/006-discography-links/spec.md)
+- [YouTube 커버 분류·과거 수집·조회](../specs/007-youtube-covers/spec.md)
+- [세트리스트 이전·후보 선택·가창 정정과 복구](../specs/008-setlist-quality/spec.md)
+- [곡 탐색·세트리스트 검색과 조회 최적화](../specs/009-song-exploration/spec.md)
+- [오리지널 음원의 근거 기반 장르·분위기 필터](../specs/010-original-music-tags/spec.md)
 
 아래 멀티뷰 이력의 최신 Holodex 기준은 전체 검색 1시간, 생방송 및 예정 시각 도달 방송 확인 3분이다. 1분·30분 기록은 당시 적용 이력이며 실제 운영 설정은 배포 시 확인한다.
 
