@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | [001-service-readiness](001-service-readiness/spec.md) | 신규 DB 수집·알림 서비스 운영 전환 | 과거 로컬 검증 기록 있음, 운영 확인 작업 남음 |
 | [002-live-multiview](002-live-multiview/spec.md) | 생방송 검색·상태 확인·멀티뷰 운영 연결 | 기존 구현 있음, 배포·운영 확인 작업 남음 |
+| [003-original-song-availability](003-original-song-availability/spec.md) | 분류 파일 누락 시 오리지널 목록 복구 | 로컬 수정·회귀 검증 완료, 배포·운영 확인 남음 |
 
 각 디렉터리의 spec.md → plan.md → tasks.md 순서로 읽는다. 기존 검증의 건수는 기록 시점 값이다. 이번 도입의 검증 범위는 [스펙 작업 안내](../docs/spec-driven-development.md)에 기록한다.
 

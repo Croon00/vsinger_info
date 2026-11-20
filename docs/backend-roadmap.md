@@ -1,5 +1,10 @@
 # 백엔드 후속 작업
 
+## 오리지널 곡 조회 복구 (2026-11-21)
+
+- [x] 운영 분류 파일 누락으로 기본 오리지널 API가 500을 반환하는 원인 확인. 앱 리소스로 파일 이동, 누락 시 기본 목록 유지·분류 필터 503 구현. 관련 fixture 7 passed, 로컬 PostgreSQL 의존 13 skipped. [계약·검증 범위](original-music-tags.md), [스펙](../specs/003-original-song-availability/spec.md).
+- [ ] 새 백엔드와 `app/resources/classification/original_music_tags.json` 배포 후 운영 목록·분류 필터 확인.
+
 ## 스펙 기반 작업 연결 (2026-11-17)
 
 서비스 운영 전환은 [001-service-readiness](../specs/001-service-readiness/spec.md), 생방송 멀티뷰 운영 연결은 [002-live-multiview](../specs/002-live-multiview/spec.md)의 spec.md·plan.md·tasks.md에서 추적한다. 다른 항목은 요청 범위가 정해질 때 기능 스펙으로 구체화한다. [문서 지도와 명령 안내](spec-driven-development.md)를 함께 읽는다.
