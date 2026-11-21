@@ -21,7 +21,13 @@ SCOPE = """l.id IN (
  UNION SELECT archive_id FROM archive_artists WHERE artist_id=:artist
  UNION SELECT sp.archive_id FROM performance_artists spa
  JOIN performances sp ON sp.id=spa.performance_id
- WHERE spa.artist_id=:artist AND sp.archived_at IS NULL)"""
+ WHERE spa.artist_id=:artist AND sp.archived_at IS NULL)
+ AND (NOT EXISTS(SELECT 1 FROM artists requested WHERE requested.id=:artist AND requested.slug IN ('moco','bambi','sakuya','kagura'))
+      OR (EXISTS(SELECT 1 FROM external_accounts he WHERE he.id=v.source_account_id
+           AND he.platform='youtube' AND he.archived_at IS NULL AND he.platform_id =
+             (SELECT CASE WHEN requested.slug IN ('moco','bambi') THEN 'UCQXuGcIoseWY5HmW6-U7teg'
+                          ELSE 'UCuvYHCPdMxfvjW_F9w5LmRA' END FROM artists requested WHERE requested.id=:artist))
+          AND NOT EXISTS(SELECT 1 FROM covers hc WHERE hc.video_id=v.id AND hc.archived_at IS NULL)))"""
 # Distinct work IDs remain distinct even when their titles match.
 PERFORMANCE_SQL = """SELECT p.id,p.archive_id,p.ordinal,p.start_seconds,p.song_id,
  COALESCE(s.title_native,p.raw_title) song_title,s.title_ko song_title_ko,
@@ -43,7 +49,9 @@ PERFORMANCE_SQL = """SELECT p.id,p.archive_id,p.ordinal,p.start_seconds,p.song_i
  LEFT JOIN LATERAL (
  SELECT pa.artist_id,va.name_native,va.name_ko FROM performance_artists pa
  JOIN artists va ON va.id=pa.artist_id AND va.archived_at IS NULL
- WHERE pa.performance_id=p.id ORDER BY pa.position,pa.id LIMIT 1
+ WHERE pa.performance_id=p.id ORDER BY
+ (pa.artist_id=(SELECT host.primary_artist_id FROM live_archives host WHERE host.id=p.archive_id)) DESC NULLS LAST,
+ pa.position,pa.id LIMIT 1
  ) singer ON true WHERE p.archived_at IS NULL"""
 
 # Match on narrow rows first; constructing PERFORMANCE_SQL for every candidate

@@ -24,9 +24,58 @@ from app.services.catalog_read import CatalogRead
     ('vesperbell','【ヨミ】 Song Cover',{'vesperbell-yomi'}),
     ('kmnz','HIP (Cover) / KMNZ LITA & VESPERBELL ヨミ',{'kmnz-lita','vesperbell-yomi'}),
     ('other','Song cover / KMNZ TINA',set()),
+    ('honk-the-horn','Song Cover - MOCO【HONK THE HORN】',{'moco'}),
+    ('honk-the-horn','Song Cover - BAMBI【HONK THE HORN】',{'bambi'}),
+    ('honk-the-horn','Song Cover【HONK THE HORN】',{'moco','bambi'}),
+    ('honk-the-horn','Song Cover - BAMBIAN【HONK THE HORN】',{'moco','bambi'}),
+    ('honk-the-horn','Song (Cover) / BAMBI',{'bambi'}),
+    ('honk-the-horn','Song (Cover) / MOCO × BAMBI',{'moco','bambi'}),
+    ('honk-the-horn','Song cover #MOCO #HTH',{'moco'}),
+    ('honk-the-horn','Song cover / KMNZ LITA & HONK THE HORN',{'moco','bambi'}),
+    ('nurojunk','Song (Cover) / NUROJUNK SAKUYA',{'sakuya'}),
+    ('nurojunk','Song (Cover) / NUROJUNK カグラ',{'kagura'}),
+    ('nurojunk','Song (Cover) / NUROJUNK',set()),
+    ('honk-the-horn','Song (Cover) / NUROJUNK SAKUYA',{'moco','bambi'}),
 ])
 def test_approved_member_display_policy(group,title,expected):
     assert members_for_title(group,title)==expected
+
+
+def test_reviewed_duets_and_cross_group_collaborations_keep_publisher_scope(store):
+    from app.repositories.shared_youtube import REVIEWED_COVERS
+    db,engine=store
+    members={};accounts={}
+    for slug,names in [('honk-the-horn',['moco','bambi']),('nurojunk',['sakuya','kagura'])]:
+        group=row(db,'artists',slug=slug,name_native=slug,entity_kind='group',show_in_catalog=False)
+        channel=next(r['channel_id'] for r in RULES if r['group_slug']==slug)
+        account=row(db,'external_accounts',platform='youtube',platform_id=channel,url='https://youtube.com/channel/'+channel)
+        accounts[channel]=account
+        row(db,'artist_external_accounts',artist_id=group,account_id=account,relationship='owner')
+        for name in names:
+            member=row(db,'artists',slug=name,name_native=name,entity_kind='solo',show_in_catalog=True)
+            row(db,'artist_group_members',group_id=group,member_id=member);members[name]=member
+    for external,(channel,_) in REVIEWED_COVERS.items():
+        video=row(db,'videos',platform='youtube',platform_video_id=external,source_account_id=accounts[channel],title='Group cover',duration_seconds=240,availability='public')
+        row(db,'covers',video_id=video)
+    honk_channel='UCQXuGcIoseWY5HmW6-U7teg'
+    for external,title in [('unnamed0001','New group cover / HONK THE HORN'),('solomoco001','New cover / MOCO')]:
+        video=row(db,'videos',platform='youtube',platform_video_id=external,source_account_id=accounts[honk_channel],title=title,duration_seconds=240,availability='public')
+        row(db,'covers',video_id=video)
+    # A newly explicit solo name overrides the older reviewed duet default.
+    db.execute("UPDATE videos SET title='New title Cover / BAMBI' WHERE platform_video_id='iZ0bNfLYfMI'")
+    db.commit()
+    with Session(engine) as session:
+        for name,id in members.items():
+            page=CatalogRead(session).covers(id,0,100)
+            expected={external for external,(_,names) in REVIEWED_COVERS.items() if name in names}
+            if name=='moco':
+                expected.discard('iZ0bNfLYfMI')
+                expected.update({'unnamed0001','solomoco001'})
+            elif name=='bambi':expected.add('unnamed0001')
+            assert {x['youtube_video_id'] for x in page['items']}==expected
+            assert page['total']==len(expected)
+        page=explore(session,kind='cover',agency='all',q='',order='latest',offset=0,limit=100)
+        assert page['total']==8 and len({r['key'] for r in page['items']})==8
 
 
 def test_shared_stats_and_covers_keep_group_ownership_and_distinct_global_rows(store):

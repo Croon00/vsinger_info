@@ -1,5 +1,7 @@
 # 백엔드 후속 작업
 
+2026-11-22 [공유 멤버 연결](shared-members-2026-11-22.md): MOCO/BAMBI·SAKUYA/KAGURA 라이브·커버와 듀엣/공동 영상을 로컬에서 보완했다. disposable DB fixture, 진행자 미확정 3개, 운영 배포·일일 재대조 확인은 [013 작업](../specs/013-shared-member-catalog/tasks.md)에 남긴다.
+
 ## YouTube 오리지널 일일 수집 (2026-11-22)
 
 - [x] 기존 일일 poll에 original 검증 작업 연결, 키워드 없는 등록 발매 영상 연결·새 오리지널/가창 근거·원문/감사·중복/수동 링크 보호 로컬 구현. 관련 테스트 122 passed, PostgreSQL 의존 106 skipped. [현재 계약](youtube-original-collection.md), [012 스펙](../specs/012-youtube-original-daily/spec.md).

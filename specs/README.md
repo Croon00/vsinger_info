@@ -1,5 +1,7 @@
 # UtaMowa 기능 스펙
 
+- [013 공유 채널 멤버별 라이브·커버](013-shared-member-catalog/spec.md): HONK THE HORN·NUROJUNK 멤버 분리·듀엣/공동 커버·실데이터 보완. 운영 후속은 tasks.md에서 추적한다.
+
 - [012 YouTube 오리지널 일일 수집](012-youtube-original-daily/spec.md): 기존 하루 1회 poll 연결과 키워드 없는 발매 연결·새 곡 근거 검증 로컬 구현. DB fixture·운영 적용은 tasks.md에서 추적한다.
 
 - [011 홈 최근 오리지널·커버 곡](011-home-recent-songs/spec.md): 로컬 구현·실데이터 조회 확인, 화면 검수 및 PostgreSQL fixture 후속 실행은 tasks.md에서 추적한다.
