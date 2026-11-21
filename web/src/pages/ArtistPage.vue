@@ -18,7 +18,7 @@ import ArtistAvatar from '@/components/ArtistAvatar.vue'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { todayKey } from '@/lib/dates'
-import ArtistDiscography from '@/components/ArtistDiscography.vue'
+import ArtistOriginalSongs from '@/components/ArtistOriginalSongs.vue'
 import ArtistCovers from '@/components/ArtistCovers.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
@@ -155,9 +155,7 @@ function changeTab(value: string | number) {
       album: undefined,
       group: undefined,
     },
-    state: origin
-      ? { artistReturnTo: origin.to, artistBackSteps: origin.steps + 1 }
-      : undefined,
+    state: origin ? { artistReturnTo: origin.to, artistBackSteps: origin.steps + 1 } : undefined,
   })
 }
 function returnToList() {
@@ -216,7 +214,7 @@ function returnToList() {
             </TabsTrigger>
             <TabsTrigger value="originals">
               <Disc3 />
-              발매곡
+              오리지널 곡
             </TabsTrigger>
             <TabsTrigger value="concerts">
               <CalendarDays />
@@ -226,7 +224,10 @@ function returnToList() {
           <TabsContent value="lives" class="pt-4 min-[769px]:pt-6">
             <div class="section-heading">
               <div>
-                <h2 class="live-archive-title">라이브 아카이브 <span v-if="liveData">{{ liveData.total }}개</span></h2>
+                <h2 class="live-archive-title">
+                  라이브 아카이브
+                  <span v-if="liveData">{{ liveData.total }}개</span>
+                </h2>
               </div>
               <span class="text-xs text-muted-foreground">최신순</span>
             </div>
@@ -282,11 +283,17 @@ function returnToList() {
           </TabsContent>
           <TabsContent value="statistics" class="pt-4 min-[769px]:pt-6">
             <ResourceState :loading="statsLoading" :error="statsError" @retry="reloadStats">
-              <ArtistStatistics v-if="stats" :key="id" :lives="[]" :summary="stats" :artist-id="Number(id)" />
+              <ArtistStatistics
+                v-if="stats"
+                :key="id"
+                :lives="[]"
+                :summary="stats"
+                :artist-id="Number(id)"
+              />
             </ResourceState>
           </TabsContent>
           <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">
-            <ArtistDiscography :artist="data.artist" :artist-id="Number(id)" />
+            <ArtistOriginalSongs :key="id" :artist-id="Number(id)" />
           </TabsContent>
           <TabsContent value="concerts" class="pt-4 min-[769px]:pt-6">
             <ResourceState

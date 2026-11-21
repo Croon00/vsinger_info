@@ -3,8 +3,22 @@ import { test, expect } from '@playwright/test'
 test('calendar colors events by artist and shows adjacent-month events', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'light' })
   const artists = [
-    { id: 42, name: 'HACHI', theme_color: '#336699', birthday: '10-01', related_artist_ids: [42], sources: [] },
-    { id: 43, name: 'Another', theme_color: '#ffcc00', birthday: '01-01', related_artist_ids: [43], sources: [] },
+    {
+      id: 42,
+      name: 'HACHI',
+      theme_color: '#336699',
+      birthday: '10-01',
+      related_artist_ids: [42],
+      sources: [],
+    },
+    {
+      id: 43,
+      name: 'Another',
+      theme_color: '#ffcc00',
+      birthday: '01-01',
+      related_artist_ids: [43],
+      sources: [],
+    },
   ]
   const concerts = [
     { id: 79, artist_id: 42, title: 'August concert', starts_at: '2026-08-31T18:00:00+09:00' },
@@ -20,8 +34,17 @@ test('calendar colors events by artist and shows adjacent-month events', async (
     if (url.pathname === '/api/concerts') {
       const start = url.searchParams.get('start')!
       const end = url.searchParams.get('end')!
-      const items = concerts.filter((concert) => concert.starts_at.slice(0, 10) >= start && concert.starts_at.slice(0, 10) < end)
-        .map((concert) => ({ ...concert, event_type: 'live_event', event_format: 'onsite', status: 'ready' }))
+      const items = concerts
+        .filter(
+          (concert) =>
+            concert.starts_at.slice(0, 10) >= start && concert.starts_at.slice(0, 10) < end,
+        )
+        .map((concert) => ({
+          ...concert,
+          event_type: 'live_event',
+          event_format: 'onsite',
+          status: 'ready',
+        }))
       await route.fulfill({ json: { items, total: items.length, offset: 0, limit: 100 } })
       return
     }
@@ -31,20 +54,33 @@ test('calendar colors events by artist and shows adjacent-month events', async (
   const august = page.getByRole('button', { name: '2026년 8월 31일, 1개 일정' }).locator('..')
   await expect(august.locator('.calendar-event-theme')).toHaveCount(1)
   await expect(august.locator('.cell-events')).toHaveCSS('opacity', '0.22')
-  await expect(august.locator('.calendar-event-theme')).toHaveCSS('--calendar-event-color', '#336699')
-  const lightBackground = await august.locator('.calendar-event-theme').evaluate((badge) => getComputedStyle(badge).backgroundColor)
+  await expect(august.locator('.calendar-event-theme')).toHaveCSS(
+    '--calendar-event-color',
+    '#336699',
+  )
+  const lightBackground = await august
+    .locator('.calendar-event-theme')
+    .evaluate((badge) => getComputedStyle(badge).backgroundColor)
   expect(lightBackground).not.toBe('rgb(51, 102, 153)')
   await page.emulateMedia({ colorScheme: 'dark' })
   await expect(page.locator('html')).toHaveClass(/dark/)
-  const darkBackground = await august.locator('.calendar-event-theme').evaluate((badge) => getComputedStyle(badge).backgroundColor)
+  const darkBackground = await august
+    .locator('.calendar-event-theme')
+    .evaluate((badge) => getComputedStyle(badge).backgroundColor)
   expect(darkBackground).not.toBe(lightBackground)
   const october = page.getByRole('button', { name: '2026년 10월 1일, 1개 일정' }).locator('..')
   await expect(october.locator('.calendar-event-theme')).toHaveCount(1)
   await page.emulateMedia({ colorScheme: 'light' })
   await page.goto('/calendar?month=2026-12-01')
   const january = page.getByRole('button', { name: '2027년 1월 1일, 1개 일정' }).locator('..')
-  await expect(january.locator('.calendar-event-theme')).toHaveCSS('--calendar-event-color', '#ffcc00')
-  await expect(january.locator('.calendar-event-theme')).not.toHaveCSS('background-color', 'rgb(255, 204, 0)')
+  await expect(january.locator('.calendar-event-theme')).toHaveCSS(
+    '--calendar-event-color',
+    '#ffcc00',
+  )
+  await expect(january.locator('.calendar-event-theme')).not.toHaveCSS(
+    'background-color',
+    'rgb(255, 204, 0)',
+  )
 })
 
 test('calendar keeps its grid and cached events while fetching adjacent months', async ({
@@ -84,7 +120,9 @@ test('calendar keeps its grid and cached events while fetching adjacent months',
       ]
       await route.fulfill({
         json: {
-          items: events.filter(({ day }) => day >= start && day < end).map(({ id, day }) => ({
+          items: events
+            .filter(({ day }) => day >= start && day < end)
+            .map(({ id, day }) => ({
               id,
               artist_id: 42,
               title: `${day} concert`,
@@ -92,7 +130,7 @@ test('calendar keeps its grid and cached events while fetching adjacent months',
               event_format: 'onsite',
               status: 'ready',
               starts_at: `${day}T18:00:00+09:00`,
-          })),
+            })),
           total: 2,
           offset: 0,
           limit: 100,
@@ -149,12 +187,27 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
     let data: unknown = []
     let status = 200
     if (url.pathname === '/api/artists') data = [artist]
-    else if (url.pathname.endsWith('/statistics')) data = {
-      archives: 200, archivesWithSetlist: 180, performances: 900, uniqueSongs: 1, uniqueArtists: 1,
-      songs: [{ key: 'song', title: 'Aggregated song', artist: 'Band', searchText: 'Aggregated song Band', count: 900, lastPerformedAt: '2026-09-01T00:00:00Z', rank: 1 }],
-      artists: [{ key: 'band', name: 'Band', count: 900, percentage: 100 }],
-      activity: [{ month: '2026-08', count: 200 }],
-    }
+    else if (url.pathname.endsWith('/statistics'))
+      data = {
+        archives: 200,
+        archivesWithSetlist: 180,
+        performances: 900,
+        uniqueSongs: 1,
+        uniqueArtists: 1,
+        songs: [
+          {
+            key: 'song',
+            title: 'Aggregated song',
+            artist: 'Band',
+            searchText: 'Aggregated song Band',
+            count: 900,
+            lastPerformedAt: '2026-09-01T00:00:00Z',
+            rank: 1,
+          },
+        ],
+        artists: [{ key: 'band', name: 'Band', count: 900, percentage: 100 }],
+        activity: [{ month: '2026-08', count: 200 }],
+      }
     else if (url.pathname === '/api/artists/42/lives')
       data = [
         {
@@ -168,7 +221,26 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
           ],
         },
       ]
-    else if (url.pathname === '/api/artists/42/albums') {
+    else if (url.pathname === '/api/explore/songs') {
+      status = spotifyReady ? 200 : 503
+      data = spotifyReady
+        ? {
+            items: [
+              {
+                key: 'recording:37',
+                title: 'Real song',
+                title_ko: null,
+                artist_name: 'HACHI',
+                youtube_video_id: null,
+                published_at: null,
+              },
+            ],
+            total: 1,
+            offset: 0,
+            limit: 24,
+          }
+        : { detail: 'Unavailable' }
+    } else if (url.pathname === '/api/artists/42/albums') {
       status = spotifyReady ? 200 : 503
       data = spotifyReady
         ? [
@@ -202,7 +274,9 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         tracks: [
           {
             id: '21',
-            recording_id: 37, song_id: 987, has_lyrics: true,
+            recording_id: 37,
+            song_id: 987,
+            has_lyrics: true,
             name: 'Real song',
             disc_number: 1,
             track_number: 1,
@@ -221,7 +295,8 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         tracks: [
           {
             id: '31',
-            recording_id: 51, has_lyrics: false,
+            recording_id: 51,
+            has_lyrics: false,
             name: 'Other song',
             disc_number: 1,
             track_number: 1,
@@ -230,12 +305,16 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
           },
           {
             id: '32',
-            recording_id: 52, has_lyrics: false,
+            recording_id: 52,
+            has_lyrics: false,
             name: 'Guest song',
             disc_number: 2,
             track_number: 1,
             duration_ms: 180000,
-            artists: [{ artist_id: 42, name: 'HACHI' }, { artist_id: null, name: 'Other' }],
+            artists: [
+              { artist_id: 42, name: 'HACHI' },
+              { artist_id: null, name: 'Other' },
+            ],
           },
         ],
       }
@@ -251,6 +330,8 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
         needs_review: true,
         lyrics_source_type: 'caption',
       }
+    else if (url.pathname === '/api/search/performers')
+      data = [{ id: 42, name: 'HACHI', display_name: '하치' }]
     else if (url.pathname === '/api/search')
       data = [
         {
@@ -307,43 +388,27 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   await page.getByRole('tab', { name: '통계', exact: true }).click()
   await expect(page.locator('.statistics-song-row')).toContainText('Aggregated song')
   await expect(page.locator('.statistics-count').first()).toContainText('900')
-  expect(calls.filter(p => p.includes('/lives?'))).toHaveLength(1)
-  expect(calls.some(p => p.includes('all_records'))).toBe(false)
-  await page.getByRole('tab', { name: '발매곡' }).click()
-  await expect(page.getByText('콘텐츠 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.')).toBeVisible()
+  expect(calls.filter((p) => p.includes('/lives?'))).toHaveLength(1)
+  expect(calls.some((p) => p.includes('all_records'))).toBe(false)
+  await page.getByRole('tab', { name: '오리지널 곡' }).click()
+  await expect(
+    page.getByText('콘텐츠 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.'),
+  ).toBeVisible()
   await expect(page.locator('h1')).toHaveText('HACHI')
   spotifyReady = true
   await page.getByRole('button', { name: '다시 시도' }).click()
-  const hero = page.locator('.release-hero')
-  await expect(hero).toContainText('Real release')
-  await expect(hero).toContainText('싱글 · 2020년 4월 · 2:03')
-  await expect(hero.getByRole('link', { name: 'Spotify에서 열기' })).toHaveAttribute(
-    'href',
-    'https://open.spotify.com/album/realrelease',
-  )
-  const chips = page.locator('.release-filters [data-slot="toggle-group-item"]')
-  await expect(chips).toHaveText(['전체 2', '싱글 1', '참여 1'])
-  await chips.filter({ hasText: '참여' }).click()
-  await expect(page).toHaveURL(/[?&]group=appears(?:&|$)/)
-  await expect(hero).toHaveCount(0)
-  const cards = page.locator('a.release-card')
-  await expect(cards).toHaveCount(1)
-  await expect(cards).toContainText('2019 · 참여 컴필레이션')
-  await cards.click()
+  await expect(page.getByLabel('오리지널 곡 목록')).toContainText('Real song')
+  await page.goto('/artists/42?tab=originals&album=16')
   const dialog = page.getByRole('dialog')
   await expect(dialog).toContainText('Guest compilation')
   await expect(dialog).toContainText(/컴필레이션\s*참여/)
   await expect(dialog).not.toContainText('2곡')
   await expect(dialog.getByText('Disc 2')).toBeVisible()
-  await expect(dialog.locator('[data-slot="item"][data-variant="muted"]')).toHaveText(
-    /Guest song/,
-  )
+  await expect(dialog.locator('[data-slot="item"][data-variant="muted"]')).toHaveText(/Guest song/)
   await expect(dialog.getByRole('button', { name: '가사', exact: true })).toHaveCount(0)
   await page.keyboard.press('Escape')
   await expect(dialog).not.toBeVisible()
-  await chips.filter({ hasText: '전체' }).click()
-  await expect(page).not.toHaveURL(/group=/)
-  await hero.getByRole('button', { name: '자세히' }).click()
+  await page.goto('/artists/42?tab=originals&album=15')
   await expect(dialog).toContainText('Real song')
   await dialog.getByRole('button', { name: '가사', exact: true }).click()
   await expect(dialog).toContainText('Contract fixture text')
@@ -359,30 +424,66 @@ test('real mode uses new catalog contracts, isolates errors and displays stored 
   expect(calls.some((p) => p.startsWith('/api/draft/') || p.startsWith('/api/songs/'))).toBe(false)
 })
 
-test('search filters ignore missing artist credits and keep navigation clickable', async ({ page }) => {
+test('search filters ignore missing artist credits and keep navigation clickable', async ({
+  page,
+}) => {
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   const artist = {
-    id: 42, name: 'HACHI', display_name: '하치', related_artist_ids: [42], sources: [],
+    id: 42,
+    name: 'HACHI',
+    display_name: '하치',
+    related_artist_ids: [42],
+    sources: [],
   }
   await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
     const url = new URL(route.request().url())
-    const data = url.pathname === '/api/artists' ? [artist]
-      : url.pathname === '/api/artists/42' ? artist
-      : url.pathname === '/api/search' ? {
-          items: [
-            { id: 1, archive_id: 10, artist_id: 42, artist_name: 'HACHI',
-              song_title: 'First', original_artist: '', start_seconds: 10,
-              youtube_url: 'https://youtu.be/abcdefghijk' },
-            { id: 2, archive_id: 10, artist_id: 42, artist_name: 'HACHI',
-              song_title: 'Second', original_artist: 'Band', start_seconds: 20,
-              youtube_url: 'https://youtu.be/abcdefghijk' },
-            { id: 3, archive_id: 10, artist_id: null, artist_name: '',
-              song_title: 'Third', original_artist: 'Band', start_seconds: 30,
-              youtube_url: 'https://youtu.be/abcdefghijk' },
-          ], total: 3, offset: 0, limit: 50,
-        }
-      : { items: [], total: 0, offset: 0, limit: 12 }
+    const data =
+      url.pathname === '/api/artists'
+        ? [artist]
+        : url.pathname === '/api/artists/42'
+          ? artist
+      : url.pathname === '/api/search/performers'
+        ? [artist]
+      : url.pathname === '/api/search'
+            ? {
+                items: [
+                  {
+                    id: 1,
+                    archive_id: 10,
+                    artist_id: 42,
+                    artist_name: 'HACHI',
+                    song_title: 'First',
+                    original_artist: '',
+                    start_seconds: 10,
+                    youtube_url: 'https://youtu.be/abcdefghijk',
+                  },
+                  {
+                    id: 2,
+                    archive_id: 10,
+                    artist_id: 42,
+                    artist_name: 'HACHI',
+                    song_title: 'Second',
+                    original_artist: 'Band',
+                    start_seconds: 20,
+                    youtube_url: 'https://youtu.be/abcdefghijk',
+                  },
+                  {
+                    id: 3,
+                    archive_id: 10,
+                    artist_id: null,
+                    artist_name: '',
+                    song_title: 'Third',
+                    original_artist: 'Band',
+                    start_seconds: 30,
+                    youtube_url: 'https://youtu.be/abcdefghijk',
+                  },
+                ],
+                total: 3,
+                offset: 0,
+                limit: 50,
+              }
+            : { items: [], total: 0, offset: 0, limit: 12 }
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify(data) })
   })
   await page.goto('/search?q=하치')
@@ -392,7 +493,7 @@ test('search filters ignore missing artist credits and keep navigation clickable
   await page.keyboard.press('Escape')
   await page.getByRole('combobox', { name: '부른 아티스트' }).click()
   await page.keyboard.press('Escape')
-  expect(await page.evaluate(() => document.body.style.pointerEvents)).not.toBe('none')
+  await expect.poll(() => page.evaluate(() => document.body.style.pointerEvents)).not.toBe('none')
   await page.getByRole('link', { name: 'HACHI 아티스트 상세' }).click()
   await expect(page).toHaveURL('/artists/42')
   expect(errors).toEqual([])

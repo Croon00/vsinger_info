@@ -1,5 +1,17 @@
 # 백엔드 후속 작업
 
+## YouTube 오리지널 일일 수집 (2026-11-22)
+
+- [x] 기존 일일 poll에 original 검증 작업 연결, 키워드 없는 등록 발매 영상 연결·새 오리지널/가창 근거·원문/감사·중복/수동 링크 보호 로컬 구현. 관련 테스트 122 passed, PostgreSQL 의존 106 skipped. [현재 계약](youtube-original-collection.md), [012 스펙](../specs/012-youtube-original-daily/spec.md).
+- [ ] disposable PostgreSQL/CI에서 DB fixture 실행, poll·collect worker 모두 새 코드 적용 후 일일 수집·실제 조회 검증. 이번 작업에서 DB 변경·worker 활성화·배포는 하지 않았다.
+
+## 모델 호출 없는 세트리스트 복구 (2026-11-21)
+
+- [x] 번호 곡 목록과 종료/하이라이트 경계, 대화 항목과 구분선을 `setlist-rules-2`로 지원. 관련 fixture 175 passed, PostgreSQL 의존 38 skipped. 사용자 영상 15곡 실제 반영·모델 호출 0회.
+- [x] 전체 빈 방송 조사 후 484개 방송·7,732곡을 규칙만으로 복구. 작업 484개 succeeded, 사용자 영상 15곡 API 확인. [최종 기록](setlist-rules-recovery-2026-11-21.md).
+- [ ] 잔여 2,141개: 추가 형식/충돌 검토 1,613개·저장 댓글 없음 466개·보관 가창 보호 62개. 라코 133개는 미해결이다. [008 작업 목록](../specs/008-setlist-quality/tasks.md).
+- [ ] 새 규칙 코드 운영 배포·장기 worker 적용 후 신규 수집 확인. 로컬의 실데이터 반영과 코드 배포를 구분한다.
+
 ## 사용자 지정 이름·누락 이미지 복구 (2026-11-21)
 
 - [x] 한글 이름 4건 반영 및 Figaro·shin의 누락된 대표 512px 이미지 2건 복구. 원본·작은 변형·기존 URL 보존, 영수증 9924. 실제 API 이름 4건·공개 이미지 6건 확인, 관련 fixture 19 passed. [이름 기록](artist-names.md), [복구 기록](avatar-storage.md).
@@ -154,5 +166,7 @@ Discord 라우팅·수집 worker·Google Calendar 동기화는 새 프론트 네
 - YouTube 조회수 정기 갱신 주기·운영 예산 확정. 현재는 명시적 갱신 CLI이며 조회 API가 수집을 시작하지 않는다.
 - source 계정이 없는 발매 영상의 업로더 근거 확인과 소유권 검수. 조회수를 위해 임의로 계정을 붙이지 않는다.
 ## 오리지널 음악 분류 후속 (2026-11-15)
+
+2026-11-22 [실제 누락곡 보완](youtube-original-backfill-2026-11-22.md)에서 공식 활성 채널 138개를 조사하고 신규 녹음 40곡·영상 연결 14건을 반영했다. 아티스트 곡 목록·홈 즐겨찾기 캐러셀은 로컬 구현·검증했다. 미확정 후보/별도 유통 채널 검수·일일 worker 운영 배포·PostgreSQL fixture 실행은 [012 작업](../specs/012-youtube-original-daily/tasks.md)에 남는다.
 
 [공식 근거 분류](original-music-tags.md)는 40개 음원/편곡 버전과 조회 필터를 반영했다. 미분류 음원 조사·공식 영상 연결 보완·분위기 근거 확대는 남아 있다. 음원 청취 자동 분석과 정기 분류 worker는 구현되지 않았다.

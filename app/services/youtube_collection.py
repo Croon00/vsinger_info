@@ -11,6 +11,7 @@ from app.services.youtube_setlist import POLICY, select_setlist
 from app.services.youtube_setlist_rules import RULE_POLICY
 from app.repositories import youtube_collection as repository
 from app.schemas.worker_jobs import JobRequest
+from app.services.youtube_original import POLICY as ORIGINAL_POLICY, eligible as original_eligible, decide as decide_original
 
 
 def client():
@@ -57,7 +58,7 @@ async def collect_poll(job, payload):
     from app.integrations.youtube_channel_statistics import ChannelStatistics
     statistics = getattr(provider, 'channel_statistics', None)
     return dict(state=state, captured_at=captured, playlist=playlist, truncated=truncated, gap=gap,
-                videos=videos, purposes={v.id: purpose(v) for v in videos},
+                videos=videos, purposes={v.id: purpose(v) or ('original' if original_eligible(v) else None) for v in videos},
                 channel_statistics=statistics.model_dump(mode='json') if isinstance(statistics, ChannelStatistics) else None)
 
 
@@ -80,6 +81,13 @@ async def collect_video(job, payload):
         result['video'] = video
         if video.availability == 'private':
             result['outcome'] = 'private_or_deleted'
+            return result
+        if payload.purpose == 'original':
+            from app.repositories.youtube_original import scope
+            current_scope = await db_call(scope, job.external_account_id)
+            decision = decide_original(video, current_scope)
+            result.update(original=decision.model_dump(), extractor=ORIGINAL_POLICY,
+                          outcome='collected' if decision.status in ('new_original', 'link_recording') else decision.status)
             return result
         if purpose(video) != payload.purpose:
             result['outcome'] = 'not_eligible'

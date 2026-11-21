@@ -170,11 +170,7 @@ test('search finds original artists and songs and seeks through the YouTube API'
 test('lyrics and concert overlays preserve route state, keyboard focus and back behavior', async ({
   page,
 }) => {
-  await visit(page, '/artists/2?tab=originals')
-  const release = page.locator('a.release-card').filter({ hasText: 'EAT THE PAST' })
-  await expect(release).toHaveAttribute('href', /[?&]album=kaf-eat(?:&|$)/)
-  await release.click()
-  await expect(page).toHaveURL(/[?&]album=kaf-eat(?:&|$)/)
+  await visit(page, '/artists/2?tab=originals&album=kaf-eat')
   await expect(page.getByRole('dialog')).toContainText('EAT THE PAST')
   await page.reload({ waitUntil: 'domcontentloaded' })
   await expect(page.getByRole('dialog')).toContainText('EAT THE PAST')
@@ -190,8 +186,13 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await page.keyboard.press('Shift+Tab')
   await page.keyboard.press('Tab')
   await expect(archive.locator('.live-play')).toHaveCSS('opacity', '1')
-  await page.getByRole('tab', { name: '발매곡' }).click()
-  await page.locator('a.release-card').filter({ hasText: 'Midnight blue' }).click()
+  await page.getByRole('tab', { name: '오리지널 곡' }).click()
+  await page.evaluate(() => {
+    const url = new URL(location.href)
+    url.searchParams.set('album', 'midnight-blue')
+    history.pushState({}, '', url)
+    dispatchEvent(new PopStateEvent('popstate'))
+  })
   const dialog = page.getByRole('dialog')
   await expect(dialog).toContainText('Midnight blue')
   const lyrics = dialog.getByRole('button', { name: '가사', exact: true }).first()
@@ -207,7 +208,10 @@ test('lyrics and concert overlays preserve route state, keyboard focus and back 
   await expect(lyrics).toBeFocused()
   await page.goBack()
   await expect(dialog).not.toBeVisible()
-  await expect(page.getByRole('tab', { name: '발매곡' })).toHaveAttribute('data-state', 'active')
+  await expect(page.getByRole('tab', { name: '오리지널 곡' })).toHaveAttribute(
+    'data-state',
+    'active',
+  )
   await page.getByRole('tab', { name: '공연 정보' }).click()
   await page.locator('.concert-row').first().click()
   await expect(page.getByRole('dialog')).toContainText('티켓')

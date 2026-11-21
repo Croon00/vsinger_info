@@ -1,5 +1,9 @@
 # 새 카탈로그 통합 조회 API
 
+2026-11-22 아티스트 `?tab=originals`는 `/api/explore/songs?kind=original&artist_ids=ID`로 앨범 없는 녹음·영상 미연결 녹음을 포함해 24곡씩 표시한다. `published_only`를 사용하지 않는다. 홈 즐겨찾기 캐러셀은 같은 API에 즐겨찾기 아티스트 ID와 `published_only=true&limit=10&order=latest`를 전달한다. 빈 즐겨찾기는 API 전체 조회로 대체하지 않는다. 모든 요청은 조회 전용이다.
+
+2026-11-22 오리지널 일일 수집의 새 녹음/영상도 기존 `/explore/songs?kind=original`과 홈 계약을 사용한다. 조회에서 수집을 시작하지 않으며 응답 schema 변경은 없다. 운영 적용 상태·근거 조건은 [오리지널 일일 수집](youtube-original-collection.md)을 따른다.
+
 ## 홈 최근 곡 조회 (2026-11-21)
 
 홈은 `GET /api/explore/songs?kind=original&order=latest&offset=0&limit=10&published_only=true` 및 `kind=cover`를 사용한다. 선택 bool `published_only` 기본값은 false다. true이면 유효한 YouTube 영상 ID(11자 영문·숫자·밑줄·하이픈)가 있고 `published_at <= CURRENT_TIMESTAMP`인 행만 페이지·전체 수 계산 전에 선택한다. 게시일 미확인·미래 게시일·영상 없는 음원은 제외한다. `utawaku`와 함께 사용하면 422, 잘못된 bool도 422다. 최신순은 기존 `published_at DESC NULLS LAST, key`를 유지한다. 기존 분류·영상 중복 제거·인증·조회 전용 경계를 유지한다. [스펙·검증](../specs/011-home-recent-songs/spec.md).

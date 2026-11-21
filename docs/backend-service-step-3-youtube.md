@@ -1,5 +1,7 @@
 # 보완 3단계 결과 — 독립 YouTube 수집
 
+2026-11-22 로컬 보완: 기존 하루 1회 poll에 purpose=original 검증 경로를 연결했다. 키워드 없는 발매곡 연결과 새 곡 근거·명의 검증, 현재 검증/배포 한계는 [오리지널 일일 수집](youtube-original-collection.md)을 따른다. 아래 2026-09-23 기록은 당시 구현 근거다.
+
 실행일: 2026-09-23. [서비스 보완 계획](backend-service-readiness-plan.md)의 C단계다. 신규 DB의 활성 YouTube 계정 → 채널 감시 → 영상별 작업 → 댓글/세트리스트/커버 저장 → 조회 API 경로를 구현했다. 기존 `001/002` 스키마를 사용하며 운영 DB 변경·실제 provider 호출·PR 변경·Railway 배포는 수행하지 않았다.
 
 ## 실행 경로

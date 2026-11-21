@@ -29,6 +29,8 @@ function search(q: string) {
     </section>
     <RecentSongs kind="original" title="최근 오리지널 곡" />
     <RecentSongs kind="cover" title="최근 커버 곡" />
+    <RecentSongs kind="original" title="즐겨찾기한 오리지널 곡" favorites-only />
+    <RecentSongs kind="cover" title="즐겨찾기한 커버 곡" favorites-only />
     <section class="favorites-section" aria-labelledby="favorites-heading">
       <div class="section-heading">
         <div>

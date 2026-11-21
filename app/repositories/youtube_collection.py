@@ -140,6 +140,10 @@ def persist_collect(session, job, payload, value):
             published_at,duration_seconds,availability) VALUES ('youtube',:external,:account,:title,:published,:duration,:availability) RETURNING id'''),
             dict(external=video.id, account=job.external_account_id, title=video.title, published=video.published_at,
                  duration=video.duration_seconds, availability=video.availability)).scalar_one()
+    if payload.purpose == 'original':
+        from app.repositories.youtube_original import persist
+        persist(session, job, payload, value, current=current, video_id=video_id, conflict=conflict)
+        return
     archive_id = current['archive']['id'] if current['archive'] else None
     # The registered channel owner is the requested default even for group or
     # collaborative streams. Never choose arbitrarily between multiple owners.
