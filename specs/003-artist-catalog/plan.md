@@ -24,6 +24,8 @@ AGENTS.md와 [프로젝트 원칙](../../.specify/memory/constitution.md)을 따
 
 ## 조사와 설계
 
+2026-11-21 FR-001 보완은 `scripts/repair_requested_profiles_20261121.py`로 처리한다. 기본 dry-run, 정확한 ID/slug·빈 한글 이름을 검증하고 적용 시 version·updated_at과 감사 이력을 같은 transaction에서 갱신한다. 기존 이름 충돌·동시 수정은 중단한다. API/프론트 계약 변경은 없다.
+
 채널 통계는 collection_states의 저장 namespace에서 조회한다. scripts/refresh_youtube_channel_statistics.py와 기존 youtube_poll이 갱신하며 여러 채널 구독자를 합산하지 않는다. 공유 채널·그룹 명의의 예외는 원본의 검수 규칙을 사용한다.
 
 원본 계약과 근거는 다음 문서를 따른다.

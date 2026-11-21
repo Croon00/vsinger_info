@@ -53,7 +53,9 @@ def test_song_endpoint_contract_auth_and_input_validation(monkeypatch):
             assert response.status_code == 200, response.text
             assert response.json()['offset'] == 24
             assert calls[-1]['q'] == 'Song' and calls[-1]['agency'] == 'Group'
-        for query in ['kind=bad','order=bad','limit=0','limit=101','offset=-1']:
+        assert client.get('/api/explore/songs?kind=original&published_only=true&order=latest&limit=10').status_code == 200
+        assert calls[-1]['published_only'] is True and calls[-1]['limit'] == 10
+        for query in ['kind=bad','order=bad','limit=0','limit=101','offset=-1','kind=utawaku&published_only=true','kind=cover&published_only=bad']:
             assert client.get('/api/explore/songs?'+query).status_code == 422
         assert client.get('/api/explore/songs?kind=cover&artist_ids=2&artist_ids=1&artist_ids=2').status_code==200
         assert calls[-1]['artist_ids']==[1,2]
@@ -65,6 +67,26 @@ def test_song_endpoint_contract_auth_and_input_validation(monkeypatch):
         assert str(calls[-1]['start'])=='2026-10-01' and str(calls[-1]['end'])=='2026-10-31'
         for query in ['kind=cover&start=bad','kind=original&start=2026-10-31&end=2026-10-01','kind=utawaku&start=2026-10-01']:
             assert client.get('/api/explore/songs?'+query).status_code==422
+
+
+@pytest.mark.parametrize('kind', ['original', 'cover'])
+def test_home_songs_filter_before_pagination_and_use_publication_order(store, kind):
+    db, engine = store
+    artist, *_ = seed(db)
+    account = db.execute('SELECT account_id FROM artist_external_accounts WHERE artist_id=%s', (artist,)).fetchone()[0]
+    for n in range(14):
+        stamp = None if n == 12 else ('2999-01-01T00:00:00Z' if n == 13 else f'2020-01-{n+1:02}T00:00:00Z')
+        video = row(db, 'videos', platform='youtube', platform_video_id=f'home{n:07}', title='Song cover' if kind == 'cover' else 'Official MV', published_at=stamp, duration_seconds=240, source_account_id=account)
+        if kind == 'cover':
+            row(db, 'covers', video_id=video)
+        else:
+            recording = row(db, 'recordings', title_native=f'Song {n}', official_video_id=video)
+            row(db, 'recording_artists', recording_id=recording, artist_id=artist, role='primary')
+    db.commit()
+    with Session(engine) as session:
+        page = explore(session, kind=kind, agency='all', q='', order='latest', offset=0, limit=10, published_only=True)
+        assert page['total'] == 12
+        assert [item['youtube_video_id'] for item in page['items']] == [f'home{n:07}' for n in range(11, 1, -1)]
 
 
 def test_view_batches_keep_previous_video_counts_and_other_namespaces(store):

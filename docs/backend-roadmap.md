@@ -1,5 +1,14 @@
 # 백엔드 후속 작업
 
+## 사용자 지정 이름·누락 이미지 복구 (2026-11-21)
+
+- [x] 한글 이름 4건 반영 및 Figaro·shin의 누락된 대표 512px 이미지 2건 복구. 원본·작은 변형·기존 URL 보존, 영수증 9924. 실제 API 이름 4건·공개 이미지 6건 확인, 관련 fixture 19 passed. [이름 기록](artist-names.md), [복구 기록](avatar-storage.md).
+- [ ] 배포 환경의 AVATAR_BUCKET과 기존 저장 URL 버킷 일치 여부를 확인한다. 현재 로컬 기본값에서는 기존 저장 이미지의 avatar_variants가 비어 있어 대표 URL을 사용한다. 두 누락 대표 파일은 복구 완료했다.
+
+## 홈 최근 곡 캐러셀 (2026-11-21)
+
+[011 스펙](../specs/011-home-recent-songs/spec.md)에 따라 로컬 구현·빌드·프론트 62개 및 API fixture 2개 통과, 실데이터 각 10개 조회를 확인했다. PostgreSQL fixture 14개는 로컬 바이너리 부재로 건너뛰었으며 PC·모바일 화면 검수와 함께 [작업 목록](../specs/011-home-recent-songs/tasks.md)에서 추적한다. 실제 재수집·DB 변경·운영 배포는 하지 않았다.
+
 ## 오리지널 곡 조회 복구 (2026-11-21)
 
 - [x] 운영 분류 파일 누락으로 기본 오리지널 API가 500을 반환하는 원인 확인. 앱 리소스로 파일 이동, 누락 시 기본 목록 유지·분류 필터 503 구현. 관련 fixture 7 passed, 로컬 PostgreSQL 의존 13 skipped. [계약·검증 범위](original-music-tags.md), [스펙](../specs/003-original-song-availability/spec.md).

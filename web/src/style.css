@@ -264,9 +264,12 @@ a:focus-visible {
 }
 
 .home-page {
-  width: min(100% - 96px, 800px);
+  width: min(100% - 96px, 1280px);
   margin: 0 auto;
-  padding: clamp(88px, 16vh, 160px) 0 64px;
+  padding: 48px 0 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .search-form {
@@ -275,7 +278,7 @@ a:focus-visible {
 }
 
 .favorites-section {
-  margin-top: 48px;
+  margin-top: 0;
 }
 .favorite-grid {
   --favorite-columns: 6;
@@ -1613,6 +1616,7 @@ a:focus-visible {
 }
 
 .home-search {
+  width: 100%;
   max-width: 720px;
   margin: 0 auto;
 }
@@ -1801,15 +1805,13 @@ a:focus-visible {
     padding-bottom: 100px;
   }
   .home-page {
-    display: grid;
-    grid-template-rows: minmax(220px, calc((100svh - 100px) / 3)) 1fr;
-    min-height: calc(100svh - 100px);
+    display: flex;
+    gap: 32px;
     padding-top: 0;
     padding-bottom: 24px;
   }
   .home-search {
     width: 100%;
-    align-self: center;
     padding: 24px 0;
   }
   .home-title {

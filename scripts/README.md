@@ -1,5 +1,7 @@
 # 운영 도구
 
+`repair_requested_profiles_20261121.py`는 2026-11-21 사용자 요청 범위인 한글 이름 4명과 Figaro·shin의 누락 512px 파일 2개만 처리한다. 기본 dry-run, `--apply`는 원본 재변환·기존 128/256px 일치·관리 URL/endpoint 검증 후 누락 파일만 조건부 PUT하고 이름·감사 이력을 저장한다. 실제 반영 영수증 9924, 반복 적용은 already_applied다. 일반 수집·worker는 실행하지 않는다. [이미지 복구 기록](../docs/avatar-storage.md).
+
 2026-11-17 요청한 鈍色聴·稍麦의 아티스트 등록, 커버·오리지널 반영과 우타와꾸 worker 진행 조회는
 [등록·수집 기록](../docs/requested-channels-2026-11-17.md)을 따른다.
 

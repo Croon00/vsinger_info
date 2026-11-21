@@ -240,6 +240,7 @@ export const backendApi = {
     artistIds: number[] = [],
     period: { start?: string; end?: string } = {},
     tags: { genres?: string[]; moods?: string[] } = {},
+    videoOptions: { limit?: number; publishedOnly?: boolean } = {},
   ): Promise<Page<ExploredSong>> {
     const params = new URLSearchParams({
       kind,
@@ -247,9 +248,10 @@ export const backendApi = {
       q,
       order,
       offset: String(offset),
-      limit: '24',
+      limit: String(videoOptions.limit ?? 24),
     })
     for (const id of artistIds) params.append('artist_ids', String(id))
+    if (videoOptions.publishedOnly) params.set('published_only', 'true')
     if (period.start) params.set('start', period.start)
     if (period.end) params.set('end', period.end)
     if (kind === 'original') {

@@ -45,3 +45,6 @@ Checks: `python -m pytest tests/test_artist_identity.py tests/test_read_api.py`.
 For frontend validation see the [QA guide](../web/docs/qa.md).
 The official source links above are preserved provenance, not a new external
 verification performed during the documentation cleanup.
+# 사용자 지정 한글 이름 보완 (2026-11-21)
+
+사용자 요청 표기를 신규 DB의 빈 `name_ko`에 반영했다: 오토노세 라코(ID 1041, otonose-raco), 스이우 시노(1044, suiu-shino), 니비이로 유루시(1045, nibiiro-yurushi), 아야무기(1046, yayamugi). 원어 이름·ID·소유권은 유지했다. 정확한 ID/slug를 확인한 dry-run 후 적용했으며 영수증 9924와 변경 이력 4건을 남겼다. 실제 프론트 프록시의 `/api/artists`에서 네 display_name을 대조했다. 사용자 지정 표기이며 별도 공식 한국어 표기 조사 결과는 아니다.

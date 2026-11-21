@@ -1,5 +1,9 @@
 # 새 카탈로그 통합 조회 API
 
+## 홈 최근 곡 조회 (2026-11-21)
+
+홈은 `GET /api/explore/songs?kind=original&order=latest&offset=0&limit=10&published_only=true` 및 `kind=cover`를 사용한다. 선택 bool `published_only` 기본값은 false다. true이면 유효한 YouTube 영상 ID(11자 영문·숫자·밑줄·하이픈)가 있고 `published_at <= CURRENT_TIMESTAMP`인 행만 페이지·전체 수 계산 전에 선택한다. 게시일 미확인·미래 게시일·영상 없는 음원은 제외한다. `utawaku`와 함께 사용하면 422, 잘못된 bool도 422다. 최신순은 기존 `published_at DESC NULLS LAST, key`를 유지한다. 기존 분류·영상 중복 제거·인증·조회 전용 경계를 유지한다. [스펙·검증](../specs/011-home-recent-songs/spec.md).
+
 2026-09-22 기준. 새 사용자 프론트 `web/`의 실제 모드는 **신규 통합 DB**를 `/api`로 조회한다. X/Discord runtime도 같은 DB 전용 코드이며 기존 DB router는 정상 app에서 마운트하지 않는다.
 
 ## 연결과 실행
