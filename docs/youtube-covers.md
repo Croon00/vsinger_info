@@ -1,14 +1,30 @@
 # YouTube 커버 영상
 
+최종 확인 2026-11-23. 날짜별 오분류 수정·복구·검증 결과는 [변경·검증 기록](records/backend/youtube-covers-history.md)에 있다.
+
 아티스트 화면은 라이브 → 커버 → 통계 → 발매곡 → 공연 정보 순서다. 커버 탭을 선택할 때만 첫 12개를 조회하며 더보기로 다음 페이지를 읽는다. 썸네일·원문 제목·게시일·영상 길이를 표시하고 영상 선택은 YouTube 새 창으로 연결한다. 조회 요청에서 외부 수집을 시작하지 않는다.
 
 ## 조회 계약
 
-VESPERBELL·KMNZ 멤버의 커버는 [공유 채널 규칙](shared-youtube-channels.md)에 따라 제목에 명시된 멤버만, 명시가 없으면 대상 멤버 전원에게 표시한다. 전체 목록에서 영상은 중복 생성하지 않는다.
+`GET /api/artists/{artist_id}/covers?offset=0&limit=12`는 `Page[CoverRead]`를 반환한다.
 
-`GET /api/artists/{artist_id}/covers?offset=0&limit=12`는 `Page[CoverRead]`를 반환한다. `offset`은 0~100000, `limit`은 1~100이다. 기존 조회 API와 동일하게 `API_KEY`가 설정된 환경에서 API 키 인증을 적용하며, 미설정 환경에서는 인증을 강제하지 않는다. 존재하지 않거나 카탈로그에 표시하지 않는 아티스트는 404다. 임시 `/api/v2` 별칭에서도 동일하게 제공한다.
+- `offset`은 0~100000, `limit`은 1~100이다. `API_KEY`가 설정된 환경에서만 API 키를 요구한다. 존재하지 않거나 카탈로그에 표시하지 않는 아티스트는 404다. 임시 `/api/v2` 별칭에서도 같다.
+- `items`는 `id`, `youtube_video_id`, `youtube_url`, `title`, `published_at`, `duration_seconds`다.
+- 정렬은 게시일 내림차순, 같은 날짜는 커버 ID 내림차순이며 날짜가 없는 항목은 마지막이다.
+- 저장된 `covers`와 `videos` 중 보관 처리되지 않고 공개·일부 공개·공개 상태 미확인인 항목만 읽는다.
+- 범위는 현재 공식 채널 소유 관계(`artist_external_accounts.relationship=owner`)와 영상의 `source_account_id`로 정한다. 채널 소유자를 가창 참여자로 자동 확정하지 않는다.
+- VESPERBELL·KMNZ 멤버의 커버는 [공유 채널 규칙](shared-youtube-channels.md)에 따라 제목에 명시된 멤버만, 명시가 없으면 대상 멤버 전원에게 표시한다. 전체 목록에서 영상은 중복 생성하지 않는다.
+- 원본 수집에는 Shorts도 남을 수 있으나 사용자 조회에서는 [곡 탐색의 Shorts 제외 규칙](song-exploration.md#shorts-제외)에 따라 제외하고, 짧은 미확인 영상은 형식 확인 후 표시한다.
 
-`items`는 `id`, `youtube_video_id`, `youtube_url`, `title`, `published_at`, `duration_seconds`를 제공한다. 게시일 내림차순, 같은 날짜는 커버 ID 내림차순이며 날짜가 없는 항목은 마지막이다. 저장된 `covers`와 `videos` 중 보관 처리되지 않고 공개·일부 공개·공개 상태 미확인인 항목만 읽는다. 현재 공식 채널 소유 관계(`artist_external_accounts.relationship=owner`)와 영상의 `source_account_id`로 범위를 정하며, 채널 소유자를 가창 참여자로 자동 확정하지 않는다.
+## 커버 판정 기준 (`cover-title-v3`)
+
+수집 worker, 과거 수집, 곡 탐색과 아티스트 커버 조회가 같은 제목 기준을 사용한다.
+
+- 제목의 독립된 `cover`/`covered`/`covers`, `歌ってみた`, `カバー`, `커버`만 커버 근거로 사용한다. 설명의 홍보 링크·해시태그나 `歌唱` 가창 크레딧은 근거로 쓰지 않으며 명시적 셀프 커버는 제외한다.
+- 진행 중·예정 영상은 제외한다. 완료된 영상에 방송 시작·종료 정보가 있어도 프리미어 공개에서 생긴 정보일 수 있으므로 명시적 커버 제목을 다시 확인해 인정한다. YouTube Data API의 공식 premiere 플래그를 사용하는 판정은 아니다.
+- 가창 방송 제목은 기존 archive 분류를 유지하고 라이브 방송·잡담·장시간 방송 등의 제목은 일반 커버로 넣지 않는다.
+- 과거 설명만으로 저장된 후보는 원문·소유권을 유지하고 조회에서 제외한다. 그런 후보 때문에 연결된 발매 음원이 오리지널 탭에서 빠지지 않는다.
+- 비공개·삭제 영상과 제목에 커버 표기가 없는 영상은 수집을 보장하지 않는다.
 
 ## 과거 영상 수집
 
@@ -16,32 +32,30 @@ VESPERBELL·KMNZ 멤버의 커버는 [공유 채널 규칙](shared-youtube-chann
 .venv\Scripts\python.exe scripts/backfill_catalog_youtube_covers.py --until-complete
 ```
 
-수집 대상은 신규 DB의 표시 중인 아티스트가 소유하고 수집이 활성화된 YouTube `external_accounts`다. 구 DB 및 `youtube_channel_monitors`를 읽거나 변경하지 않는다. API로 채널의 업로드 재생목록을 확인하고 `playlistItems.list` 50개, `videos.list` 최대 50개 단위로 순차 처리한다. 검색 API·LLM·댓글·Discord·Calendar는 호출하지 않는다.
+- 대상은 신규 DB의 표시 중인 아티스트가 소유하고 수집이 활성화된 YouTube `external_accounts`다. 구 DB 및 `youtube_channel_monitors`를 읽거나 변경하지 않는다.
+- 채널의 업로드 재생목록을 `playlistItems.list` 50개, `videos.list` 최대 50개 단위로 순차 처리한다. 검색 API·LLM·댓글·Discord·Calendar는 호출하지 않는다.
+- 페이지 단위로 신규 영상·커버·원문 설명과 provider 메타데이터를 한 트랜잭션에 저장한다. 영상 ID 잠금과 고유 키로 중복을 막고, 다른 채널 소유권·기존 보관 처리·라이브 분류를 덮어쓰지 않는다. 페이지 저장 후에만 다음 페이지 토큰을 기록하므로 중간 종료 후 같은 페이지를 다시 읽어도 중복 생성하지 않는다.
+- 공유 채널 업로드 목록에 나타나는 별도 게시 채널은 승인된 출처 ID를 external account로 등록한 경우에만 수집한다. 출처가 비어 있던 기존 완료 프리미어는 빈 출처만 채우고 기존 라이브 행을 보존한다. 임의의 다른 채널은 수집하지 않으며 기존 출처를 덮어쓰지 않는다.
 
-`cover-title-v3` 기준으로 제목의 독립된 `cover`/`covered`/`covers`, `歌ってみた`, `カバー`, `커버`만 커버 근거로 사용한다. 설명의 홍보 링크·해시태그나 `歌唱` 가창 크레딧은 근거로 사용하지 않으며 명시적 셀프 커버는 제외한다. 진행 중·예정 영상은 제외한다. 완료된 영상에 방송 시작·종료 정보가 있어도 프리미어 공개에서 생긴 정보일 수 있으므로 명시적 커버 제목을 다시 확인한다. 가창 방송 제목은 기존 archive 분류를 유지하고 라이브 방송·잡담·장시간 방송 등의 제목은 일반 커버로 넣지 않는다. 수집 worker, 과거 수집, 곡 탐색과 아티스트 커버 조회가 동일한 제목 기준을 사용한다. 과거 설명만으로 저장된 후보는 원문·소유권을 유지하고 조회에서 제외하며, 그런 후보 때문에 연결된 발매 음원이 오리지널 탭에서 빠지지 않게 처리한다. 원본 수집에는 Shorts도 남을 수 있으나 사용자 조회에서는 [곡 탐색의 Shorts 제외 규칙](song-exploration.md#shorts-제외)에 따라 제외하고 짧은 미확인 영상은 형식 확인 후 표시한다. 비공개·삭제 영상과 제목에 커버 표기가 없는 영상은 전체 수집을 보장하지 않는다.
+| 옵션 | 기본값 | 동작 |
+| --- | --- | --- |
+| `--until-complete` | 꺼짐 | 예산이 회복되면 자동 재개하고 일시적인 provider 실패를 최대 5회 연속 재시도 |
+| `--budget` | 1500 | 이 도구의 최근 24시간 요청 수 상한(실패 요청 포함). 프로젝트 전체 사용량 계측은 아니므로 남은 할당량에 맞춰 낮출 수 있다 |
+| `--interval` | 2 | 요청 간 최소 초 |
+| `--max-pages` | 2000 | 채널별 실행당 페이지 상한 |
+| `--checkpoint` | `.tmp/youtube-cover-backfill.json` | 진행 위치와 요청 시각 |
+| `--account-id ID` | 없음 | 지정한 계정만 처리(반복 가능) |
+| `--rescan-completed` | 꺼짐 | 완료 채널 재검사. `--account-id` 또는 `--rescan-all`이 필요 |
+| `--rescan-all` | 꺼짐 | 대상 채널 전체를 명시적으로 재검사 |
+| `--rescan-run LABEL` | 자동 생성 | 재검사 감사 라벨(영문·숫자·`._-` 1~80자). 같은 라벨로 재개하면 완료한 페이지를 다시 초기화하지 않는다 |
+| `--include-disabled` | 꺼짐 | 비활성 계정의 커버 전용 검사. 정기 수집 설정은 바꾸지 않는다 |
 
-프리미어 누락 보정처럼 완료 채널을 다시 읽으려면 `--rescan-completed --account-id <ID>`를 사용한다. 대상 계정 지정 없이는 재검사를 허용하지 않는다. 같은 체크포인트의 요청 예산과 기존 pages/covers_saved 누적값을 유지하고 rescan_history에 이전 상태를 남긴다. 같은 실행의 재시도는 rescan_run으로 중복 초기화하지 않는다.
+- 재검사는 같은 체크포인트의 요청 예산과 기존 pages/covers_saved 누적값을 유지하고 rescan_history에 이전 상태를 남긴다.
+- 체크포인트는 DB 인스턴스 ID를 대조하며 DB advisory lock으로 이 도구의 동시 실행을 막는다. 같은 체크포인트를 써야 완료 채널과 최근 요청 사용량을 이어받는다.
+- API 일일 할당량 오류는 provider 대기 시간을 따른다. 영구 오류나 DB 오류는 종료하며 원인을 해결한 뒤 같은 명령으로 재개한다. PC나 프로세스가 종료되면 자동 실행되지 않는다.
+- 신규 영상의 정기 수집은 기존 `youtube_poll`/`youtube_collect` worker를 따른다. 전체 채널 재검사는 [전체 커버 재검사 기록](records/data/youtube-cover-audit-2026-11-01.md)과 `scripts/audit_youtube_covers.py`를 참고한다.
 
-페이지 단위로 신규 영상·커버·원문 설명과 provider 메타데이터를 한 트랜잭션에 저장한다. 영상 ID 잠금과 고유 키로 중복을 방지하고, 다른 채널 소유권·기존 보관 처리·라이브 분류를 덮어쓰지 않는다. 페이지 저장을 마친 뒤에만 다음 페이지 토큰을 기록하므로 중간 종료 후 같은 페이지를 다시 읽어도 중복 생성하지 않는다.
-
-기본 API 요청 간격은 2초이며 이 도구의 최근 24시간 시도 요청을 1,500회로 제한한다. 실패한 요청도 계산한다. 이는 다른 worker를 포함하는 프로젝트 전체 사용량 계측은 아니므로 실제 남은 할당량에 맞춰 `--budget`을 더 낮출 수 있다. `--interval`, `--max-pages`도 조정 가능하다. 페이지 제한은 채널별 실행당 2,000페이지다.
-
-진행 위치와 요청 시각은 `.tmp/youtube-cover-backfill.json`에 저장한다. DB 인스턴스 ID를 대조하고 DB advisory lock으로 이 도구의 동시 실행을 막는다. 같은 체크포인트를 유지해야 완료한 채널과 최근 요청 사용량을 이어받는다. `--until-complete`는 예산이 회복되면 자동 재개하고 일시적인 provider 실패를 최대 5회 연속 재시도한다. API 일일 할당량 오류는 provider 대기 시간을 따른다. 영구 오류나 DB 오류는 종료하며 원인을 해결한 뒤 같은 명령으로 재개한다. PC나 프로세스가 종료되면 자동 실행되지 않으며 동일 명령을 다시 실행해야 한다. 신규 영상의 정기 수집은 기존 `youtube_poll`/`youtube_collect` worker를 따른다.
-
-## 검증 — 2026-10-31
-
-2026-11-01 오분류 수정: 설명의 歌唱 크레딧과 커버 홍보 문구로 원본 MV가 후보에 포함된 것을 확인하고 제목 기반 v2로 제한했다. 분류·수집·조회 회귀 테스트 40개 통과, 로컬 PostgreSQL이 필요한 41개는 건너뛰었다. 실제 로컬 API에서 `NDOJZSG9SPU`(花譜 #36 不可解)와 `UKZt1vq8bKI`(シリウスの心臓 원본 MV)가 커버에서 제외되고, 후자의 연결 발매곡이 오리지널 탭에 노출되는 것을 확인했다. 원본 데이터·소유권은 변경하지 않았다. 이전 연결 오류로 중단된 과거 수집도 같은 체크포인트에서 새 규칙으로 재개했으며 기존 24시간 요청 예산은 유지한다.
-
-같은 날짜의 프리미어 누락 보정: `QOCmDcgPtYw`는 공개된 236초 커버인데 방송 시작·종료 metadata 때문에 미수집된 것을 API로 확인했다. 완료된 명시적 커버를 허용하도록 v3를 적용하고 VESPERBELL의 기존 계정 소유권으로 저장했다. 실제 로컬 API에서 조회수 5,633,058회, 요미 포함·카스카 제외를 확인했다. 두 공유 채널 27페이지 재검사를 완료해 같은 원인의 커버 80개를 추가로 복구했고, 조회수 80개와 짧은 영상 형식 2개도 확인했다. 지정 영상의 직접 추가 1건은 이 80개와 별개다. YouTube Data API의 공식 premiere 플래그로 판정한 것은 아니며 완료 상태와 명시적 커버 제목을 사용하는 규칙이다.
-
-추가 전체 대조에서 공유 채널 업로드 목록에 나타나는 별도 게시 채널 ID의 커버가 동일 채널 필터에 제외된 문제를 발견했다. 정확한 출처 ID를 승인 목록·신규 external account에 등록해 누락 267개를 복구했다. 출처 미연결 상태의 기존 완료 프리미어는 빈 출처만 채우고 기존 라이브 행을 보존하며 커버로도 조회한다. 임의의 다른 채널은 수집하지 않으며 기존 출처를 덮어쓰지 않는다. 전체 대조·멤버 배정·조회수 검증은 [공유 채널 문서](shared-youtube-channels.md)에 기록했다.
-
-- 프론트엔드 실제 모드 빌드 통과, 기존 단위 테스트 48개 통과.
-- HTTP fixture를 사용하는 PC·모바일 브라우저 테스트 4개 통과: 탭 지연 조회, 더보기, 원문 URL, 새로고침 후 선택 유지, 오류 재시도, 빈 목록, 가로 넘침 검사.
-- provider/DB mock을 사용하는 요청 예산·체크포인트 재개 테스트 2개 통과. 로컬 PostgreSQL 바이너리가 없어 폐기 가능한 DB를 사용하는 신규 API·저장 테스트 2개와 기존 카탈로그 읽기 테스트 13개는 건너뛰었다.
-- 별도의 실데이터 검증에서 신규 DB identity, 수집 활성 채널 95개, 기존 커버 380개를 확인한 뒤 요청된 추가 수집을 실행했다. 실제 페이지 저장을 확인하고 신규 DB를 읽는 FastAPI TestClient에서 아티스트별 조회 200, API 키 설정 시 미인증 401, 없는 아티스트 404, 잘못된 페이지 크기 422 및 페이지 간 ID 중복 없음을 확인했다. 전체 채널 수집 완료 여부는 체크포인트의 `done`과 실행 로그로 확인해야 하며 테스트 통과와 구분한다.
-
-회귀 검증 명령:
+## 테스트
 
 ```powershell
 .venv\Scripts\python.exe -m pytest tests/test_youtube_covers.py tests/test_new_catalog_read.py -q --basetemp=.tmp/pytest-covers -p no:cacheprovider
@@ -50,3 +64,5 @@ npm test
 npx playwright test --config playwright.real.config.ts artist-covers.spec.ts
 npm run build
 ```
+
+DB fixture 테스트는 로컬 PostgreSQL 바이너리가 있어야 실행되며 없으면 건너뛴다. 브라우저 테스트는 HTTP fixture를 사용하므로 실데이터 검증과 구분한다.

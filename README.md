@@ -1,24 +1,10 @@
 # UtaMowa (우타모와)
 
-스펙 기반 작업은 [Spec Kit 작업 안내](docs/spec-driven-development.md)와 [기능 스펙 목록](specs/README.md)에서 시작한다. 프로젝트 원칙은 [.specify/memory/constitution.md](.specify/memory/constitution.md)를 따른다.
+VTuber·버추얼 싱어의 YouTube 라이브·세트리스트·커버·발매곡·공연 일정을 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL(신규 DB), 조회 프론트 `web/`, X 새 글을 Discord로 알리는 봇과 수집 worker로 구성된다.
 
-아티스트·YouTube 라이브·세트리스트·공연 정보를 수집하고 조회하는 프로젝트다. FastAPI 백엔드, PostgreSQL, 조회 프론트(`web/`), 새 카탈로그 관리자(`admin-web/`), 기존 관리 웹(`web.bak/`), Discord 봇과 수집 worker로 구성된다.
+작업 규칙은 [AGENTS.md](AGENTS.md), 공통 원칙은 [constitution](.specify/memory/constitution.md), 스펙 기반 작업은 [작업 안내](docs/spec-driven-development.md)와 [기능 스펙 목록](specs/README.md)에서 시작한다.
 
-전체 디렉터리 역할과 코드·자료 보관 기준은 [파일 구조 안내](docs/repository-structure.md), 운영 도구 목록은 [scripts 안내](scripts/README.md)를 따른다.
-
-## 시작하기
-
-오리지널 곡의 장르·분위기 태그, 복수 선택과 공식 근거 수집 범위는 [음악 분류](docs/original-music-tags.md)를 따른다.
-
-VESPERBELL·KMNZ 멤버의 공유 구독자 수와 커버 분리는 [공유 YouTube 채널](docs/shared-youtube-channels.md)을 따른다.
-
-탐색의 곡 탭은 우타와꾸·커버·오리지널/발매 음원을 소속사별로 조회한다. 커버·발매곡의 YouTube 조회수는 `python scripts/refresh_youtube_video_statistics.py`로 갱신하며, 화면의 조회는 저장된 값만 사용한다. 집계·분류 범위와 정렬 계약은 [곡 탐색](docs/song-exploration.md)을 따른다.
-
-아티스트 탐색의 채널 생성일·구독자·가나다 정렬과 채널 통계 갱신은 [아티스트 정렬](docs/artist-sorting.md)을 따른다. 구독자 수를 즉시 갱신하려면 `python scripts/refresh_youtube_channel_statistics.py`를 실행한다. 정상 YouTube poll도 기존 채널 조회 응답에서 통계를 함께 갱신한다.
-
-등록된 공식 YouTube 채널의 과거 커버 영상은 `python scripts/backfill_catalog_youtube_covers.py --until-complete`로 신규 DB에 수집한다. 요청 간격·예산·이어받기와 커버 탭의 조회 계약은 [YouTube 커버 수집](docs/youtube-covers.md)을 따른다.
-
-곡별 YouTube 연결과 미연결 URL 목록 생성은 [디스코그래피 YouTube 연결 도구](docs/discography-youtube-links.md)를 따른다. 조회 API는 저장된 링크만 반환한다.
+## 빠른 시작
 
 프로젝트 루트에서 백엔드를 준비한다. 이미 `.env`가 있으면 덮어쓰지 않는다.
 
@@ -30,18 +16,13 @@ if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 uvicorn app.main:app --reload
 ```
 
-루트 `.env` 또는 서버 환경변수의 `DATABASE_URL`에 신규 PostgreSQL 접속 정보를 설정한다. 이전 원본을 읽는 도구에만 `LEGACY_DATABASE_URL`을 별도로 제공한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며, 로컬 API를 실행해도 DB가 로컬로 복사되지는 않는다. `data/twscrape_accounts.db`는 X 수집 도구의 별도 계정 저장소다.
+`.env` 또는 서버 환경변수의 `DATABASE_URL`에 신규 PostgreSQL 접속 정보를 설정한다. 현재 개발 데이터는 Neon PostgreSQL에 있으며 로컬 API를 실행해도 DB가 로컬로 복사되지 않는다. 이전 원본을 읽는 도구에만 `LEGACY_DATABASE_URL`을 따로 제공한다. 설정 기준은 [`app/core/config.py`](app/core/config.py)와 [`.env.example`](.env.example)이며 실제 환경변수가 우선한다.
 
-- API: http://127.0.0.1:8000
-- API 문서: http://127.0.0.1:8000/docs
-- 프로세스 상태: http://127.0.0.1:8000/health — DB 연결까지 검사하는 주소는 아니다.
-- 준비 상태: http://127.0.0.1:8000/ready — 신규 DB와 음악 worker 상태 조회. worker가 활성화됐는데 필수 provider 인증 설정, handler 또는 heartbeat가 빠지면 ready=false다.
-- `app.main:app`과 `app.api.main:app`은 같은 API다.
-- 멀티뷰 생방송 확인만 로컬에서 실행하려면 `.venv\Scripts\python.exe -m app.services.youtube_live_monitor`를 사용한다. 새 방송·예약 검색은 30분, 후보 상태 확인은 1분이며 기존 아카이브 수집·Discord·LLM은 시작하지 않는다. `python -m app.runtime`의 음악 worker에도 연결돼 있다. [설정·범위](docs/read-api-v2.md#생방송-멀티뷰)를 따른다.
-- 서버 전용 `HOLODEX_API_KEY`를 설정하면 멀티뷰 전용 수집기는 전체 생방송·예정 방송을 `HOLODEX_POLL_SECONDS=3600`(1시간)마다 조회하고, 생방송 또는 예정 시각이 된 저장 영상이 있는 채널을 `HOLODEX_LIVE_CHECK_SECONDS=180`(3분)마다 묶음 확인한다. 3분 확인은 기존 생방송의 유지·종료와 예정 시각이 된 영상의 시작 여부를 갱신하며 미래 예정 방송과 전체 검색 기한은 유지한다. 미등록 방송·예정 시각 전 조기 시작 발견은 최대 약 1시간, 등록된 예정 방송은 예정 시각부터 약 3분마다 시작 여부를 확인하며 종료 반영도 약 3분과 provider 지연만큼 늦어질 수 있다. 실패 시 해당 주기와 더 긴 provider 유예를 존중한다. 이 모드는 YouTube Data API를 호출하지 않으며 일일 아카이브 수집은 기존대로 유지한다. Railway에서도 백엔드 Variables에 키·주기를 따로 설정하고 변경 코드를 배포해야 지속 실행된다. 로컬 `.env`는 배포되지 않는다.
-- 정상 API는 기존 `app/core/db.py` 초기화를 호출하지 않으며 구 SQL 연결은 차단되어 있다.
+- API http://127.0.0.1:8000, 문서 http://127.0.0.1:8000/docs
+- `/health`: 프로세스 상태. DB 연결은 검사하지 않는다.
+- `/ready`: 신규 DB와 음악 worker 상태. worker가 활성화됐는데 필수 provider 인증, handler 또는 heartbeat가 빠지면 `ready=false`다.
 
-다른 터미널에서 새 프론트를 실행한다.
+다른 터미널에서 프론트를 실행한다.
 
 ```powershell
 cd web
@@ -49,82 +30,57 @@ npm install
 npm run dev
 ```
 
-http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`으로 http://localhost:5175 를 연다. 상세 환경변수·빌드·프록시는 [새 프론트 README](web/README.md)를 따른다.
-
-현재 사용자 조회 `/api`, X poller·Discord URL sender, 독립 YouTube·Spotify worker는 단일 `DATABASE_URL`의 신규 DB를 사용한다. 구 SQL 연결 함수는 차단되어 있다. 실제 수집·알림 상태 이전과 운영 활성화는 배포 시점의 최종 snapshot 검증 뒤 수행한다. 앨범과 가사를 포함한 조회는 외부 수집 없이 저장된 자료만 사용한다.
-
-### 미연결 아티스트의 디스코그래피
-
-`python scripts/discover_spotify_accounts.py --output outputs/spotify-discovery-배치명`은 표시 중인 아티스트 중 Spotify 미연결 대상을 API로 조사한다. 원어·등록 영문·한국어 이름과 일치하는 단일 후보만 연결 대상으로 삼고 동명이인·검색 미완료·기존 소유권·이전 검수 보류는 구분해 남긴다. 기본 실행은 DB 읽기 전용이며, 사용자 요청에 따른 실제 연결·수집은 `--apply --run 배치명`을 추가한다. 새 조사에는 새 output 디렉터리를 사용한다. 자세한 기준·실제 반영 결과는 [Spotify 이름 일치 연결](docs/spotify-exact-name-discovery.md)에 있다.
-
-### 공개 라이브 일정
-
-`python -m app.runtime`은 `LIVE_SITE_MONITOR_ENABLED=true`일 때 시작 직후와 이후 24시간마다 RK Music·카미츠바키 Z-aN 채널, RIOT MUSIC ZAIKO 채널 및 공식 공지를 확인한다. 공식 채널에 남아 있는 과거 공연도 수집하고 RIOT 공식 공지의 이전 목록 페이지도 확인한다. 날짜와 아티스트를 확인한 일정만 통합 `DATABASE_URL`의 `concerts`에 저장하며 지난 공연은 `completed`로 표시한다. 달력은 생일과 공연을 함께 표시하며, 공연 제목을 선택하면 상세 화면에서 공식 사이트를 열 수 있다. 같은 원문 URL은 중복 등록하지 않는다. 로컬에서 수집만 한 번 실행하려면 `python -m app.agents.live_site_monitor`를 사용한다.
-
-사이트 접근이 거부되거나 robots.txt가 허용하지 않으면 해당 소스를 건너뛴다. ZAIKO는 자동 요청에 403을 반환할 수 있어 RIOT 공식 공지도 보조적으로 확인하지만 일부 일정은 누락될 수 있다. 티켓 구매나 응모는 수행하지 않는다.
-
-선택한 runtime 상태의 신규 DB 이전은 [운영 DB 이전 기록](docs/backend-cutover-2026-09-23.md)대로 완료했다. X·Discord, 독립 YouTube, 등록된 Spotify 계정, 설정 통합의 로컬 검증과 별개로, X provider 오류 확인·Discord 활성화·실제 운영 검증은 남아 있다. 최신 완료 조건은 [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md)을 따른다.
-
-## 새 DB 관리자
-
-`admin-web` 개편과 운영 연동은 이번 백엔드 목표 밖이다. 보존된 로컬 관리자 도구의 기존 안내는 [사용 안내](docs/admin-web-plan.md)를 따른다. 현재 설정 이름은 단일 `DATABASE_URL`이다.
+http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만 확인하려면 `npm run dev:mock`(http://localhost:5175)을 쓴다. 자세한 내용은 [프론트 README](web/README.md)를 따른다.
 
 ## 실행 범위
 
-| 명령/디렉터리 | 역할 |
+| 명령 | 역할 |
 | --- | --- |
-| `uvicorn app.main:app --reload` | API만 실행. Discord 로그인과 주기 수집 loop는 시작하지 않음 |
-| `python -m app.runtime` | API와 공개 라이브 일정 감시 실행. `RUNTIME_CUTOVER_ENABLED=true`에서 Discord 봇을, 여기에 `AGENT_ENABLED=true`이면 기존 수집 loop도 실행 |
-| `web/` | 새 사용자 조회 화면. 기본 통합 `/api`, 별도 mock 모드 |
-| `admin-web/` / `python scripts/run_admin.py` | 새 카탈로그 로컬 관리자. 빌드 후 127.0.0.1:8010, 초기 데이터는 명시적 검수·반영 |
-| `web.bak/` | 기존 관리 웹. 유지 중이며 새 프론트의 시각 구현과 분리 |
-| `scripts/` | 정규화, 수집, 등록 등 운영 도구. 실행 전 조회/변경 여부 확인 |
+| `uvicorn app.main:app --reload` | 조회 API만 실행. Discord 로그인과 주기 수집을 시작하지 않는다. `app.main:app`과 `app.api.main:app`은 같은 API다 |
+| `python -m app.runtime` | 배포 진입점(Railway). API와 공개 라이브 일정 감시를 실행하고, `RUNTIME_CUTOVER_ENABLED=true`이면 Discord 봇, 여기에 `AGENT_ENABLED=true`이면 수집 loop도 실행한다 |
+| `python -m app.services.youtube_live_monitor` | 멀티뷰 생방송 확인만 단독 실행. 주기와 Holodex 설정은 [조회 API](docs/read-api.md)를 따른다 |
+| `python -m app.agents.live_site_monitor` | 공개 라이브 일정을 한 번 수집. [공개 라이브 일정](docs/live-site-monitor.md) |
 
-설정은 [`app/core/config.py`](app/core/config.py)와 [`.env.example`](.env.example)를 기준으로 한다. Python 코드 기본값과 예시 환경변수가 다를 수 있으며 실제 환경변수가 우선한다. DB·외부 서비스 키는 백엔드에 보관한다. 수집기 실행은 DB 저장·외부 알림을 동반하므로 화면 조회와 구분한다.
+수집기는 DB 저장과 외부 알림을 동반하므로 화면 조회와 구분해 실행한다. Railway에는 백엔드 Variables를 따로 설정하고 코드를 배포해야 한다. 로컬 `.env`는 배포되지 않는다. 빈 작업 큐는 `WORKER_IDLE_SECONDS=900`(기본) 간격으로 확인하며 근거는 [백엔드 구조](docs/backend-architecture.md#db-유휴-대기)에 있다.
 
-신규 아티스트의 초기 이미지는 migration 007 적용 후 YouTube → X 순서로 자동 저장한다. 기존 이미지는 보존하며 runtime의 `AVATAR_WORKER_ENABLED` 기본값은 true다(cutover·agent 활성 조건도 필요). 기존 아티스트의 빈 이미지 미리보기·작업 등록은 `python scripts/avatar_jobs.py enqueue --artist-id ID`를 사용한다. `status ID`로 작업 결과와 `result.storage_error`의 실패 단계·코드를 조회할 수 있으며 단독 worker도 처리 로그를 출력한다. 실행·저장소 설정과 재시도는 [프로필 이미지 저장](docs/avatar-storage.md)에 정리했다. 2026-10-02 SHIN·히비쿠 작업 성공을 확인했고 Figaro는 로컬에서 작업 9를 수동 완료했다. 서버 worker의 저장소 환경변수 갱신·재시작은 남아 있다.
+## 운영 도구
 
-곡 별칭은 통합검색과 아티스트의 부른 곡 검색에서 사용할 수 있다. 활성 `song_id`가 연결된 가창 기록에 적용하며 추가 migration은 필요 없다. 검색·집계 기준과 2026-10-02 읽기 전용 실데이터 검증은 [통합 조회 API](docs/read-api-v2.md)에 정리했다. 서버 반영은 변경된 백엔드 코드 배포·API 재시작으로 적용한다.
+`scripts/`의 도구는 서버 시작이나 조회 API에 연결되지 않는다. 실행 전 DB 변경·외부 호출 여부를 확인한다. 전체 목록은 [scripts 안내](scripts/README.md)에 있다.
 
-## 문서 안내
+| 명령 | 용도 | 문서 |
+| --- | --- | --- |
+| `python scripts/refresh_youtube_video_statistics.py` | 커버·발매곡 조회수 갱신. 화면은 저장된 값만 사용 | [곡 탐색](docs/song-exploration.md) |
+| `python scripts/refresh_youtube_channel_statistics.py` | 채널 구독자 수 즉시 갱신. 정상 YouTube poll도 함께 갱신 | [아티스트 정렬](docs/artist-sorting.md) |
+| `python scripts/backfill_catalog_youtube_covers.py --until-complete` | 공식 채널의 과거 커버 수집 | [YouTube 커버](docs/youtube-covers.md) |
+| `python scripts/avatar_jobs.py enqueue --artist-id ID` / `status ID` | 빈 프로필 이미지 작업 등록·결과 조회 | [프로필 이미지 저장](docs/avatar-storage.md) |
+| `python scripts/discover_spotify_accounts.py --output outputs/spotify-discovery-배치명` | Spotify 미연결 아티스트 조사(기본 읽기 전용, `--apply --run 배치명`으로 반영) | [Spotify 이름 일치 연결](docs/spotify-exact-name-discovery.md) |
+| `python scripts/music_jobs.py` | 음악 worker 작업 등록·단일 실행·readiness 확인 | [작업 실행기 기록](docs/records/backend/backend-service-step-2-jobs.md) |
 
-| 문서 | 다루는 내용 |
+## 운영 상태
+
+2026-09-23 신규 DB로 이전했다([전환 기록](docs/records/backend/backend-cutover-2026-09-23.md)). X provider 오류 확인, Discord 활성화, 프로필 이미지 worker의 서버 저장소 설정 등 운영 확인 작업이 남아 있다. 전체 미완료 항목은 [후속 작업](docs/backend-roadmap.md), 완료 조건은 [서비스 보완 계획](docs/plans/backend-service-readiness-plan.md)을 따른다.
+
+## 문서
+
+| 위치 | 내용 |
 | --- | --- |
-| [백엔드 통합 최종 계획](docs/backend-consolidation-plan.md) | 신규 DB 일원화, 수집·알림 필수 항목만 이전, external_accounts 기반 X 수집, API·설정 통합 |
-| [보완 1단계 결과](docs/backend-service-step-1-runtime.md) | X/Discord 안정화, 변경한 실행 주기·실패 처리와 검증 결과 |
-| [보완 4단계 결과](docs/backend-service-step-4-spotify.md) | 등록된 Spotify 계정의 앨범·녹음·트랙 저장과 공동 크레딧 보존 |
-| [보완 5단계 결과](docs/backend-service-step-5-migration.md) | 선택 이전·설정 통합·레거시 차단과 Railway 변수표 |
-| [보완 6단계 결과](docs/backend-service-step-6-validation.md) | 이전→수집→조회 통합, 웹 브라우저·회귀 검증과 PR·배포 준비 |
-| [보완 3단계 결과](docs/backend-service-step-3-youtube.md) | 신규 YouTube 채널 감시·세트리스트·커버 저장, 댓글 대기와 수동 수정 보존 |
-| [세트리스트 후보 비교](docs/youtube-setlist-selection.md) | 명시적 목록은 규칙 우선 추출, 그 외 최대 3개 댓글의 모델 비교·원문 보존·오류 보류. 모델 경로는 `OPENAI_API_KEY` 필요 |
-| [보완 2단계 결과](docs/backend-service-step-2-jobs.md) | 독립 작업 실행기, 로컬 명령, 재시도·취소·heartbeat·readiness 계약 |
-| [서비스 검증과 보완 개발 계획](docs/backend-service-readiness-plan.md) | 전체 서비스 준비 판정, 재현 결함 6건, YouTube 등 독립 수집기 개발 순서와 합격 기준 |
-| [백엔드 통합 1단계 준비](docs/backend-phase-1-baseline.md) | 읽기 전용 계정 매핑·선택 이전 조사 절차, 참고 기준선, 실행 전 확인 목록 |
-| [백엔드 통합 2단계 결과](docs/backend-phase-2-runtime-schema.md) | 신규 DB 운영 스키마, 연결 guard, 적용·검증 결과 |
-| [백엔드 통합 3단계 결과](docs/backend-phase-3-runtime-migration.md) | 선택 이전 dry-run, snapshot manifest, 적용·재실행 검증 |
-| [백엔드 통합 4단계 결과](docs/backend-phase-4-runtime.md) | external_accounts 기반 X 수집, durable Discord URL sender, 명령·분류·자동 등록 제거 |
-| [백엔드 통합 5단계 전환](docs/backend-phase-5-cutover.md) | `/api` 통합, 배포 잠금, 최종 이전·Railway 활성화 순서와 롤백 |
-| [2026-09-23 운영 DB 이전 기록](docs/backend-cutover-2026-09-23.md) | 적용 영수증·검증 건수·남은 운영 장애 |
-| [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 실제 수집·Discord URL 전송 흐름, 설정, 보안 |
-| [조회 API v2](docs/read-api-v2.md) | 새 프론트 계약, 페이지·통계 기준, 성능 측정 |
-| [프로필 이미지 저장](docs/avatar-storage.md) | Neon 이미지 이전, 크기 최적화, 캐시·교체와 복구 |
-| [백엔드 후속 작업](docs/backend-roadmap.md) | 미지원 기능, 기존 미사용 API, 데이터 정제·곡 중심 확장 |
-| [새 DB 구조·이전 계획](docs/db-renewal-plan.md) | 원격 스키마와 사용자 v2 연결 완료, 데이터 검수·운영 기능 이전은 별도 |
-| [기존 세트리스트 빠른 이관 계획](docs/setlist-migration-plan.md) | 덤프의 가창 행을 새 카탈로그로 옮기기 위한 범위·변환·보류·검증 절차 |
-| [곡 마스터 구축 계획](docs/song-master-plan.md) | 외부 목록 기반 곡 seed, latin/한국어 표기 규칙, song_id 연결 순서 |
-| [기존 세트리스트 이관 결과](docs/setlist-migration-report.md) | 2026-09-21 실제 반영 건수, 사용자 결정, 검증 결과와 남은 범위 |
-| [새 DB 마이그레이션](migrations/catalog/README.md) | 실제 적용 DDL, 전용 접속 설정, 실행·검증 범위 |
-| [카탈로그 테이블·필드](docs/catalog-schema.md) | 새 DB 도메인별 상세 필드와 로컬 검수 저장소 설계 |
-| [로컬 카탈로그 관리자](docs/admin-web-plan.md) | 실행·JSON 검수·승인 후 반영·수동 관리·백업 |
-| [아티스트 식별](docs/artist-names.md) | 별칭·그룹 ID 보존, 이름 정규화 도구 |
-| [전환 시기 아카이브 복구](docs/youtube-cutover-recovery-2026-10-09.md) | 2026-10-09 활성 104채널 조사, 9/20~23 누락 아카이브 28개 복구·실DB/API 검증 |
-| [YouTube 채널 보완](docs/youtube-channel-coverage.md) | 시드 등록 절차와 당시 확인 결과 |
-| [새 프론트 실행](web/README.md) | 실제/mock 실행, 환경변수, 디렉터리, 배포 |
-| [새 프론트 화면 설계](web/docs/design-plan.md) | 현재 화면·반응형·접근성·디자인 기준 |
-| [검증 가이드](web/docs/qa.md) | 테스트 실행법, 검증 범위, 최근 결과 |
-| [목업 콘텐츠 출처](web/docs/content-sources.md) | 공식 자료와 합성 데이터의 출처·한계 |
-| [기존 관리 웹](web.bak/README.md) | 기존 프론트 실행과 유지 범위 |
+| `docs/` | 현재 구조와 계약. 아래 표의 문서 |
+| [`docs/plans/`](docs/plans/) | 확정 계획과 설계 근거(통합 최종 계획, 서비스 보완 계획, DB·곡 마스터·세트리스트 이관 계획) |
+| [`docs/records/backend/`](docs/records/backend/) | 백엔드 통합·보완 단계별 결과, 운영 이전·복구·성능 측정 기록 |
+| [`docs/records/data/`](docs/records/data/) | 날짜별 아티스트 등록·수집·세트리스트 정정 기록 |
+| [`specs/`](specs/README.md) | 기능별 요구사항·설계·작업 |
 
-`AGENTS.md`는 작업 규칙, README는 실행 안내를 다룬다. 현재 동작 문서와 미구현 계획을 구분하고, 계획서의 제안을 실행된 기능으로 해석하지 않는다. 검수 이력은 검증 문서에 모으고 폐기된 계획을 현재 사양과 나란히 유지하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.
+| 현재 계약 문서 | 다루는 내용 |
+| --- | --- |
+| [백엔드 구조·운영](docs/backend-architecture.md) | 실행 경계, 수집·Discord URL 전송 흐름, 설정, 보안 |
+| [조회 API](docs/read-api.md) | 프론트 계약, 페이지·통계 기준, 생방송 멀티뷰 |
+| [카탈로그 테이블·필드](docs/catalog-schema.md), [마이그레이션](migrations/catalog/README.md) | 신규 DB 필드 설명, 적용 DDL |
+| [저장소 구조](docs/repository-structure.md) | 디렉터리 역할과 관리 기준 |
+| [후속 작업](docs/backend-roadmap.md) | 미지원 기능과 남은 작업 |
+| [아티스트 식별](docs/artist-names.md), [아티스트 정렬](docs/artist-sorting.md), [공유 YouTube 채널](docs/shared-youtube-channels.md) | 아티스트 명의·정렬·공유 채널 |
+| [YouTube 커버](docs/youtube-covers.md), [세트리스트 후보 비교](docs/youtube-setlist-selection.md) | YouTube 수집·분류 |
+| [곡 탐색](docs/song-exploration.md), [음악 분류](docs/original-music-tags.md), [디스코그래피 YouTube 연결](docs/discography-youtube-links.md), [Spotify 이름 일치 연결](docs/spotify-exact-name-discovery.md) | 곡·발매 음원 |
+| [프로필 이미지 저장](docs/avatar-storage.md), [공개 라이브 일정](docs/live-site-monitor.md) | 이미지·공연 일정 |
+| [프론트 화면 설계](web/docs/design-plan.md), [검증 가이드](web/docs/qa.md), [목업 콘텐츠 출처](web/docs/content-sources.md) | 프론트 |
 
-DB 사용량 절약: `WORKER_IDLE_SECONDS=900`(기본)으로 빈 작업 큐를 15분 경계마다 확인한다. 외부 등록 작업·예약 재시도는 그만큼 지연될 수 있다. 동작과 감시 설정은 [백엔드 구조](docs/backend-architecture.md#db-유휴-시간-확보-2026-10-09)를 참고한다.
+현재 동작 문서와 계획을 구분하고, 계획서의 제안을 실행된 기능으로 해석하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.

@@ -4,9 +4,9 @@
 
 ## 근거
 
-- [확정 통합 계획](../../docs/backend-consolidation-plan.md)
-- [서비스 보완 계획](../../docs/backend-service-readiness-plan.md)
-- [운영 DB 이전 기록](../../docs/backend-cutover-2026-09-23.md)
+- [확정 통합 계획](../../docs/plans/backend-consolidation-plan.md)
+- [서비스 보완 계획](../../docs/plans/backend-service-readiness-plan.md)
+- [운영 DB 이전 기록](../../docs/records/backend/backend-cutover-2026-09-23.md)
 - [현재 후속 작업](../../docs/backend-roadmap.md)
 
 ## 사용자 시나리오와 검증
@@ -52,7 +52,7 @@
 
 ## 범위 경계
 
-admin-web·관리 API 개편, 노래방, 가사·번역·독음 worker, 추가 과거 자료 이전은 후속 범위다. X 분류·봇 명령·X→YouTube와 Google Calendar는 제거·격리 방침을 따른다.
+관리 도구·관리 API(새로 설계), 노래방, 가사·번역·독음 worker, 추가 과거 자료 이전은 후속 범위다. X 분류·봇 명령·X→YouTube와 Google Calendar는 제거·격리 방침을 따른다.
 
 ## 완료 조건
 

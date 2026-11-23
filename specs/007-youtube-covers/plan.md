@@ -31,7 +31,7 @@ GET /api/artists/{artist_id}/covers는 기본 12개·게시일 내림차순 Page
 원본 계약과 근거는 다음 문서를 따른다.
 
 - [youtube-covers](../../docs/youtube-covers.md)
-- [youtube-cover-audit-2026-11-01](../../docs/youtube-cover-audit-2026-11-01.md)
+- [youtube-cover-audit-2026-11-01](../../docs/records/data/youtube-cover-audit-2026-11-01.md)
 - [shared-youtube-channels](../../docs/shared-youtube-channels.md)
 
 ## 검증과 운영 적용

@@ -30,15 +30,15 @@ AGENTS.md와 [프로젝트 원칙](../../.specify/memory/constitution.md)을 따
 
 원본 계약과 근거는 다음 문서를 따른다.
 
-- [setlist-migration-report](../../docs/setlist-migration-report.md)
-- [performance-artists-2026-10-04](../../docs/performance-artists-2026-10-04.md)
+- [setlist-migration-report](../../docs/records/backend/setlist-migration-report.md)
+- [performance-artists-2026-10-04](../../docs/records/data/performance-artists-2026-10-04.md)
 - [youtube-setlist-selection](../../docs/youtube-setlist-selection.md)
-- [live-5850-correction-2026-10-07](../../docs/live-5850-correction-2026-10-07.md)
-- [youtube-cutover-recovery-2026-10-09](../../docs/youtube-cutover-recovery-2026-10-09.md)
-- [setlist-cleanup-2026-10-10](../../docs/setlist-cleanup-2026-10-10.md)
-- [setlist-refresh-2026-10-30](../../docs/setlist-refresh-2026-10-30.md)
-- [setlist-model-recovery-2026-10-31](../../docs/setlist-model-recovery-2026-10-31.md)
-- [song-master-plan](../../docs/song-master-plan.md)
+- [live-5850-correction-2026-10-07](../../docs/records/data/live-5850-correction-2026-10-07.md)
+- [youtube-cutover-recovery-2026-10-09](../../docs/records/backend/youtube-cutover-recovery-2026-10-09.md)
+- [setlist-cleanup-2026-10-10](../../docs/records/data/setlist-cleanup-2026-10-10.md)
+- [setlist-refresh-2026-10-30](../../docs/records/data/setlist-refresh-2026-10-30.md)
+- [setlist-model-recovery-2026-10-31](../../docs/records/data/setlist-model-recovery-2026-10-31.md)
+- [song-master-plan](../../docs/plans/song-master-plan.md)
 
 ## 검증과 운영 적용
 

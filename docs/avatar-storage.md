@@ -1,10 +1,14 @@
 # 프로필 이미지 저장과 교체
 
-2026-09-20 최초 적용. 아티스트 이미지 파일은 Neon Object Storage, 대표 URL은 `artists.avatar_url`에 저장한다. 2026-10-02 자동 초기 이미지 코드와 migration 007을 추가했다. 같은 날 운영 DB 읽기 전용 확인에서 SHIN·히비쿠의 작업 성공과 공개 이미지 응답을 확인했다. Figaro는 worker의 `missing_storage_configuration` 진단을 확인한 뒤 사용자 요청으로 정상 로컬 설정에서 작업 9를 수동 완료했다. 변환 이미지 3종과 대표 URL·감사 기록을 반영했다. 서버 worker 환경변수 갱신·재시작은 남아 있다.
+최종 확인 2026-11-23. 적용·검증·실데이터 처리 기록은 [프로필 이미지 저장 이력](records/backend/avatar-storage-history.md)에 있다.
+
+아티스트 이미지 파일은 Neon Object Storage, 대표 URL은 `artists.avatar_url`에 저장한다. 빈 이미지는 migration 007의 `avatar_jobs`가 자동으로 채우고, 직접 지정한 URL의 이전·교체는 명시적 CLI(`scripts/migrate_avatars.py`)를 사용한다.
+
+남은 운영 확인: 서버 이미지 worker의 저장소 환경변수 갱신·재시작과 실제 처리 결과 확인([spec 004 T003](../specs/004-avatar-storage/tasks.md)).
 
 ## 신규 등록 시 자동 이미지
 
-revision 007의 `avatar_jobs`와 DB trigger가 아티스트에 YouTube·X `owner` 관계를 저장할 때 같은 transaction으로 이미지 작업을 예약한다. 아티스트 생성 후 계정을 나중에 연결하거나 URL·대표 계정·소유 관계를 바꿔도 적용된다. 등록에는 외부 API나 업로드를 실행하지 않는다. 조회 `/api`도 이미지 작업을 예약·실행하지 않는다. 등록 스크립트와 향후 신규 DB용 등록 경로에 공통으로 적용되며 admin-web 연동은 이번 범위에 없다.
+revision 007의 `avatar_jobs`와 DB trigger가 아티스트에 YouTube·X `owner` 관계를 저장할 때 같은 transaction으로 이미지 작업을 예약한다. 아티스트 생성 후 계정을 나중에 연결하거나 URL·대표 계정·소유 관계를 바꿔도 적용된다. 등록에는 외부 API나 업로드를 실행하지 않는다. 조회 `/api`도 이미지 작업을 예약·실행하지 않는다. 등록 스크립트와 향후 신규 DB용 등록 경로에 공통으로 적용되며 관리 도구 연동은 후속 범위다.
 
 - 기존 `avatar_url`이 있으면 예약·교체를 생략한다. 직접 지정한 이미지를 우선 보존한다.
 - YouTube → X 순서이며 같은 플랫폼에서는 `is_primary` → `position` → 계정 ID 순서다. `member` 관계와 보관된 계정은 제외한다. `collection_enabled`와 탐색 노출 여부는 이미지 처리 조건이 아니다.
@@ -26,14 +30,16 @@ revision 007의 `avatar_jobs`와 DB trigger가 아티스트에 YouTube·X `owner
 # 이미지 조회·저장소 업로드·DB 갱신. 음악 수집은 실행하지 않는다.
 .\.venv\Scripts\python.exe scripts/avatar_jobs.py run-once
 .\.venv\Scripts\python.exe scripts/avatar_jobs.py worker
+# 요청 대상만 선점: --artist-id 반복 가능, 생략하면 전체 큐
+.\.venv\Scripts\python.exe scripts/avatar_jobs.py run-once --artist-id 941
 .\.venv\Scripts\python.exe scripts/avatar_jobs.py status 1
 ```
 
-007 적용 자체는 이미 등록된 아티스트의 작업을 만들지 않는다. 같은 아티스트·계정 snapshot·`request_run`은 같은 작업을 반환한다. 끝난 작업의 명시적 재시도는 `enqueue --request-run retry-2026-10-02 --apply`처럼 새 라벨을 지정한다. 현재 이미지는 여전히 덮어쓰지 않는다. 주기적인 이미지 교체는 후속 작업이다.
+007 적용 자체는 이미 등록된 아티스트의 작업을 만들지 않는다. 같은 아티스트·계정 snapshot·`request_run`은 같은 작업을 반환한다. 끝난 작업의 명시적 재시도는 `enqueue --request-run retry-<라벨> --apply`처럼 새 라벨을 지정한다. 현재 이미지는 여전히 덮어쓰지 않는다. 주기적인 이미지 교체는 후속 작업이다.
 
 ### 저장 실패 확인
 
-`status ID`의 `last_error=avatar_storage_failed`는 저장 단계에서 실패했다는 뜻이다. 상세 원인은 `result.storage_error`에서 확인한다. 다음은 원본 업로드 권한 오류의 예시이며 Figaro의 과거 실패 원인을 확정한 기록은 아니다.
+`status ID`의 `last_error=avatar_storage_failed`는 저장 단계에서 실패했다는 뜻이다. 상세 원인은 `result.storage_error`에서 확인한다. 다음은 원본 업로드 권한 오류의 예시다.
 
 ```json
 {
@@ -50,7 +56,7 @@ revision 007의 `avatar_jobs`와 DB trigger가 아티스트에 YouTube·X `owner
 - `code`: `missing_storage_configuration`, `s3_error`, `public_http_error`, `storage_timeout`, `storage_connection_error`, `bucket_requires_public_read`, `public_content_mismatch`, `cache_control_mismatch`, 그 외 `storage_exception`.
 - `error_type`은 예외 종류, `object_name`은 실패한 파일이다. HTTP 상태와 허용된 S3 `provider_code`는 확인 가능한 경우에만 남긴다. 알 수 없는 S3 코드는 `unrecognized`로 기록한다.
 
-SDK 원문 메시지·응답 본문·헤더·자격 증명·서명 URL은 저장하거나 출력하지 않는다. 재시도는 선택된 원본 URL을 유지하고, 다시 실패하면 상세 진단을 갱신하며 성공하면 오류 필드를 제거한다. 과거 작업의 이미 버려진 상세 예외는 복원하지 못한다. 별도 DB migration은 필요 없다.
+SDK 원문 메시지·응답 본문·헤더·자격 증명·서명 URL은 저장하거나 출력하지 않는다. 재시도는 선택된 원본 URL을 유지하고, 다시 실패하면 상세 진단을 갱신하며 성공하면 오류 필드를 제거한다. 진단 필드 도입 전에 끝난 작업의 상세 예외는 남아 있지 않다. 별도 DB migration은 필요 없다.
 
 단독 `worker`와 `run-once`도 이미지 worker의 INFO 로그를 활성화한다. 실패 경고에는 작업·아티스트 ID, 시도 횟수와 위 상세 오류가 출력되고, 반복 worker는 작업 처리 결과도 출력한다. 코드 배포와 worker 재시작 뒤 새 `--request-run`으로 종료된 작업을 재시도하면 진단을 수집할 수 있다. 로컬 원본 PUT 성공만으로 서버 worker의 설정·네트워크가 같다고 판단하지 않는다.
 
@@ -62,7 +68,7 @@ SDK 원문 메시지·응답 본문·헤더·자격 증명·서명 URL은 저장
 - `AWS_ENDPOINT_URL_S3`: 해당 Neon 브랜치의 S3 endpoint
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`: 이미지 worker·명시적 업로드 도구 전용. 일반 조회 API의 이미지 URL 생성에는 불필요
 - `AWS_REGION`: 저장소 리전
-- `AVATAR_BUCKET`: 이미지 버킷. 이번 적용값은 `avator-image`
+- `AVATAR_BUCKET`: 이미지 버킷. 적용값은 `avator-image`
 
 버킷은 Neon 콘솔에서 `public_read`로 설정해야 한다. 공개 읽기만 허용하며 쓰기는 자격 증명이 필요하다. 현재 코드는 별도 CDN을 구성하지 않고 저장소에서 직접 제공한다. 캐시는 HTTP 브라우저 캐시다.
 
@@ -90,9 +96,9 @@ SDK 원문 메시지·응답 본문·헤더·자격 증명·서명 URL은 저장
 .\.venv\Scripts\python.exe scripts/migrate_avatars.py apply --report db-migration/workspace/avatars/import-next.json
 ```
 
-prepare는 DB를 조회하고 외부 이미지를 로컬에 다운로드·가공한다. 이미 관리 중인 URL은 건너뛴다. apply는 원본과 변형 파일을 업로드하고 **모든 변형의 익명 GET, 내용, Cache-Control을 확인한 다음** DB를 갱신한다. 새 주소를 만든 동안 관리자가 avatar_url을 수정했다면 conflict로 건너뛴다. 다운로드/업로드 실패 항목의 DB URL은 유지한다. apply는 중단 후 같은 report로 재실행할 수 있다.
+prepare는 DB를 조회하고 외부 이미지를 로컬에 다운로드·가공한다. 이미 관리 중인 URL은 건너뛴다. apply는 원본과 변형 파일을 업로드하고 **모든 변형의 익명 GET, 내용, Cache-Control을 확인한 다음** DB를 갱신한다. 새 주소를 만든 동안 다른 경로에서 avatar_url이 수정됐다면 conflict로 건너뛴다. 다운로드/업로드 실패 항목의 DB URL은 유지한다. apply는 중단 후 같은 report로 재실행할 수 있다.
 
-관리자에서 신규 외부 URL을 저장한 뒤 위 과정을 실행하거나, 한 아티스트만 교체할 수 있다.
+DB에 신규 외부 URL이 저장된 뒤 위 과정을 실행하거나, 한 아티스트만 교체할 수 있다.
 
 ```powershell
 .\.venv\Scripts\python.exe scripts/migrate_avatars.py prepare --artist-id 1 --source-url "https://example.com/new-profile.jpg" --report db-migration/workspace/avatars/artist-1-next.json
@@ -113,32 +119,3 @@ prepare는 DB를 조회하고 외부 이미지를 로컬에 다운로드·가공
 - CDN/이미지 변환 서비스는 별도로 추가하지 않았다.
 
 원본, 이전 주소, 새 주소와 결과는 Git 제외 경로 `db-migration/workspace/avatars/`에 보존한다. 복구 시 report의 source(교체 작업이면 previous_url)를 해당 ID에 복원하되, 현재 URL이 report의 new_url과 일치하는지 확인해야 한다. 이후의 별도 수정을 덮어쓰지 않는다.
-
-## 검증 기록
-
-2026-10-03 요청 아티스트 34명 읽기 전용 점검: Figaro·SHIN·히비쿠 3명은 이미지가
-있고, 나머지 31명은 빈 이미지와 pending/retry 작업이다. 모두 YouTube owner 계정을
-사용하며 이 31명에게 등록된 X 후보는 없다. 안나 작업 41의 실제 오류는
-`quotaExceeded`다. 태평양 시간 자정 초기화에 맞춰 요청 대상의 pending/retry 31개
-첫 실행 시각을 2026-10-03 16:00:30 KST로 앞당겼다. 우타와꾸 첫 재시도보다 30초
-이르며 작업 예약 변경이지 이미지 저장 성공 기록은 아니다.
-
-현재 로컬 `storage_settings()`에서는 endpoint·secret key·region이 없다(값은 기록하지
-않음). API 한도가 풀려도 로컬 업로드에는 이 설정 복구가 필요하다. 이 확인에서
-이미지 다운로드·업로드나 이미지 URL 변경은 수행하지 않았다. 배포 worker의 저장소
-설정은 이번 확인으로 판단할 수 없다.
-
-`avatar_jobs.py run-once/worker --artist-id ID`(반복 가능)로 요청 대상만 선점할 수 있게
-했다. 인자를 생략하면 기존 전체 worker 동작이다. 요청 대상의 이미지 처리 transaction을
-rollback하는 실데이터 검증으로 범위 선점을 확인했고 검증용 변경은 모두 되돌렸다.
-관련 mock/fixture 테스트는 38 passed이며 로컬 PostgreSQL 부재로 DB fixture가 생략됐다.
-
-2026-10-02 Figaro 실데이터 수동 완료: 사용자 요청 범위인 아티스트 941만 처리했다. 이전 선택 원본을 같은 계정 snapshot에서 재사용했고 작업 9는 첫 시도에 `succeeded`로 종료됐다. 128/256/512 WebP 공개 GET은 모두 200이며 각각 5,790/17,742/42,810 bytes와 immutable 캐시 헤더를 확인했다. `artists.avatar_url`과 `initial-avatar-v1` 영수증을 반영했다. 기존 실패 작업은 보존했고 다른 아티스트·음악 수집·외부 알림은 실행하지 않았다. 서버 환경변수는 변경하지 않았다.
-
-2026-10-02 저장 오류 진단 보완: 로컬 disposable PostgreSQL·mock S3/HTTP 검증 42개 통과. 원본/변환 업로드 및 공개 응답 실패 단계, HTTP/S3 코드, 설정 누락, 비밀정보 제외, 재시도 소진 시 진단 보존과 성공 시 오류 제거, 기존 이미지 보호·runtime 회귀를 확인했다. 이 수정 검증에서는 운영 DB 변경이나 실제 업로드를 실행하지 않았다. 별도 승인된 앞선 실데이터 진단에서는 Figaro 원본 PUT 1회와 익명 GET이 성공했고 DB는 읽기 전용이었다. 과거 실패 예외는 복원하지 못했다.
-
-2026-10-02: disposable 로컬 PostgreSQL과 provider/S3/HTTP mock 검증 203개 통과. 범위는 신규 자동 이미지·등록 dry-run/재실행·동시 claim·lease 복구·provider 대기·수동 수정/소유 변경 보호·공개 업로드 검증, migration 001/002/004/006 업그레이드, 기존 이미지 CLI·runtime·음악 작업·YouTube/Spotify 수집·조회 API·X 클라이언트 회귀다. 운영 DB schema 변경·실제 YouTube/X 조회·업로드는 실행하지 않았다.
-
-2026-09-20: 81개 이미지 다운로드·WebP 생성·업로드·DB 반영 성공, 실패 0개. 각 3개 변형의 공개 응답과 캐시 헤더를 DB 반영 전에 확인했다. 원본 합계 13,153,829 bytes, 256px 합계 1,174,592 bytes(약 91% 감소). 전송 파일 크기 비교이며 페이지 전체 로딩 시간 측정값은 아니다.
-
-로컬 fixture: 이미지 변환/URL 검사 및 기존 조회 API 테스트 12개, 프론트 단위 테스트 26개, PC·모바일 이미지 크기 선택/지연 로딩/주소 교체 브라우저 테스트 2개 통과. 프론트 타입 검사·프로덕션 빌드 통과.

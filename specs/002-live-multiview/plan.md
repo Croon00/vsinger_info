@@ -20,7 +20,7 @@ FastAPI·PostgreSQL, 비동기 provider integration, Vue 3 멀티뷰 화면을 �
 
 ## 데이터와 계약
 
-기존 collection_states의 provider 상태·snapshot·lease를 우선 사용한다. API 필드·필터·만료 계약은 docs/read-api-v2.md에서 관리한다. 후속 계약 변경이 필요하면 이 디렉터리에 변경 계약과 호환성 검증을 추가한다.
+기존 collection_states의 provider 상태·snapshot·lease를 우선 사용한다. API 필드·필터·만료 계약은 docs/read-api.md에서 관리한다. 후속 계약 변경이 필요하면 이 디렉터리에 변경 계약과 호환성 검증을 추가한다.
 
 ## 검증
 

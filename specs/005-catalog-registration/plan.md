@@ -29,15 +29,15 @@ AGENTS.md와 [프로젝트 원칙](../../.specify/memory/constitution.md)을 따
 
 원본 계약과 근거는 다음 문서를 따른다.
 
-- [youtube-channel-coverage](../../docs/youtube-channel-coverage.md)
-- [requested-vsingers-2026-10-02](../../docs/requested-vsingers-2026-10-02.md)
-- [requested-channels-2026-11-14](../../docs/requested-channels-2026-11-14.md)
-- [mair-2026-10-07](../../docs/mair-2026-10-07.md)
-- [nakamachi-arale-2026-10-07](../../docs/nakamachi-arale-2026-10-07.md)
-- [nekothe-registration-2026-11-01](../../docs/nekothe-registration-2026-11-01.md)
-- [kurokumo-2026-11-07](../../docs/kurokumo-2026-11-07.md)
-- [react-collection-2026-11-07](../../docs/react-collection-2026-11-07.md)
-- [react-members-2026-11-07](../../docs/react-members-2026-11-07.md)
+- [youtube-channel-coverage-2026-09-18](../../docs/records/data/youtube-channel-coverage-2026-09-18.md)
+- [requested-vsingers-2026-10-02](../../docs/records/data/requested-vsingers-2026-10-02.md)
+- [requested-channels-2026-11-14](../../docs/records/data/requested-channels-2026-11-14.md)
+- [mair-2026-10-07](../../docs/records/data/mair-2026-10-07.md)
+- [nakamachi-arale-2026-10-07](../../docs/records/data/nakamachi-arale-2026-10-07.md)
+- [nekothe-registration-2026-11-01](../../docs/records/data/nekothe-registration-2026-11-01.md)
+- [kurokumo-2026-11-07](../../docs/records/data/kurokumo-2026-11-07.md)
+- [react-collection-2026-11-07](../../docs/records/data/react-collection-2026-11-07.md)
+- [react-members-2026-11-07](../../docs/records/data/react-members-2026-11-07.md)
 
 ## 검증과 운영 적용
 

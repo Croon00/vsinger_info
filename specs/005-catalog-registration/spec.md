@@ -6,15 +6,15 @@
 
 사용자 요청에 따라 기존 요구·구현·검증 기록을 소급 정리했다. 수치와 완료 기록은 원본 날짜에 적용한다. 이번 정리에서는 운영 상태를 재측정하지 않았다.
 
-- [youtube-channel-coverage](../../docs/youtube-channel-coverage.md)
-- [requested-vsingers-2026-10-02](../../docs/requested-vsingers-2026-10-02.md)
-- [requested-channels-2026-11-14](../../docs/requested-channels-2026-11-14.md)
-- [mair-2026-10-07](../../docs/mair-2026-10-07.md)
-- [nakamachi-arale-2026-10-07](../../docs/nakamachi-arale-2026-10-07.md)
-- [nekothe-registration-2026-11-01](../../docs/nekothe-registration-2026-11-01.md)
-- [kurokumo-2026-11-07](../../docs/kurokumo-2026-11-07.md)
-- [react-collection-2026-11-07](../../docs/react-collection-2026-11-07.md)
-- [react-members-2026-11-07](../../docs/react-members-2026-11-07.md)
+- [youtube-channel-coverage-2026-09-18](../../docs/records/data/youtube-channel-coverage-2026-09-18.md)
+- [requested-vsingers-2026-10-02](../../docs/records/data/requested-vsingers-2026-10-02.md)
+- [requested-channels-2026-11-14](../../docs/records/data/requested-channels-2026-11-14.md)
+- [mair-2026-10-07](../../docs/records/data/mair-2026-10-07.md)
+- [nakamachi-arale-2026-10-07](../../docs/records/data/nakamachi-arale-2026-10-07.md)
+- [nekothe-registration-2026-11-01](../../docs/records/data/nekothe-registration-2026-11-01.md)
+- [kurokumo-2026-11-07](../../docs/records/data/kurokumo-2026-11-07.md)
+- [react-collection-2026-11-07](../../docs/records/data/react-collection-2026-11-07.md)
+- [react-members-2026-11-07](../../docs/records/data/react-members-2026-11-07.md)
 
 ## 사용자 시나리오와 검증
 
@@ -43,7 +43,7 @@
 
 ## 범위 경계
 
-검수된 등록·자료 보완 이력을 묶는다. admin-web과 미요청 신규 등록·재수집은 후속 범위다.
+검수된 등록·자료 보완 이력을 묶는다. 관리 도구와 미요청 신규 등록·재수집은 후속 범위다.
 
 ## 완료 조건
 

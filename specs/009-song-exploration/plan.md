@@ -31,8 +31,8 @@ GET /api/explore/songs는 기본 24개 Page 응답이다. 가창자 조회와 /a
 원본 계약과 근거는 다음 문서를 따른다.
 
 - [song-exploration](../../docs/song-exploration.md)
-- [read-api-v2](../../docs/read-api-v2.md)
-- [backend-read-performance-2026-10-11](../../docs/backend-read-performance-2026-10-11.md)
+- [read-api](../../docs/read-api.md)
+- [backend-read-performance-2026-10-11](../../docs/records/backend/backend-read-performance-2026-10-11.md)
 - [shared-youtube-channels](../../docs/shared-youtube-channels.md)
 
 ## 검증과 운영 적용

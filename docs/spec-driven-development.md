@@ -1,6 +1,6 @@
 # UtaMowa 스펙 기반 작업 안내
 
-작성 2026-11-17 · Specify CLI 1.4.1 · Codex skills · PowerShell
+작성 2026-11-17 · 최종 확인 2026-11-23 · Specify CLI 1.4.1 · Codex skills · PowerShell
 
 ## 시작하기
 
@@ -42,8 +42,9 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 | specs/<번호-기능>/spec.md | 사용자 요구·범위·완료 조건 |
 | specs/<번호-기능>/plan.md | 변경 설계·영향 코드·검증 방법 |
 | specs/<번호-기능>/tasks.md | 요구사항별 실행 작업과 상태 |
-| docs의 계약·구조 문서 | 현재 동작과 상세 계약 |
-| docs의 날짜별 기록 | 당시 데이터 변경·검증·운영 결과 |
+| docs 루트의 계약·구조 문서 | 현재 동작과 상세 계약 |
+| docs/plans | 확정 계획과 설계 근거 |
+| docs/records/backend, docs/records/data | 당시 백엔드 단계·운영 결과, 날짜별 데이터 변경·검증 |
 | docs/backend-roadmap.md | 전체 미완료 작업과 기능 스펙 연결 |
 | README.md | 실행법과 문서 진입점 |
 
@@ -53,22 +54,23 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 
 ### 공통 구조와 계약
 
-- [백엔드 구조](backend-architecture.md), [저장소 구조](repository-structure.md), [조회 API](read-api-v2.md), [카탈로그 schema](catalog-schema.md)는 plan 단계에서 현재 구조·계약 근거로 읽는다.
-- [후속 작업](backend-roadmap.md)은 specify 단계의 후보 목록이다. [DB 구조 계획](db-renewal-plan.md), [곡 마스터 계획](song-master-plan.md), [세트리스트 이전 계획](setlist-migration-plan.md)은 해당 기능을 진행할 때 현 구현과 대조한다.
-- [관리자 계획](admin-web-plan.md)은 후속 관리 기능의 자료다. 현재 서비스 통합 범위는 constitution과 서비스 보완 계획을 따른다.
+- [백엔드 구조](backend-architecture.md), [저장소 구조](repository-structure.md), [조회 API](read-api.md), [카탈로그 schema](catalog-schema.md), [공개 라이브 일정](live-site-monitor.md)은 plan 단계에서 현재 구조·계약 근거로 읽는다. 2026-09-21 [파일 정리 기록](records/backend/repository-cleanup-2026-09-21.md)은 당시 구조의 근거다.
+- 기능별 계약 문서(곡 탐색·커버·세트리스트 후보·프로필 이미지·공유 채널 등)는 상단에 날짜별 변경·검증 기록(`records/backend/*-history.md` 등) 링크를 둔다. 과거 근거는 그 링크에서 찾는다.
+- [후속 작업](backend-roadmap.md)은 specify 단계의 후보 목록이다. [DB 구조 계획](plans/db-renewal-plan.md), [곡 마스터 계획](plans/song-master-plan.md), [세트리스트 이전 계획](plans/setlist-migration-plan.md)은 해당 기능을 진행할 때 현 구현과 대조한다.
+- [관리자 계획](records/backend/admin-web-plan.md)은 2026-11-23 삭제한 로컬 관리자 앱의 기록이며 후속 관리 도구 설계 때 참고한다. 현재 서비스 통합 범위는 constitution과 서비스 보완 계획을 따른다.
 
 ### 서비스 운영 전환
 
 [001-service-readiness](../specs/001-service-readiness/spec.md)에서 요구사항·설계·남은 작업을 추적한다.
 
-- 확정 요구와 설계 근거는 [통합 최종 계획](backend-consolidation-plan.md), [서비스 보완 계획](backend-service-readiness-plan.md)이다.
-- 기존 단계 기록은 [조사](backend-phase-1-baseline.md), [schema](backend-phase-2-runtime-schema.md), [이전 도구](backend-phase-3-runtime-migration.md), [runtime](backend-phase-4-runtime.md), [전환 절차](backend-phase-5-cutover.md)다.
-- 로컬 보완 기록은 [X·Discord](backend-service-step-1-runtime.md), [작업 실행기](backend-service-step-2-jobs.md), [YouTube](backend-service-step-3-youtube.md), [Spotify](backend-service-step-4-spotify.md), [이전·설정](backend-service-step-5-migration.md), [통합 검증](backend-service-step-6-validation.md)이다.
-- 실제 이전 근거는 [2026-09-23 전환 기록](backend-cutover-2026-09-23.md), 조회 성능 근거는 [2026-10-11 측정](backend-read-performance-2026-10-11.md)이다.
+- 확정 요구와 설계 근거는 [통합 최종 계획](plans/backend-consolidation-plan.md), [서비스 보완 계획](plans/backend-service-readiness-plan.md)이다.
+- 기존 단계 기록은 [조사](records/backend/backend-phase-1-baseline.md), [schema](records/backend/backend-phase-2-runtime-schema.md), [이전 도구](records/backend/backend-phase-3-runtime-migration.md), [runtime](records/backend/backend-phase-4-runtime.md), [전환 절차](records/backend/backend-phase-5-cutover.md)다.
+- 로컬 보완 기록은 [X·Discord](records/backend/backend-service-step-1-runtime.md), [작업 실행기](records/backend/backend-service-step-2-jobs.md), [YouTube](records/backend/backend-service-step-3-youtube.md), [Spotify](records/backend/backend-service-step-4-spotify.md), [이전·설정](records/backend/backend-service-step-5-migration.md), [통합 검증](records/backend/backend-service-step-6-validation.md)이다.
+- 실제 이전 근거는 [2026-09-23 전환 기록](records/backend/backend-cutover-2026-09-23.md), 조회 성능 근거는 [2026-10-11 측정](records/backend/backend-read-performance-2026-10-11.md)이다.
 
 ### 생방송 멀티뷰
 
-[002-live-multiview](../specs/002-live-multiview/spec.md)에서 조회·주기·상태 전환·운영 연결을 추적한다. 상세 계약은 [조회 API](read-api-v2.md), 과거 실행 기록은 [roadmap](backend-roadmap.md)에서 확인한다. Holodex의 최신 기준은 전체 검색 1시간·생방송 및 예정 시각 도달 방송 확인 3분이다. 과거 1분·30분 기록은 당시 이력이다.
+[002-live-multiview](../specs/002-live-multiview/spec.md)에서 조회·주기·상태 전환·운영 연결을 추적한다. 상세 계약은 [조회 API](read-api.md#생방송-멀티뷰), 주기 변경 경위는 [조회 API 기록](records/backend/read-api-history.md)에서 확인한다.
 
 ### 음악·아티스트 기능 계약
 
@@ -87,29 +89,13 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 
 다음 기록은 관련 작업의 research·검증 근거로 참조한다. 데이터 수치와 성공 여부는 해당 기록 시점에 적용한다.
 
-- [요청 아티스트 2026-10-02](requested-vsingers-2026-10-02.md), [가창자 반영 2026-10-04](performance-artists-2026-10-04.md), [요청 채널 2026-11-14](requested-channels-2026-11-14.md)
-- [Mair](mair-2026-10-07.md), [Nakamachi Arale](nakamachi-arale-2026-10-07.md), [Nekothe](nekothe-registration-2026-11-01.md), [Kurokumo](kurokumo-2026-11-07.md), [ReAcT 자료](react-collection-2026-11-07.md), [ReAcT 멤버](react-members-2026-11-07.md)
-- [라이브 5850 정정](live-5850-correction-2026-10-07.md), [세트리스트 정리](setlist-cleanup-2026-10-10.md), [규칙 갱신](setlist-refresh-2026-10-30.md), [모델 복구](setlist-model-recovery-2026-10-31.md)
-- [전환 시기 복구](youtube-cutover-recovery-2026-10-09.md), [수집 runtime 조사](youtube-runtime-audit-2026-10-11.md), [커버 조사](youtube-cover-audit-2026-11-01.md)
+- [요청 아티스트 2026-10-02](records/data/requested-vsingers-2026-10-02.md), [가창자 반영 2026-10-04](records/data/performance-artists-2026-10-04.md), [요청 채널 2026-11-14](records/data/requested-channels-2026-11-14.md)
+- [누락 YouTube 채널 2026-09-18](records/data/youtube-channel-coverage-2026-09-18.md), [Mair](records/data/mair-2026-10-07.md), [Nakamachi Arale](records/data/nakamachi-arale-2026-10-07.md), [Nekothe](records/data/nekothe-registration-2026-11-01.md), [Kurokumo](records/data/kurokumo-2026-11-07.md), [ReAcT 자료](records/data/react-collection-2026-11-07.md), [ReAcT 멤버](records/data/react-members-2026-11-07.md)
+- [라이브 5850 정정](records/data/live-5850-correction-2026-10-07.md), [세트리스트 정리](records/data/setlist-cleanup-2026-10-10.md), [규칙 갱신](records/data/setlist-refresh-2026-10-30.md), [모델 복구](records/data/setlist-model-recovery-2026-10-31.md)
+- [전환 시기 복구](records/backend/youtube-cutover-recovery-2026-10-09.md), [수집 runtime 조사](records/backend/youtube-runtime-audit-2026-10-11.md), [커버 조사](records/data/youtube-cover-audit-2026-11-01.md)
 
 web/docs와 scripts/README.md 등 영역 문서는 해당 영역 AGENTS.md와 함께 읽는다. 실행 도구의 실제 DB 변경·외부 호출 범위를 확인한 뒤 사용한다.
 
-## 도입 검증
+## 도입·검증 기록
 
-2026-11-17 검증 결과는 다음과 같다.
-
-- Specify CLI 1.4.1의 Codex 스킬 9개와 PowerShell 스크립트·템플릿·workflow 설치를 확인했다.
-- 두 기능에 check-prerequisites.ps1 -RequireSpec -RequireTasks -IncludeTasks를 실행해 spec.md·plan.md·tasks.md 인식과 종료 코드 0을 확인했다.
-- docs/의 모든 Markdown 문서가 위 지도에서 연결됨을 확인했다. README·AGENTS·constitution·신규 안내·specs의 상대 링크와 UTF-8 문자를 검사했다.
-- roadmap의 병합 충돌 표시를 제거하고 양쪽 기록을 2026-10-03 이력과 2026-10-04 후속 기록으로 연결했다. git diff --check를 실행했다.
-
-이번 검증 범위는 문서·설치 구조다. 애플리케이션 테스트·실제 provider·운영 배포 확인은 각 기능의 미완료 작업으로 추적한다.
-
-## 기존 작업 이관 검증 (2026-11-18)
-
-003~010의 8개 기능에 spec.md·plan.md·tasks.md 24개를 작성하고 기능 목록·문서 지도·roadmap에 연결했다. 분류 단위는 기존 계약과 날짜별 작업의 관련 범위로 정했다. 과거 완료 기록은 원본 날짜를 유지했으며, fixture·실데이터·배포 상태를 구분했다.
-
-- Windows PowerShell 환경에서 8개 디렉터리 각각에 check-prerequisites.ps1 -Json -RequireSpec -RequireTasks -IncludeTasks를 실행해 종료 코드 0을 확인했다.
-- 신규 문서 24개와 연결 문서 3개의 UTF-8 문자·상대 링크 대상, 신규 문서의 명시적 코드 경로와 US/FR/SC 식별자를 검사해 오류 0건을 확인했다. git diff --check를 통과했다.
-- 애플리케이션 테스트·DB 조회 및 변경·실제 provider 호출·배포 확인은 이번 문서 이관에서 실행하지 않았다. Git 제외 보고서의 존재·내용은 재검증하지 않았다.
-- requested-vsingers-2026-10-02.md에 남은 병합 충돌 표시와 상태 불일치는 005의 T003에서 추적한다. 세트리스트의 10월 초 상태는 10월 말 복구 기록과 대조할 후속 작업으로 008에 연결했다.
+2026-11-17 도입, 2026-11-18 기존 작업 이관, 2026-11-23 문서 재배치의 검증 결과는 [스펙 기반 작업 기록](records/backend/spec-kit-adoption-2026-11-17.md)에 있다.

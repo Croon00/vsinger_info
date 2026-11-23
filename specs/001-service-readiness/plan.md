@@ -7,7 +7,7 @@
 Python 3.12.8, FastAPI, Pydantic, SQLAlchemy, PostgreSQL, Vue 3·Vite를 사용한다. 검증은 pytest, Vitest, Playwright를 사용한다. 처리 경로와 계약은 원본 문서를 따른다.
 
 - [백엔드 구조](../../docs/backend-architecture.md)
-- [조회 API](../../docs/read-api-v2.md)
+- [조회 API](../../docs/read-api.md)
 - [카탈로그 schema](../../docs/catalog-schema.md)
 
 ## 프로젝트 원칙 준수 점검
@@ -26,8 +26,8 @@ Python 3.12.8, FastAPI, Pydantic, SQLAlchemy, PostgreSQL, Vue 3·Vite를 사용�
 
 현재 API·schema·이전 계약은 원본에서 관리한다. 계약 변경이 필요할 때 이 디렉터리에 변경 계약과 마이그레이션 계획을 추가한다. tests/의 관련 fixture·PostgreSQL 검증, web/의 관련 테스트·build를 변경 범위에 따라 실행한다. 실행 날짜·환경·결과와 운영 관찰을 기록한다.
 
-- [X·Discord](../../docs/backend-service-step-1-runtime.md)
-- [작업 실행기](../../docs/backend-service-step-2-jobs.md)
-- [YouTube](../../docs/backend-service-step-3-youtube.md)
-- [Spotify](../../docs/backend-service-step-4-spotify.md)
-- [전환 절차](../../docs/backend-phase-5-cutover.md)
+- [X·Discord](../../docs/records/backend/backend-service-step-1-runtime.md)
+- [작업 실행기](../../docs/records/backend/backend-service-step-2-jobs.md)
+- [YouTube](../../docs/records/backend/backend-service-step-3-youtube.md)
+- [Spotify](../../docs/records/backend/backend-service-step-4-spotify.md)
+- [전환 절차](../../docs/records/backend/backend-phase-5-cutover.md)

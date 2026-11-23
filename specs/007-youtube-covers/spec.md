@@ -7,7 +7,7 @@
 사용자 요청에 따라 기존 요구·구현·검증 기록을 소급 정리했다. 수치와 완료 기록은 원본 날짜에 적용한다. 이번 정리에서는 운영 상태를 재측정하지 않았다.
 
 - [youtube-covers](../../docs/youtube-covers.md)
-- [youtube-cover-audit-2026-11-01](../../docs/youtube-cover-audit-2026-11-01.md)
+- [youtube-cover-audit-2026-11-01](../../docs/records/data/youtube-cover-audit-2026-11-01.md)
 - [shared-youtube-channels](../../docs/shared-youtube-channels.md)
 
 ## 사용자 시나리오와 검증

@@ -1,10 +1,10 @@
 # 새 프론트 화면 설계
 
-기준: 2026-09-18. 초기 계획과 후속 변경을 현재 구현 기준으로 통합했다. 실행은 [README](../README.md), 데이터 계약은 [API v2](../../docs/read-api-v2.md), 미지원 기능은 [후속 작업](../../docs/backend-roadmap.md), 검증은 [QA](qa.md)를 따른다.
+기준: 2026-09-18. 초기 계획과 후속 변경을 현재 구현 기준으로 통합했다. 실행은 [README](../README.md), 데이터 계약은 [API v2](../../docs/read-api.md), 미지원 기능은 [후속 작업](../../docs/backend-roadmap.md), 검증은 [QA](qa.md)를 따른다.
 
 ## 범위와 디자인 기준
 
-- Vue 3 + TypeScript + Vite + Vue Router. 기존 web.bak의 화면·스타일을 참고하거나 재사용하지 않는다.
+- Vue 3 + TypeScript + Vite + Vue Router. 기존 관리 웹(`web.bak`, 2026-11-23 삭제)의 화면·스타일을 참고하거나 재사용하지 않는다.
 - CLI의 --preset a2vfHFI로 생성한 shadcn-vue Luma/Neutral/Lucide 구성을 유지한다. index.html에서 Google Fonts의 Inter·Noto Sans JP·Noto Sans KR을 불러오고, src/style.css의 `--font-sans`에 Inter → JP → KR → macOS/Windows → 시스템 고딕 순서로 둔다. 아카이브 제목(카드·검색 결과·뷰어)에는 `palt`를 적용한다. components.json의 Inter 값은 프리셋 설정이며 실제 폰트 순서는 `--font-sans`가 정한다.
 - 컴포넌트 구조·접근성·색상·폰트·반경은 shadcn-vue, 호환되는 모션은 transitions-dev를 따른다. 충돌 시 shadcn-vue 우선.
 - 의미 기반 색상 토큰과 사진·앨범 아트를 사용한다. 홍보 슬로건·가짜 계정·장식용 날짜를 넣지 않는다.

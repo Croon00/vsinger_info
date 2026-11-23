@@ -7,7 +7,7 @@
 roadmap의 2026-11-15 기록과 app/core/config.py, app/services/youtube_live_monitor.py, tests/test_holodex.py에서 확인한 범위를 이관했다.
 
 - [후속 작업](../../docs/backend-roadmap.md)
-- [조회 계약](../../docs/read-api-v2.md)
+- [조회 계약](../../docs/read-api.md)
 
 ## 사용자 시나리오와 검증
 
