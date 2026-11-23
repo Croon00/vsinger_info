@@ -12,6 +12,18 @@ from app.db.catalog_session import catalog_runtime_session,verify_catalog_identi
 from app.integrations.youtube_catalog import Video
 from app.integrations.youtube_cover_rules import is_cover_title
 from app.repositories.shared_youtube import COVER_SOURCE_CHANNELS
+from app.services.youtube_original import eligible
+from app.repositories.youtube_collection import snapshot, _document
+from datetime import UTC, datetime
+
+# Individually reviewed releases with official-owner vocals and release links.
+# These are explicit imports, not a relaxed automatic official/MV rule.
+REVIEWED_RELEASES = {
+    'TYiDKfmGLas': (942, 'UC5zO6IFsWSUHMYgJMv81XKg', 'Reboot of Mine',
+                    ['Vocal：shin', 'https://linkco.re/FduN9U39', 'Song: shin - Reboot of Mine']),
+    'Az_tvib08tc': (941, 'UC7CtvN04ublW4LGTPksG6mg', '彗星の夜明け',
+                    ['Figaro 3rd Single 『彗星の夜明け』', 'Vocal & Movie - Figaro', 'https://lnk.to/Figaro_CometsDawn']),
+}
 
 
 def run(path,apply=False):
@@ -28,9 +40,14 @@ def run(path,apply=False):
         planned=[]
         for item in manifest['items']:
             v=Video.model_validate(item['video'])
-            if is_cover_title(v.title) or 'official music video' not in v.title.lower():
+            reviewed = REVIEWED_RELEASES.get(v.id) if manifest['policy']=='reviewed-originals-20261122-shin-figaro-v1' else None
+            if reviewed:
+                artist, channel, title, excerpts = reviewed
+                if not eligible(v) or v.channel_id != channel or item['title'] != title or not all(x in v.description for x in excerpts):
+                    raise ValueError('Reviewed release proof changed')
+            elif is_cover_title(v.title) or 'official music video' not in v.title.lower():
                 raise ValueError('Reviewed original MV evidence required')
-            if v.channel_id not in (COVER_SOURCE_CHANNELS['kmnz']+COVER_SOURCE_CHANNELS['vesperbell']
+            if not reviewed and v.channel_id not in (COVER_SOURCE_CHANNELS['kmnz']+COVER_SOURCE_CHANNELS['vesperbell']
                                     + ['UCQXuGcIoseWY5HmW6-U7teg','UCuvYHCPdMxfvjW_F9w5LmRA']):
                 raise ValueError('Unapproved publisher')
             account=s.execute(text("SELECT id FROM external_accounts WHERE platform='youtube' AND platform_id=:channel AND archived_at IS NULL"),{'channel':v.channel_id}).scalar_one_or_none()
@@ -43,6 +60,16 @@ def run(path,apply=False):
                 group=s.execute(text("SELECT id FROM artists WHERE slug='vesperbell' AND archived_at IS NULL")).scalar_one()
                 create('artist_external_accounts',"INSERT INTO artist_external_accounts(artist_id,account_id,relationship,is_primary,label,position) VALUES (:artist,:account,'owner',false,'YouTube music source',100) RETURNING *",{'artist':group,'account':account})
             credits=[s.execute(text('SELECT id FROM artists WHERE slug=:slug AND archived_at IS NULL'),{'slug':slug}).scalar_one() for slug in item['artist_slugs']]
+            if reviewed:
+                owners=s.execute(text('''SELECT ae.artist_id FROM artist_external_accounts ae
+                    JOIN external_accounts e ON e.id=ae.account_id JOIN artists a ON a.id=ae.artist_id
+                    WHERE e.id=:account AND e.collection_enabled AND e.archived_at IS NULL
+                    AND a.archived_at IS NULL AND ae.relationship='owner' FOR SHARE OF ae,e,a'''),{'account':account}).scalars().all()
+                if credits != [reviewed[0]] or reviewed[0] not in owners:
+                    raise ValueError('Reviewed owner changed')
+                current=snapshot(s,v.id,lock=True)
+                if current['cover'] or current['archive']:
+                    raise ValueError('Existing classification preserved')
             existing=s.execute(text("SELECT id,source_account_id,archived_at FROM videos WHERE platform='youtube' AND platform_video_id=:id"),{'id':v.id}).mappings().first()
             if existing and (existing['source_account_id'] not in (None,account) or existing['archived_at']):
                 raise ValueError('Existing video source or archive conflict')
@@ -50,6 +77,12 @@ def run(path,apply=False):
             if not linked:planned.append((item,v,account,credits,existing))
         if not apply:return {'reviewed':len(manifest['items']),'new_recordings':len(planned)}
         for item,v,account,credits,existing in planned:
+            if v.id in REVIEWED_RELEASES:
+                _document(s,video_id=v.id,kind='video_description',external_id=v.id,content=v.description,
+                          metadata={'collector':'reviewed-original-import','policy':manifest['policy'],
+                                    'video':v.model_dump(mode='json'),'evidence_excerpts':REVIEWED_RELEASES[v.id][3],
+                                    'artist_ids':credits,'model_calls':0},
+                          disposition='applied',captured_at=datetime.now(UTC))
             if existing:
                 video=existing['id']
                 if existing['source_account_id'] is None:

@@ -7,7 +7,7 @@ from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_PARAMS
 import json
 
 
-def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None, genres=None, moods=None, music_tags=None):
+def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None, genres=None, moods=None, music_tags=None, published_only=False):
     repo = repository or CatalogReadRepository(session)
     params = {'agency': agency, 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}
     scope = """a.archived_at IS NULL AND a.show_in_catalog AND
@@ -122,6 +122,8 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
     else:
         sql += """ AND (CAST(:start AS date) IS NULL OR (published_at AT TIME ZONE 'Asia/Seoul')::date>=:start)
           AND (CAST(:end AS date) IS NULL OR (published_at AT TIME ZONE 'Asia/Seoul')::date<=:end)"""
+    if published_only:
+        sql += " AND youtube_video_id ~ '^[A-Za-z0-9_-]{11}$' AND published_at <= CURRENT_TIMESTAMP"
     if order == 'name':
         ordering = 'q.title,q.key'
     elif order == 'latest':

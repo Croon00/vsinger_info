@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test'
 
-test('statistics song links show singer dates and open the selected timestamp', async ({ page }) => {
+test('statistics song links show singer dates and open the selected timestamp', async ({
+  page,
+}) => {
   await page.goto('/artists/1?tab=statistics')
   const song = page.locator('.statistics-song-row a.statistics-song-title').first()
   await expect(song).toBeVisible()
@@ -24,12 +26,20 @@ test('artist bars hide immediately when their page becomes inactive', async ({ p
     const hiddenBars = await page.evaluate(async (buttonLabel) => {
       const section = document.querySelector('.original-artist-statistics')!
       section.querySelector<HTMLButtonElement>(`[aria-label="${buttonLabel}"]`)!.click()
-      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-      return [...section.querySelectorAll('[inert] [data-slot="progress-indicator"]')].map((bar) => ({
-        visibility: getComputedStyle(bar).visibility,
-        visibilityTransition: bar.getAnimations().some((animation) =>
-          animation instanceof CSSTransition && animation.transitionProperty === 'visibility'),
-      }))
+      await new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      )
+      return [...section.querySelectorAll('[inert] [data-slot="progress-indicator"]')].map(
+        (bar) => ({
+          visibility: getComputedStyle(bar).visibility,
+          visibilityTransition: bar
+            .getAnimations()
+            .some(
+              (animation) =>
+                animation instanceof CSSTransition && animation.transitionProperty === 'visibility',
+            ),
+        }),
+      )
     }, label)
     expect(hiddenBars.length).toBeGreaterThan(0)
     for (const bar of hiddenBars) {
@@ -45,7 +55,13 @@ test('artist statistics paginate, retain Enter searches, filter aliases and pagi
   await page.goto('/artists/1', { waitUntil: 'domcontentloaded' })
   await page.getByRole('tab', { name: '통계', exact: true }).click()
   await expect(page).toHaveURL(/tab=statistics/)
-  await expect(page.getByRole('tab')).toHaveText([/라이브/, '통계', '발매곡', '공연 정보'])
+  await expect(page.getByRole('tab')).toHaveText([
+    /라이브/,
+    '커버',
+    '통계',
+    '오리지널 곡',
+    '공연 정보',
+  ])
   const songSection = page.locator('.song-statistics')
   const artistSection = page.locator('.original-artist-statistics')
   await expect(page.getByText('라이브 기록', { exact: true })).toHaveCount(0)
@@ -128,9 +144,12 @@ test('statistics pagination preserves document height, scroll and controls in bo
     // pagination. A viewport transition is not a page-change scroll jump.
     await page.evaluate(async () => {
       await document.fonts.ready
-      await Promise.all(document.getAnimations()
-        .filter(animation => animation.effect?.getTiming().iterations !== Infinity)
-        .map(animation => animation.finished.catch(() => {})))
+      await Promise.all(
+        document
+          .getAnimations()
+          .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+          .map((animation) => animation.finished.catch(() => {})),
+      )
     })
     for (const selector of ['.song-statistics', '.original-artist-statistics']) {
       const section = page.locator(selector)

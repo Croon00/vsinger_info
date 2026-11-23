@@ -37,7 +37,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /artists/{id}/statistics | 가창자 기준 곡·원곡 아티스트 순위와 월별 활동량. 곡의 `searchText`는 이름·곡 별칭·원곡자 검색용 문자열. `titleKo`·`artistKo`, 원곡 아티스트 순위의 `nameKo`는 저장된 한국어 이름이며 없으면 null |
 | GET /search?q=... | 아래 [검색](#검색) |
 | GET /search/performers?q=... | 전체 검색 결과의 공개 가창자 선택지. [곡 탐색](song-exploration.md) |
-| GET /explore/songs, /explore/song-performers | 우타와꾸·커버·오리지널 곡 탐색. [곡 탐색](song-exploration.md) |
+| GET /explore/songs, /explore/song-performers | 우타와꾸·커버·오리지널 곡 탐색. 홈 최근 곡·즐겨찾기 캐러셀·아티스트 오리지널 탭도 이 경로를 쓴다(`published_only`). [곡 탐색](song-exploration.md) |
 | GET /explore/music-tags | 오리지널 장르·분위기 태그. [음악 분류](original-music-tags.md) |
 | GET /streams, /stream-groups | 아래 [생방송 멀티뷰](#생방송-멀티뷰) |
 | GET /concerts | 보관/취소 제외 공연. `artist_id`, `start`(포함), `end`(제외) 선택 필터 |
@@ -133,6 +133,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 - 보관된 아카이브/영상과 private/deleted 영상은 제외한다. public/unlisted/unknown은 저장된 가용성 그대로 조회하며 외부 플랫폼을 확인하지 않는다. 새 DB는 검수된 라이브 관계를 사용하므로 기존 420초 길이 필터는 적용하지 않는다.
 - 활동량/방송 수는 아티스트가 참여한 아카이브를 한 번씩 센다. 월은 Asia/Seoul이며 미래/날짜 미정은 그래프에서 제외한다.
 - 통계 API의 월별 활동량에는 이번 달 누적도 포함된다. 프론트 그래프는 진행 중인 이번 달을 빼고 지난달까지 표시한다. 6M/1Y는 완료된 6개월/12개월, All은 최초 기록 월부터 지난달까지이며, 기록이 없으면 지난달 0건과 빈 상태 안내를 표시한다.
+- HONK THE HORN·NUROJUNK 네 멤버의 개인 라이브·통계는 지정 그룹 공식 채널의 비커버 방송으로 제한한다. 커버 표시 규칙은 [공유 YouTube 채널](shared-youtube-channels.md)을 따른다.
 - 가창 통계는 performance_artists에 해당 아티스트가 연결된 performance만 센다. 출연만 했다는 이유로 다른 사람의 가창을 포함하지 않는다. 가창자가 미연결된 세트리스트는 상세에 보이지만 개인 통계에는 포함하지 않는다.
 - 곡은 song_id 기준이다. 미매칭 곡만 원문 제목+원문 아티스트의 소문자·양끝 공백 정리 값으로 임시 구분한다. 같은 제목의 다른 곡 ID를 합치지 않는다.
 - 공동 원곡자는 각 명의에 횟수를 부여하므로 원곡 아티스트 비율 합계가 100%를 넘을 수 있다. 비율 분모는 전체 가창 횟수다. 미등록 원곡자는 순위에서 제외한다.

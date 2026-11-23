@@ -11,7 +11,7 @@ import unicodedata
 
 from app.integrations.youtube_catalog import find_timestamps, timestamp_seconds
 
-RULE_POLICY = 'setlist-rules-1'
+RULE_POLICY = 'setlist-rules-2'
 DECOR = ' \t\u3000┗└├│─━═•・🎵🎶🎤♫♪✨✦★☆▸▶🎀🐶🤍❇️'
 HEADING = re.compile(r'(?:set\s*list|song\s*list|歌枠セットリスト|セットリスト|セトリ|세트리스트|歌唱タイムスタンプ)', re.I)
 FIELD_ORDER = {
@@ -19,17 +19,99 @@ FIELD_ORDER = {
     'artist_first': re.compile(r'(?:歌手|アーティスト|artist|가수|원곡자)\s*[/／|｜]\s*(?:曲名|曲|song(?: title)?|title|곡명|제목)', re.I),
 }
 ORDINAL = re.compile(r'^(?:(?:[＃#]\s*[0-9０-９]+|[0-9０-９]+\s*曲目)\s*|'
-                     r'(?:[0-9０-９]{1,3}\s*[.．、)]\s+|[①-⑳]\s*))')
+                     r'(?:[0-9０-９]{1,3}\s*[.．、)]\s+|[0-9０-９]{1,3}\s*[|｜]\s*|[①-⑳]\s*))')
 SONG_NUMBER = re.compile(r'[0-9０-９]+\s*曲目(?:\s*[/／]\s*[0-9０-９]+(?:st|nd|rd|th)\s+song)?', re.I)
 LABEL_NOTE = r'(?:\s*(?:[（(【\[].*[）)】\]]|[:：]\s+.+))?'
-NON_SONG = re.compile(r'(?:start|end|opening|closing|intro|outro|mc|talk|chat|'
+NON_SONG = re.compile(r'(?:start(?:\s+stream)?[！!]?|end(?:ing)?(?:\s+talk)?|op|opening|closing|intro|outro|mc|talk|chat|'
                       r'配信開始|配信終了|開始|終了|挨拶|雑談|告知|重大告知|アフタートーク|'
+                      r'おはなし[0-9０-９①-⑳]*|お話[0-9０-９①-⑳]*|'
                       r'시작|종료|인사|잡담|공지)' + LABEL_NOTE, re.I)
-SECTION_END = re.compile(r'(?:end|closing|outro|配信終了|終了|アフタートーク|종료)' + LABEL_NOTE, re.I)
-PAIR = re.compile(r'\S\s*[/／|｜]\s*\S')
+SECTION_END = re.compile(r'(?:end(?:ing)?(?:\s+talk)?|closing|outro|配信終了|終了|アフタートーク|종료)' + LABEL_NOTE, re.I)
+PAIR = re.compile(r'(?:\S\s*[/／|｜]\s*\S|\S\s+[-–—]\s+\S)')
 TIME_LIKE = re.compile(r'[0-9０-９]+\s*[:：]\s*[0-9０-９]+')
 RANGE = re.compile(r'\s*[~〜～–—−-]\s*')
 ANNOTATION = re.compile(r'\s*[（(【\[]\s*(?:take\s*\d+|key\s*[+-]?\d+|[+-]\d+|初|初披露|NEW)\s*[）)】\]]\s*$', re.I)
+TIMELINE_HEADING = re.compile(r'(?:タイムスタンプ|time\s*stamps?|타임스탬프)', re.I)
+TIMELINE_END = re.compile(r'(?:ending\s+talk|end(?:ing)?|closing|outro|ハイライト|highlights?|'
+                          r'アフタートーク|スパチャ読み|お名前呼び|하이라이트|마무리|종료)', re.I)
+SEQUENTIAL_NUMBER = re.compile(r'^([0-9０-９]{1,3})\s*[.．、)]\s+(.+)$')
+MIXED_SECTION_HEADING = re.compile(r'セトリ\s*[＆&]\s*シーン', re.I)
+SECTION_DIVIDER = re.compile(r'[-─━=＝_—ー*＊・.]{3,}')
+
+
+def _plain_label(value: str) -> str:
+    """Strip decoration only from standalone section labels, never song text."""
+    while value and unicodedata.category(value[0])[0] in 'PSZM':
+        value = value[1:]
+    while value and unicodedata.category(value[-1])[0] in 'PSZM':
+        value = value[:-1]
+    return value
+
+
+def extract_numbered_timeline(context: dict, duration: int | None) -> RuleCandidate:
+    """Accept a contiguous 1..N song-information block with explicit boundaries.
+
+    Generic timestamps do not activate the ordinary setlist parser. This narrow
+    format requires numbering AND title/artist-shaped text on every entry;
+    intros and a separate ending/highlight section are never inferred as songs.
+    Unlabelled artist order remains unresolved, as in the existing rules.
+    """
+    if context['truncated']:
+        return RuleCandidate(reason='truncated', blocks_selection=True)
+    lines = context['lines']
+    if not any(TIMELINE_HEADING.fullmatch(_plain_label(line['text'])) or _heading(line['text']) for line in lines):
+        return RuleCandidate()
+    active = ended = False
+    rows, seen = [], set()
+    for line in lines:
+        raw = line['text']
+        stamps = find_timestamps(raw)
+        if TIMELINE_END.fullmatch(_plain_label(raw)):
+            if active:
+                ended = True
+                break
+            continue
+        if not stamps:
+            # An untimed numbered song inside the block makes it incomplete.
+            if active and SEQUENTIAL_NUMBER.match(raw.strip(DECOR)):
+                return RuleCandidate(reason='numbered_song_without_time', blocks_selection=True)
+            continue
+        if len(stamps) != 1:
+            if active:
+                return RuleCandidate(reason='numbered_multiple_timestamps', blocks_selection=True)
+            continue
+        stamp = stamps[0]
+        left, right = raw[:stamp.start()].strip(DECOR), raw[stamp.end():].strip(DECOR)
+        if active and not left and TIMELINE_END.fullmatch(_plain_label(right)):
+            ended = True
+            break
+        match = SEQUENTIAL_NUMBER.match(right) if not left else None
+        if match is None:
+            if active and not _label(right):
+                return RuleCandidate(reason='unnumbered_entry_inside_song_block', blocks_selection=True)
+            continue
+        ordinal = int(unicodedata.normalize('NFKC', match[1]))
+        if not active and ordinal != 1:
+            return RuleCandidate(reason='numbered_block_does_not_start_at_one', blocks_selection=True)
+        title = match[2].strip()
+        if (ordinal != len(rows) + 1 or not PAIR.search(title) or _label(title)
+                or _info(title, None, True) is None):
+            return RuleCandidate(reason='ambiguous_numbered_song_block', blocks_selection=True)
+        seconds = timestamp_seconds(stamp[1])
+        if seconds in seen or (rows and seconds <= rows[-1]['start_seconds']) or (duration is not None and seconds >= duration):
+            return RuleCandidate(reason='invalid_numbered_song_time', blocks_selection=True)
+        active = True
+        seen.add(seconds)
+        # Keep the full verbatim song information: a slash alone does not prove
+        # which side is the artist, or whether a title itself includes a slash.
+        rows.append(dict(timestamp=stamp[1], start_seconds=seconds, title=title,
+                         original_artist=None, raw_line=raw,
+                         line_number=line['line_number'], end_line_number=line['line_number']))
+        if len(rows) > 200:
+            return RuleCandidate(reason='too_many_songs', blocks_selection=True)
+    if len(rows) >= 2 and ended:
+        return RuleCandidate(rows=rows, reason='bounded_numbered_timeline')
+    return RuleCandidate(reason='incomplete_numbered_timeline', blocks_selection=bool(rows))
 
 
 @dataclass
@@ -105,7 +187,7 @@ def _info(value: str, order: str | None, numbered: bool) -> tuple[str, str | Non
     return value, None
 
 
-def extract_rules(context: dict, duration: int | None) -> RuleCandidate:
+def _extract_explicit_rules(context: dict, duration: int | None) -> RuleCandidate:
     """Either accept a whole bounded section or leave it for model/review.
 
     Known non-song markers are skipped. Ambiguous timestamp entries invalidate
@@ -116,9 +198,13 @@ def extract_rules(context: dict, duration: int | None) -> RuleCandidate:
     if context['truncated']:
         return RuleCandidate(reason='truncated', blocks_selection=True)
     if not explicit:
+        numbered = extract_numbered_timeline(context, duration)
+        if numbered.rows or numbered.blocks_selection:
+            return numbered
         # An unheaded competing list may split time/title across lines or put
         # its ordinal after the time. Do not dismiss it as chat in either case.
-        structured = any(PAIR.search(line) or ORDINAL.match(line.strip(DECOR)) or
+        structured = any(PAIR.search(line) or (
+                         (number := ORDINAL.match(line.strip(DECOR))) and line.strip(DECOR)[number.end():].strip()) or
                          re.search(r'[「『][^」』]+[」』]', line) or
                          any(_clean(line[stamp.end():])[1] for stamp in find_timestamps(line))
                          for line in lines)
@@ -233,6 +319,37 @@ def extract_rules(context: dict, duration: int | None) -> RuleCandidate:
     if not rows:
         return ambiguous('no_supported_songs')
     return RuleCandidate(rows=sorted(rows, key=lambda row: row['start_seconds']), reason='explicit_setlist')
+
+
+def extract_rules(context: dict, duration: int | None) -> RuleCandidate:
+    explicit = _extract_explicit_rules(context, duration)
+    if explicit.rows:
+        return explicit
+    # A generic timeline and a SetList heading can introduce the same bounded
+    # numbered format. Only a complete numbered block may rescue an otherwise
+    # ambiguous mixed comment; the original checks remain for all other forms.
+    numbered = extract_numbered_timeline(context, duration)
+    if numbered.rows:
+        return numbered
+    # Some authors label the combined comment "setlist & scenes", then
+    # explicitly divide the song list from announcements/highlights. Accept
+    # only the existing strict pair parser's complete section before that line.
+    header = next((i for i, line in enumerate(context['lines'])
+                   if MIXED_SECTION_HEADING.fullmatch(_plain_label(line['text']))), None)
+    if header is not None and not context['truncated']:
+        end = next((i for i in range(header + 1, len(context['lines']))
+                    if SECTION_DIVIDER.fullmatch(context['lines'][i]['text'].strip())), None)
+        if end is not None:
+            bounded = [dict(line) for line in context['lines']]
+            bounded[header]['text'] = 'SetList'
+            bounded[end]['text'] = 'End'
+            for i in range(end + 1, len(bounded)):
+                bounded[i]['text'] = ''
+            mixed = _extract_explicit_rules({**context, 'lines': bounded}, duration)
+            if len(mixed.rows) >= 2:
+                mixed.reason = 'bounded_setlist_and_scenes'
+                return mixed
+    return explicit
 
 
 def choose_rules(contexts: list[dict], duration: int | None) -> tuple[int | None, list[RuleCandidate]]:

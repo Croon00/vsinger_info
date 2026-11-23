@@ -9,6 +9,7 @@ import { favoriteIds } from '@/composables/preferences'
 import ArtistTile from '@/components/ArtistTile.vue'
 import SearchForm from '@/components/SearchForm.vue'
 import ResourceState from '@/components/ResourceState.vue'
+import RecentSongs from '@/components/RecentSongs.vue'
 const router = useRouter()
 const { data, loading, error, reload } = useResource(api.artists)
 const favorites = computed(() => (data.value ?? []).filter((a) => favoriteIds.value.includes(a.id)))
@@ -26,6 +27,10 @@ function search(q: string) {
       <h1 id="home-heading" class="sr-only">통합검색</h1>
       <SearchForm large placeholder="아티스트 또는 원곡 검색" @search="search" />
     </section>
+    <RecentSongs kind="original" title="최근 오리지널 곡" />
+    <RecentSongs kind="cover" title="최근 커버 곡" />
+    <RecentSongs kind="original" title="즐겨찾기한 오리지널 곡" favorites-only />
+    <RecentSongs kind="cover" title="즐겨찾기한 커버 곡" favorites-only />
     <section class="favorites-section" aria-labelledby="favorites-heading">
       <div class="section-heading">
         <div>

@@ -37,12 +37,14 @@
 | `artist_ids` | 반복. 양의 정수 최대 100개, 중복 제거 |
 | `start`, `end` | `YYYY-MM-DD`. 커버·오리지널의 영상 등록일 범위 |
 | `genres`, `moods` | 반복. 오리지널 전용([음악 분류](original-music-tags.md)) |
+| `published_only` | bool, 기본 false. 커버·오리지널 전용 |
 
 - 검색어는 우타와꾸에서 부른 아티스트와 확인된 원곡 가수, 커버에서 공식 채널 소유 아티스트, 오리지널에서 등록된 가창 명의에 적용한다. 오리지널은 대체 곡명도 검색한다. 검색어에 맞는 곡을 찾되 곡별 횟수는 소속사 범위 전체 집계다. SQL wildcard 문자는 리터럴로 처리한다.
 - `artist_ids`: 커버·오리지널은 소속사 범위 내 연결 명의 중 선택한 아티스트가 하나라도 있는 곡을 조회한다. 명의 전체를 먼저 집계한 뒤 선택 여부를 판정하므로 같은 소속사의 협업 아티스트 표기를 잃지 않으며, 같은 영상이 여러 선택에 해당해도 한 번만 표시한다. 우타와꾸는 선택한 아티스트들의 가창 기록을 먼저 제한한 뒤 곡별 부른 횟수·가창자 수·최근 날짜를 집계한다. 같은 듀엣 가창은 여러 명을 골라도 한 번만 센다. 선택하지 않으면 해당 소속사 전체다.
 - `start`, `end`: `published_at`의 한국 시간 날짜 기준이며 양 끝을 포함한다. 한쪽만 지정할 수 있다. 영상 등록일이 없는 항목은 날짜 필터가 있을 때 제외한다. 우타와꾸 세트리스트의 방송일 범위와 구분한다.
+- `published_only=true`: 유효한 YouTube 영상 ID(11자 영문·숫자·밑줄·하이픈)가 있고 `published_at <= CURRENT_TIMESTAMP`인 행만 고른다. 게시일 미확인·미래 게시일·영상 없는 음원은 제외한다. 최신순은 기존 `published_at DESC NULLS LAST, key`를 유지한다([011](../specs/011-home-recent-songs/spec.md)).
 - 모든 필터는 정렬·총 개수·페이지 계산 전에 적용한다.
-- 422: 잘못된 열거값·범위, 역전된 날짜 범위, 우타와꾸에 영상 날짜 지정, 오리지널 이외에 `genres`·`moods` 지정.
+- 422: 잘못된 열거값·범위·bool, 역전된 날짜 범위, 우타와꾸에 영상 날짜나 `published_only` 지정, 오리지널 이외에 `genres`·`moods` 지정.
 
 응답은 `Page[SongExploreRead]`(`items,total,offset,limit`)다. 항목은 `key,title,title_ko,artist_name,youtube_video_id,view_count,views_updated_at,performance_count,artist_count,archive_id,start_seconds,published_at`과 오리지널 태그 필드다. 해당되지 않거나 확인되지 않은 수치는 null이다.
 
@@ -128,6 +130,13 @@
 형식 확인 방법은 아래 [운영 도구](#shorts-형식-확인)를 따른다.
 
 ## 화면 동작
+
+### 홈과 아티스트 화면에서의 사용
+
+- 홈 최근 곡: `kind=original`과 `kind=cover`를 각각 `order=latest&offset=0&limit=10&published_only=true`로 조회한다.
+- 홈 즐겨찾기 캐러셀: 같은 API에 즐겨찾기 아티스트 ID(`artist_ids`)와 `published_only=true&limit=10&order=latest`를 전달한다. 즐겨찾기가 비어 있으면 전체 조회로 대체하지 않는다.
+- 아티스트 `?tab=originals`: `kind=original&artist_ids=ID`로 앨범 없는 녹음·영상 미연결 녹음까지 24곡씩 표시하며 `published_only`를 쓰지 않는다.
+- 오리지널 일일 수집이 만든 새 녹음·영상도 같은 계약으로 조회한다([오리지널 일일 수집](youtube-original-collection.md)). 모든 요청은 조회 전용이다.
 
 ### 아티스트 복수 선택
 

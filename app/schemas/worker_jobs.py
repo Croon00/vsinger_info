@@ -27,7 +27,7 @@ class YouTubePoll(Payload):
 class YouTubeCollect(Payload):
     channel_id: ChannelId
     youtube_video_id: str = Field(pattern=r'^[A-Za-z0-9_-]{11}$')
-    purpose: Literal['archive', 'cover'] = 'archive'
+    purpose: Literal['archive', 'cover', 'original'] = 'archive'
     extraction_version: str = Field(default='1', pattern=r'^[A-Za-z0-9._-]{1,40}$')
     wait_count: int = Field(default=0, ge=0, le=168)
     selection_retry_count: int = Field(default=0, ge=0, le=2)

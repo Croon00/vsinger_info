@@ -27,6 +27,8 @@ AGENTS.md와 [프로젝트 원칙](../../.specify/memory/constitution.md)을 따
 
 ## 조사와 설계
 
+2026-11-21 명시적 복구는 `scripts/repair_requested_profiles_20261121.py`로 수행한다. 정확한 두 ID/slug와 기존 관리 URL을 확인하고 저장된 original로 생성한 128/256px 결과가 현재 파일과 바이트 단위로 같을 때만 512px를 복구한다. 저장 대상 host와 설정 endpoint를 대조하고 IfNoneMatch=*로 기존 객체 덮어쓰기를 방지한다. 공개 내용·Cache-Control 검증 후 영수증에 복구 경로·해시·크기를 남긴다. 원본 URL·기존 사진·소유 관계는 보존하며 일반 worker나 조회 경로는 변경하지 않는다.
+
 Neon Object Storage에 콘텐츠 해시 경로로 저장한다. migration 007 trigger가 owner 관계 변경과 같은 transaction에서 avatar_jobs를 예약한다. 독립 이미지 loop가 다운로드·가공·업로드·공개 검증을 수행하고 대표 URL과 catalog_changes를 반영한다.
 
 원본 계약과 근거는 다음 문서를 따른다.

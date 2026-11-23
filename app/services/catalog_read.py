@@ -50,8 +50,13 @@ class CatalogRead:
     def explore_songs(self, **kwargs):
         from app.repositories.song_explore import explore
         if kwargs.get('kind') == 'original':
-            from app.services.music_tags import tag_rows
-            kwargs['music_tags'] = tag_rows()
+            from app.services.music_tags import MusicTagCatalogUnavailable, tag_rows
+            try:
+                kwargs['music_tags'] = tag_rows()
+            except MusicTagCatalogUnavailable:
+                if kwargs.get('genres') or kwargs.get('moods'):
+                    raise
+                kwargs['music_tags'] = []
         return explore(self.repository.session, repository=self.repository, **kwargs)
     def song_performers(self, song_key, agency):
         from app.repositories.song_explore import performers

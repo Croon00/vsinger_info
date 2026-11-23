@@ -43,3 +43,15 @@ disposable 로컬 PostgreSQL·provider mock 기반 백엔드 테스트 58개와 
 ## 2026-11-15 오리지널 장르·분위기
 
 `GET /api/explore/music-tags`와 오리지널 곡의 `genres,moods` 필터를 추가했다. 상세는 [음악 분류](../../original-music-tags.md)를 따른다.
+
+## 2026-11-21 홈 최근 곡 조회
+
+홈이 `GET /api/explore/songs?kind=original&order=latest&offset=0&limit=10&published_only=true` 및 `kind=cover`를 사용하도록 선택 bool `published_only`(기본 false)를 추가했다. [011 스펙·검증](../../../specs/011-home-recent-songs/spec.md).
+
+## 2026-11-22 공유 멤버·오리지널 탭·일일 수집
+
+- HONK 공식 채널 커버의 추가 표시 결정: MOCO/BAMBI가 제목에 있으면 해당 멤버만, 둘 다 없으면 두 멤버 모두 조회한다. 같은 채널의 명시적 이름이 기본/검토 배정보다 우선한다. 기존 본편/Shorts 제외·중복 제거·페이지 조건은 유지한다.
+- 네 공유 멤버의 개인 라이브·통계를 지정 그룹 공식 채널의 비커버 방송으로 제한했다. 커버는 솔로 이름과 검토한 듀엣/공동 영상 명의를 사용한다. 정렬·페이지·DTO와 조회/수집 분리는 유지한다. [계약과 확인 수치](../../shared-members-2026-11-22.md).
+- 아티스트 `?tab=originals`와 홈 즐겨찾기 캐러셀이 `/api/explore/songs`를 사용하도록 연결했다.
+- 오리지널 일일 수집의 새 녹음/영상도 기존 `/explore/songs?kind=original`과 홈 계약을 사용한다. 응답 schema 변경은 없다. [오리지널 일일 수집](../../youtube-original-collection.md).
+

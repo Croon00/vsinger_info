@@ -8,18 +8,23 @@
 
 로컬 검증은 끝났으나 배포·실제 관찰이 남은 항목이다. 배포 전후에 `/ready`와 각 수집 결과를 확인한다.
 
+- [ ] **오리지널 곡 조회 복구 배포**: 운영 분류 파일 누락으로 기본 오리지널 API가 500을 반환한다(2026-11-21 확인). 새 백엔드와 `app/resources/classification/original_music_tags.json`을 배포한 뒤 운영 목록·분류 필터를 확인한다. [원인·계약](original-music-tags.md), [003-original-song-availability](../specs/003-original-song-availability/tasks.md)
 - [ ] runtime 운영 활성화: 신규 DB runtime의 실제 수집, Discord 활성화와 장애 확인. [전환 순서](records/backend/backend-phase-5-cutover.md). [001](../specs/001-service-readiness/tasks.md) T007~T010
 - [ ] X provider `NoAccountError` 재현 여부·원인 조사와 수정. 001 T003
 - [ ] Discord 실제 URL 전송·route·중복 방지 확인. 001 T009
 - [ ] 생방송 멀티뷰 운영 반영: Railway에 `HOLODEX_API_KEY`, `HOLODEX_POLL_SECONDS=3600`, `HOLODEX_LIVE_CHECK_SECONDS=180`을 설정하고 API·monitor를 함께 배포한다. 이전 운영 API는 `live_checked_at`을 모르므로 조회 코드도 같이 배포해야 한다. 배포 웹에서 재생·채팅·자동재생 제한을 확인하고, YouTube 모드를 쓸 경우 채널 수에 따른 할당량을 점검한다. [002](../specs/002-live-multiview/tasks.md) T006~T009
-- [ ] 프로필 이미지 worker의 서버 저장소 환경변수 갱신·재시작·실제 처리 확인. [004](../specs/004-avatar-storage/tasks.md) T003
+- [ ] 프로필 이미지 worker의 서버 저장소 환경변수 갱신·재시작·실제 처리 확인. 배포 환경의 `AVATAR_BUCKET`과 기존 저장 URL 버킷 일치 여부도 확인한다(다르면 `avatar_variants`가 비어 대표 URL만 쓰임). [004](../specs/004-avatar-storage/tasks.md) T003
 - [ ] 로컬 검증 후 배포하지 않은 코드의 배포와 확인:
   - 세트리스트 규칙 우선 추출·후보 비교(배포 후 실제 모델 품질 평가 포함), 작업 선점 반복 스캔 제거·보관 가창 재생성 방지. [008](../specs/008-setlist-quality/tasks.md) T005
   - 단일 채널 owner의 새 가창 자동 연결 worker. [005](../specs/005-catalog-registration/tasks.md) T005
   - 디스코그래피 YouTube 링크 조회·웹 버튼. [006](../specs/006-discography-links/tasks.md) T005
   - 라이브·통계 아티스트 범위 SQL 최적화. [009](../specs/009-song-exploration/tasks.md) T003
   - 오리지널 장르·분위기 필터. [010](../specs/010-original-music-tags/tasks.md) T004
-- [ ] 로컬 PostgreSQL이 없어 건너뛴 DB fixture 테스트를 CI 또는 PostgreSQL이 있는 환경에서 실행한다. 여러 스펙의 검증에서 반복해서 남은 항목이다.
+  - 세트리스트 규칙 `setlist-rules-2`(모델 호출 없는 번호 타임스탬프 등). 장기 worker 적용 후 신규 수집 확인. [008](../specs/008-setlist-quality/tasks.md)
+  - YouTube 오리지널 일일 수집: poll·collect worker 모두 새 코드 적용 후 일일 수집·실제 조회 검증. [012](../specs/012-youtube-original-daily/tasks.md), [계약](youtube-original-collection.md)
+  - HONK THE HORN·NUROJUNK 멤버별 수집·일일 재대조 worker/API. [013](../specs/013-shared-member-catalog/tasks.md)
+  - 홈 최근 곡·즐겨찾기 캐러셀(PC·모바일 화면 검수 포함). [011](../specs/011-home-recent-songs/tasks.md)
+- [ ] 로컬 PostgreSQL이 없어 건너뛴 DB fixture 테스트를 CI 또는 PostgreSQL이 있는 환경에서 실행한다. 여러 스펙의 검증에서 반복해서 남은 항목이다(011·012·013 포함).
 - [ ] 운영 동일 출처 `/api` 프록시 구성.
 - [ ] Neon 사용량 확인: 빈 큐 확인을 15분 경계로 바꾼 뒤(`WORKER_IDLE_SECONDS=900`) worker 활성 설정·중복 runtime·`/ready` 감시 주기와 Neon Active 시간·CU-hours를 비교한다. 실제 절감량은 미검증이다.
 
@@ -27,6 +32,7 @@
 
 자동 수집이 만든 후보를 사람이 확인하거나 근거를 찾아 연결하는 작업이다. 원문·외부 ID·출처·수동 교정을 보존하고 이름만으로 병합하지 않는다.
 
+- [ ] 세트리스트 잔여(2026-11-21 규칙 복구 후): 추가 형식/충돌 검토 1,613개·저장 댓글 없음 466개·보관 가창 보호 62개, 총 2,141개. 오토노세 라코 133개는 미해결이다. [복구 기록](setlist-rules-recovery-2026-11-21.md), [008](../specs/008-setlist-quality/tasks.md)
 - [ ] 세트리스트: 2026-10-31 모델 재처리의 원문 검증 실패 108개·판단 불확실 1개 수동 검토, 댓글 없는 261개는 새 근거가 생기면 재검토(보관 가창 33개는 자동 재생성하지 않음). 10월 초 보류·복구 3단계 범위(빈 아카이브 44개+정정 1개)와 중복 없이 대조해 현재 잔여를 확정한다. `transient_error` 원인 조사와 재시도 소진 작업 복구 포함. [008](../specs/008-setlist-quality/tasks.md) T003~T004
 - [ ] 요청 아티스트(2026-10-02) 후속: 미란 대상 확인, 기존 보류 15,825행과 미연결 행의 반영·오파싱 교정, 미연결 곡·한국어 제목·작품·Spotify 자료. [005](../specs/005-catalog-registration/tasks.md) T003~T005
 - [ ] Spotify 미연결 32명(검토 19·이름 미일치 13)의 공식 계정 근거 확인과 개별 연결. [006](../specs/006-discography-links/tasks.md) T003
@@ -34,6 +40,8 @@
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결 검수와 남은 음악 데이터 반영. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. [이관 결과](records/backend/setlist-migration-report.md)
 - [ ] 발매 음원의 오리지널/커버 여부 검수 확대, source 계정이 없는 발매 영상의 업로더 근거·소유권 검수. [009](../specs/009-song-exploration/tasks.md) T004
 - [ ] 오리지널 음악 분류: 미분류 음원 조사, 공식 영상 연결 보완, 분위기 근거 확대. [010](../specs/010-original-music-tags/tasks.md) T003, T005
+- [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
+- [ ] HONK THE HORN·NUROJUNK 진행자 미확정 방송 3개 검토. [013](../specs/013-shared-member-catalog/tasks.md)
 - [ ] YouTube 커버 과거 수집의 전체 채널 순회 완료 여부 확인. [007](../specs/007-youtube-covers/tasks.md) T003
 - [ ] 실제 콘텐츠의 영상 재생 가능 여부와 이미지 품질 검수. fixture 성공은 외부 플랫폼 실재생 보증이 아니다.
 

@@ -88,3 +88,7 @@
 - `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`을 사용했으며 Windows 제한 토큰의 asyncio 정지 때문에 로컬 실행 권한으로 테스트했다. `git diff --check` 통과. 실제 YouTube·LLM·Discord·Calendar 호출은 0회다.
 
 운영 배포·운영 DB 변경·재수집 등록은 수행하지 않았다. `transient_error` 자체의 provider 원인과 복구는 이번 규칙 개선 범위에서 제외했다.
+
+## 2026-11-21 `setlist-rules-2`
+
+번호 타임스탬프와 종료/하이라이트 경계·대화 표기·구분선 형식을 보강했다. 이 형식은 OpenAI 호출 없이 처리한다. 변경·실데이터 복구(484개 방송·7,732곡)·잔여 검토는 [복구 기록](../../setlist-rules-recovery-2026-11-21.md)을 따른다. 그 이전 `setlist-rules-1` 수치와 검증은 당시 이력이다.

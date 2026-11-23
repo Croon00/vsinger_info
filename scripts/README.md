@@ -1,5 +1,16 @@
 # 운영 도구
 
+`repair_shared_youtube_members.py`는 사용자 승인된 HONK THE HORN·NUROJUNK의 fresh 영상 상세/공식 재생목록 캐시를 검증한다. `--input PATH --group honk-the-horn|nurojunk`는 조사이며 `--apply`는 신규 DB의 커버/멤버 연결을 감사와 함께 반영한다. 기존 가창·원문·소유권을 보존한다. [실제 범위·검증·한계](../docs/shared-members-2026-11-22.md).
+
+`backfill_youtube_originals.py`는 공식 owner 계정의 과거 업로드와 원문을 체크포인트에 보존하고 근거가 확인된 오리지널만 기존 수집 저장 경로로 반영한다. 기본은 dry-run, `--apply`는 신규 DB 반영이며 `--account ID`, `--budget`, `--output`으로 범위를 지정한다. 저장된 head 확인은 같은 실행 재개 시 재사용하므로 새 날짜의 조사는 새 output 디렉터리를 쓴다. `import_reviewed_original_videos.py`의 2026-11-22 제한 manifest는 shin/Figaro 두 영상의 검토 근거를 요구한다. `review_original_backfill_clips.py`는 이번 작업에서 생성한 정확한 홍보/축약 영상 9개만 감사와 미수정 상태를 확인해 가역적으로 보관한다. [실제 보완·한계](../docs/youtube-original-backfill-2026-11-22.md).
+
+`recover_rule_setlists.py`는 공개 카탈로그의 빈 방송과 저장 댓글을 읽기 전용으로 조사한다. `--apply`는 규칙으로 검증된 댓글만 신규 DB의 기존 원자 저장 경로로 반영한다. 모델·YouTube 재조회는 실행하지 않으며, 활성/보관 가창은 유지한다. `--video ID`, 반복 `--artist ID`, `--workers 1..5`, `--output PATH`를 지원한다. [2026-11-21 복구](../docs/setlist-rules-recovery-2026-11-21.md).
+
+`repair_requested_profiles_20261121.py`는 2026-11-21 사용자 요청 범위인 한글 이름 4명과 Figaro·shin의 누락 512px 파일 2개만 처리한다. 기본 dry-run, `--apply`는 원본 재변환·기존 128/256px 일치·관리 URL/endpoint 검증 후 누락 파일만 조건부 PUT하고 이름·감사 이력을 저장한다. 실제 반영 영수증 9924, 반복 적용은 already_applied다. 일반 수집·worker는 실행하지 않는다. [이미지 복구 기록](../docs/avatar-storage.md).
+
+2026-11-17 요청한 鈍色聴·稍麦의 아티스트 등록, 커버·오리지널 반영과 우타와꾸 worker 진행 조회는
+[등록·수집 기록](../docs/requested-channels-2026-11-17.md)을 따른다.
+
 2026-11-14 요청한 音ノ瀬らこ·苺咲べりぃ·碧生ねの·翠雨しの의 등록·커버 수집과 요청 전용 노래 방송 worker 진행 조회는
 [등록·수집 기록](../docs/records/data/requested-channels-2026-11-14.md)을 따른다.
 

@@ -11,6 +11,17 @@
 
 [`app/repositories/shared_youtube.py`](../app/repositories/shared_youtube.py)의 명시적 규칙(`RULES`), 기존 `artist_group_members` 관계, 해당 그룹이 실제 소유한 채널 ID를 함께 확인한다. 보관된 아티스트·계정 또는 종료된 멤버 관계는 공유 대상으로 사용하지 않는다. 그룹 자체가 탐색 목록에서 숨겨져 있어도 공개된 위 멤버의 공유 채널로는 사용할 수 있다. 다른 그룹에 자동 확장하지 않는다.
 
+## HONK THE HORN·NUROJUNK 멤버별 표시
+
+2026-11-22 추가 승인으로 두 그룹(HONK THE HORN: MOCO·BAMBI, NUROJUNK: SAKUYA·KAGURA)을 멤버별로 나눈다. 위 VESPERBELL·KMNZ 규칙과 달리 공식 재생목록·검토 근거로 진행자를 연결한다. 요구·설계·작업은 [013](../specs/013-shared-member-catalog/spec.md), 반영 수치와 한계는 [반영 기록](shared-members-2026-11-22.md)에 있다.
+
+- 커버(HONK): 제목에 MOCO 또는 BAMBI 한 명이 있으면 그 멤버에게만, 둘 다 있거나 둘 다 없으면 두 멤버에게 표시한다. 부분 일치는 쓰지 않으며 같은 채널의 명시적 이름이 기본·검토 배정보다 우선한다. 다른 협업자 이름만 있어도 미표기 기본값을 적용한다.
+- 커버(NUROJUNK): 미표기 영상은 공식 근거·개별 검토를 요구한다.
+- 공동 영상은 공식 공동 재생목록과 설명 MC/Vocal을 확인한 경우에만 여러 멤버에게 표시하며, 실제 publisher·영상 ID는 유지한다. 이름 없는 연습 음원·Shorts는 개인 본편 목록에 배정하지 않는다(Shorts는 계속 제외).
+- 라이브: HONK는 공식 MOCO/BAMBI STREAMS 재생목록으로 나눈다. NUROJUNK는 같은 목록이 없어 공식 썸네일·제목을 개별 검토한 방송만 사용하고 근거는 [검토 manifest](../migrations/catalog/nurojunk-stream-members-2026-11-22.json)에 보존한다. 썸네일 자동 얼굴 인식은 하지 않으며, 명시적 진행자 제목 외에는 검토 대상이다. 근거가 부족한 방송은 그룹 상태로 둔다. 합동 방송은 두 멤버를 연결한다.
+- 네 멤버의 개인 라이브·통계는 지정 그룹 공식 채널의 비커버 방송으로 제한하고 외부 원곡 MV·커버 프리미어는 제외한다. 커버는 솔로 이름과 검토한 듀엣·공동 영상 명의를 사용한다. 그룹 owner·기존 가창·원문은 보존하며 다른 가창자가 지정된 곡은 덮어쓰지 않는다.
+- 일일 poll·collect가 재대조한다(`app/repositories/shared_member_youtube.py`). 명시적 보완은 `scripts/repair_shared_youtube_members.py --input PATH --group honk-the-horn|nurojunk`이며 `--apply`가 실제 반영이다.
+
 ## 추가 음악 출처 채널
 
 그룹 본채널 업로드 목록에 포함되지만 `videos.list.snippet.channelId`가 별도 음악 채널인 영상이 있다. `shared_youtube.COVER_SOURCE_CHANNELS`에는 공식 업로드 목록 소속과 실제 영상 채널 ID를 함께 검증한 출처만 명시한다(KMNZ 본채널 외 5개, VESPERBELL 본채널 외 3개).

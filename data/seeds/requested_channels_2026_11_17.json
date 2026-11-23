@@ -1,0 +1,31 @@
+{
+  "reviewed_on": "2026-11-17",
+  "artists": [
+    {
+      "slug": "nibiiro-yurushi",
+      "name_native": "鈍色聴",
+      "name_ko": null,
+      "name_latin": "Yurushi Nibiiro",
+      "channel_url": "https://www.youtube.com/channel/UCsq-OUWv1erpLBN6qLIc7jA",
+      "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+      "channel_title": "鈍色聴 / Yurushi Nibiiro",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@Yurushi_nibiiro",
+      "reviewed_on": "2026-11-17"
+    },
+    {
+      "slug": "yayamugi",
+      "name_native": "稍麦",
+      "name_ko": null,
+      "name_latin": "yayamugi",
+      "channel_url": "https://www.youtube.com/channel/UCDqno_7LWobowaVc_vzUuCA",
+      "channel_id": "UCDqno_7LWobowaVc_vzUuCA",
+      "channel_title": "稍 麦 - yayamugi -",
+      "agency": null,
+      "affiliation_status": "pending",
+      "source_url": "https://www.youtube.com/@yayamugi222",
+      "reviewed_on": "2026-11-17"
+    }
+  ]
+}

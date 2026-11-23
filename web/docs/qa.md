@@ -1,5 +1,18 @@
 # 검증 가이드와 결과
 
+## 2026-11-22 오리지널 목록·즐겨찾기 캐러셀
+
+실제 모드 빌드와 단위 테스트 62개 통과. HTTP fixture Playwright는 아티스트 곡 목록/더보기/검색/영상 미연결 표시/재생/포커스 복원 PC·모바일 2개, 홈 즐겨찾기 아티스트 필터/양옆 화살표/해제 후 빈 상태 PC·모바일 2개를 통과했다. 기존 API 계약·앨범 직접 링크 포함 통합 11 passed, 1 skipped(모바일 hover 전제 시나리오). mock 앨범·가사 뒤로가기 호환 2 passed. 테스트의 YouTube 요청은 가로채며 실제 모델·외부 전송은 호출하지 않았다.
+
+캡처는 `outputs/original-backfill-2026-11-22/artist-originals-*.png`, `home-favorites-*.png`이며 fixture 이미지 실패 대체 화면이다. 실데이터 적용은 [누락곡 보완 기록](../../docs/youtube-original-backfill-2026-11-22.md)에 구분한다.
+
+## 2026-11-21 홈 최근 곡
+
+- TypeScript·Vite 빌드 통과, 기존 프론트 단위 테스트 11개 파일·62개 통과.
+- 백엔드 `tests/test_song_explore.py`: 2 passed, 14 skipped(로컬 PostgreSQL 바이너리 없음). 새 fixture는 미래·미확인 게시일을 제외한 후 종류별 최신 10개 선택을 검증한다.
+- 실데이터 API·프록시 응답 200. 오리지널·커버 각 10개, 중복 영상 0개·게시일 내림차순 확인. 당시 최신 게시일은 각각 2026-10-17·2026-11-20이다. 수집·DB 변경 없음.
+- 브라우저 화면 확인은 미실행: 내장 브라우저 연결 불가, 기존 Chrome 창 연결은 사적 콘텐츠 접근 위험으로 자동 승인 검토에서 거부됨. PC·모바일 배치·스크롤·다이얼로그·전체 보기의 시각/상호작용 검증은 후속이다. [작업 목록](../../specs/011-home-recent-songs/tasks.md).
+
 ## 2026-11-15 예정 시각 이후 3분 상태 확인
 
 저장된 예정 방송의 시각이 되면 생방송 채널과 같은 3분 상태 확인 대상에 포함한다. fixture로 예정→LIVE 승격과 중복 제거, 미래·시각 미정 항목 보존, 대기·시각 변경·성공 응답에서 누락된 항목 제거, 미등록 영상 제외, 전체 검색 기한 보존을 검증했다. `test_holodex.py`, `test_youtube_live_monitor.py`, `test_multiview.py` 합계 46개 통과·로컬 PostgreSQL 의존 2개 skip이며 프론트 빌드도 통과했다. 실데이터 검증은 신규 DB의 읽기 전용 트랜잭션에서 변경된 대상 선택 SELECT만 실행해 SQL 실행과 당시 확인 대상 7개를 확인했다. lease claim·snapshot 변경·provider 재수집·운영 배포는 수행하지 않았다. 로컬 전용 monitor/runtime 프로세스는 발견되지 않아 재시작하지 않았으며 운영 수집기 배포가 남아 있다.

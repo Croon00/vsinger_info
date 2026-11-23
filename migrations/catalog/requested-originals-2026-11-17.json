@@ -1,0 +1,193 @@
+{
+  "policy": "requested-channels-originals-2026-11-17-v1",
+  "reviewed_on": "2026-11-17",
+  "items": [
+    {
+      "title": "双つの余光",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "c8V0X1d2c0k",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】双つの余光 / 10i◇[toy box]【#VocaDuo2026】",
+        "published_at": "2026-07-03T12:00:06Z",
+        "started_at": "2026-07-03T12:00:06Z",
+        "scheduled_at": "2026-07-03T12:00:00Z",
+        "ended_at": "2026-07-03T12:05:28Z",
+        "scheduled": false,
+        "duration_seconds": 202,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=c8V0X1d2c0k",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "夢渡りと告灰",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "m--baFXXfMk",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】夢渡りと告灰 / 鈍色聴",
+        "published_at": "2025-07-29T12:00:06Z",
+        "started_at": "2025-07-29T12:00:06Z",
+        "scheduled_at": "2025-07-29T12:00:00Z",
+        "ended_at": "2025-07-29T12:06:34Z",
+        "scheduled": false,
+        "duration_seconds": 246,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=m--baFXXfMk",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "海月の骨",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "1TLGEyJrbDU",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】海月の骨 / 鈍色聴",
+        "published_at": "2025-06-06T09:06:06Z",
+        "started_at": "2025-06-06T09:06:06Z",
+        "scheduled_at": "2025-06-06T09:06:00Z",
+        "ended_at": "2025-06-06T09:12:08Z",
+        "scheduled": false,
+        "duration_seconds": 242,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=1TLGEyJrbDU",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "Empty Vessel",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "A9HJ5CIhKaA",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】Empty Vessel / 高城みよ feat.鈍色聴",
+        "published_at": "2025-04-22T12:30:06Z",
+        "started_at": "2025-04-22T12:30:06Z",
+        "scheduled_at": "2025-04-22T12:30:00Z",
+        "ended_at": "2025-04-22T12:36:07Z",
+        "scheduled": false,
+        "duration_seconds": 223,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=A9HJ5CIhKaA",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "カーテン・コール",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "MLeW1w1AQEI",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】カーテン・コール / 10i◇[toy box]【#VocaDuo2024】",
+        "published_at": "2024-07-01T12:00:07Z",
+        "started_at": "2024-07-01T12:00:07Z",
+        "scheduled_at": "2024-07-01T12:00:00Z",
+        "ended_at": "2024-07-01T12:05:11Z",
+        "scheduled": false,
+        "duration_seconds": 185,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=MLeW1w1AQEI",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "湖畔のサンクチュアリ",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "DGvavhr-LeQ",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】湖畔のサンクチュアリ / r0y feat.鈍色聴",
+        "published_at": "2024-06-01T12:00:06Z",
+        "started_at": "2024-06-01T12:00:06Z",
+        "scheduled_at": "2024-06-01T12:00:00Z",
+        "ended_at": "2024-06-01T12:04:11Z",
+        "scheduled": false,
+        "duration_seconds": 186,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=DGvavhr-LeQ",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "苧環",
+      "artist_id": 1045,
+      "account_id": 361,
+      "video": {
+        "id": "UtqLlK0cflU",
+        "channel_id": "UCsq-OUWv1erpLBN6qLIc7jA",
+        "title": "【MV】苧環 / アオトケイ feat.yrmare",
+        "published_at": "2024-04-21T11:00:06Z",
+        "started_at": "2024-04-21T11:00:06Z",
+        "scheduled_at": "2024-04-21T11:00:00Z",
+        "ended_at": "2024-04-21T11:06:29Z",
+        "scheduled": false,
+        "duration_seconds": 323,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=UtqLlK0cflU",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "Polaris",
+      "artist_id": 1046,
+      "account_id": 362,
+      "video": {
+        "id": "sqVHf3Ae5aI",
+        "channel_id": "UCDqno_7LWobowaVc_vzUuCA",
+        "title": "【オリジナル曲】　Polaris/yayamugi　【フルMV】",
+        "published_at": "2026-05-21T11:00:23Z",
+        "started_at": "2026-05-21T11:00:23Z",
+        "scheduled_at": "2026-05-21T11:00:00Z",
+        "ended_at": "2026-05-21T11:04:54Z",
+        "scheduled": false,
+        "duration_seconds": 228,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=sqVHf3Ae5aI",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    },
+    {
+      "title": "disappear",
+      "artist_id": 1046,
+      "account_id": 362,
+      "video": {
+        "id": "Gz1XVxT8Pmw",
+        "channel_id": "UCDqno_7LWobowaVc_vzUuCA",
+        "title": "【オリジナル曲】　disappear/yayamugi　【フルMV】",
+        "published_at": "2025-07-04T15:00:06Z",
+        "started_at": "2025-07-04T15:00:06Z",
+        "scheduled_at": "2025-07-04T15:00:00Z",
+        "ended_at": "2025-07-04T15:06:33Z",
+        "scheduled": false,
+        "duration_seconds": 254,
+        "availability": "public"
+      },
+      "source_url": "https://www.youtube.com/watch?v=Gz1XVxT8Pmw",
+      "credit_review": "official description identifies requested artist as vocal; collaboration credits retained in source snapshot"
+    }
+  ],
+  "albums": [
+    {
+      "title": "あえかなる唱導",
+      "artist_id": 1045,
+      "release_date": "2025-04-27",
+      "source_url": "https://aekanaru.netlify.app/",
+      "tracks": [
+        "Empty Vessel",
+        "utopia",
+        "人間が怖い",
+        "薄明のネモフィラ",
+        "Glassbound",
+        "夢渡りと告灰"
+      ]
+    }
+  ]
+}

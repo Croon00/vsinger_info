@@ -66,6 +66,9 @@ def snapshot(session, video_id, *, lock=False):
 
 
 def persist_poll(session, job, payload, value):
+    if value.get('honk_memberships'):
+        from app.repositories.shared_member_youtube import reconcile
+        reconcile(session, job.external_account_id, value['honk_memberships'])
     state = value['state']['provider_state']
     baseline = state.get('youtube_baseline_at')
     if not payload.backfill_video_ids:
@@ -80,6 +83,7 @@ def persist_poll(session, job, payload, value):
                 'youtube_window_truncated': value['truncated'],
                 'youtube_poll_gap': bool(state.get('youtube_poll_gap')) or value['gap'] or len(pending) > 200,
                 'youtube_pending_video_ids': pending[:200],
+                **({'honk_memberships':value['honk_memberships']} if value.get('honk_memberships') else {}),
                 **({'youtube_channel_statistics': value['channel_statistics']}
                    if value.get('channel_statistics') else {}),
             })})
@@ -140,6 +144,10 @@ def persist_collect(session, job, payload, value):
             published_at,duration_seconds,availability) VALUES ('youtube',:external,:account,:title,:published,:duration,:availability) RETURNING id'''),
             dict(external=video.id, account=job.external_account_id, title=video.title, published=video.published_at,
                  duration=video.duration_seconds, availability=video.availability)).scalar_one()
+    if payload.purpose == 'original':
+        from app.repositories.youtube_original import persist
+        persist(session, job, payload, value, current=current, video_id=video_id, conflict=conflict)
+        return
     archive_id = current['archive']['id'] if current['archive'] else None
     # The registered channel owner is the requested default even for group or
     # collaborative streams. Never choose arbitrarily between multiple owners.
@@ -221,6 +229,10 @@ def persist_collect(session, job, payload, value):
                     dict(performance=performance_id, artist=singer)).mappings().one()
                 credits.append(credit)
         _record_owner_credits(session, job, document, credits)
+        member_proof = poll_state(session, job.external_account_id)['provider_state'].get('honk_memberships')
+        if member_proof:
+            from app.repositories.shared_member_youtube import reconcile
+            reconcile(session, job.external_account_id, member_proof)
     if (payload.purpose == 'cover' and outcome == 'collected' and video_id and not conflict
             and not current['archive'] and not current['cover']):
         session.execute(text('INSERT INTO covers(video_id) VALUES (:id) ON CONFLICT DO NOTHING'), {'id': video_id})

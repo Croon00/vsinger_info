@@ -81,6 +81,7 @@ http://localhost:5174 에서 실제 API를 사용한다. API 없이 디자인만
 | [YouTube 커버](docs/youtube-covers.md), [세트리스트 후보 비교](docs/youtube-setlist-selection.md) | YouTube 수집·분류 |
 | [곡 탐색](docs/song-exploration.md), [음악 분류](docs/original-music-tags.md), [디스코그래피 YouTube 연결](docs/discography-youtube-links.md), [Spotify 이름 일치 연결](docs/spotify-exact-name-discovery.md) | 곡·발매 음원 |
 | [프로필 이미지 저장](docs/avatar-storage.md), [공개 라이브 일정](docs/live-site-monitor.md) | 이미지·공연 일정 |
+| [YouTube 오리지널 일일 수집](docs/youtube-original-collection.md) | 기존 하루 1회 채널 확인을 공유하는 오리지널 발매곡 연결·등록 |
 | [프론트 화면 설계](web/docs/design-plan.md), [검증 가이드](web/docs/qa.md), [목업 콘텐츠 출처](web/docs/content-sources.md) | 프론트 |
 
 현재 동작 문서와 계획을 구분하고, 계획서의 제안을 실행된 기능으로 해석하지 않는다. 코드로 확인하지 않은 운영 상태를 구현 완료로 표기하지 않는다.

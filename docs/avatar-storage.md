@@ -4,7 +4,7 @@
 
 아티스트 이미지 파일은 Neon Object Storage, 대표 URL은 `artists.avatar_url`에 저장한다. 빈 이미지는 migration 007의 `avatar_jobs`가 자동으로 채우고, 직접 지정한 URL의 이전·교체는 명시적 CLI(`scripts/migrate_avatars.py`)를 사용한다.
 
-남은 운영 확인: 서버 이미지 worker의 저장소 환경변수 갱신·재시작과 실제 처리 결과 확인([spec 004 T003](../specs/004-avatar-storage/tasks.md)).
+남은 운영 확인: 서버 이미지 worker의 저장소 환경변수 갱신·재시작과 실제 처리 결과 확인([spec 004 T003](../specs/004-avatar-storage/tasks.md)). 배포 환경의 `AVATAR_BUCKET`이 기존 저장 URL의 버킷과 같은지도 확인한다. 다르면 `avatar_variants`가 빈 객체가 되어 대표 URL만 쓰인다(2026-11-21 로컬에서 확인).
 
 ## 신규 등록 시 자동 이미지
 

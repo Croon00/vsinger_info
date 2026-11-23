@@ -32,4 +32,5 @@ python -m pytest tests/test_artist_identity.py tests/test_read_api.py
 
 - 2026-09-18: 기존 DB 기준으로 `artist_identities.json` 별칭 묶음과 `normalize_artist_names.py`(미리보기 기본, `--apply`는 `display_name`·`updated_at`만 변경), 별칭 묶음 목록 API를 정리했다.
 - 2026-09-22 이후: 신규 DB와 `/api` 조회로 전환하면서 이름은 `name_native`·`name_ko`·`name_latin`·`artist_aliases`로 분리됐고, 조회는 아티스트 행을 묶지 않는다.
+- 2026-11-21: 사용자 요청 표기를 신규 DB의 빈 `name_ko`에 반영했다: 오토노세 라코(ID 1041, otonose-raco), 스이우 시노(1044, suiu-shino), 니비이로 유루시(1045, nibiiro-yurushi), 아야무기(1046, yayamugi). 원어 이름·ID·소유권은 유지했다. 정확한 ID/slug를 확인한 dry-run 후 적용했으며 영수증 9924와 변경 이력 4건을 남겼다. 실제 프론트 프록시의 `/api/artists`에서 네 display_name을 대조했다. 사용자 지정 표기이며 별도 공식 한국어 표기 조사 결과는 아니다.
 - 2026-11-23: 영어 문서를 한국어로 다시 쓰고 현재 코드와 대조했다.

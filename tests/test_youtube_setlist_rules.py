@@ -159,3 +159,118 @@ def test_song_list_heading_is_ranked_before_unstructured_mentions():
     comments = [comment(str(i), 'Setlistについて話す\n00:10 cute') for i in range(3)]
     comments.append(comment('songs', 'Song List\n01:00 Song / Artist'))
     assert service.shortlist(comments)[0]['comment'].id == 'songs'
+
+
+# User-provided source: https://www.youtube.com/watch?v=dSszoaOjZiY
+# Original Japanese song information is retained; the supplied translation is
+# not substituted for the comment or used to invent title/artist credits.
+NUMBERED_TIMELINE = '''タイムスタンプ⏲
+00:00:00 本日のサムネ
+00:00:20 OP
+00:03:25 Start stream！
+
+00:14:03 1. 迷宮バタフライ/ほしな歌唄（CV：水樹奈々）
+00:19:10 2. アンインストール/石川智晶
+00:26:38 3. 島のうた セイレーン Ver./セイレーン (CV：鈴木みのり) 、人魚 (CV：大木咲絵子、七瀬彩夏)
+00:28:07 4. 人マニア/原口沙輔
+00:30:29 5. 太陽が昇らない世界/Aimer
+00:37:07 6. 独りんぼエンヴィー/電ポルP
+00:40:45 7. フィクサー/ぬゆり
+00:48:57 8. The Everlasting Guilty Crown/EGOIST
+00:54:37 9. 花の唄/Aimer
+01:00:51 10. SPARK-AGAIN/Aimer
+
+01:09:58 11. メフィスト/女王蜂
+01:13:55 12. Magia/Kalafina
+01:19:13 13. 名前のない怪物/EGOIST
+01:25:30 14. ないない/ReoNa
+01:29:47 15. 拝啓ドッペルゲンガー/kemu
+
+01:34:14 Ending talk
+
+～ハイライト～
+00:12:34 今日のセトリは匂わせ
+01:34:26 明日はオンラインライブ！
+01:47:37 お名前呼び
+01:48:52 ここかわいい'''
+
+
+def test_user_numbered_timeline_extracts_fifteen_songs_without_model(monkeypatch):
+    model = AsyncMock(side_effect=AssertionError('Bounded numbered songs must not call the model'))
+    monkeypatch.setattr(service, 'compare_setlist_candidates', model)
+    comments = [comment('songs', NUMBERED_TIMELINE),
+                comment('reaction', '00:23:23 どこ見てんだ？\n00:43:37 体が！沈む！'),
+                comment('no_identity', '1曲目\n14:30〜\n\n高評価ポチ。おつやや')]
+    result = asyncio.run(service.select_setlist(comments, 7000))
+    rows = result['rows']
+    assert len(rows) == 15
+    assert rows[0]['start_seconds'] == 843
+    assert rows[-1]['start_seconds'] == 5387
+    assert rows[-1]['title'] == '拝啓ドッペルゲンガー/kemu'
+    assert result['selection']['method'] == 'rules'
+    assert result['selection']['comparison_calls'] == 0
+    for row in rows:
+        assert row['title'] in row['raw_line']
+        assert row['raw_line'] == NUMBERED_TIMELINE.splitlines()[row['line_number'] - 1]
+    model.assert_not_awaited()
+
+
+@pytest.mark.parametrize('body', [
+    NUMBERED_TIMELINE.replace('2. アンインストール', '3. アンインストール'),
+    NUMBERED_TIMELINE.replace('00:19:10 2.', '00:13:00 2.'),
+    NUMBERED_TIMELINE.replace('00:19:10 2.', '00:14:03 2.'),
+    NUMBERED_TIMELINE.replace('00:19:10 2.', '2.'),
+    NUMBERED_TIMELINE.replace('00:19:10 2.', '00:18:00 00:19:10 2.'),
+    NUMBERED_TIMELINE.replace('00:19:10 2. アンインストール/石川智晶', '00:19:10 cute'),
+    NUMBERED_TIMELINE.replace('アンインストール/石川智晶', 'https://example.test/song'),
+    NUMBERED_TIMELINE.split('01:34:14 Ending talk')[0],
+    'タイムスタンプ\n01:00 1. Greetings\n02:00 2. News\n03:00 Ending talk',
+])
+def test_incomplete_or_ambiguous_timeline_remains_for_review(body):
+    assert not extract_rules(context(body), 7000).rows
+
+
+def test_numbered_timeline_does_not_override_conflicting_song_candidate():
+    full = context(NUMBERED_TIMELINE, 'full')
+    conflict = context('00:14:03 01. Different / Artist', 'conflict')
+    assert choose_rules([full, conflict], 7000)[0] is None
+    truncated = full | {'truncated': True}
+    assert not extract_rules(truncated, 7000).rows
+
+
+def test_explicit_list_with_talk_ordinals_and_ending_does_not_include_mc():
+    body = '''♪セトリ
+00:00:00 start
+00:00:30 opening
+00:03:12 ハシタイロ/rionos
+00:07:07 おはなし①
+00:13:44 偏食/香椎モイミ
+00:17:31 おはなし②
+00:19:47 プラチナ/坂本真綾
+00:43:15 ending
+🗣MC
+00:07:07 おはなし①（楽しい感じだったので）'''
+    result = extract_rules(context(body), 3000)
+    assert [r['start_seconds'] for r in result.rows] == [192, 824, 1187]
+    assert all('おはなし' not in r['title'] for r in result.rows)
+
+
+def test_explicit_pipe_ordinals_ranges_and_spaced_dash_keep_verbatim_fields():
+    body = '''♬セトリ/Set List♬
+00:07:17 ~ 00:12:25 01| Faraway | 苺咲べりぃ(Maisaki Berry)
+00:19:09 ~ 00:24:18 02| 明日への手紙(Asuhe no tegami) | 手嶌葵(Tesima aoi)'''
+    rows = extract_rules(context(body), 3000).rows
+    assert [r['title'] for r in rows] == [
+        'Faraway | 苺咲べりぃ(Maisaki Berry)', '明日への手紙(Asuhe no tegami) | 手嶌葵(Tesima aoi)']
+    assert all(r['original_artist'] is None for r in rows)
+    body = 'セットリスト\n0:08:15 ただ君に晴れ (Just a Sunny Day for You) - ヨルシカ (Yorushika)'
+    assert extract_rules(context(body), 3000).rows[0]['title'] == body.split('0:08:15 ')[1]
+
+
+def test_combined_setlist_and_scenes_requires_complete_song_section_and_divider():
+    body = '🪴セトリ＆シーン🪞\n0:15:17 新時代 / Ado\n0:19:12 ピースサイン / 米津玄師\n＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝\n0:20:00 Original Song「blink」MV投稿日'
+    rows = extract_rules(context(body), 3000).rows
+    assert [r['start_seconds'] for r in rows] == [917, 1152]
+    assert all(r['raw_line'] in body for r in rows)
+    assert not extract_rules(context(body.replace('＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝', '')), 3000).rows
+    assert not extract_rules(context(body.replace('ピースサイン / 米津玄師', 'ここかわいい')), 3000).rows

@@ -27,3 +27,9 @@ Figaro 실데이터 수동 완료: 사용자 요청 범위인 아티스트 941�
 현재 로컬 `storage_settings()`에서는 endpoint·secret key·region이 없다(값은 기록하지 않음). API 한도가 풀려도 로컬 업로드에는 이 설정 복구가 필요하다. 이 확인에서 이미지 다운로드·업로드나 이미지 URL 변경은 수행하지 않았다. 배포 worker의 저장소 설정은 이번 확인으로 판단할 수 없다.
 
 `avatar_jobs.py run-once/worker --artist-id ID`(반복 가능)로 요청 대상만 선점할 수 있게 했다. 인자를 생략하면 기존 전체 worker 동작이다. 요청 대상의 이미지 처리 transaction을 rollback하는 실데이터 검증으로 범위 선점을 확인했고 검증용 변경은 모두 되돌렸다. 관련 mock/fixture 테스트는 38 passed이며 로컬 PostgreSQL 부재로 DB fixture가 생략됐다.
+
+## 2026-11-21 Figaro·shin 누락 파일 복구
+
+실제 저장소에서 두 아티스트(ID 941·942)의 original·128/256px는 정상이고 대표 512px만 404였다. 화면별 이미지 선택에 따라 정상/실패가 달라질 수 있다. 파일이 사라진 경위는 이번 응답 확인만으로 확정할 수 없다. 로컬의 AVATAR_BUCKET 기본값과 저장 URL 버킷이 달라 avatar_variants가 빈 객체인 점도 확인했으나, 대표 URL 자체의 404를 먼저 복구했다.
+
+`scripts/repair_requested_profiles_20261121.py`는 기본 dry-run이다. 저장 원본의 재변환이 기존 작은 이미지와 바이트 단위로 일치함을 확인하고 `--apply`에서 누락 512px만 조건부 업로드한다. 기존 사진·대표 URL은 유지했다. 파일 크기는 Figaro 42,810 bytes, shin 33,546 bytes이며 실제 128/256/512px 6파일 모두 공개 응답·WebP 디코딩을 확인했다. 영수증 9924에 복구 해시·경로를 남겼다. 반복 적용은 already_applied=true다. 관련 저장·URL fixture 19 passed, 브라우저 시각 검수는 수행하지 않았다.

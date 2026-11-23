@@ -22,12 +22,12 @@ AGENTS.md와 [프로젝트 원칙](../../.specify/memory/constitution.md)을 따
 - `app/schemas/music_tags.py`
 - `app/repositories/song_explore.py`
 - `scripts/collect_original_music_tags.py`
-- `data/classification/original_music_tags.json`
+- `app/resources/classification/original_music_tags.json`
 - `web/src/components/SongExplore.vue`
 
 ## 조사와 설계
 
-Pydantic으로 검수 파일을 검증하고 변경 시각별 캐시를 사용한다. jsonb_to_recordset으로 오리지널 집계에 연결하며 /api/explore/music-tags와 곡 응답에 선택지·태그·출처를 제공한다. 배포에 data/classification을 포함한다. --review 제안은 공개 검수 목록 반영 전에 검토한다.
+Pydantic으로 검수 파일을 검증하고 변경 시각별 캐시를 사용한다. jsonb_to_recordset으로 오리지널 집계에 연결하며 /api/explore/music-tags와 곡 응답에 선택지·태그·출처를 제공한다. 배포에 app/resources/classification을 포함한다. --review 제안은 공개 검수 목록 반영 전에 검토한다.
 
 원본 계약과 근거는 다음 문서를 따른다.
 
