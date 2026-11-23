@@ -14,7 +14,7 @@ schedule_music/
 ├─ docs/                 현재 구조·계약 (plans/, records/ 하위 포함)
 ├─ specs/                기능별 spec·plan·tasks (Spec Kit)
 ├─ .specify/             Spec Kit 원칙·템플릿·스크립트
-├─ data/                 등록 도구의 시드(seeds/)와 분류 자료(classification/)
+├─ data/                 등록 도구의 시드(seeds/)
 ├─ artifacts/            작업 기록이 참조하는 소수의 원본 자료
 ├─ db-migration/         로컬 입력·보고서·이전 백업(README만 추적)
 ├─ requirements.txt, runtime.txt, railway.json, railpack.json
@@ -41,6 +41,7 @@ Git에서 제외: `.env`·`.env.*`, 가상환경, `node_modules`·빌드 결과,
 | `app/legacy/` | Google helper 전용 설정 | 보존 전용 |
 | `app/lyrics_pipeline/` | 가사 수집·변환 | 후속 TODO, worker에서 실행하지 않음 |
 | `app/data/` | 아티스트 식별용 내장 별칭 자료 | 운영 |
+| `app/resources/` | 앱과 함께 배포하는 검수 자료. `classification/original_music_tags.json`(오리지널 장르·분위기) | 운영. 배포 산출물에 포함해야 한다 |
 
 이름이 비슷한 보존 코드와 운영 코드는 사용 종료를 확인하기 전 병합하지 않는다. 보존 전용 코드는 사용자 요청 없이 운영 경로에 다시 연결하지 않는다.
 

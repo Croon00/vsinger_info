@@ -1,6 +1,6 @@
 # HONK THE HORN·NUROJUNK 멤버별 수집 보완
 
-2026-11-22 사용자 요청으로 신규 DB·로컬 조회 API에 반영했다. [013 요구·설계·작업](../specs/013-shared-member-catalog/spec.md)을 따른다. legacy DB·계정 소유권·기존 세트리스트를 삭제하지 않았고 모델·Discord·Calendar를 호출하지 않았다.
+2026-11-22 사용자 요청으로 신규 DB·로컬 조회 API에 반영했다. [013 요구·설계·작업](../../../specs/013-shared-member-catalog/spec.md)을 따른다. legacy DB·계정 소유권·기존 세트리스트를 삭제하지 않았고 모델·Discord·Calendar를 호출하지 않았다.
 
 ## 조사와 결과
 
@@ -21,7 +21,7 @@ cover 64행·출처 영상 63개를 추가하고, 과거 커버 프리미어의 
 
 추가 사용자 결정으로 HONK 공식 채널 커버의 미표기 기본값을 변경했다. 제목에 MOCO 또는 BAMBI 한 명이 있으면 그 멤버에게만, 둘 다 있거나 둘 다 없으면 두 멤버에게 표시한다. 이름의 부분 일치는 사용하지 않는다. 다른 협업자 이름만 있는 경우에도 MOCO/BAMBI 미표기 기본값을 적용한다. NUROJUNK 및 라이브 진행자 판정은 별도 계약을 유지한다. 본편만 표시하도록 재확인했으므로 HONK의 Shorts 38개는 목록에 넣지 않는다. 현재 HONK 본편 12개는 이미 개인/검토 듀엣으로 연결되어 이번 일반화 뒤에도 개인 표시 수치는 9/8이다(다른 채널의 공동 영상 1개씩 포함).
 
-HONK는 공식 MOCO/BAMBI STREAMS 목록으로 나눈다. NUROJUNK에는 같은 개인별 STREAMS 목록이 없어 공식 썸네일·제목을 개별 검토한 24개 방송을 사용했다. [검토 manifest](../migrations/catalog/nurojunk-stream-members-2026-11-22.json)에 영상/썸네일 URL·당시 이미지 SHA-256·명의를 보존했다. 향후 썸네일을 자동 얼굴 인식하지 않으며 명시적 진행자 제목 외에는 검토 대상이다. 공통 SNS·다른 멤버 상품 이름은 근거가 아니다.
+HONK는 공식 MOCO/BAMBI STREAMS 목록으로 나눈다. NUROJUNK에는 같은 개인별 STREAMS 목록이 없어 공식 썸네일·제목을 개별 검토한 24개 방송을 사용했다. [검토 manifest](../../../migrations/catalog/nurojunk-stream-members-2026-11-22.json)에 영상/썸네일 URL·당시 이미지 SHA-256·명의를 보존했다. 향후 썸네일을 자동 얼굴 인식하지 않으며 명시적 진행자 제목 외에는 검토 대상이다. 공통 SNS·다른 멤버 상품 이름은 근거가 아니다.
 
 HONK 2ceIEfZ8rR4, NUROJUNK ITHQE7YrLz8·V2JXCTh6ens는 개인 진행자 근거가 부족해 그룹 상태로 남겼다. 네 개인 라이브/통계에서는 외부 원곡 MV·커버 프리미어를 제외하지만 기존 import 원문·외부 ID는 보존한다. 전역 검색의 과거 데이터 전체를 새로 정정한 작업은 아니다.
 

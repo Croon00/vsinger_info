@@ -20,4 +20,4 @@
 
 정확한 오리지널 곡 태그·복합 Vocal 크레딧·그룹 명의 표기를 지원한다. `Original MV/オリジナルMV`만으로 원곡 창작 근거를 확정하지 않는다. 짧은 영상(90초 미만/길이 미상), short.ver·1Chorus·일본어 티저/홍보 표기는 자동 등록하지 않고 별도 검토한다. 실제 짧은 완성곡도 이 보수적 경로에서는 별도 검토 대상이다.
 
-관련 Python 회귀 83 passed, 44 skipped(disposable PostgreSQL 바이너리 부재). 실제 원격 DB 반영·감사 재조회와 fixture 검증은 별개다. 로컬 프론트·API HTTP 200과 신규 곡 목록 반영을 확인했다. 일일 worker 배포와 생략한 DB fixture는 [012 작업](../specs/012-youtube-original-daily/tasks.md)에 남긴다.
+관련 Python 회귀 83 passed, 44 skipped(disposable PostgreSQL 바이너리 부재). 실제 원격 DB 반영·감사 재조회와 fixture 검증은 별개다. 로컬 프론트·API HTTP 200과 신규 곡 목록 반영을 확인했다. 일일 worker 배포와 생략한 DB fixture는 [012 작업](../../../specs/012-youtube-original-daily/tasks.md)에 남긴다.

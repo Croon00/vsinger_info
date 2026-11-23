@@ -13,7 +13,7 @@
 
 ## HONK THE HORN·NUROJUNK 멤버별 표시
 
-2026-11-22 추가 승인으로 두 그룹(HONK THE HORN: MOCO·BAMBI, NUROJUNK: SAKUYA·KAGURA)을 멤버별로 나눈다. 위 VESPERBELL·KMNZ 규칙과 달리 공식 재생목록·검토 근거로 진행자를 연결한다. 요구·설계·작업은 [013](../specs/013-shared-member-catalog/spec.md), 반영 수치와 한계는 [반영 기록](shared-members-2026-11-22.md)에 있다.
+2026-11-22 추가 승인으로 두 그룹(HONK THE HORN: MOCO·BAMBI, NUROJUNK: SAKUYA·KAGURA)을 멤버별로 나눈다. 위 VESPERBELL·KMNZ 규칙과 달리 공식 재생목록·검토 근거로 진행자를 연결한다. 요구·설계·작업은 [013](../specs/013-shared-member-catalog/spec.md), 반영 수치와 한계는 [반영 기록](records/data/shared-members-2026-11-22.md)에 있다.
 
 - 커버(HONK): 제목에 MOCO 또는 BAMBI 한 명이 있으면 그 멤버에게만, 둘 다 있거나 둘 다 없으면 두 멤버에게 표시한다. 부분 일치는 쓰지 않으며 같은 채널의 명시적 이름이 기본·검토 배정보다 우선한다. 다른 협업자 이름만 있어도 미표기 기본값을 적용한다.
 - 커버(NUROJUNK): 미표기 영상은 공식 근거·개별 검토를 요구한다.

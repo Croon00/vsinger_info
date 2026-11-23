@@ -8,4 +8,4 @@ FR-003~004: integrations/honk_youtube.py는 공식 멤버별 재생목록을 최
 
 FR-004~005: catalog_read.SCOPE에서 네 개인 라이브/통계의 출처·비커버 범위를 제한한다. 원곡 MV의 기존 import는 삭제하지 않는다. CLI repair_shared_youtube_members.py는 검토한 영상 상세·재생목록 캐시로 누락 cover와 멤버 연결을 반영한다. 새 HTTP/schema migration·LLM·댓글 재수집·알림은 없다.
 
-순수 규칙/API mock, disposable DB fixture, 별도 실제 DB/HTTP 대조와 재실행을 구분한다. [현재 계약과 결과](../../docs/shared-members-2026-11-22.md).
+순수 규칙/API mock, disposable DB fixture, 별도 실제 DB/HTTP 대조와 재실행을 구분한다. [현재 계약과 결과](../../docs/records/data/shared-members-2026-11-22.md).

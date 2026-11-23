@@ -4,7 +4,7 @@
 
 실제 모드 빌드와 단위 테스트 62개 통과. HTTP fixture Playwright는 아티스트 곡 목록/더보기/검색/영상 미연결 표시/재생/포커스 복원 PC·모바일 2개, 홈 즐겨찾기 아티스트 필터/양옆 화살표/해제 후 빈 상태 PC·모바일 2개를 통과했다. 기존 API 계약·앨범 직접 링크 포함 통합 11 passed, 1 skipped(모바일 hover 전제 시나리오). mock 앨범·가사 뒤로가기 호환 2 passed. 테스트의 YouTube 요청은 가로채며 실제 모델·외부 전송은 호출하지 않았다.
 
-캡처는 `outputs/original-backfill-2026-11-22/artist-originals-*.png`, `home-favorites-*.png`이며 fixture 이미지 실패 대체 화면이다. 실데이터 적용은 [누락곡 보완 기록](../../docs/youtube-original-backfill-2026-11-22.md)에 구분한다.
+캡처는 `outputs/original-backfill-2026-11-22/artist-originals-*.png`, `home-favorites-*.png`이며 fixture 이미지 실패 대체 화면이다. 실데이터 적용은 [누락곡 보완 기록](../../docs/records/data/youtube-original-backfill-2026-11-22.md)에 구분한다.
 
 ## 2026-11-21 홈 최근 곡
 

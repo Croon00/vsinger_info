@@ -85,6 +85,13 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 - [곡 탐색·세트리스트 검색과 조회 최적화](../specs/009-song-exploration/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
 - [오리지널 음원의 근거 기반 장르·분위기 필터](../specs/010-original-music-tags/spec.md). 원본 자료는 해당 spec.md의 입력과 근거에서 확인한다.
 
+2026-11-21 이후 새 기능은 다음 스펙에서 시작했다.
+
+- [홈 최근 오리지널·커버 곡](../specs/011-home-recent-songs/spec.md): 계약은 [곡 탐색](song-exploration.md)의 `published_only`.
+- [YouTube 오리지널 일일 수집](../specs/012-youtube-original-daily/spec.md): 계약은 [오리지널 일일 수집](youtube-original-collection.md).
+- [공유 채널 멤버별 라이브·커버](../specs/013-shared-member-catalog/spec.md): 계약은 [공유 YouTube 채널](shared-youtube-channels.md).
+- [분류 파일 누락 시 오리지널 목록 복구](../specs/014-original-song-availability/spec.md): 계약은 [음악 분류](original-music-tags.md).
+
 ### 날짜별 조사·적용·검증 근거
 
 다음 기록은 관련 작업의 research·검증 근거로 참조한다. 데이터 수치와 성공 여부는 해당 기록 시점에 적용한다.
@@ -92,6 +99,7 @@ $env:SPECIFY_FEATURE_DIRECTORY = 'specs/002-live-multiview'
 - [요청 아티스트 2026-10-02](records/data/requested-vsingers-2026-10-02.md), [가창자 반영 2026-10-04](records/data/performance-artists-2026-10-04.md), [요청 채널 2026-11-14](records/data/requested-channels-2026-11-14.md)
 - [누락 YouTube 채널 2026-09-18](records/data/youtube-channel-coverage-2026-09-18.md), [Mair](records/data/mair-2026-10-07.md), [Nakamachi Arale](records/data/nakamachi-arale-2026-10-07.md), [Nekothe](records/data/nekothe-registration-2026-11-01.md), [Kurokumo](records/data/kurokumo-2026-11-07.md), [ReAcT 자료](records/data/react-collection-2026-11-07.md), [ReAcT 멤버](records/data/react-members-2026-11-07.md)
 - [라이브 5850 정정](records/data/live-5850-correction-2026-10-07.md), [세트리스트 정리](records/data/setlist-cleanup-2026-10-10.md), [규칙 갱신](records/data/setlist-refresh-2026-10-30.md), [모델 복구](records/data/setlist-model-recovery-2026-10-31.md)
+- [요청 채널 2026-11-17](records/data/requested-channels-2026-11-17.md), [규칙만으로 세트리스트 복구 2026-11-21](records/data/setlist-rules-recovery-2026-11-21.md), [공유 멤버 보완 2026-11-22](records/data/shared-members-2026-11-22.md), [오리지널 누락곡 보완 2026-11-22](records/data/youtube-original-backfill-2026-11-22.md)
 - [전환 시기 복구](records/backend/youtube-cutover-recovery-2026-10-09.md), [수집 runtime 조사](records/backend/youtube-runtime-audit-2026-10-11.md), [커버 조사](records/data/youtube-cover-audit-2026-11-01.md)
 
 web/docs와 scripts/README.md 등 영역 문서는 해당 영역 AGENTS.md와 함께 읽는다. 실행 도구의 실제 DB 변경·외부 호출 범위를 확인한 뒤 사용한다.

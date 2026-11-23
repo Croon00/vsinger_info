@@ -1,18 +1,22 @@
 # UtaMowa 기능 스펙
 
-- [013 공유 채널 멤버별 라이브·커버](013-shared-member-catalog/spec.md): HONK THE HORN·NUROJUNK 멤버 분리·듀엣/공동 커버·실데이터 보완. 운영 후속은 tasks.md에서 추적한다.
-
-- [012 YouTube 오리지널 일일 수집](012-youtube-original-daily/spec.md): 기존 하루 1회 poll 연결과 키워드 없는 발매 연결·새 곡 근거 검증 로컬 구현. DB fixture·운영 적용은 tasks.md에서 추적한다.
-
-- [011 홈 최근 오리지널·커버 곡](011-home-recent-songs/spec.md): 로컬 구현·실데이터 조회 확인, 화면 검수 및 PostgreSQL fixture 후속 실행은 tasks.md에서 추적한다.
-
 2026-11-17 기존 문서를 바탕으로 도입했다. 번호는 문서 식별자이며 실행 우선순위는 사용자 요청과 roadmap을 따른다.
 
 | 스펙 | 범위 | 현재 판정 |
 | --- | --- | --- |
 | [001-service-readiness](001-service-readiness/spec.md) | 신규 DB 수집·알림 서비스 운영 전환 | 과거 로컬 검증 기록 있음, 운영 확인 작업 남음 |
 | [002-live-multiview](002-live-multiview/spec.md) | 생방송 검색·상태 확인·멀티뷰 운영 연결 | 기존 구현 있음, 배포·운영 확인 작업 남음 |
-| [003-original-song-availability](003-original-song-availability/spec.md) | 분류 파일 누락 시 오리지널 목록 복구 | 로컬 수정·회귀 검증 완료, 배포·운영 확인 남음 |
+
+## 신규 기능 스펙 (2026-11-21~)
+
+| 스펙 | 범위 | 현재 판정 |
+| --- | --- | --- |
+| [011-home-recent-songs](011-home-recent-songs/spec.md) | 홈 최근 오리지널·커버 곡 | 로컬 구현·실데이터 조회 확인, 화면 검수·PostgreSQL fixture 남음 |
+| [012-youtube-original-daily](012-youtube-original-daily/spec.md) | YouTube 오리지널 일일 수집 | 로컬 구현, DB fixture·운영 적용 남음 |
+| [013-shared-member-catalog](013-shared-member-catalog/spec.md) | HONK THE HORN·NUROJUNK 멤버별 라이브·커버 | 실데이터 보완, 운영 후속 남음 |
+| [014-original-song-availability](014-original-song-availability/spec.md) | 분류 파일 누락 시 오리지널 목록 복구 | 로컬 수정·회귀 검증 완료, 배포·운영 확인 남음 |
+
+014는 2026-11-21 `003-original-song-availability`로 만들었으나 기존 `003-artist-catalog`와 번호가 겹쳐 2026-11-23 014로 바꿨다. 새 스펙은 기존 최대 번호 다음 번호를 쓴다.
 
 각 디렉터리의 spec.md → plan.md → tasks.md 순서로 읽는다. 기존 검증의 건수는 기록 시점 값이다. 이번 도입의 검증 범위는 [스펙 작업 안내](../docs/spec-driven-development.md)에 기록한다.
 

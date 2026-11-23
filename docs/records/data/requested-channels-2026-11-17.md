@@ -1,7 +1,7 @@
 # 요청한 두 채널 등록·수집 (2026-11-17)
 
 사용자가 지정한 `@Yurushi_nibiiro`, `@yayamugi222/streams`를 YouTube channels API의
-`forHandle`로 확인해 신규 통합 DB에 등록했다. [등록 seed](../data/seeds/requested_channels_2026_11_17.json)에
+`forHandle`로 확인해 신규 통합 DB에 등록했다. [등록 seed](../../../data/seeds/requested_channels_2026_11_17.json)에
 입력 URL·공식 채널 ID·이름을 보존했다. 등록 전 dry-run에서 둘 다 신규임을 확인했으며
 기존 아티스트·계정·소유권을 병합하지 않았다. 한국어 이름과 소속은 추정하지 않았다.
 
@@ -19,7 +19,7 @@
 - Shorts 제목 표식 20개와 추가 URL 확인 3개를 처리했다. 저장 커버는 Shorts를 포함하며,
   현재 일반 커버 조회 API에는 각각 12개·7개가 표시된다.
 - 공식 MV의 설명·가창 크레딧을 검토해 영상 9개와 음원 9개를 등록했다.
-  [오리지널 manifest](../migrations/catalog/requested-originals-2026-11-17.json)에 영상 메타데이터와 출처를 보존했다.
+  [오리지널 manifest](../../../migrations/catalog/requested-originals-2026-11-17.json)에 영상 메타데이터와 출처를 보존했다.
   협업·피처링의 원문 제목과 전체 설명은 신규 DB의 출처 스냅샷에 보존했다.
 - 鈍色聴의 [공식 앨범 페이지](https://aekanaru.netlify.app/)에서 `あえかなる唱導`의
   6곡과 실물 발매일 2025-04-27을 확인했다. 기존에 등록한 MV 2곡을 같은 음원에 연결하고,

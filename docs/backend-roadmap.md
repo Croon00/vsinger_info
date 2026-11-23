@@ -8,7 +8,7 @@
 
 로컬 검증은 끝났으나 배포·실제 관찰이 남은 항목이다. 배포 전후에 `/ready`와 각 수집 결과를 확인한다.
 
-- [ ] **오리지널 곡 조회 복구 배포**: 운영 분류 파일 누락으로 기본 오리지널 API가 500을 반환한다(2026-11-21 확인). 새 백엔드와 `app/resources/classification/original_music_tags.json`을 배포한 뒤 운영 목록·분류 필터를 확인한다. [원인·계약](original-music-tags.md), [003-original-song-availability](../specs/003-original-song-availability/tasks.md)
+- [ ] **오리지널 곡 조회 복구 배포**: 운영 분류 파일 누락으로 기본 오리지널 API가 500을 반환한다(2026-11-21 확인). 새 백엔드와 `app/resources/classification/original_music_tags.json`을 배포한 뒤 운영 목록·분류 필터를 확인한다. [원인·계약](original-music-tags.md), [014-original-song-availability](../specs/014-original-song-availability/tasks.md)
 - [ ] runtime 운영 활성화: 신규 DB runtime의 실제 수집, Discord 활성화와 장애 확인. [전환 순서](records/backend/backend-phase-5-cutover.md). [001](../specs/001-service-readiness/tasks.md) T007~T010
 - [ ] X provider `NoAccountError` 재현 여부·원인 조사와 수정. 001 T003
 - [ ] Discord 실제 URL 전송·route·중복 방지 확인. 001 T009
@@ -32,7 +32,7 @@
 
 자동 수집이 만든 후보를 사람이 확인하거나 근거를 찾아 연결하는 작업이다. 원문·외부 ID·출처·수동 교정을 보존하고 이름만으로 병합하지 않는다.
 
-- [ ] 세트리스트 잔여(2026-11-21 규칙 복구 후): 추가 형식/충돌 검토 1,613개·저장 댓글 없음 466개·보관 가창 보호 62개, 총 2,141개. 오토노세 라코 133개는 미해결이다. [복구 기록](setlist-rules-recovery-2026-11-21.md), [008](../specs/008-setlist-quality/tasks.md)
+- [ ] 세트리스트 잔여(2026-11-21 규칙 복구 후): 추가 형식/충돌 검토 1,613개·저장 댓글 없음 466개·보관 가창 보호 62개, 총 2,141개. 오토노세 라코 133개는 미해결이다. [복구 기록](records/data/setlist-rules-recovery-2026-11-21.md), [008](../specs/008-setlist-quality/tasks.md)
 - [ ] 세트리스트: 2026-10-31 모델 재처리의 원문 검증 실패 108개·판단 불확실 1개 수동 검토, 댓글 없는 261개는 새 근거가 생기면 재검토(보관 가창 33개는 자동 재생성하지 않음). 10월 초 보류·복구 3단계 범위(빈 아카이브 44개+정정 1개)와 중복 없이 대조해 현재 잔여를 확정한다. `transient_error` 원인 조사와 재시도 소진 작업 복구 포함. [008](../specs/008-setlist-quality/tasks.md) T003~T004
 - [ ] 요청 아티스트(2026-10-02) 후속: 미란 대상 확인, 기존 보류 15,825행과 미연결 행의 반영·오파싱 교정, 미연결 곡·한국어 제목·작품·Spotify 자료. [005](../specs/005-catalog-registration/tasks.md) T003~T005
 - [ ] Spotify 미연결 32명(검토 19·이름 미일치 13)의 공식 계정 근거 확인과 개별 연결. [006](../specs/006-discography-links/tasks.md) T003
@@ -40,7 +40,7 @@
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결 검수와 남은 음악 데이터 반영. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. [이관 결과](records/backend/setlist-migration-report.md)
 - [ ] 발매 음원의 오리지널/커버 여부 검수 확대, source 계정이 없는 발매 영상의 업로더 근거·소유권 검수. [009](../specs/009-song-exploration/tasks.md) T004
 - [ ] 오리지널 음악 분류: 미분류 음원 조사, 공식 영상 연결 보완, 분위기 근거 확대. [010](../specs/010-original-music-tags/tasks.md) T003, T005
-- [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
+- [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](records/data/youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
 - [ ] HONK THE HORN·NUROJUNK 진행자 미확정 방송 3개 검토. [013](../specs/013-shared-member-catalog/tasks.md)
 - [ ] YouTube 커버 과거 수집의 전체 채널 순회 완료 여부 확인. [007](../specs/007-youtube-covers/tasks.md) T003
 - [ ] 실제 콘텐츠의 영상 재생 가능 여부와 이미지 품질 검수. fixture 성공은 외부 플랫폼 실재생 보증이 아니다.

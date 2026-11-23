@@ -16,7 +16,7 @@
 
 DB 마이그레이션 없이 검수 파일을 SQL `jsonb_to_recordset`으로 읽어 오리지널 집계 결과에 연결한다. 필터는 페이지·전체 건수 계산 전에 적용한다. 파일은 수정 시각별 캐시를 사용하며 조회 중 provider·LLM·수집·DB 변경을 실행하지 않는다. 배포 시 `app/resources/classification/`을 백엔드와 함께 포함해야 한다(가변 데이터 디렉터리와 분리하려고 앱 내부에 둔다).
 
-파일이 없으면 오류 로그를 남긴다. 장르·분위기 필터가 없는 곡 조회는 빈 태그로 기존 DB 목록을 반환하고, 분류 필터가 있으면 잘못된 0건 대신 HTTP 503을 반환한다. 파일을 복구하면 재시작 없이 다음 조회에서 다시 읽는다. 다른 파일 오류나 schema 검증 실패는 이 처리에 포함하지 않는다. 요구사항은 [003-original-song-availability](../specs/003-original-song-availability/spec.md)에 있다.
+파일이 없으면 오류 로그를 남긴다. 장르·분위기 필터가 없는 곡 조회는 빈 태그로 기존 DB 목록을 반환하고, 분류 필터가 있으면 잘못된 0건 대신 HTTP 503을 반환한다. 파일을 복구하면 재시작 없이 다음 조회에서 다시 읽는다. 다른 파일 오류나 schema 검증 실패는 이 처리에 포함하지 않는다. 요구사항은 [014-original-song-availability](../specs/014-original-song-availability/spec.md)에 있다.
 
 ## 계약
 

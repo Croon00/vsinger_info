@@ -1,6 +1,6 @@
 # YouTube 오리지널 일일 수집 설계
 
-2026-11-22 추가: [곡 목록·즐겨찾기 화면 설계](ui.md)와 [실제 과거 보완 결과](../../docs/youtube-original-backfill-2026-11-22.md)를 연결한다. `scripts/backfill_youtube_originals.py`는 공식 owner 계정의 업로드 캐시·head 갱신·영상 상세를 체크포인트로 보존한다. API 요청 예산/대기 시각을 지키며 일일 worker와 독립적으로 명시적 실행한다. 작업별 Session과 기존 수집 원자 저장을 재사용한다.
+2026-11-22 추가: [곡 목록·즐겨찾기 화면 설계](ui.md)와 [실제 과거 보완 결과](../../docs/records/data/youtube-original-backfill-2026-11-22.md)를 연결한다. `scripts/backfill_youtube_originals.py`는 공식 owner 계정의 업로드 캐시·head 갱신·영상 상세를 체크포인트로 보존한다. API 요청 예산/대기 시각을 지키며 일일 worker와 독립적으로 명시적 실행한다. 작업별 Session과 기존 수집 원자 저장을 재사용한다.
 
 기존 일일 poll → youtube_collect(purpose=original) → 근거 판정 → 원문/검토 후보 또는 녹음/명의/영상 저장 순서다. integrations.youtube_catalog.purpose의 기존 cover/archive 계약은 유지하고 services.youtube_collection에서 미분류 일반 업로드를 오리지널 검증 후보로 추가한다. 후보라는 사실만으로 곡을 생성하지 않는다.
 
