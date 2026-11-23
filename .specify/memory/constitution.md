@@ -1,6 +1,6 @@
 # UtaMowa 프로젝트 원칙
 
-버전 1.0.1 · 제정 2026-11-17 · 최종 수정 2026-11-17
+버전 1.1.0 · 제정 2026-11-17 · 최종 수정 2026-11-23
 
 ## 근거와 적용
 
@@ -26,11 +26,11 @@ source_items로 원문 중복을 차단하고 route별 전송 이력을 유지�
 
 ### V. 확정 서비스 범위
 
-현재 통합은 독립 YouTube 수집과 신규 external_accounts에 등록된 Spotify 계정을 대상으로 한다. admin-web 개발·관리 API 연동은 후속 범위다. 노래방은 song_id 구축 후 TODO이고 가사·번역·독음도 이번 목표·worker 실행에서 제외한다. 이후 확정된 기능별 계약은 해당 범위에서 참조한다.
+현재 통합은 독립 YouTube 수집과 신규 external_accounts에 등록된 Spotify 계정을 대상으로 한다. 관리 도구와 관리 API는 후속 범위이며 새로 설계한다. 2026-11-23 운영 경로와 무관한 기존 admin-web·web.bak은 삭제했다. 노래방은 song_id 구축 후 TODO이고 가사·번역·독음도 이번 목표·worker 실행에서 제외한다. 이후 확정된 기능별 계약은 해당 범위에서 참조한다.
 
 ### VI. 외부 동작과 권한
 
-Discord 공용 설정은 manage_guild와 해당 서버 접근을 검증한다. 구매·결제·응모 제출·CAPTCHA 우회를 자동화하지 않는다. 공식 사이트의 robots.txt·약관과 provider 한도를 준수한다. 키·토큰·DB URL을 코드·로그·공개 문서에 노출하지 않는다. DB 변경·재수집·실제 전송은 사용자 요청 범위를 확인한다. 테스트에서 실제 Discord·Calendar·LLM을 호출하지 않는다.
+Discord 공용 설정이나 관리 API를 도입하면 manage_guild와 해당 서버 접근을 검증한다. 구매·결제·응모 제출·CAPTCHA 우회를 자동화하지 않는다. 공식 사이트의 robots.txt·약관과 provider 한도를 준수한다. 키·토큰·DB URL을 코드·로그·공개 문서에 노출하지 않는다. DB 변경·재수집·실제 전송은 사용자 요청 범위를 확인한다. 테스트에서 실제 Discord·Calendar·LLM을 호출하지 않는다.
 
 ### VII. 필요한 자동화
 
@@ -44,11 +44,13 @@ specify → clarify → plan → tasks → analyze → implement 순서로 작�
 
 ## 원칙 관리
 
-실행법과 진입점은 README, 현재 구조와 계약은 docs, 전체 남은 작업은 roadmap에 유지한다. 기능별 specs는 요구사항·설계·작업을 연결한다. 역사 기록은 당시 날짜와 근거를 보존한다. 원칙 변경 시 근거와 버전을 갱신하고 영향받는 스펙을 점검한다. 새 범위는 사용자 결정 또는 기존 확정 문서의 근거를 기록한다.
+실행법과 진입점은 README, 현재 구조와 계약은 docs 루트, 확정 계획은 docs/plans, 날짜별 기록은 docs/records, 전체 남은 작업은 roadmap에 유지한다. 기능별 specs는 요구사항·설계·작업을 연결한다. 역사 기록은 당시 날짜와 근거를 보존한다. 원칙 변경 시 근거와 버전을 갱신하고 영향받는 스펙을 점검한다. 새 범위는 사용자 결정 또는 기존 확정 문서의 근거를 기록한다.
+
+1.1.0(2026-11-23): 기존 admin-web·web.bak 삭제, Discord 관리 권한 원칙을 도입 시 조건으로 변경, docs 위치 규칙(plans·records) 추가.
 
 ## 참조
 
 - [작업 지침](../../AGENTS.md)
-- [통합 최종 계획](../../docs/backend-consolidation-plan.md)
-- [서비스 보완 계획](../../docs/backend-service-readiness-plan.md)
+- [통합 최종 계획](../../docs/plans/backend-consolidation-plan.md)
+- [서비스 보완 계획](../../docs/plans/backend-service-readiness-plan.md)
 - [스펙 작업 안내](../../docs/spec-driven-development.md)

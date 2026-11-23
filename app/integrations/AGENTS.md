@@ -5,12 +5,15 @@
 
 ## 책임
 
-- X API 사용자 및 게시글 조회
-- OpenAI 분류·추출 호출
-- Google Calendar OAuth 및 일정 동기화
-- Spotify 등 외부 API 연결
-- 공개 웹페이지 본문 수집
-- notification route 조회와 알림 관련 공용 helper
+운영 경로에서 사용하는 adapter:
+
+- X 사용자·게시글 조회(`x_client.py`)와 notification route helper(`notifications.py`)
+- YouTube 채널·아카이브·세트리스트·커버·통계 조회(`youtube_*.py`)와 Holodex 생방송 조회(`holodex.py`)
+- 등록된 Spotify 계정의 카탈로그 조회(`spotify_catalog.py` 등)
+- 세트리스트 후보 비교용 OpenAI 호출([세트리스트 후보 비교](../../docs/youtube-setlist-selection.md))
+- 공식 사이트 공개 라이브 일정 페이지(`live_site_pages.py`)와 프로필 이미지 원본(`avatar_sources.py`)
+
+보존 전용: `google_calendar.py`(Google Calendar legacy), 노래방 조회(`karaoke_lookup.py`, `jpop_playlist_tj.py`)는 후속 TODO다. 사용자 요청 없이 운영 경로에 연결하지 않는다. X 게시글 분류·추출은 제거 대상이다.
 
 ## 설계 경계
 

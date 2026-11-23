@@ -9,7 +9,7 @@
 - 기존 route의 channel 조회
 - 전달받은 X `source_url` 한 줄 전송과 message ID 반환
 
-slash command, interaction, command tree, 관리자 기능, route CRUD, 수동 테스트·재전송, 아티스트·YouTube·Spotify·노래방·가사·Google 기능을 추가하지 않는다. 설정 관리는 향후 admin-web에서 담당한다.
+slash command, interaction, command tree, 관리자 기능, route CRUD, 수동 테스트·재전송, 아티스트·YouTube·Spotify·노래방·가사·Google 기능을 추가하지 않는다. 설정 관리는 후속으로 새로 설계할 관리 도구에서 담당한다.
 
 ## 경계와 안전성
 
