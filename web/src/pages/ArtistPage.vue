@@ -15,9 +15,11 @@ import { api } from '@/api/client'
 import type { Live } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import ArtistAvatar from '@/components/ArtistAvatar.vue'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { todayKey } from '@/lib/dates'
+import { spotifyGenreLabels } from '@/lib/spotify-genres'
 import ArtistOriginalSongs from '@/components/ArtistOriginalSongs.vue'
 import ArtistCovers from '@/components/ArtistCovers.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
@@ -133,6 +135,7 @@ const data = computed(() =>
       }
     : null,
 )
+const spotifyGenres = computed(() => spotifyGenreLabels(data.value?.artist.spotify_genres))
 const upcoming = computed(() =>
   (data.value?.concerts ?? [])
     .filter((c) => !c.starts_at || c.starts_at.slice(0, 10) >= todayKey())
@@ -182,6 +185,17 @@ function returnToList() {
             <p v-if="data.artist.display_name" class="profile-reading">
               {{ data.artist.display_name }}
             </p>
+            <ul
+              v-if="spotifyGenres.length"
+              class="profile-genres"
+              aria-label="Spotify 아티스트 장르"
+              title="Spotify가 아티스트 단위로 제공하는 장르입니다. 곡별 장르가 아닙니다."
+            >
+              <li class="profile-genres-source">Spotify</li>
+              <li v-for="genre in spotifyGenres" :key="genre">
+                <Badge variant="outline">{{ genre }}</Badge>
+              </li>
+            </ul>
             <div class="profile-links">
               <Button
                 v-for="link in data.artist.links"

@@ -55,6 +55,7 @@ export interface Artist {
   youtube_channel_created_at?: string | null
   youtube_statistics_updated_at?: string | null
   youtube_statistics_source?: string | null
+  spotify_genres?: string[]
   intro: string
 }
 export interface Performance {

@@ -25,6 +25,7 @@
   - YouTube 오리지널 일일 수집: poll·collect worker 모두 새 코드 적용 후 일일 수집·실제 조회 검증. [012](../specs/012-youtube-original-daily/tasks.md), [계약](youtube-original-collection.md)
   - HONK THE HORN·NUROJUNK 멤버별 수집·일일 재대조 worker/API. [013](../specs/013-shared-member-catalog/tasks.md)
   - 홈 최근 곡·즐겨찾기 캐러셀(PC·모바일 화면 검수 포함). [011](../specs/011-home-recent-songs/tasks.md)
+  - 아티스트 상세 Spotify 장르(실데이터 저장 완료, 화면 검수 포함). [015](../specs/015-artist-spotify-genres/tasks.md)
 - [ ] 로컬 PostgreSQL이 없어 건너뛴 DB fixture 테스트를 CI 또는 PostgreSQL이 있는 환경에서 실행한다. 여러 스펙의 검증에서 반복해서 남은 항목이다(011·012·013 포함).
 - [ ] 운영 동일 출처 `/api` 프록시 구성.
 - [ ] Neon 사용량 확인: 빈 큐 확인을 15분 경계로 바꾼 뒤(`WORKER_IDLE_SECONDS=900`) worker 활성 설정·중복 runtime·`/ready` 감시 주기와 Neon Active 시간·CU-hours를 비교한다. 실제 절감량은 미검증이다.
@@ -41,6 +42,7 @@
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결 검수와 남은 음악 데이터 반영. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. [이관 결과](records/backend/setlist-migration-report.md)
 - [ ] 발매 음원의 오리지널/커버 여부 검수 확대, source 계정이 없는 발매 영상의 업로더 근거·소유권 검수. [009](../specs/009-song-exploration/tasks.md) T004
 - [ ] 오리지널 음악 분류: 미분류 음원 조사, 공식 영상 연결 보완, 분위기 근거 확대. [010](../specs/010-original-music-tags/tasks.md) T003, T005
+- [ ] Spotify 아티스트 장르가 빈 계정(표시 대상 75개 중 67개) 보완 방법 결정. [015](../specs/015-artist-spotify-genres/tasks.md) T007
 - [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](records/data/youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
 - [ ] HONK THE HORN·NUROJUNK 진행자 미확정 방송 3개 검토. [013](../specs/013-shared-member-catalog/tasks.md)
 - [ ] YouTube 커버 과거 수집의 전체 채널 순회 완료 여부 확인. [007](../specs/007-youtube-covers/tasks.md) T003

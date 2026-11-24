@@ -29,7 +29,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 
 | 경로 (`/api` 아래) | 응답과 기준 |
 | --- | --- |
-| GET /artists | 보관되지 않았고 show_in_catalog=true인 통합 명부. 원어 이름 오름차순+ID. 전체 목록 |
+| GET /artists | 보관되지 않았고 show_in_catalog=true인 통합 명부. 원어 이름 오름차순+ID. 전체 목록. `spotify_genres`는 [아티스트 Spotify 장르](artist-spotify-genres.md) |
 | GET /artists/{id} | 동일 노출 조건의 아티스트. 기존 DB ID/이름 기반 병합 없음 |
 | GET /artists/{id}/lives | 대표·출연·가창 연결로 참여한 아카이브. 방송일/공개일 내림차순+ID, 세트리스트 없이 활성 곡 수 `performance_count`를 포함한 요약 |
 | GET /artists/{id}/covers | 공식 채널 커버. [YouTube 커버](youtube-covers.md) |

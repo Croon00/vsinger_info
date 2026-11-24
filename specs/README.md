@@ -15,6 +15,7 @@
 | [012-youtube-original-daily](012-youtube-original-daily/spec.md) | YouTube 오리지널 일일 수집 | 로컬 구현, DB fixture·운영 적용 남음 |
 | [013-shared-member-catalog](013-shared-member-catalog/spec.md) | HONK THE HORN·NUROJUNK 멤버별 라이브·커버 | 실데이터 보완, 운영 후속 남음 |
 | [014-original-song-availability](014-original-song-availability/spec.md) | 분류 파일 누락 시 오리지널 목록 복구 | 로컬 수정·회귀 검증 완료, 배포·운영 확인 남음 |
+| [015-artist-spotify-genres](015-artist-spotify-genres/spec.md) | 아티스트 상세의 Spotify 아티스트 장르 | 로컬 구현·실데이터 저장 완료, 배포·화면 검수 남음 |
 
 014는 2026-11-21 `003-original-song-availability`로 만들었으나 기존 `003-artist-catalog`와 번호가 겹쳐 2026-11-23 014로 바꿨다. 새 스펙은 기존 최대 번호 다음 번호를 쓴다.
 

@@ -183,6 +183,8 @@ class CatalogReadRepository:
         (yt.stats->>'created_at')::timestamptz youtube_channel_created_at,
         (yt.stats->>'captured_at')::timestamptz youtube_statistics_updated_at,
         yt.shared_from youtube_statistics_source,
+        COALESCE(sp.genres->'genres','[]'::jsonb) spotify_genres,
+        (sp.genres->>'captured_at')::timestamptz spotify_genres_updated_at,
         (SELECT jsonb_build_object('id',og.group_id,'name',og.group_name,'agency',ga.name_native)
          FROM original_groups og JOIN artists grp ON grp.id=og.group_id
          LEFT JOIN agencies ga ON ga.id=grp.agency_id AND ga.archived_at IS NULL
@@ -214,6 +216,14 @@ class CatalogReadRepository:
           ) ch LEFT JOIN collection_states cs ON cs.external_account_id=ch.account_id
           ORDER BY ch.priority,ch.position,ch.link_id LIMIT 1
         ) yt ON true
+        LEFT JOIN LATERAL (
+          -- Representative owned Spotify account; genres are never merged across accounts.
+          SELECT cs.provider_state->'spotify_artist_genres' genres
+          FROM artist_external_accounts ae JOIN external_accounts e ON e.id=ae.account_id
+          LEFT JOIN collection_states cs ON cs.external_account_id=e.id
+          WHERE ae.artist_id=a.id AND ae.relationship='owner' AND e.platform='spotify' AND e.archived_at IS NULL
+          ORDER BY ae.is_primary DESC,ae.position,ae.id LIMIT 1
+        ) sp ON true
         WHERE a.archived_at IS NULL AND a.show_in_catalog
         AND (CAST(:artist_id AS integer) IS NULL OR a.id=:artist_id)
         ORDER BY lower(a.name_native),a.id""", {"artist_id": artist_id, **SHARED_PARAMS})

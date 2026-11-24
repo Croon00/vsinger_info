@@ -53,6 +53,8 @@ class ArtistRead(BaseModel):
     youtube_channel_created_at: datetime | None = None
     youtube_statistics_updated_at: datetime | None = None
     youtube_statistics_source: str | None = None
+    spotify_genres: list[str] = Field(default_factory=list)
+    spotify_genres_updated_at: datetime | None = None
     theme_color: str | None = None
     agency: str | None = None
     profile_intro: str | None = None

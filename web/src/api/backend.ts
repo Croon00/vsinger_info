@@ -109,6 +109,7 @@ export function mapArtist(row: BackendArtist): Artist {
     youtube_channel_created_at: row.youtube_channel_created_at ?? null,
     youtube_statistics_updated_at: row.youtube_statistics_updated_at ?? null,
     youtube_statistics_source: row.youtube_statistics_source ?? null,
+    spotify_genres: (row.spotify_genres ?? []).filter((genre) => typeof genre === 'string' && genre.trim()),
     original_song_group: row.original_song_group ?? null,
     intro: row.profile_intro ?? '',
   }

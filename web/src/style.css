@@ -520,6 +520,20 @@ button.original-song-thumb { cursor: pointer; }
   line-height: 1.8;
   color: var(--muted-foreground);
 }
+.profile-genres {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+.profile-genres-source {
+  font-size: 11px;
+  color: var(--muted-foreground);
+  margin-right: 2px;
+}
 .profile-links {
   display: flex;
   flex-wrap: wrap;
@@ -2190,8 +2204,8 @@ button.original-song-thumb { cursor: pointer; }
 @media (max-width: 768px) {
   .artist-profile { display: grid; grid-template-columns: 80px minmax(0, 1fr); }
   .profile-copy { display: contents; }
-  .profile-copy > .eyebrow, .profile-copy > .profile-name, .profile-copy > .profile-reading { grid-column: 2; }
-  .profile-avatar { grid-column: 1; grid-row: 1 / 4; }
+  .profile-copy > .eyebrow, .profile-copy > .profile-name, .profile-copy > .profile-reading, .profile-copy > .profile-genres { grid-column: 2; }
+  .profile-avatar { grid-column: 1; grid-row: 1 / 5; }
   .artist-profile { row-gap: 0; }
   .profile-links { grid-column: 1 / -1; justify-content: flex-start; margin-top: 16px; }
   .song-statistics > .section-heading { align-items: center; }
