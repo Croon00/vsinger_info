@@ -67,7 +67,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 - 항목: `account_id`, `channel_id`, `artist_id`, `artist_name`, `avatar_url`, `avatar_variants`, `video_id`, `title`, `status`(`live`/`upcoming`), `started_at`(예정 방송은 null), `scheduled_at`, `checked_at`.
 - 기본은 생방송만 반환한다. `include_upcoming=true`이면 생방송(시작 내림차순) 다음에 예정 방송(예정 시각 오름차순)을 붙인다. 생방송끼리는 시작 시각 내림차순·계정 ID·영상 ID순이다.
 - 채널을 여러 아티스트가 공유하면 대표 아티스트(owner 우선·is_primary·position·ID) 하나로 표시한다. 아티스트 이미지는 저장된 프로필/해상도 variant를 쓰며 이미지 수집을 시작하지 않는다.
-- 데이터는 `collection_states.provider_state.youtube_live_snapshot`의 방송 배열이다. 계정은 활성 YouTube 수집 대상이고 공개 카탈로그 아티스트에 연결돼 있어야 한다. 미래 관측은 제외한다.
+- 데이터는 `collection_states.provider_state.youtube_live_snapshot`의 방송 배열이다. 활성 YouTube 계정이 공개 카탈로그 아티스트에 연결돼 있으면 조회한다. `youtube_live_only`로 등록한 계정은 멀티뷰에서 수집하고, 카탈로그에서 숨긴 활성 소유 그룹도 멀티뷰에 표시할 수 있다. 미래 관측은 제외한다. [멤버십 채널 등록 기록](records/data/multiview-membership-channels-2026-11-24.md)
 - 유효 시간: 생방송은 `live_checked_at`(없으면 `checked_at`)부터 15분이며 응답의 `checked_at`도 이 시각이다. Holodex 예정 방송은 전체 조회 `checked_at`부터 75분(수집 간격 60분+유예 15분)이다. 그 밖의 YouTube 관측은 15분이다.
 - 시작 시각이 없는 예정 방송은 예정 시각이 지나도 실제 시작이 확인될 때까지 `upcoming`으로 유지한다.
 - API는 수집·외부 요청·DB 변경을 시작하지 않는다.

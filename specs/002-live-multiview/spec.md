@@ -43,6 +43,7 @@ roadmap의 2026-11-15 기록과 app/core/config.py, app/services/youtube_live_mo
 - FR-005 Holodex 예정 방송은 checked_at 기준 75분, 생방송은 live_checked_at(없으면 checked_at) 기준 15분 유효기간을 적용한다. YouTube fallback은 checked_at 기준 15분이다. 미래 관찰 시각과 만료 경계를 검증한다.
 - FR-006 Holodex와 YouTube fallback의 설정·quota·상태를 각각 기록하고 일일 아카이브 수집 경계를 유지한다.
 - FR-007 API·monitor·웹의 배포 revision과 실제 브라우저 결과를 기록한다.
+- FR-008 VESPERBELL MEMBERSHIP과 KMNCLUB을 기존 그룹에 연결하고 멀티뷰 수집에 포함한다. 신규 계정의 일반 영상 수집과 그룹의 카탈로그 공개 범위는 바꾸지 않는다.
 
 ## 예외와 경계 조건
 
@@ -58,3 +59,4 @@ Holodex 미등록 채널의 추가 discovery와 최근 업로드 밖 미발견 �
 - SC-002 fixture에서 예정 방송 75분·생방송 15분 만료와 관찰 시각 선택, 조회 중 provider 호출 0회를 확인한다.
 - SC-003 실제 설정·revision·관찰 기간·요청량·상태 갱신·오류·유예를 기록하고 FR-002~004에 대조한다. 관찰 기간은 실행 환경과 provider 한도에 맞춰 계획한다.
 - SC-004 배포 웹의 선택·영상·채팅·자동재생 제한 결과를 브라우저와 날짜로 기록한다.
+- SC-005 전제: 두 멤버십 채널과 비공개 카탈로그 그룹, 동작: 등록을 반복하고 수집·멀티뷰 조회를 실행, 기대 결과: 채널별 계정 한 건, 양쪽 수집 경로와 멀티뷰 목록 포함, 일반 영상 수집 비활성 및 그룹 카탈로그 비공개 유지.

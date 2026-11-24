@@ -6,7 +6,7 @@ from unittest.mock import Mock
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
 from test_catalog_migration import database, local_server, apply, row
@@ -14,9 +14,45 @@ from app.api.routers.read_api import router, catalog
 from app.core.config import settings
 from app.integrations.youtube_catalog import Video
 from app.repositories.youtube_collection import persist_poll
+from app.repositories.youtube_live_monitor import claim, claim_holodex, save, save_holodex_batch
 from app.services.catalog_read import CatalogRead
+from scripts.register_multiview_channels import CHANNELS, register
 
 CHANNEL = 'UC' + 'a' * 22
+
+
+def test_membership_channels_are_available_only_to_live_monitoring(database):
+    apply(database)
+    for slug, *_ in CHANNELS:
+        row(database, 'artists', slug=slug, entity_kind='group', name_native=slug, show_in_catalog=False)
+    database.commit()
+    info = database.info
+    engine = create_engine(f'postgresql+psycopg://catalog_test@127.0.0.1:{info.port}/{info.dbname}')
+    try:
+        with Session(engine) as session:
+            register(session)
+            register(session)
+            session.commit()
+            accounts = session.execute(text('SELECT id,platform_id,collection_enabled FROM external_accounts')).all()
+            assert {account.platform_id for account in accounts} == {entry[1] for entry in CHANNELS}
+            assert all(not account.collection_enabled for account in accounts)
+
+            snapshot = dict(provider='holodex', checked_at=datetime.now(UTC).isoformat(),
+                            streams=[dict(video_id='abcdefghijk', title='Live')])
+            claimed = claim_holodex(session, 'holodex-fixture')
+            updates = [dict(id=account['id'], channel_id=account['channel_id'], state={}, snapshot=snapshot)
+                       for account in claimed]
+            account_ids = {account.id for account in accounts}
+            assert save_holodex_batch(session, 'holodex-fixture', updates) == account_ids
+            fallback = claim(session, 'youtube-fixture')
+            assert {account['id'] for account in fallback} == account_ids
+            assert all(save(session, account, 'youtube-fixture', {}, snapshot) for account in fallback)
+            service = CatalogRead(session)
+            assert {item['account_id'] for item in service.live_streams(0, 10)['items']} == account_ids
+            assert {item['name'] for item in service.stream_groups()} == {'vesperbell', 'kmnz'}
+            assert service.artists() == []
+    finally:
+        engine.dispose()
 
 
 def test_archive_poll_preserves_live_monitor_snapshot_and_backfill_preserves_state():

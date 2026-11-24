@@ -18,3 +18,6 @@ T006부터는 배포·실제 provider 검증 범위를 확인한 뒤 진행한�
 - [ ] T007 [US2] 요청 범위의 API·monitor를 배포하고 실제 검색·상태 전환·실패 유예를 관찰한다. SC-003.
 - [ ] T008 [US3] 배포 웹의 영상 선택·재생·채팅·자동재생 제한을 확인한다. SC-004.
 - [ ] T009 [US1] 날짜·환경·revision·관찰 결과를 운영 기록과 docs/backend-roadmap.md에 반영한다.
+- [x] T010 [US1·US2] 멀티뷰 전용 대상 플래그와 VESPERBELL MEMBERSHIP·KMNCLUB 등록 경로를 연결한다. FR-008.
+- [x] T011 [US1·US2] 격리 PostgreSQL에서 SC-005를 검증한다. [2026-11-24 검증 기록](../../docs/records/data/multiview-membership-channels-2026-11-24.md)
+- [ ] T012 [US1·US2] 통합 DB에 두 채널을 등록하고 운영 코드에서 조회·수집을 확인한다.

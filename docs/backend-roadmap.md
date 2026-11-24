@@ -13,6 +13,7 @@
 - [ ] X provider `NoAccountError` 재현 여부·원인 조사와 수정. 001 T003
 - [ ] Discord 실제 URL 전송·route·중복 방지 확인. 001 T009
 - [ ] 생방송 멀티뷰 운영 반영: Railway에 `HOLODEX_API_KEY`, `HOLODEX_POLL_SECONDS=3600`, `HOLODEX_LIVE_CHECK_SECONDS=180`을 설정하고 API·monitor를 함께 배포한다. 이전 운영 API는 `live_checked_at`을 모르므로 조회 코드도 같이 배포해야 한다. 배포 웹에서 재생·채팅·자동재생 제한을 확인하고, YouTube 모드를 쓸 경우 채널 수에 따른 할당량을 점검한다. [002](../specs/002-live-multiview/tasks.md) T006~T009
+- [ ] VESPERBELL MEMBERSHIP·KMNCLUB 멀티뷰 전용 등록과 운영 수집 확인. [등록 기록](records/data/multiview-membership-channels-2026-11-24.md) · [002](../specs/002-live-multiview/tasks.md) T012
 - [ ] 프로필 이미지 worker의 서버 저장소 환경변수 갱신·재시작·실제 처리 확인. 배포 환경의 `AVATAR_BUCKET`과 기존 저장 URL 버킷 일치 여부도 확인한다(다르면 `avatar_variants`가 비어 대표 URL만 쓰임). [004](../specs/004-avatar-storage/tasks.md) T003
 - [ ] 로컬 검증 후 배포하지 않은 코드의 배포와 확인:
   - 세트리스트 규칙 우선 추출·후보 비교(배포 후 실제 모델 품질 평가 포함), 작업 선점 반복 스캔 제거·보관 가창 재생성 방지. [008](../specs/008-setlist-quality/tasks.md) T005

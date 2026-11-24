@@ -111,17 +111,22 @@ class CatalogReadRepository:
 
     def stream_groups(self):
         return self.rows('''WITH channels AS (
-            SELECT e.id account_id,a.id artist_id,a.agency_id,a.entity_kind
+            SELECT e.id account_id,a.id artist_id,a.agency_id,a.entity_kind,
+                   COALESCE(cs.provider_state @> '{"youtube_live_only": true}',false) live_only
             FROM external_accounts e JOIN artist_external_accounts ae ON ae.account_id=e.id
             JOIN artists a ON a.id=ae.artist_id
-            WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
-              AND a.archived_at IS NULL AND a.show_in_catalog
+            LEFT JOIN collection_states cs ON cs.external_account_id=e.id
+            WHERE e.platform='youtube' AND e.archived_at IS NULL AND a.archived_at IS NULL
+              AND (e.collection_enabled OR cs.provider_state @> '{"youtube_live_only": true}')
+              AND (a.show_in_catalog OR (a.entity_kind='group' AND ae.relationship='owner'
+                   AND cs.provider_state @> '{"youtube_live_only": true}'))
         ), grouped AS (
             SELECT 'agency:'||g.id::text key,g.name_native name,'agency' kind,c.account_id
             FROM channels c JOIN agencies g ON g.id=c.agency_id AND g.archived_at IS NULL
             UNION
             SELECT 'group:'||g.id::text,COALESCE(g.name_ko,g.name_native),'group',c.account_id
-            FROM channels c JOIN artists g ON g.entity_kind='group' AND g.archived_at IS NULL AND g.show_in_catalog
+            FROM channels c JOIN artists g ON g.entity_kind='group' AND g.archived_at IS NULL
+              AND (g.show_in_catalog OR (c.live_only AND g.id=c.artist_id))
               AND (g.id=c.artist_id OR EXISTS (SELECT 1 FROM artist_group_members m
                    WHERE m.group_id=g.id AND m.member_id=c.artist_id AND m.left_on IS NULL))
         ) SELECT key,name,kind,array_agg(DISTINCT account_id ORDER BY account_id) account_ids
@@ -141,7 +146,9 @@ class CatalogReadRepository:
             JOIN LATERAL (
                 SELECT ar.id,ar.name_native,ar.name_ko,ar.avatar_url FROM artist_external_accounts ae
                 JOIN artists ar ON ar.id=ae.artist_id
-                WHERE ae.account_id=e.id AND ar.archived_at IS NULL AND ar.show_in_catalog
+                WHERE ae.account_id=e.id AND ar.archived_at IS NULL
+                  AND (ar.show_in_catalog OR (ar.entity_kind='group' AND ae.relationship='owner'
+                       AND cs.provider_state @> '{"youtube_live_only": true}'))
                 ORDER BY (ae.relationship='owner') DESC,ae.is_primary DESC,ae.position,ar.id LIMIT 1
             ) a ON true
             CROSS JOIN LATERAL (
@@ -154,7 +161,8 @@ class CatalogReadRepository:
               ) AS x(video_id text,title text,started_at timestamptz,scheduled_at timestamptz)
               WHERE :include_upcoming
             ) s
-            WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
+            WHERE e.platform='youtube' AND e.archived_at IS NULL
+              AND (e.collection_enabled OR cs.provider_state @> '{"youtube_live_only": true}')
               AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
               AND s.video_id ~ '^[A-Za-z0-9_-]{11}$'
               AND CASE WHEN s.status='live' AND cs.provider_state->'youtube_live_snapshot'->>'provider'='holodex'

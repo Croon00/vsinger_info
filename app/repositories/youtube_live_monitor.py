@@ -14,7 +14,11 @@ def claim(session, token, limit=25):
         COALESCE((cs.provider_state->'youtube_live_monitor'->>'next_discovery_at')::timestamptz,
                  '-infinity'::timestamptz) <= clock_timestamp() discover
         FROM external_accounts e JOIN collection_states cs ON cs.external_account_id=e.id
-        WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
+        WHERE e.platform='youtube' AND e.archived_at IS NULL
+          AND (e.collection_enabled OR (cs.provider_state @> '{"youtube_live_only": true}'
+               AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
+                           WHERE ae.account_id=e.id AND ae.relationship='owner'
+                             AND a.entity_kind='group' AND a.archived_at IS NULL)))
           AND e.platform_id ~ '^UC[A-Za-z0-9_-]{22}$'
           AND COALESCE((cs.provider_state->'youtube_live_monitor'->>'lease_until')::timestamptz,
                        '-infinity'::timestamptz) <= clock_timestamp()
@@ -41,7 +45,11 @@ def save(session, account, token, state, snapshot):
         jsonb_set(jsonb_set(cs.provider_state,'{youtube_live_monitor}',CAST(:state AS jsonb)),
                   '{youtube_live_snapshot}',CAST(:snapshot AS jsonb))
         FROM external_accounts e WHERE e.id=cs.external_account_id AND e.id=:id
-          AND e.platform='youtube' AND e.platform_id=:channel AND e.collection_enabled AND e.archived_at IS NULL
+          AND e.platform='youtube' AND e.platform_id=:channel AND e.archived_at IS NULL
+          AND (e.collection_enabled OR (cs.provider_state @> '{"youtube_live_only": true}'
+               AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
+                           WHERE ae.account_id=e.id AND ae.relationship='owner'
+                             AND a.entity_kind='group' AND a.archived_at IS NULL)))
           AND cs.provider_state->'youtube_live_monitor'->>'lease_token'=:token
           AND (cs.provider_state->'youtube_live_monitor'->>'lease_until')::timestamptz > clock_timestamp()
         RETURNING e.id'''), dict(id=account['id'], channel=account['channel_id'], token=token,
@@ -75,10 +83,13 @@ def claim_holodex(session, token, limit=500, *, poll_seconds=3600, live_check_se
         COALESCE(cs.provider_state->'youtube_live_snapshot','{{}}'::jsonb) snapshot,
         {discovery_due} discover
         FROM external_accounts e JOIN collection_states cs ON cs.external_account_id=e.id
-        WHERE e.platform='youtube' AND e.collection_enabled AND e.archived_at IS NULL
+        WHERE e.platform='youtube' AND e.archived_at IS NULL
+          AND (e.collection_enabled OR cs.provider_state @> '{{"youtube_live_only": true}}')
           AND e.platform_id ~ '^UC[A-Za-z0-9_-]{{22}}$'
           AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
-                      WHERE ae.account_id=e.id AND a.archived_at IS NULL AND a.show_in_catalog)
+                      WHERE ae.account_id=e.id AND a.archived_at IS NULL
+                        AND (a.show_in_catalog OR (a.entity_kind='group' AND ae.relationship='owner'
+                            AND cs.provider_state @> '{{"youtube_live_only": true}}')))
           AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'lease_until')::timestamptz,
                        '-infinity'::timestamptz) <= clock_timestamp()
           AND COALESCE((cs.provider_state->'holodex_live_monitor'->>'retry_at')::timestamptz,
@@ -114,9 +125,12 @@ def save_holodex_batch(session, token, updates):
         FROM jsonb_to_recordset(CAST(:updates AS jsonb))
              AS x(id bigint,channel_id text,state jsonb,snapshot jsonb), external_accounts e
         WHERE e.id=x.id AND cs.external_account_id=e.id
-          AND e.platform='youtube' AND e.platform_id=x.channel_id AND e.collection_enabled AND e.archived_at IS NULL
+          AND e.platform='youtube' AND e.platform_id=x.channel_id AND e.archived_at IS NULL
+          AND (e.collection_enabled OR cs.provider_state @> '{"youtube_live_only": true}')
           AND EXISTS (SELECT 1 FROM artist_external_accounts ae JOIN artists a ON a.id=ae.artist_id
-                      WHERE ae.account_id=e.id AND a.archived_at IS NULL AND a.show_in_catalog)
+                      WHERE ae.account_id=e.id AND a.archived_at IS NULL
+                        AND (a.show_in_catalog OR (a.entity_kind='group' AND ae.relationship='owner'
+                            AND cs.provider_state @> '{"youtube_live_only": true}')))
           AND cs.provider_state->'holodex_live_monitor'->>'lease_token'=:token
           AND (cs.provider_state->'holodex_live_monitor'->>'lease_until')::timestamptz > clock_timestamp()
         RETURNING e.id'''), dict(token=token, updates=json.dumps(updates))).scalars())
