@@ -7,6 +7,7 @@ import {
   Play,
   Music2,
   Disc3,
+  DiscAlbum,
   CalendarDays,
   ChevronDown,
   ChartNoAxesColumnIncreasing,
@@ -21,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { todayKey } from '@/lib/dates'
 import { spotifyGenreLabels } from '@/lib/spotify-genres'
 import ArtistOriginalSongs from '@/components/ArtistOriginalSongs.vue'
+import ArtistDiscography from '@/components/ArtistDiscography.vue'
 import ArtistCovers from '@/components/ArtistCovers.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import LiveCard from '@/components/LiveCard.vue'
@@ -50,7 +52,9 @@ watch(
 )
 const id = computed(() => String(route.params.artistId))
 const tab = computed(() =>
-  ['lives', 'covers', 'statistics', 'originals', 'concerts'].includes(String(route.query.tab))
+  ['lives', 'covers', 'statistics', 'originals', 'discography', 'concerts'].includes(
+    String(route.query.tab),
+  )
     ? String(route.query.tab)
     : 'lives',
 )
@@ -230,6 +234,10 @@ function returnToList() {
               <Disc3 />
               오리지널 곡
             </TabsTrigger>
+            <TabsTrigger value="discography">
+              <DiscAlbum />
+              디스코그래피
+            </TabsTrigger>
             <TabsTrigger value="concerts">
               <CalendarDays />
               공연 정보
@@ -308,6 +316,9 @@ function returnToList() {
           </TabsContent>
           <TabsContent value="originals" class="pt-4 min-[769px]:pt-6">
             <ArtistOriginalSongs :key="id" :artist-id="Number(id)" />
+          </TabsContent>
+          <TabsContent value="discography" class="pt-4 min-[769px]:pt-6">
+            <ArtistDiscography :key="id" :artist="data.artist" :artist-id="Number(id)" />
           </TabsContent>
           <TabsContent value="concerts" class="pt-4 min-[769px]:pt-6">
             <ResourceState

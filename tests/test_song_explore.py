@@ -20,6 +20,12 @@ from app.repositories.song_explore import explore, performers
 from app.repositories.catalog_read import CatalogReadRepository
 
 
+def credit_singer(db, recording, artist):
+    """Real originals credit the song to its singer; the shared seed song credits another artist."""
+    song=db.execute('SELECT song_id FROM recordings WHERE id=%s',(recording,)).fetchone()[0]
+    row(db,'song_artists',song_id=song,artist_id=artist)
+
+
 def test_view_counts_preserve_unknown_zero_and_validate_identity():
     provider = AsyncMock()
     provider.get.return_value = {'items': [
@@ -132,6 +138,7 @@ def test_original_recording_is_not_hidden_by_old_description_only_cover(store):
     db,engine=store
     artist,guest,original,archive,concert,album,recording=seed(db)
     account=db.execute('SELECT account_id FROM artist_external_accounts WHERE artist_id=%s',(artist,)).fetchone()[0]
+    credit_singer(db,recording,artist)
     video=row(db,'videos',platform='youtube',platform_video_id='originalMV1',title='Original Music Video',source_account_id=account,duration_seconds=240)
     row(db,'covers',video_id=video)
     db.execute('UPDATE recordings SET official_video_id=%s WHERE id=%s',(video,recording));db.commit()
@@ -171,6 +178,7 @@ def test_artist_union_keeps_collaborator_names_and_scopes_before_pagination(stor
     for n,source in enumerate([account,guest_account]):
         video=row(db,'videos',platform='youtube',platform_video_id=f'coverunion{n}',title=f'Song {n} cover',duration_seconds=240,source_account_id=source)
         row(db,'covers',video_id=video)
+    credit_singer(db,recording,artist)
     row(db,'recording_artists',recording_id=recording,artist_id=guest,role='featured')
     second=row(db,'recordings',title_native='Guest song')
     row(db,'recording_artists',recording_id=second,artist_id=guest,role='primary')
@@ -274,3 +282,35 @@ def test_original_member_credits_display_as_approved_group_without_youtube_accou
         artists=CatalogReadRepository(s).artists()
         assert next(a for a in artists if a['id']==member)['original_song_group']['id']==group
         assert db.execute('SELECT artist_id FROM recording_artists WHERE recording_id=%s',(recording,)).fetchone()[0]==member
+
+
+def test_released_covers_are_not_originals(store):
+    db,engine=store
+    artist,guest,original,archive,concert,album,recording=seed(db)
+    group=row(db,'artists',entity_kind='group',slug='unit',name_native='Unit',show_in_catalog=True)
+    row(db,'artist_group_members',group_id=group,member_id=artist)
+    def recording_of(title,credits,version=None):
+        song=row(db,'songs',title_native=title) if credits is not None else None
+        for credited in credits or []:
+            row(db,'song_artists',song_id=song,artist_id=credited)
+        made=row(db,'recordings',title_native=title,song_id=song,version_label=version)
+        row(db,'recording_artists',recording_id=made,artist_id=artist,role='primary')
+    recording_of('Live Cover Song - Cover Live',None)
+    recording_of('カバー曲',None)
+    recording_of('歌ってみたアルバム曲',None)
+    recording_of('Covered elsewhere',[original])          # someone else's song
+    recording_of('Plain title',None,version='Cover')      # marked in the version label
+    recording_of('Discover',None)                         # word boundary: stays original
+    recording_of('Own song',[artist])
+    recording_of('Collab song',[artist,original])
+    recording_of('Unit song',[group])                     # credited to the singer's group
+    recording_of('Uncredited song',[])                    # song without credits: unknown, kept
+    db.commit()
+    with Session(engine) as session:
+        page=explore(session,kind='original',agency='all',q='',order='name',offset=0,limit=50)
+        titles={item['title'] for item in page['items']}
+        assert {'Discover','Own song','Collab song','Unit song','Uncredited song'} <= titles
+        assert not titles & {'Live Cover Song - Cover Live','カバー曲','歌ってみたアルバム曲','Covered elsewhere','Plain title','Title'}
+        from app.repositories.recording_lyrics import released_cover_entries
+        excluded={e['title'] for e in released_cover_entries(session)}
+        assert {'Covered elsewhere','Plain title','Title'} <= excluded and 'Own song' not in excluded

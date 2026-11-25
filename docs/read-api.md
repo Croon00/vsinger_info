@@ -44,7 +44,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /concerts/{id} | 공연·도시·장소·출처 링크·첫 티켓 정보 |
 | GET /artists/{id}/albums | 앨범 명의(album_artists) 또는 수록 녹음의 가창 명의(recording_artists)로 연결된 앨범. 발매 연월일 내림차순+ID. `is_primary`는 해당 아티스트가 앨범 명의에 있으면 true, 트랙 명의로만 연결된 참여 발매면 false |
 | GET /albums/{id} | 앨범과 디스크/트랙 순 수록 녹음, 가사 존재 여부, `youtube_url`(연결된 공개/일부 공개 영상만, 없으면 null). 아티스트 기준이 없으므로 `is_primary`는 null |
-| GET /recordings/{id}/lyrics | 해당 녹음의 저장된 가사·번역·독음과 출처 URL |
+| GET /recordings/{id}/lyrics | 해당 녹음의 저장된 가사·번역·독음과 출처 URL. 등록 절차는 [가사 등록](original-lyrics.md) |
 
 ## 검색
 

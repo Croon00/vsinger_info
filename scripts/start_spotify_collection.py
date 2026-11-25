@@ -1,7 +1,7 @@
 """Enable Spotify collection for catalog-visible artists and enqueue their first jobs.
 
 Targets are active Spotify accounts linked as ``owner`` to an active ``show_in_catalog``
-artist. The preview (default) only reads. ``--apply`` refuses unless catalog revision 006
+artist, or to a hidden group approved for original-song display (``original_song_groups``). The preview (default) only reads. ``--apply`` refuses unless catalog revision 006
 (provider track credits, which needs 005 ISRC) is applied, then in ONE transaction sets ``collection_enabled=true`` on the targets
 that are still disabled (catalog_imports receipt + one catalog_changes row each) and
 enqueues one ``spotify_collect`` job per target (``request_run`` from ``--run``, default ``initial``; album offset 0,
@@ -33,6 +33,7 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from app.repositories import worker_jobs  # noqa: E402
+from app.repositories.original_song_groups import ORIGINAL_GROUPS_CTE  # noqa: E402
 from app.schemas.worker_jobs import JobRequest  # noqa: E402
 
 POLICY = "spotify-collection-start-v1"
@@ -45,12 +46,15 @@ _spec.loader.exec_module(migrate_catalog)
 
 
 def targets(session) -> list[dict]:
-    return [dict(r) for r in session.execute(text("""
+    # Hidden groups approved for original-song display (VESPERBELL, HONK THE HORN, ...)
+    # release under the group name, so their accounts are collected like visible artists.
+    return [dict(r) for r in session.execute(text(f"""WITH {ORIGINAL_GROUPS_CTE}
         SELECT e.id AS account_id, e.platform_id, e.collection_enabled, e.version, min(a.name_native) AS artist,
                array_agg(a.id ORDER BY a.id) AS artist_ids
         FROM external_accounts e
         JOIN artist_external_accounts ae ON ae.account_id=e.id AND ae.relationship='owner'
-        JOIN artists a ON a.id=ae.artist_id AND a.show_in_catalog AND a.archived_at IS NULL
+        JOIN artists a ON a.id=ae.artist_id AND a.archived_at IS NULL
+          AND (a.show_in_catalog OR a.id IN (SELECT group_id FROM original_groups))
         WHERE e.platform='spotify' AND e.archived_at IS NULL
         GROUP BY e.id ORDER BY e.id""")).mappings()]
 
@@ -75,7 +79,7 @@ def run(session, *, write: bool, run_label: str = "initial", limit: int | None =
         wanted = set(artist_ids)
         missing = wanted - {a for t in rows for a in t["artist_ids"]}
         if missing:
-            raise RuntimeError(f"Not catalog-visible Spotify owner artists: {sorted(missing)}")
+            raise RuntimeError(f"Not catalog-visible (or original-group) Spotify owner artists: {sorted(missing)}")
         rows = [t for t in rows if wanted & set(t["artist_ids"])]
     keys = {t["account_id"]: request(t, run_label).key() for t in rows}
     queued = {r[0] for r in session.execute(text("""SELECT external_account_id FROM worker_jobs

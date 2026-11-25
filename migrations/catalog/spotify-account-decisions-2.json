@@ -1,0 +1,1190 @@
+{
+ "policy": "spotify-account-candidates-v1",
+ "items": [
+  {
+   "artist_id": 18,
+   "version": 4,
+   "name_native": "ヨミ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 19,
+   "version": 3,
+   "name_native": "カスカ",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "5TvJEtADwS3KU505zjFJuU",
+   "spotify_name": "カスカ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 0
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 40,
+   "version": 3,
+   "name_native": "MOCO",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "1QaNuJznMxC9jYv8TB8ZzK",
+   "spotify_name": "moco",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 19
+   },
+   "alternatives": [
+    {
+     "spotify_id": "50RqMnXRE3TzoxvP2YcmGs",
+     "name": "moco",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 41,
+   "version": 3,
+   "name_native": "BAMBI",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "5ic8bWWvZHWf0dDBi9ThNk",
+   "spotify_name": "bambi",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 617261
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 42,
+   "version": 3,
+   "name_native": "SAKUYA",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "0oYtTSw2rWJIeDAs08wNVF",
+   "spotify_name": "SAKUYA",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 8
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 43,
+   "version": 3,
+   "name_native": "KAGURA",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "764yfWMKOdh5dmBZBvgNOr",
+   "spotify_name": "KAGURA",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 173
+   },
+   "alternatives": [
+    {
+     "spotify_id": "3pch74EOi8aPUAfr6qbxIA",
+     "name": "KAGURA",
+     "overlap": []
+    },
+    {
+     "spotify_id": "0946oKG2f5DP7eThhSx6Hm",
+     "name": "kagurA",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 78,
+   "version": 7,
+   "name_native": "電信柱ちゃん",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 79,
+   "version": 6,
+   "name_native": "宮島ルシェル",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "3ENwYVoa8Sv8tVeSC2pEF0",
+   "spotify_name": "청초",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 1
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 80,
+   "version": 7,
+   "name_native": "傘屋くぐる",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 941,
+   "version": 3,
+   "name_native": "Figaro",
+   "decision": "accept",
+   "basis": "user_review_profile",
+   "relationship": "owner",
+   "spotify_id": "75Q19HPo5GPVhnKd6geSYw",
+   "spotify_name": "Figaro",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "咲き跡",
+     "彗星の夜明け",
+     "discover",
+     "トワイライト"
+    ],
+    "followers": 666
+   },
+   "alternatives": [
+    {
+     "spotify_id": "0WCZJZH5PtfXKwUQxjtNqn",
+     "name": "Figaro",
+     "overlap": []
+    },
+    {
+     "spotify_id": "70IDcHqzz63TDRM1OLmUx3",
+     "name": "Figaro",
+     "overlap": []
+    },
+    {
+     "spotify_id": "4qBIW3OmdzxMpbAxwUYAV5",
+     "name": "Figaro",
+     "overlap": [
+      "Figaro (Original Score) [Demos]",
+      "Figaro (Epilogue)",
+      "Figaro (Prologue)"
+     ]
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인 (Spotify 프로필 화면 대조)"
+  },
+  {
+   "artist_id": 942,
+   "version": 4,
+   "name_native": "shin",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "1KEjCyPe4OgofpgrcYTnvB",
+   "spotify_name": "Shin",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 1676
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 943,
+   "version": 3,
+   "name_native": "音魂ヒビク",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 978,
+   "version": 3,
+   "name_native": "白玖ウタノ",
+   "decision": "accept",
+   "basis": "user_review_profile",
+   "relationship": "owner",
+   "spotify_id": "5EYN1FR294bYvdsael1Hvg",
+   "spotify_name": "白玖ウタノ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "LINK!!",
+     "未来証明",
+     "最高の僕へ"
+    ],
+    "followers": 778
+   },
+   "alternatives": [
+    {
+     "spotify_id": "34T6oMyL4ggcRnUEXcRtjD",
+     "name": "白玖ウタノ",
+     "overlap": []
+    },
+    {
+     "spotify_id": "0qUyc9Mt1Hlpq0OZhw5SvP",
+     "name": "白玖ウタノ",
+     "overlap": [
+      "Boom Boo Bomb Cooking"
+     ]
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인 (Spotify 프로필 화면 대조)"
+  },
+  {
+   "artist_id": 981,
+   "version": 3,
+   "name_native": "よしか⁂",
+   "decision": "accept",
+   "basis": "wikidata",
+   "relationship": "owner",
+   "spotify_id": "2abRCk5exakgTX5rqEPVpT",
+   "spotify_name": "よしか⁂",
+   "evidence": {
+    "wikidata": [
+     "Q118289056"
+    ],
+    "overlap": [
+     "Shining at dawn",
+     "カモミールに踊って"
+    ],
+    "followers": 280
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 983,
+   "version": 3,
+   "name_native": "渚沢シチ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 988,
+   "version": 3,
+   "name_native": "INARI",
+   "decision": "skip",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "33tlOoZkBIQ2CXH1fLFIVx",
+   "spotify_name": "inari",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "アカ"
+    ],
+    "followers": 631
+   },
+   "alternatives": [
+    {
+     "spotify_id": "5M3dlhtUsjSVTtzUpHsF15",
+     "name": "INARI",
+     "overlap": []
+    },
+    {
+     "spotify_id": "0tuVgDVIeIxIbLWA8qacZJ",
+     "name": "inari",
+     "overlap": []
+    },
+    {
+     "spotify_id": "0FoVj0kiKlv2I6ScKUyOwF",
+     "name": "INARI",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 제외"
+  },
+  {
+   "artist_id": 989,
+   "version": 3,
+   "name_native": "NoiR",
+   "decision": "review",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "3piQqS6gFTnv2lhQXWm1Cp",
+   "spotify_name": "Noir",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 381
+   },
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 993,
+   "version": 3,
+   "name_native": "nayuta",
+   "decision": "accept",
+   "basis": "user_review_profile",
+   "relationship": "owner",
+   "spotify_id": "5A9lXbSd5VDeTz1eSi5dCj",
+   "spotify_name": "nayuta",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "恋、夏めく。",
+     "Decillion Encounter"
+    ],
+    "followers": 22003
+   },
+   "alternatives": [
+    {
+     "spotify_id": "3gq6N0OZl26oIJH0H7OZf2",
+     "name": "nayuta",
+     "overlap": []
+    },
+    {
+     "spotify_id": "2zI13lsU43qgRbrDmKynCk",
+     "name": "nayuta",
+     "overlap": [
+      "IT"
+     ]
+    },
+    {
+     "spotify_id": "5ocyec3BtEj4v7L5bS0kLr",
+     "name": "nayuta",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인 (Spotify 프로필 화면 대조)"
+  },
+  {
+   "artist_id": 996,
+   "version": 4,
+   "name_native": "えん",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 998,
+   "version": 3,
+   "name_native": "CYBILL",
+   "decision": "accept",
+   "basis": "user_review_profile",
+   "relationship": "owner",
+   "spotify_id": "2xYXxsJnBvuYK4sK8CsdKW",
+   "spotify_name": "CYBILL",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 52
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인 (Spotify 프로필 화면 대조)"
+  },
+  {
+   "artist_id": 999,
+   "version": 3,
+   "name_native": "彷徨鈴",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "6vLgo5XmWEJkvhWneJ0fue",
+   "spotify_name": "彷徨 鈴",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 45
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1002,
+   "version": 3,
+   "name_native": "緋月ゆい",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1003,
+   "version": 3,
+   "name_native": "炭酸水",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "6WWhjgYln6xmvIlHwYbaIW",
+   "spotify_name": "炭酸水",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "下書き",
+     "嘘つきと音楽"
+    ],
+    "followers": 28
+   },
+   "alternatives": [
+    {
+     "spotify_id": "7f5bD5vUhQVRq1hyjkZzeO",
+     "name": "炭酸水",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1005,
+   "version": 7,
+   "name_native": "MaiR",
+   "decision": "accept",
+   "basis": "user_review_profile",
+   "relationship": "owner",
+   "spotify_id": "5180NTpNvdlL8YuthLdGT0",
+   "spotify_name": "MaiR",
+   "evidence": {
+    "wikidata": [
+     "Q104699777"
+    ],
+    "overlap": [
+     "未完星",
+     "AIR",
+     "ジェノサイドソウ・ヘヴン - Cover"
+    ],
+    "followers": 4227
+   },
+   "alternatives": [
+    {
+     "spotify_id": "0Zgzv649kW01zA6lFITFCn",
+     "name": "星乃めあ",
+     "overlap": []
+    },
+    {
+     "spotify_id": "4CtGi06LyKoxsKr2f8SDmX",
+     "name": "Mea Hoshino",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인 (Spotify 프로필 화면 대조)"
+  },
+  {
+   "artist_id": 1006,
+   "version": 4,
+   "name_native": "揺蕩",
+   "decision": "skip",
+   "basis": "name_only",
+   "relationship": "owner",
+   "spotify_id": "7HiZsf77tQrbeLIsVNmPFO",
+   "spotify_name": "TAYUTA",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 0
+   },
+   "alternatives": [
+    {
+     "spotify_id": "4LLLQLXxbnPpBcd0rDZeFy",
+     "name": "tayuTa",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 제외"
+  },
+  {
+   "artist_id": 1007,
+   "version": 4,
+   "name_native": "Nijyuna",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1013,
+   "version": 3,
+   "name_native": "からくりんね",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "1OAKf2hHlir5oPqWdhmZz3",
+   "spotify_name": "からくりんね",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 8
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1019,
+   "version": 3,
+   "name_native": "燈舞りん",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1020,
+   "version": 3,
+   "name_native": "ノア・ポラリス",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1022,
+   "version": 4,
+   "name_native": "猫 The Sappiness",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "1S5XPH1n8FqTyX3Rdnt0MR",
+   "spotify_name": "猫 The Sappiness",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "「恋とカフェラテ」",
+     "yakusoku o'clock",
+     "nonfiction",
+     "Your Own Daybreak",
+     "Breezy Magic"
+    ],
+    "followers": 2227
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1023,
+   "version": 3,
+   "name_native": "あかつき るき",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "4BFdjm1NWX3D9x2mqUW8o4",
+   "spotify_name": "あかつき るき",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 565
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1024,
+   "version": 3,
+   "name_native": "夢川かなう",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "0sVSaI5Q6w9zNWeNkILwLQ",
+   "spotify_name": "夢川かなう",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 333
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1025,
+   "version": 3,
+   "name_native": "水瓶ミア",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "69okdLMAMx8cjbDLB3qXZS",
+   "spotify_name": "水瓶ミア",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 151
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1026,
+   "version": 3,
+   "name_native": "丸餅つきみ",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "1HShdrRRPP74Mvy6Y5pU28",
+   "spotify_name": "丸餅つきみ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 105
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1027,
+   "version": 3,
+   "name_native": "猫乃ユキノ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "2zAQnEypxPltHUpXWyhWHk",
+   "spotify_name": "猫乃ユキノ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "♡ Sweet Biting Cat ♡",
+     "Want You!",
+     "Destination",
+     "♡Sweet Biting Cat♡",
+     "Chasing Love"
+    ],
+    "followers": 264
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1028,
+   "version": 3,
+   "name_native": "月紫アリア",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "4Zxq3ZbD6aG8vB8dAks6j3",
+   "spotify_name": "月紫アリア",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "ARIADONE",
+     "しゅき好禁術",
+     "アリアの最強しもべ計画♡"
+    ],
+    "followers": 336
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1029,
+   "version": 3,
+   "name_native": "皇ロゼ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1030,
+   "version": 3,
+   "name_native": "魔光リサ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "5VPBLUN5zPkuDOrGAClJtY",
+   "spotify_name": "魔光リサ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "SACRIFICE",
+     "SACRIFICE (2026Ver)",
+     "カットアウト"
+    ],
+    "followers": 150
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1031,
+   "version": 3,
+   "name_native": "音伽ねむ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1032,
+   "version": 3,
+   "name_native": "白音ゆき",
+   "decision": "accept",
+   "basis": "user_review",
+   "relationship": "owner",
+   "spotify_id": "3NZ3keyjN9lY05AgeEJE2o",
+   "spotify_name": "白音ゆき",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [],
+    "followers": 31
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1033,
+   "version": 3,
+   "name_native": "レイラ・サマ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1034,
+   "version": 3,
+   "name_native": "鈴花いのり",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1035,
+   "version": 3,
+   "name_native": "音羽奏來",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1036,
+   "version": 3,
+   "name_native": "不知名イヲ",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1037,
+   "version": 3,
+   "name_native": "燈明寺かぐら",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "7MBrtrxiCXaQidLC9TVwPE",
+   "spotify_name": "燈明寺かぐら",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "一騎当千 - Cover"
+    ],
+    "followers": 8
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1038,
+   "version": 3,
+   "name_native": "kototo!",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1039,
+   "version": 3,
+   "name_native": "彩雲のの",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1040,
+   "version": 3,
+   "name_native": "くろくも",
+   "decision": "review",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "6x7lzE8DH3rrCb7zLZg7pk",
+   "spotify_name": "Kurokumo",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "夜明けと蛍",
+     "右肩の蝶",
+     "メリュー",
+     "アサガオの散る頃に",
+     "それがあなたの幸せとしても"
+    ],
+    "followers": 33759
+   },
+   "alternatives": [
+    {
+     "spotify_id": "7IDEQKwtthac8GSscalERA",
+     "name": "くろくも",
+     "overlap": []
+    },
+    {
+     "spotify_id": "2g2O1U90Twxsfbp0v75u60",
+     "name": "Kurokumo",
+     "overlap": []
+    }
+   ],
+   "note": null
+  },
+  {
+   "artist_id": 1041,
+   "version": 4,
+   "name_native": "音ノ瀬らこ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "505iBxI8njTusdXJrxOmix",
+   "spotify_name": "音ノ瀬らこ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "ルミナス (instrumental)",
+     "ルミナス",
+     "ルミナス - instrumental"
+    ],
+    "followers": 4927
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1042,
+   "version": 4,
+   "name_native": "苺咲べりぃ",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "141y6naUwtjAH4PD7T78s6",
+   "spotify_name": "苺咲べりぃ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "HappyLuckyStrawberry",
+     "Start Roll"
+    ],
+    "followers": 418
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1043,
+   "version": 3,
+   "name_native": "碧生ねの",
+   "decision": "skip",
+   "basis": "no_candidate",
+   "relationship": "owner",
+   "spotify_id": null,
+   "spotify_name": null,
+   "evidence": {},
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "artist_id": 1044,
+   "version": 4,
+   "name_native": "翠雨しの",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "2pH1YYeBZxpapC2EpxxwgF",
+   "spotify_name": "翠雨しの",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "afterglow"
+    ],
+    "followers": 15
+   },
+   "alternatives": [
+    {
+     "spotify_id": "409raJSdIoPAJh77fExxNR",
+     "name": "翠雨しの",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1045,
+   "version": 4,
+   "name_native": "鈍色聴",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "14dYpwgv5j5OZFAl5pjZ0k",
+   "spotify_name": "鈍色聴",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "対象a - Cover",
+     "海月の骨 (feat. 海野水玉)",
+     "Empty Vessel (feat. 高城みよ)",
+     "夢渡りと告灰 (feat. 弓場崇弘)",
+     "湖畔のサンクチュアリ (feat. r0y)"
+    ],
+    "followers": 162
+   },
+   "alternatives": [
+    {
+     "spotify_id": "1Ig3spOr2KdOiPACit70T1",
+     "name": "鈍色聴",
+     "overlap": []
+    }
+   ],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 1046,
+   "version": 4,
+   "name_native": "稍麦",
+   "decision": "accept",
+   "basis": "title_overlap",
+   "relationship": "owner",
+   "spotify_id": "4gux80X8glFZqomQQfPrg8",
+   "spotify_name": "稍麦",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "disappear",
+     "Polaris"
+    ],
+    "followers": 92
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 검토 승인"
+  },
+  {
+   "artist_id": 39,
+   "version": 6,
+   "name_native": "HONK THE HORN",
+   "decision": "accept",
+   "basis": "group_official_mv_titles",
+   "relationship": "owner",
+   "spotify_id": "67unXyFn9uVNqHCijVszTe",
+   "spotify_name": "HONK THE HORN",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "DIM LIGHT",
+     "808",
+     "WILD SIDE",
+     "SLOW FLAME",
+     "NO LEASH"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. 그룹 공식 YouTube MV 제목과 Spotify 발매작 일치"
+  },
+  {
+   "artist_id": 40,
+   "version": 3,
+   "name_native": "MOCO",
+   "decision": "accept",
+   "basis": "group_member",
+   "relationship": "member",
+   "spotify_id": "67unXyFn9uVNqHCijVszTe",
+   "spotify_name": "HONK THE HORN",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "DIM LIGHT",
+     "808",
+     "WILD SIDE",
+     "SLOW FLAME",
+     "NO LEASH"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. HONK THE HORN 멤버로 그룹 계정에 연결"
+  },
+  {
+   "artist_id": 41,
+   "version": 3,
+   "name_native": "BAMBI",
+   "decision": "accept",
+   "basis": "group_member",
+   "relationship": "member",
+   "spotify_id": "67unXyFn9uVNqHCijVszTe",
+   "spotify_name": "HONK THE HORN",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "DIM LIGHT",
+     "808",
+     "WILD SIDE",
+     "SLOW FLAME",
+     "NO LEASH"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. HONK THE HORN 멤버로 그룹 계정에 연결"
+  },
+  {
+   "artist_id": 24,
+   "version": 6,
+   "name_native": "NUROJUNK",
+   "decision": "accept",
+   "basis": "group_official_mv_titles",
+   "relationship": "owner",
+   "spotify_id": "4Kq9ayg5Fldpi11vu42Srp",
+   "spotify_name": "NUROJUNK",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Chase the Sun",
+     "Rising a Tide",
+     "DEMOLISHER"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. 그룹 공식 YouTube MV 제목과 Spotify 발매작 일치"
+  },
+  {
+   "artist_id": 42,
+   "version": 3,
+   "name_native": "SAKUYA",
+   "decision": "accept",
+   "basis": "group_member",
+   "relationship": "member",
+   "spotify_id": "4Kq9ayg5Fldpi11vu42Srp",
+   "spotify_name": "NUROJUNK",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Chase the Sun",
+     "Rising a Tide",
+     "DEMOLISHER"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. NUROJUNK 멤버로 그룹 계정에 연결"
+  },
+  {
+   "artist_id": 43,
+   "version": 3,
+   "name_native": "KAGURA",
+   "decision": "accept",
+   "basis": "group_member",
+   "relationship": "member",
+   "spotify_id": "4Kq9ayg5Fldpi11vu42Srp",
+   "spotify_name": "NUROJUNK",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Chase the Sun",
+     "Rising a Tide",
+     "DEMOLISHER"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. NUROJUNK 멤버로 그룹 계정에 연결"
+  }
+ ],
+ "summary": {
+  "skip": 21,
+  "review": 9,
+  "accept": 30
+ },
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "exported_at": "2026-11-25T05:18:40Z"
+}

@@ -25,6 +25,7 @@
   - YouTube 오리지널 일일 수집: poll·collect worker 모두 새 코드 적용 후 일일 수집·실제 조회 검증. [012](../specs/012-youtube-original-daily/tasks.md), [계약](youtube-original-collection.md)
   - HONK THE HORN·NUROJUNK 멤버별 수집·일일 재대조 worker/API. [013](../specs/013-shared-member-catalog/tasks.md)
   - 홈 최근 곡·즐겨찾기 캐러셀(PC·모바일 화면 검수 포함). [011](../specs/011-home-recent-songs/tasks.md)
+  - 오리지널 곡 목록의 발매 커버 제외(실데이터 2,471→2,141). [017](../specs/017-released-cover-exclusion/tasks.md)
   - 아티스트 상세 Spotify 장르(실데이터 저장 완료, 화면 검수 포함). [015](../specs/015-artist-spotify-genres/tasks.md)
 - [ ] 로컬 PostgreSQL이 없어 건너뛴 DB fixture 테스트를 CI 또는 PostgreSQL이 있는 환경에서 실행한다. 여러 스펙의 검증에서 반복해서 남은 항목이다(011·012·013 포함).
 - [ ] 운영 동일 출처 `/api` 프록시 구성.
@@ -37,11 +38,12 @@
 - [ ] 세트리스트 잔여(2026-11-21 규칙 복구 후): 추가 형식/충돌 검토 1,613개·저장 댓글 없음 466개·보관 가창 보호 62개, 총 2,141개. 오토노세 라코 133개는 미해결이다. [복구 기록](records/data/setlist-rules-recovery-2026-11-21.md), [008](../specs/008-setlist-quality/tasks.md)
 - [ ] 세트리스트: 2026-10-31 모델 재처리의 원문 검증 실패 108개·판단 불확실 1개 수동 검토, 댓글 없는 261개는 새 근거가 생기면 재검토(보관 가창 33개는 자동 재생성하지 않음). 10월 초 보류·복구 3단계 범위(빈 아카이브 44개+정정 1개)와 중복 없이 대조해 현재 잔여를 확정한다. `transient_error` 원인 조사와 재시도 소진 작업 복구 포함. [008](../specs/008-setlist-quality/tasks.md) T003~T004
 - [ ] 요청 아티스트(2026-10-02) 후속: 미란 대상 확인, 기존 보류 15,825행과 미연결 행의 반영·오파싱 교정, 미연결 곡·한국어 제목·작품·Spotify 자료. [005](../specs/005-catalog-registration/tasks.md) T003~T005
-- [ ] Spotify 미연결 32명(검토 19·이름 미일치 13)의 공식 계정 근거 확인과 개별 연결. [006](../specs/006-discography-links/tasks.md) T003
+- [ ] Spotify 미연결 잔여: 2026-11-25 미연결 54명 중 28명(그룹 멤버 4명 포함)을 연결·수집했다([기록](records/data/spotify-recollect-2026-11-25.md)). くろくも·NoiR·shin·宮島ルシェル·INARI·揺蕩 등 검토 미결과 후보 없음 19명이 남았다. Spotify 정기 재수집 방식 결정. [006](../specs/006-discography-links/tasks.md) T003
 - [ ] 미연결 녹음 2,564개(Topic/레이블·미등록 가창 명의·Instrumental·라이브 버전 등)의 공식 근거 확인과 연결. 006 T004
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결 검수와 남은 음악 데이터 반영. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. [이관 결과](records/backend/setlist-migration-report.md)
 - [ ] 발매 음원의 오리지널/커버 여부 검수 확대, source 계정이 없는 발매 영상의 업로더 근거·소유권 검수. [009](../specs/009-song-exploration/tasks.md) T004
 - [ ] 오리지널 음악 분류: 미분류 음원 조사, 공식 영상 연결 보완, 분위기 근거 확대. [010](../specs/010-original-music-tags/tasks.md) T003, T005
+- [ ] 오리지널 곡 가사: 후보 608개 검토·등록, 직접 입력 2,244개 작성, 공개 전 권리 확인. [가사 등록](original-lyrics.md), [016](../specs/016-original-lyrics-review/tasks.md)
 - [ ] Spotify 아티스트 장르가 빈 계정(표시 대상 75개 중 67개) 보완 방법 결정. [015](../specs/015-artist-spotify-genres/tasks.md) T007
 - [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](records/data/youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
 - [ ] HONK THE HORN·NUROJUNK 진행자 미확정 방송 3개 검토. [013](../specs/013-shared-member-catalog/tasks.md)
@@ -94,4 +96,4 @@
 - 집계 단위는 한 번의 가창이며 메들리·반복·부분 가창·합동 가창·재업로드·버전 합산 기준을 먼저 정한다.
 - 월별 추이는 수집량 증가를 인기 상승으로 오인하지 않도록 전체 수집 가창 대비 비율 제공 여부를 검토한다.
 - 구 DB의 곡·가사는 이전 대상이 아니며 기존 DB에 보존한다. 이전 즐겨찾기는 자동 승계하지 않는다.
-- 노래방(song_id 구축 후)과 가사·번역·독음은 이 버전 이후의 TODO다.
+- 노래방(song_id 구축 후)은 이 버전 이후의 TODO다. 가사는 2026-11-25 사용자 요청으로 검토 후 등록 도구를 만들었다([016](../specs/016-original-lyrics-review/spec.md)). 번역·독음 자동 생성은 TODO다.

@@ -105,6 +105,8 @@ def test_music_filter_contract(monkeypatch):
 def test_filters_before_paging_and_recording_identity_guards(store):
     db, engine = store
     artist, *_, recording = seed(db)
+    song = db.execute('SELECT song_id FROM recordings WHERE id=%s', (recording,)).fetchone()[0]
+    row(db, 'song_artists', song_id=song, artist_id=artist)  # real originals credit the singer
     extra = row(db, 'recordings', title_native='Other')
     row(db, 'recording_artists', recording_id=extra, artist_id=artist, role='primary')
     db.commit()

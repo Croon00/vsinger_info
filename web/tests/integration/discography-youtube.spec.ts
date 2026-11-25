@@ -45,7 +45,13 @@ test('album tracks show verified YouTube pills and keep unlinked versions separa
     if (path === '/api/albums/901') return route.fulfill({ json: album })
     return route.fulfill({ json: { items: [], total: 0, offset: 0, limit: 6 } })
   })
-  await page.goto('/artists/42?tab=originals&album=901')
+  await page.goto('/artists/42?tab=discography')
+  await expect(page.getByRole('tab', { name: '디스코그래피' })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  )
+  await expect(page.locator('#discography-heading')).toContainText('1개')
+  await page.goto('/artists/42?tab=discography&album=901')
   const pill = page.locator('.overlay-scroll .youtube-link')
   await expect(pill).toHaveCount(1)
   await expect(pill).toHaveAttribute('href', 'https://www.youtube.com/watch?v=abcdefghijk')

@@ -58,7 +58,8 @@ MANUAL = ROOT / "migrations" / "catalog" / "spotify-account-manual-1.json"
 SPOTIFY_ID = re.compile(r"^[0-9A-Za-z]{22}$")
 DECISION_VALUES = {"accept", "review", "skip"}
 RELATIONSHIPS = {"owner", "member"}
-USER_AGENT = "schedule_music-catalog/1.0 (spotify account research)"
+# Wikimedia rejects agents without a contact URL (robot policy, 403).
+USER_AGENT = "schedule_music-catalog/1.0 (spotify account research; https://github.com/Croon00/schedule_music)"
 
 _spec = importlib.util.spec_from_file_location("migrate_catalog", ROOT / "scripts" / "migrate_catalog.py")
 migrate_catalog = importlib.util.module_from_spec(_spec)
@@ -398,17 +399,20 @@ def apply(conn, decisions: dict, *, write: bool) -> dict:
                      "position": max([l["position"] for l in links], default=-1) + 1})
     summary = {"accept": len(accepted), "review": sum(i["decision"] == "review" for i in decisions["items"]),
                "skip": sum(i["decision"] == "skip" for i in decisions["items"]),
-               "accounts_created": sum(p["account_id"] is None for p in plan),
+               "accounts_created": len({p["spotify_id"] for p in plan if p["account_id"] is None}),
                "existing_accounts_linked": sum(p["account_id"] is not None for p in plan)}
     if not write:
         return {"status": "would_commit", "manifest_hash": digest, **summary}
-    changes, mapping = [], []
+    changes, mapping, created = [], [], {}
     for p in plan:
-        if p["account_id"] is None:
+        if p["account_id"] is None and p["spotify_id"] in created:
+            # One account shared in this run (a group owner and its members): create it once.
+            p["account_id"] = created[p["spotify_id"]]
+        elif p["account_id"] is None:
             account = conn.execute("""INSERT INTO external_accounts(platform, platform_id, url, collection_enabled)
                 VALUES ('spotify', %s, %s, false) RETURNING id, to_jsonb(external_accounts)""",
                 (p["spotify_id"], f"https://open.spotify.com/artist/{p['spotify_id']}")).fetchone()
-            p["account_id"] = account[0]
+            p["account_id"] = created[p["spotify_id"]] = account[0]
             changes.append(("external_accounts", account[0], "create", None, account[1],
                             {"policy": POLICY, "spotify_name": p["spotify_name"]}))
             mapping.append({"entity_type": "external_accounts", "id": account[0]})
@@ -436,7 +440,10 @@ def main() -> int:
     sub.add_parser("review-import", help="Record the user's edits of review.md and the approval")
     run = sub.add_parser("apply", help="Dry-run the decision file; --apply writes the accepted accounts")
     run.add_argument("--apply", action="store_true")
+    parser.add_argument("--decisions", type=Path, default=DECISIONS,
+                        help="Decision file (default: the first batch, migrations/catalog/spotify-account-decisions-1.json)")
     args = parser.parse_args()
+    decisions_path = args.decisions
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     manual = json.loads(MANUAL.read_text(encoding="utf-8")) if MANUAL.exists() else {}
     if args.command == "export":
@@ -445,14 +452,14 @@ def main() -> int:
         meta = json.loads((REPORT_DIR / "meta.json").read_text(encoding="utf-8"))
         decisions = {**export(research_rows, web, manual), "catalog_instance_id": meta["catalog_instance_id"],
                      "exported_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")}
-        DECISIONS.write_text(json.dumps(decisions, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        decisions_path.write_text(json.dumps(decisions, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         (REPORT_DIR / "review.md").write_text(render_review(decisions), encoding="utf-8")
-        print(json.dumps({"file": str(DECISIONS.relative_to(ROOT)), **decisions["summary"]}, ensure_ascii=False))
+        print(json.dumps({"file": str(decisions_path.relative_to(ROOT)), **decisions["summary"]}, ensure_ascii=False))
         return 0
     if args.command == "review-import":
         edited = REPORT_DIR / "review.md"
         (REPORT_DIR / "review.user-edited.md").write_text(edited.read_text(encoding="utf-8-sig"), encoding="utf-8")
-        decisions = json.loads(DECISIONS.read_text(encoding="utf-8"))
+        decisions = json.loads(decisions_path.read_text(encoding="utf-8"))
         ids = read_review(edited)
         edits = review_edits(decisions, ids)
         accounts = {m["artist_id"]: m for m in manual.get("accounts", [])}
@@ -480,7 +487,7 @@ def main() -> int:
             print(json.dumps({"artists": len(out), "with_candidates": sum(bool(r["candidates"]) for r in out),
                               "requests": cache.requests}, ensure_ascii=False))
             return 0
-        result = apply(conn, json.loads(DECISIONS.read_text(encoding="utf-8")), write=writing)
+        result = apply(conn, json.loads(decisions_path.read_text(encoding="utf-8")), write=writing)
         if writing:
             conn.commit()
         else:

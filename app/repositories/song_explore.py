@@ -3,13 +3,14 @@ from app.repositories.catalog_read import CatalogReadRepository
 from app.repositories.youtube_video_format import SHORT_MARKER, SHORT_VISIBILITY
 from app.repositories.youtube_cover_rules import COVER_TITLE_SQL, COVER_TITLE_PARAMS
 from app.repositories.original_song_groups import ORIGINAL_GROUPS_CTE
+from app.repositories.released_cover_rules import RELEASED_COVER_PARAMS, RELEASED_COVER_SQL
 from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_PARAMS
 import json
 
 
 def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None, genres=None, moods=None, music_tags=None, published_only=False):
     repo = repository or CatalogReadRepository(session)
-    params = {'agency': agency, 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}
+    params = {'agency': agency, 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **RELEASED_COVER_PARAMS, **SHARED_PARAMS}
     scope = """a.archived_at IS NULL AND a.show_in_catalog AND
       (:agency='all' OR (:agency='independent' AND g.id IS NULL) OR g.name_native=:agency)"""
     if kind == 'utawaku':
@@ -100,6 +101,7 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
               LEFT JOIN collection_states cs ON cs.external_account_id=v.source_account_id
               WHERE r.archived_at IS NULL AND {original_scope}
                 AND NOT EXISTS(SELECT 1 FROM covers c WHERE c.video_id=r.official_video_id AND c.archived_at IS NULL AND {COVER_TITLE_SQL})
+                AND NOT {RELEASED_COVER_SQL}
               GROUP BY CASE WHEN v.id IS NULL THEN r.id END,v.id,cs.external_account_id
               HAVING cardinality(CAST(:artists AS integer[]))=0 OR bool_or(
                 a.id=ANY(CAST(:artists AS integer[])) OR ra.source_artist_id=ANY(CAST(:artists AS integer[])) OR EXISTS(
