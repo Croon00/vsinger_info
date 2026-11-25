@@ -5,7 +5,7 @@ import { useMediaQuery } from '@vueuse/core'
 import { ConfigProvider } from 'reka-ui'
 import { AudioLines, Heart } from '@lucide/vue'
 import CalendarIcon from '@/components/icons/CalendarIcon.vue'
-import ExploreIcon from '@/components/icons/ExploreIcon.vue'
+import CompassIcon from '@/components/icons/CompassIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
 import MultiviewIcon from '@/components/icons/MultiviewIcon.vue'
 import SettingsIcon from '@/components/icons/SettingsIcon.vue'
@@ -29,7 +29,7 @@ const wide = useMediaQuery('(min-width: 1024px)')
 const mobile = useMediaQuery('(max-width: 768px)')
 const nav = [
   { title: '홈', href: '/', icon: HomeIcon },
-  { title: '탐색', href: '/explore', icon: ExploreIcon },
+  { title: '탐색', href: '/explore', icon: CompassIcon },
   { title: '멀티뷰', href: '/multiview', icon: MultiviewIcon },
   { title: '캘린더', href: '/calendar', icon: CalendarIcon },
   { title: '설정', href: '/settings', icon: SettingsIcon },

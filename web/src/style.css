@@ -1391,6 +1391,15 @@ button.original-song-thumb {
 .mobile-dock .dock-item:active {
   transform: scale(0.92);
 }
+/* Explore page view tabs: icon-only, the label shows in a tooltip. */
+.explore-view-tabs .explore-view-tab {
+  flex: none;
+  padding-inline: 14px;
+}
+.explore-view-tabs .explore-view-tab > svg {
+  width: 24px;
+  height: 24px;
+}
 /* Nav icons: parts color in and move on hover/focus; colors deepen and the icon presses on click. */
 .nav-icon {
   overflow: visible;
@@ -1428,7 +1437,37 @@ button.original-song-thumb {
   --knob-top: #b79bff;
   --knob-bottom: #ffd66b;
 }
-:is(.sidebar-nav-item, .dock-item):is(:hover, :focus-visible, :active) > .nav-icon {
+.nav-icon-compass {
+  --compass-dial: #bfe9ff;
+  --compass-needle: #ff7b7b;
+}
+.nav-icon-music {
+  --music-left: #ff8fb8;
+  --music-right: #73d2ff;
+}
+.nav-icon .nav-icon-compass-needle {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition:
+    fill var(--duration-quick) var(--ease-smooth-out),
+    transform 600ms var(--ease-smooth-out);
+}
+.nav-icon-music {
+  transform-origin: 50% 90%;
+}
+@keyframes nav-icon-music-sway {
+  from {
+    transform: rotate(-9deg) translateY(0);
+  }
+  50% {
+    transform: rotate(0deg) translateY(-1.5px);
+  }
+  to {
+    transform: rotate(9deg) translateY(0);
+  }
+}
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):is(:hover, :focus-visible, :active)
+  > .nav-icon {
   .nav-icon-home-body {
     fill: var(--home-wall);
   }
@@ -1461,8 +1500,20 @@ button.original-song-thumb {
   .nav-icon-knob-bottom {
     fill: var(--knob-bottom);
   }
+  .nav-icon-compass-dial {
+    fill: var(--compass-dial);
+  }
+  .nav-icon-compass-needle {
+    fill: var(--compass-needle);
+  }
+  .nav-icon-music-head-left {
+    fill: var(--music-left);
+  }
+  .nav-icon-music-head-right {
+    fill: var(--music-right);
+  }
 }
-:is(.sidebar-nav-item, .dock-item):is(:hover, :focus-visible) > .nav-icon {
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):is(:hover, :focus-visible) > .nav-icon {
   &.nav-icon-home {
     transform: translateY(-1.5px);
   }
@@ -1478,8 +1529,14 @@ button.original-song-thumb {
   .nav-icon-knob-bottom {
     transform: translateX(-3px);
   }
+  .nav-icon-compass-needle {
+    transform: rotate(180deg);
+  }
+  &.nav-icon-music {
+    animation: nav-icon-music-sway 420ms ease-in-out infinite alternate;
+  }
 }
-:is(.sidebar-nav-item, .dock-item):active > .nav-icon {
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):active > .nav-icon {
   --home-wall: #ffc531;
   --home-door: #ff7a35;
   --panel-top: #ff5c98;
@@ -1490,12 +1547,18 @@ button.original-song-thumb {
   --calendar-date-b: #ff9a1f;
   --knob-top: #9a73ff;
   --knob-bottom: #ffc531;
+  --compass-dial: #8fd8ff;
+  --compass-needle: #ff4d4d;
+  --music-left: #ff5c98;
+  --music-right: #33bdf5;
   transform: scale(0.92);
 }
 @media (prefers-reduced-motion: reduce) {
   .nav-icon,
+  .nav-icon .nav-icon-compass-needle,
   .nav-icon :is(.nav-icon-calendar-page, .nav-icon-calendar-rings, .nav-icon-knob) {
     transform: none !important;
+    animation: none !important;
   }
 }
 /* Explore icon: colors fill in on hover/focus and deepen on press. */
@@ -1522,7 +1585,8 @@ button.original-song-thumb {
 .explore-icon .explore-icon-ear-right {
   transform-origin: 20% 100%;
 }
-:is(.sidebar-nav-item, .dock-item):is(:hover, :focus-visible, :active) > .explore-icon {
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):is(:hover, :focus-visible, :active)
+  > .explore-icon {
   .explore-icon-ear-inner {
     fill: var(--explore-ear);
   }
@@ -1533,7 +1597,7 @@ button.original-song-thumb {
     fill: var(--explore-face);
   }
 }
-:is(.sidebar-nav-item, .dock-item):is(:hover, :focus-visible) > .explore-icon {
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):is(:hover, :focus-visible) > .explore-icon {
   .explore-icon-ear-left {
     transform: rotate(-12deg);
   }
@@ -1541,7 +1605,7 @@ button.original-song-thumb {
     transform: rotate(12deg);
   }
 }
-:is(.sidebar-nav-item, .dock-item):active > .explore-icon {
+:is(.sidebar-nav-item, .dock-item, .explore-view-tab):active > .explore-icon {
   --explore-ear: #ff5c98;
   --explore-cup: #33bdf5;
   --explore-face: #ffc29a;
@@ -1549,7 +1613,7 @@ button.original-song-thumb {
 }
 @media (prefers-reduced-motion: reduce) {
   .explore-icon .explore-icon-ear,
-  :is(.sidebar-nav-item, .dock-item):active > .explore-icon {
+  :is(.sidebar-nav-item, .dock-item, .explore-view-tab):active > .explore-icon {
     transform: none !important;
   }
 }

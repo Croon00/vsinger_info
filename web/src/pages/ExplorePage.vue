@@ -22,6 +22,9 @@ import ArtistTile from '@/components/ArtistTile.vue'
 import ResourceState from '@/components/ResourceState.vue'
 import SongExplore from '@/components/SongExplore.vue'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import ExploreIcon from '@/components/icons/ExploreIcon.vue'
+import MusicIcon from '@/components/icons/MusicIcon.vue'
 const route = useRoute()
 const router = useRouter()
 const view = computed(() => (route.query.view === 'songs' ? 'songs' : 'artists'))
@@ -93,6 +96,11 @@ const filtered = computed(() => {
     sort.value,
   )
 })
+// Icon-only view tabs; the label is the accessible name and the hover tooltip.
+const viewTabs = [
+  { value: 'artists', label: '아티스트 탐색', icon: ExploreIcon },
+  { value: 'songs', label: '곡 탐색', icon: MusicIcon },
+] as const
 </script>
 <template>
   <div class="page-container page-enter">
@@ -100,10 +108,22 @@ const filtered = computed(() => {
       <h1>{{ view === 'songs' ? '곡 탐색' : '아티스트 탐색' }}</h1>
     </div>
     <Tabs :model-value="view" @update:model-value="changeView">
-      <TabsList variant="line" class="mb-6">
-        <TabsTrigger value="artists">아티스트 탐색</TabsTrigger>
-        <TabsTrigger value="songs">곡 탐색</TabsTrigger>
-      </TabsList>
+      <TooltipProvider :delay-duration="150">
+        <TabsList variant="line" class="explore-view-tabs mb-6">
+          <Tooltip v-for="option in viewTabs" :key="option.value">
+            <TooltipTrigger as-child>
+              <TabsTrigger
+                :value="option.value"
+                :aria-label="option.label"
+                class="explore-view-tab"
+              >
+                <component :is="option.icon" />
+              </TabsTrigger>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">{{ option.label }}</TooltipContent>
+          </Tooltip>
+        </TabsList>
+      </TooltipProvider>
       <TabsContent value="artists">
         <div class="explore-toolbar">
           <div class="explore-filters">
