@@ -284,6 +284,26 @@ def test_original_member_credits_display_as_approved_group_without_youtube_accou
         assert db.execute('SELECT artist_id FROM recording_artists WHERE recording_id=%s',(recording,)).fetchone()[0]==member
 
 
+
+def test_member_discography_includes_approved_group_releases(store):
+    db,engine=store
+    group=row(db,'artists',slug='honk-the-horn',name_native='HONK THE HORN',show_in_catalog=False)
+    member=row(db,'artists',slug='bambi',name_native='BAMBI',show_in_catalog=True)
+    outsider=row(db,'artists',slug='other-unit',name_native='Other',show_in_catalog=True)
+    other_group=row(db,'artists',slug='unapproved',name_native='Unapproved',show_in_catalog=False)
+    row(db,'artist_group_members',group_id=group,member_id=member)
+    row(db,'artist_group_members',group_id=other_group,member_id=outsider)
+    for title,owner in [('Group single',group),('Member single',member),('Unapproved single',other_group)]:
+        album=row(db,'albums',title_native=title,album_type='single',release_year=2026)
+        row(db,'album_artists',album_id=album,artist_id=owner)
+    db.commit()
+    with Session(engine) as s:
+        repo=CatalogReadRepository(s)
+        listed={a['name']:a['is_primary'] for a in repo.albums(artist_id=member)}
+        assert listed=={'Group single':True,'Member single':True}
+        assert [a['name'] for a in repo.albums(artist_id=group)]==['Group single']
+        assert [a['name'] for a in repo.albums(artist_id=outsider)]==[]  # only approved groups widen
+
 def test_released_covers_are_not_originals(store):
     db,engine=store
     artist,guest,original,archive,concert,album,recording=seed(db)

@@ -23,6 +23,12 @@
 - 아티스트별 녹음: nayuta 363(앨범 187, 동인·컴필레이션 참여작 다수), 마이사키 베리 56, VESPERBELL 52, 호시노 메아(MaiR) 45, 니비이로 유루시 29 등.
 - 오리지널 목록: 2,222 → 2,852항목(발매 커버 제외 규칙 적용 후).
 
+## 4. KMNZ 그룹 계정과 멤버 화면
+
+- KMNZ 그룹(숨김, 승인된 오리지널 그룹)에 `4uWpa0r7BZUXJ1ip2LJysz`를 owner로 연결했다(`catalog_imports` #11034, [decisions-3](../../../migrations/catalog/spotify-account-decisions-3.json)). 근거: Spotify 발매작과 KMNZ 채널 공식 영상 제목 일치. 수집 작업 6개 성공.
+- LITA·TINA·NERO는 본인 계정이 있어 그룹 계정을 `member`로 추가하지 않았다(아티스트당 Spotify 연결 1개 규칙). 그룹 발매는 승인된 오리지널 그룹 규칙으로 멤버 화면에 표시한다.
+- 같은 날 `/api/artists/{id}/albums`가 승인된 그룹 멤버에게 그룹 발매도 반환하도록 바꿨다([조회 API](../../read-api.md)). 결과: KMNZ 디스코그래피 30, LITA 33, TINA 38, NERO 31, 오리지널 각 162. BAMBI·MOCO 5, ヨミ·カスカ 15, SAKUYA 3.
+
 ## 후속
 
 - 가사 검토 파일 재생성: 후보 608, 직접 입력 2,244(영상 있음 138, 영상 없음 2,106), 제외 커버 352. [016](../../../specs/016-original-lyrics-review/tasks.md)

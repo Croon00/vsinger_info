@@ -1,0 +1,31 @@
+{
+ "policy": "spotify-account-candidates-v1",
+ "catalog_instance_id": "492225c1-03b5-4bc0-920b-71f20e29914d",
+ "exported_at": "2026-11-25T06:35:43Z",
+ "items": [
+  {
+   "artist_id": 13,
+   "version": 14,
+   "name_native": "KMNZ",
+   "decision": "accept",
+   "basis": "group_official_mv_titles",
+   "relationship": "owner",
+   "spotify_id": "4uWpa0r7BZUXJ1ip2LJysz",
+   "spotify_name": "KMNZ",
+   "evidence": {
+    "wikidata": [],
+    "overlap": [
+     "Q.U.E.S.T",
+     "POSSE",
+     "DROP IN"
+    ],
+    "followers": null
+   },
+   "alternatives": [],
+   "note": "2026-11-25 사용자 승인. 그룹 계정. LITA·TINA·NERO는 본인 계정을 유지하고 그룹 발매는 승인된 오리지널 그룹 규칙으로 멤버 화면에 표시"
+  }
+ ],
+ "summary": {
+  "accept": 1
+ }
+}

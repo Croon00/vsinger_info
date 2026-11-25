@@ -366,20 +366,25 @@ class CatalogReadRepository:
     def albums(self, artist_id=None, key=None):
         # is_primary: the listed artist is an album-level credit (own release) rather than
         # only a track credit (appears on). NULL when no artist scopes the read.
-        return self.rows("""SELECT a.id::text id,a.title_native name,a.title_ko name_ko,a.album_type,
+        # A member of an approved original-song group (VESPERBELL, HONK THE HORN, ...) also
+        # lists the group's releases, matching the original-song tab; credits are unchanged.
+        return self.rows(f"""WITH {ORIGINAL_GROUPS_CTE}, scope AS MATERIALIZED (
+          SELECT CAST(:artist AS integer) id WHERE CAST(:artist AS integer) IS NOT NULL
+          UNION SELECT og.group_id FROM original_groups og WHERE og.member_id=CAST(:artist AS integer)
+        ) SELECT a.id::text id,a.title_native name,a.title_ko name_ko,a.album_type,
         concat_ws('-',a.release_year::text,lpad(a.release_month::text,2,'0'),lpad(a.release_day::text,2,'0')) release_date,
         a.cover_image_url image_url,
         CASE WHEN a.spotify_album_id IS NOT NULL THEN 'https://open.spotify.com/album/'||a.spotify_album_id END spotify_url,
         (SELECT count(*) FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL WHERE t.album_id=a.id) total_tracks,
         CASE WHEN CAST(:artist AS integer) IS NULL THEN NULL
-          ELSE EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist) END is_primary
+          ELSE EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id IN (SELECT id FROM scope)) END is_primary
         FROM albums a WHERE a.archived_at IS NULL
         AND (CAST(:key AS integer) IS NULL OR a.id=:key)
         AND (CAST(:artist AS integer) IS NULL
-          OR EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id=:artist)
+          OR EXISTS (SELECT 1 FROM album_artists aa WHERE aa.album_id=a.id AND aa.artist_id IN (SELECT id FROM scope))
           OR EXISTS (SELECT 1 FROM album_tracks t JOIN recordings r ON r.id=t.recording_id AND r.archived_at IS NULL
             JOIN recording_artists ra ON ra.recording_id=r.id
-            WHERE t.album_id=a.id AND ra.artist_id=:artist))
+            WHERE t.album_id=a.id AND ra.artist_id IN (SELECT id FROM scope)))
         ORDER BY a.release_year DESC NULLS LAST,a.release_month DESC NULLS LAST,a.release_day DESC NULLS LAST,a.id DESC""",
         {"artist":artist_id,"key":key})
 
