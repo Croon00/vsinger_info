@@ -234,10 +234,19 @@ class CatalogReadRepository:
           {LIVE_FROM} WHERE {LIVE_VISIBLE} AND {SCOPE}""",
                          {"artist":artist_id},offset,limit,"COALESCE(q.broadcast_at,q.published_at) DESC NULLS LAST,q.id DESC")
 
-    def covers(self, artist_id, offset, limit):
+    COVER_ORDERS = {
+        'latest': 'q.published_at DESC NULLS LAST,q.id DESC',
+        'oldest': 'q.published_at ASC NULLS LAST,q.id',
+        # Unknown counts go last; ties keep the newest first.
+        'views': 'q.view_count DESC NULLS LAST,q.published_at DESC NULLS LAST,q.id DESC',
+    }
+
+    def covers(self, artist_id, offset, limit, order='latest'):
         return self.page(f"""WITH {COVER_CREDITS_CTE} SELECT c.id,v.platform_video_id youtube_video_id,
           'https://www.youtube.com/watch?v='||v.platform_video_id youtube_url,
-          v.title,v.published_at,v.duration_seconds
+          v.title,v.published_at,v.duration_seconds,
+          (cs.provider_state->'youtube_video_statistics'->v.platform_video_id->>'view_count')::bigint view_count,
+          (cs.provider_state->'youtube_video_statistics'->v.platform_video_id->>'captured_at')::timestamptz views_updated_at
           FROM covers c JOIN videos v ON v.id=c.video_id
           LEFT JOIN collection_states cs ON cs.external_account_id=v.source_account_id
           WHERE c.archived_at IS NULL AND v.archived_at IS NULL AND v.platform='youtube'
@@ -245,7 +254,7 @@ class CatalogReadRepository:
           AND {SHORT_VISIBILITY}
           AND {COVER_TITLE_SQL}
           AND EXISTS (SELECT 1 FROM cover_credits cc WHERE cc.cover_id=c.id AND cc.artist_id=:artist)""",
-          {'artist': artist_id, 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}, offset, limit, 'q.published_at DESC NULLS LAST,q.id DESC')
+          {'artist': artist_id, 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **SHARED_PARAMS}, offset, limit, self.COVER_ORDERS[order])
 
     def live(self, key):
         rows = self.rows(f"SELECT {LIVE_COLUMNS} {LIVE_FROM} WHERE {LIVE_VISIBLE} AND l.id=:id", {"id":key})

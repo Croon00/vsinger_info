@@ -91,9 +91,10 @@ def lives(artist_id:int,service:Catalog,response:Response,offset:Offset=0,limit:
     return finish(response,service,service.lives(artist_id,offset,limit))
 
 @router.get('/artists/{artist_id}/covers', response_model=Page[CoverRead])
-def covers(artist_id:int,service:Catalog,response:Response,offset:Offset=0,limit:Limit=12):
+def covers(artist_id:int,service:Catalog,response:Response,offset:Offset=0,limit:Limit=12,
+           order:Literal['latest','oldest','views']='latest'):
     require_artist(service,artist_id)
-    return finish(response,service,service.covers(artist_id,offset,limit))
+    return finish(response,service,service.covers(artist_id,offset,limit,order))
 
 @router.get('/lives/{archive_id}',response_model=LiveRead)
 def live(archive_id:int,service:Catalog,response:Response):

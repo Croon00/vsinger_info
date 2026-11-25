@@ -1,4 +1,5 @@
 import type {
+  CoverOrder,
   Album,
   Artist,
   Concert,
@@ -72,6 +73,7 @@ export const api = isMock
         offset = 0,
         limit = 12,
         _signal?: AbortSignal,
+        _order?: CoverOrder,
       ): Promise<Page<Cover>> => ({ items: [], total: 0, offset, limit }),
       concert: async (id: string, signal?: AbortSignal) => {
         const result = (await mockApi.concerts(signal)).find((c) => String(c.id) === id)

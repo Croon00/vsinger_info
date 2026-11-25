@@ -2,19 +2,28 @@
 import { computed, ref, watch, onScopeDispose } from 'vue'
 import { ChevronDown } from '@lucide/vue'
 import { api } from '@/api/client'
-import type { Cover } from '@/api/types'
+import type { Cover, CoverOrder } from '@/api/types'
 import { useResource } from '@/composables/useResource'
 import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import ResourceState from '@/components/ResourceState.vue'
 import CoverCard from '@/components/CoverCard.vue'
 const props = defineProps<{ artistId: number }>()
+const order = ref<CoverOrder>('latest')
 const extra = ref<Cover[]>([])
 const moreLoading = ref(false)
 const moreError = ref('')
 let controller: AbortController | undefined
 const { data, loading, error, reload } = useResource(
-  (signal) => api.coverPage(props.artistId, 0, 12, signal),
-  [() => props.artistId],
+  (signal) => api.coverPage(props.artistId, 0, 12, signal, order.value),
+  [() => props.artistId, order],
 )
 watch(data, () => {
   controller?.abort()
@@ -33,7 +42,7 @@ async function loadMore() {
   moreLoading.value = true
   moreError.value = ''
   try {
-    const page = await api.coverPage(artist, covers.value.length, 12, request.signal)
+    const page = await api.coverPage(artist, covers.value.length, 12, request.signal, order.value)
     if (!request.signal.aborted && data.value === current && props.artistId === artist)
       extra.value.push(...page.items)
   } catch (e) {
@@ -51,7 +60,16 @@ async function loadMore() {
         커버 영상
         <span v-if="data">{{ data.total }}개</span>
       </h2>
-      <span class="text-xs text-muted-foreground">최신순</span>
+      <Select v-model="order">
+        <SelectTrigger class="w-40" aria-label="커버 영상 정렬"><SelectValue /></SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value="latest">최신순</SelectItem>
+            <SelectItem value="oldest">오래된순</SelectItem>
+            <SelectItem value="views">조회수 높은순</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
     <ResourceState
       :loading="loading"

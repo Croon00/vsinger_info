@@ -92,6 +92,8 @@ class CoverRead(BaseModel):
     title: str
     published_at: datetime | None = None
     duration_seconds: int | None = None
+    view_count: int | None = None  # stored YouTube statistics; None when not collected yet
+    views_updated_at: datetime | None = None
 
 class SearchRead(PerformanceRead):
     archive_id: int

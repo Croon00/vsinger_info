@@ -4,6 +4,7 @@ import { Play, Music2 } from '@lucide/vue'
 import type { Cover } from '@/api/types'
 import { formatDate, formatTime } from '@/lib/dates'
 import { Badge } from '@/components/ui/badge'
+import { formatSubscribers } from '@/lib/subscribers'
 const props = defineProps<{ cover: Cover }>()
 const failed = ref(false)
 const validId = computed(() => /^[A-Za-z0-9_-]{11}$/.test(props.cover.youtube_video_id))
@@ -44,6 +45,12 @@ const url = computed(() =>
     <h3>{{ cover.title }}</h3>
     <div class="live-meta">
       <p>{{ formatDate(cover.published_at ?? '', { month: '2-digit', day: '2-digit' }) }}</p>
+      <template v-if="cover.view_count != null">
+        <span aria-hidden="true">・</span>
+        <span :title="`조회수 ${cover.view_count.toLocaleString('ko-KR')}회`">
+          조회수 {{ formatSubscribers(cover.view_count) }}회
+        </span>
+      </template>
       <span aria-hidden="true">・</span>
       <span>YouTube ↗</span>
     </div>

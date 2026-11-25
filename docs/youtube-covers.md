@@ -6,11 +6,11 @@
 
 ## 조회 계약
 
-`GET /api/artists/{artist_id}/covers?offset=0&limit=12`는 `Page[CoverRead]`를 반환한다.
+`GET /api/artists/{artist_id}/covers?offset=0&limit=12&order=latest`는 `Page[CoverRead]`를 반환한다. `order`는 `latest`(기본)·`oldest`·`views`이고 항목에 저장된 YouTube 조회수 `view_count`(없으면 null)를 포함한다. 조회 중 YouTube를 호출하지 않는다.
 
 - `offset`은 0~100000, `limit`은 1~100이다. `API_KEY`가 설정된 환경에서만 API 키를 요구한다. 존재하지 않거나 카탈로그에 표시하지 않는 아티스트는 404다. 임시 `/api/v2` 별칭에서도 같다.
-- `items`는 `id`, `youtube_video_id`, `youtube_url`, `title`, `published_at`, `duration_seconds`다.
-- 정렬은 게시일 내림차순, 같은 날짜는 커버 ID 내림차순이며 날짜가 없는 항목은 마지막이다.
+- `items`는 `id`, `youtube_video_id`, `youtube_url`, `title`, `published_at`, `duration_seconds`, `view_count`, `views_updated_at`이다. 조회수는 채널 수집이 저장한 통계이며 0은 실제 값, null은 미확인이다.
+- 기본 정렬(`latest`)은 게시일 내림차순, `oldest`는 게시일 오름차순이며 둘 다 날짜가 없는 항목은 마지막이다. `views`는 조회수 내림차순, 미확인은 마지막, 동률은 최신 게시일이다. 모든 정렬의 마지막 기준은 커버 ID다.
 - 저장된 `covers`와 `videos` 중 보관 처리되지 않고 공개·일부 공개·공개 상태 미확인인 항목만 읽는다.
 - 범위는 현재 공식 채널 소유 관계(`artist_external_accounts.relationship=owner`)와 영상의 `source_account_id`로 정한다. 채널 소유자를 가창 참여자로 자동 확정하지 않는다.
 - VESPERBELL·KMNZ 멤버의 커버는 [공유 채널 규칙](shared-youtube-channels.md)에 따라 제목에 명시된 멤버만, 명시가 없으면 대상 멤버 전원에게 표시한다. 전체 목록에서 영상은 중복 생성하지 않는다.

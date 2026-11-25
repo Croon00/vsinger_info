@@ -32,7 +32,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /artists | 보관되지 않았고 show_in_catalog=true인 통합 명부. 원어 이름 오름차순+ID. 전체 목록. `spotify_genres`는 [아티스트 Spotify 장르](artist-spotify-genres.md) |
 | GET /artists/{id} | 동일 노출 조건의 아티스트. 기존 DB ID/이름 기반 병합 없음 |
 | GET /artists/{id}/lives | 대표·출연·가창 연결로 참여한 아카이브. 방송일/공개일 내림차순+ID, 세트리스트 없이 활성 곡 수 `performance_count`를 포함한 요약 |
-| GET /artists/{id}/covers | 공식 채널 커버. [YouTube 커버](youtube-covers.md) |
+| GET /artists/{id}/covers | 공식 채널 커버. `order=latest`(기본, 게시일 내림차순)·`oldest`(게시일 오름차순)·`views`(조회수 내림차순, 미확인은 마지막) 모두 동률은 ID. 항목의 nullable `view_count`·`views_updated_at`은 저장된 YouTube 통계이며 0은 실제 값이다(2026-11-25). [YouTube 커버](youtube-covers.md) |
 | GET /lives/{id} | 아카이브와 영상, ordinal+ID 순 세트리스트 |
 | GET /artists/{id}/statistics | 가창자 기준 곡·원곡 아티스트 순위와 월별 활동량. 곡의 `searchText`는 이름·곡 별칭·원곡자 검색용 문자열. `titleKo`·`artistKo`, 원곡 아티스트 순위의 `nameKo`는 저장된 한국어 이름이며 없으면 null |
 | GET /search?q=... | 아래 [검색](#검색) |

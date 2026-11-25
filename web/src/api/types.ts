@@ -196,4 +196,6 @@ export interface Cover {
   title: string
   published_at: string | null
   duration_seconds: number | null
+  view_count?: number | null
 }
+export type CoverOrder = 'latest' | 'oldest' | 'views'
