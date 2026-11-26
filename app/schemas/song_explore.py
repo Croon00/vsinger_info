@@ -25,3 +25,4 @@ class SongExploreRead(BaseModel):
     archive_id: int | None = None
     start_seconds: int | None = None
     published_at: datetime | None = None
+    lyrics_recording_id: int | None = Field(default=None, description='오리지널 곡: 가사가 등록된 녹음 ID. 없으면 null')

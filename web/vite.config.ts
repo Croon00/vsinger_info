@@ -40,7 +40,12 @@ export default defineConfig(({ mode }) => {
     name: 'read-only-backend-proxy',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (req.url?.startsWith('/api/') && !['GET', 'HEAD'].includes(req.method ?? '')) {
+        const writable = req.method === 'POST' && req.url?.split('?')[0] === '/api/worldcup/results'
+        if (
+          req.url?.startsWith('/api/') &&
+          !writable &&
+          !['GET', 'HEAD'].includes(req.method ?? '')
+        ) {
           res.writeHead(405, { 'Content-Type': 'application/json' })
           res.end('{"detail":"Read-only frontend proxy"}')
           return
@@ -60,7 +65,8 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target,
           changeOrigin: true,
-          ...(apiKey ? { headers: { 'X-API-Key': apiKey } } : {}),
+          // Marks local runs so they stay out of public world cup statistics.
+          headers: { 'X-UtaMowa-Client': 'local-dev', ...(apiKey ? { 'X-API-Key': apiKey } : {}) },
         },
       },
     },

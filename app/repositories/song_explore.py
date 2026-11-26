@@ -87,6 +87,8 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
               FROM recording_artists ra LEFT JOIN original_groups og ON og.member_id=ra.artist_id
             ) SELECT 'recording:'||min(r.id)::text key,min(r.title_native) title,min(r.title_ko) title_ko,
               string_agg(DISTINCT a.name_native,' · ' ORDER BY a.name_native) artist_name,{common},
+              min(r.id) FILTER (WHERE EXISTS(SELECT 1 FROM recording_lyrics rl
+                WHERE rl.recording_id=r.id AND rl.archived_at IS NULL)) lyrics_recording_id,
               string_agg(DISTINCT concat_ws(' ',r.title_native,r.title_ko,a.name_native,a.name_ko,a.name_latin,credited.name_native,credited.name_ko,credited.name_latin,
                 (SELECT string_agg(al.alias,' ') FROM artist_aliases al WHERE al.artist_id=a.id),
                 (SELECT string_agg(concat_ws(' ',member.name_native,member.name_ko,member.name_latin),' ')

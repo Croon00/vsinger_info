@@ -18,12 +18,42 @@ async function listen(server: Server): Promise<number> {
   return address.port
 }
 
+function rawPost(
+  port: number,
+  path: string,
+  body: string,
+): Promise<{ status: number; body: string }> {
+  return new Promise((resolve, reject) => {
+    const call = request(
+      {
+        hostname: '127.0.0.1',
+        port,
+        path,
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+      (response) => {
+        const chunks: Buffer[] = []
+        response.on('data', (chunk: Buffer) => chunks.push(chunk))
+        response.on('end', () =>
+          resolve({ status: response.statusCode ?? 0, body: Buffer.concat(chunks).toString() }),
+        )
+        response.on('error', reject)
+      },
+    )
+    call.on('error', reject)
+    call.end(body)
+  })
+}
+
 function rawGet(port: number, path: string): Promise<{ status: number; body: string }> {
   return new Promise((resolve, reject) => {
     const call = request({ hostname: '127.0.0.1', port, path }, (response) => {
       const chunks: Buffer[] = []
       response.on('data', (chunk: Buffer) => chunks.push(chunk))
-      response.on('end', () => resolve({ status: response.statusCode ?? 0, body: Buffer.concat(chunks).toString() }))
+      response.on('end', () =>
+        resolve({ status: response.statusCode ?? 0, body: Buffer.concat(chunks).toString() }),
+      )
       response.on('error', reject)
     })
     call.on('error', reject)
@@ -39,7 +69,22 @@ test('production proxy pins its backend, serves decoded data, and survives malfo
   const compressed = gzipSync(payload)
   let backendCalls = 0
   let foreignCalls = 0
-  const backend = createServer((_request, response) => {
+  const posts: { path?: string; body: string; headers: Record<string, unknown> }[] = []
+  const backend = createServer((incoming, response) => {
+    if (incoming.method === 'POST') {
+      const chunks: Buffer[] = []
+      incoming.on('data', (chunk: Buffer) => chunks.push(chunk))
+      incoming.on('end', () => {
+        posts.push({
+          path: incoming.url,
+          body: Buffer.concat(chunks).toString(),
+          headers: incoming.headers,
+        })
+        response.writeHead(201, { 'Content-Type': 'application/json' })
+        response.end('{"run_id":1}')
+      })
+      return
+    }
     backendCalls++
     response.writeHead(200, {
       'Content-Type': 'application/json',
@@ -61,7 +106,12 @@ test('production proxy pins its backend, serves decoded data, and survives malfo
     await new Promise<void>((resolve) => reservation.close(() => resolve()))
     child = spawn(process.execPath, [fileURLToPath(new URL('../../server.mjs', import.meta.url))], {
       cwd: dir,
-      env: { ...process.env, PORT: String(webPort), BACKEND_URL: `http://127.0.0.1:${backendPort}`, BACKEND_API_KEY: 'fixture-key' },
+      env: {
+        ...process.env,
+        PORT: String(webPort),
+        BACKEND_URL: `http://127.0.0.1:${backendPort}`,
+        BACKEND_API_KEY: 'fixture-key',
+      },
       windowsHide: true,
       stdio: ['ignore', 'pipe', 'pipe'],
     })
@@ -71,7 +121,9 @@ test('production proxy pins its backend, serves decoded data, and survives malfo
         child?.once('error', reject)
         child?.once('exit', () => reject(new Error('Web server exited during startup')))
       }),
-      new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Web server startup timeout')), 5000)),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('Web server startup timeout')), 5000),
+      ),
     ])
 
     const normal = await rawGet(webPort, '/api/artists?q=fixture')
@@ -82,8 +134,27 @@ test('production proxy pins its backend, serves decoded data, and survives malfo
     expect(foreignCalls).toBe(0)
     expect(await rawGet(webPort, '/%')).toMatchObject({ status: 400 })
     expect(await rawGet(webPort, '/')).toEqual({ status: 200, body: '<html>fixture</html>' })
+
+    // World cup results are the only POST forwarded; other writes stay blocked.
+    const result = await rawPost(webPort, '/api/worldcup/results', '{"size":16}')
+    expect(result).toEqual({ status: 201, body: '{"run_id":1}' })
+    expect(posts).toHaveLength(1)
+    expect(posts[0]).toMatchObject({ path: '/api/worldcup/results', body: '{"size":16}' })
+    expect(posts[0].headers['x-api-key']).toBe('fixture-key')
+    expect(posts[0].headers['x-forwarded-for']).toMatch(/127\.0\.0\.1/)
+    expect(posts[0].headers['x-utamowa-client']).toBeUndefined()
+    expect(await rawPost(webPort, '/api/artists', '{}')).toMatchObject({ status: 405 })
+    expect(await rawPost(webPort, '/api/worldcup/results', 'x'.repeat(70 * 1024))).toMatchObject({
+      status: 413,
+    })
+    expect(posts).toHaveLength(1)
   } finally {
-    child?.kill()
+    // Wait for the server process to exit before removing its directory (EBUSY on Windows).
+    if (child && child.exitCode === null) {
+      const exited = new Promise<void>((resolve) => child?.once('exit', () => resolve()))
+      child.kill()
+      await exited
+    }
     backend.closeAllConnections()
     foreign.closeAllConnections()
     if (backend.listening) await new Promise<void>((resolve) => backend.close(() => resolve()))

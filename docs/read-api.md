@@ -38,6 +38,7 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /search?q=... | 아래 [검색](#검색) |
 | GET /search/performers?q=... | 전체 검색 결과의 공개 가창자 선택지. [곡 탐색](song-exploration.md) |
 | GET /explore/songs, /explore/song-performers | 우타와꾸·커버·오리지널 곡 탐색. 홈 최근 곡·즐겨찾기 캐러셀·아티스트 오리지널 탭도 이 경로를 쓴다(`published_only`). [곡 탐색](song-exploration.md) |
+| POST /worldcup/results, GET /worldcup/stats, GET /worldcup/pool-summary | 월드컵 결과 저장(유일한 브라우저 쓰기), 곡별 통계, 설정용 곡 수 요약(오리지널·커버). [월드컵](worldcup.md) |
 | GET /explore/music-tags | 오리지널 장르·분위기 태그. [음악 분류](original-music-tags.md) |
 | GET /streams, /stream-groups | 아래 [생방송 멀티뷰](#생방송-멀티뷰) |
 | GET /concerts | 보관/취소 제외 공연. `artist_id`, `start`(포함), `end`(제외) 선택 필터 |

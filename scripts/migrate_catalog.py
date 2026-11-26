@@ -91,6 +91,7 @@ COLUMN_CONTRACTS = (
     ("004", "song-identity-columns.json"),
     ("006", "provider-credit-columns.json"),
     ("007", "avatar-job-columns.json"),
+    ("008", "worldcup-columns.json"),
 )
 
 

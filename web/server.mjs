@@ -7,6 +7,22 @@ const port = Number(process.env.PORT || 3000)
 const backendUrl = process.env.BACKEND_URL
 const apiKey = process.env.BACKEND_API_KEY
 const distDir = resolve('dist')
+// The only browser write: finished world cup brackets. Everything else stays read-only.
+const writePaths = new Set(['/api/worldcup/results'])
+const maxBodyBytes = 64 * 1024
+
+class BodyTooLarge extends Error {}
+
+async function readBody(request) {
+  const chunks = []
+  let size = 0
+  for await (const chunk of request) {
+    size += chunk.length
+    if (size > maxBodyBytes) throw new BodyTooLarge()
+    chunks.push(chunk)
+  }
+  return Buffer.concat(chunks)
+}
 
 const mimeTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -32,7 +48,7 @@ function serveFile(response, filePath) {
   createReadStream(filePath).pipe(response)
 }
 
-async function proxyApi(request, response, path) {
+async function proxyApi(request, response, path, write = false) {
   if (!backendUrl) {
     response.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' })
     response.end(JSON.stringify({ detail: 'BACKEND_URL is not configured for the frontend service.' }))
@@ -44,9 +60,25 @@ async function proxyApi(request, response, path) {
   const target = new URL(path, backendUrl)
   const headers = { accept: request.headers.accept || 'application/json' }
   if (apiKey) headers['X-API-Key'] = apiKey
+  let requestBody
+  if (write) {
+    try {
+      requestBody = await readBody(request)
+    } catch (error) {
+      if (!(error instanceof BodyTooLarge)) throw error
+      response.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' })
+      response.end(JSON.stringify({ detail: 'Request body is too large.' }))
+      return
+    }
+    headers['content-type'] = 'application/json'
+    // The backend rate-limits by client address; it does not store it.
+    const forwarded = request.headers['x-forwarded-for']
+    const address = request.socket.remoteAddress || ''
+    headers['x-forwarded-for'] = forwarded ? `${forwarded}, ${address}` : address
+  }
 
   try {
-    const upstream = await fetch(target, { method: request.method, headers })
+    const upstream = await fetch(target, { method: request.method, headers, body: requestBody })
     const body = Buffer.from(await upstream.arrayBuffer())
     const upstreamHeaders = {}
     for (const [name, value] of upstream.headers) {
@@ -73,6 +105,10 @@ const server = createServer(async (request, response) => {
     const pathname = parsed.pathname
 
     if (pathname.startsWith('/api/')) {
+      if (method === 'POST' && writePaths.has(pathname)) {
+        await proxyApi(request, response, pathname + parsed.search, true)
+        return
+      }
       if (!['GET', 'HEAD'].includes(method)) {
         response.writeHead(405, { Allow: 'GET, HEAD', 'Content-Type': 'application/json; charset=utf-8' })
         response.end(JSON.stringify({ detail: 'Read-only frontend proxy' }))

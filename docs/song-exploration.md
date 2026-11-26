@@ -46,7 +46,7 @@
 - 모든 필터는 정렬·총 개수·페이지 계산 전에 적용한다.
 - 422: 잘못된 열거값·범위·bool, 역전된 날짜 범위, 우타와꾸에 영상 날짜나 `published_only` 지정, 오리지널 이외에 `genres`·`moods` 지정.
 
-응답은 `Page[SongExploreRead]`(`items,total,offset,limit`)다. 항목은 `key,title,title_ko,artist_name,youtube_video_id,view_count,views_updated_at,performance_count,artist_count,archive_id,start_seconds,published_at`과 오리지널 태그 필드다. 해당되지 않거나 확인되지 않은 수치는 null이다.
+응답은 `Page[SongExploreRead]`(`items,total,offset,limit`)다. 항목은 `key,title,title_ko,artist_name,youtube_video_id,view_count,views_updated_at,performance_count,artist_count,archive_id,start_seconds,published_at`과 오리지널 태그 필드다. 오리지널 항목은 `lyrics_recording_id`(활성 `recording_lyrics`가 있는 묶음 내 최소 녹음 ID, 없으면 null)도 포함하며 가사 본문은 `GET /api/recordings/{id}/lyrics`로 조회한다(2026-11-26). 해당되지 않거나 확인되지 않은 수치는 null이다.
 
 ### GET /api/explore/song-performers
 
@@ -137,7 +137,7 @@
 
 - 홈 최근 곡: `kind=original`과 `kind=cover`를 각각 `order=latest&offset=0&limit=10&published_only=true`로 조회한다.
 - 홈 즐겨찾기 캐러셀: 같은 API에 즐겨찾기 아티스트 ID(`artist_ids`)와 `published_only=true&limit=10&order=latest`를 전달한다. 즐겨찾기가 비어 있으면 전체 조회로 대체하지 않는다.
-- 아티스트 `?tab=originals`: `kind=original&artist_ids=ID`로 앨범 없는 녹음·영상 미연결 녹음까지 24곡씩 표시하며 `published_only`를 쓰지 않는다.
+- 아티스트 `?tab=originals`: `kind=original&artist_ids=ID`로 앨범 없는 녹음·영상 미연결 녹음까지 24곡씩 표시하며 `published_only`를 쓰지 않는다. `lyrics_recording_id`가 있는 행은 조회수 왼쪽에 `가사` 버튼을 두고 가사 모달을 연다. 모달의 `들으면서 보기`는 목록 오른쪽에 플레이어+가사 패널을 고정(sticky)하며, 패널이 열린 동안 다른 썸네일은 패널에서 재생한다. 1023px 이하에서는 화면 아래 고정 패널로 표시한다.
 - 오리지널 일일 수집이 만든 새 녹음·영상도 같은 계약으로 조회한다([오리지널 일일 수집](youtube-original-collection.md)). 모든 요청은 조회 전용이다.
 
 ### 아티스트 복수 선택

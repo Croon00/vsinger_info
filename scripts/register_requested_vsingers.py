@@ -27,7 +27,7 @@ POLICY = 'requested-vsingers-2026-10-03-registration-v1'
 def register(conn, items, *, write=False):
     identity = conn.execute('SELECT id::text,schema_version FROM catalog_instance').fetchone()
     revisions = [r[0] for r in conn.execute('SELECT version FROM catalog_schema_migrations ORDER BY version')]
-    if not identity or identity[1] != 'catalog-v2' or revisions != [f'{n:03}' for n in range(1, 8)]:
+    if not identity or identity[1] != 'catalog-v2' or revisions not in ([f'{n:03}' for n in range(1, 8)], [f'{n:03}' for n in range(1, 9)]):
         raise ValueError('Unexpected catalog identity or revision')
     if write:
         conn.execute('SELECT pg_advisory_xact_lock(%s)', (731064923,))

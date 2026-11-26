@@ -1,0 +1,22 @@
+{
+  "worldcup_runs": [
+    {"name":"id","type":"BIGINT","nullable":false},
+    {"name":"submission_id","type":"UUID","nullable":false},
+    {"name":"client_id","type":"UUID","nullable":false},
+    {"name":"song_kind","type":"TEXT","nullable":false},
+    {"name":"scope_kind","type":"TEXT","nullable":false},
+    {"name":"scope_label","type":"TEXT","nullable":false},
+    {"name":"bracket_size","type":"SMALLINT","nullable":false},
+    {"name":"duration_seconds","type":"INTEGER","nullable":false},
+    {"name":"winner_video_id","type":"TEXT","nullable":false},
+    {"name":"is_local","type":"BOOLEAN","nullable":false},
+    {"name":"created_at","type":"TIMESTAMPTZ","nullable":false}
+  ],
+  "worldcup_matches": [
+    {"name":"run_id","type":"BIGINT","nullable":false},
+    {"name":"match_index","type":"SMALLINT","nullable":false},
+    {"name":"round_size","type":"SMALLINT","nullable":false},
+    {"name":"winner_video_id","type":"TEXT","nullable":false},
+    {"name":"loser_video_id","type":"TEXT","nullable":false}
+  ]
+}

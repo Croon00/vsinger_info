@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useMediaQuery } from '@vueuse/core'
 import { CalendarDays, MapPin, Ticket, ArrowUpRight, X } from '@lucide/vue'
@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/drawer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { safeUrl } from '@/api/backend'
 import { api } from '@/api/client'
 import type { Track } from '@/api/types'
@@ -39,6 +38,7 @@ import AlbumCover from './AlbumCover.vue'
 import ArtistAvatar from './ArtistAvatar.vue'
 import ReleaseTracks from './ReleaseTracks.vue'
 import ResourceState from './ResourceState.vue'
+import LyricsLines from './LyricsLines.vue'
 const route = useRoute()
 const router = useRouter()
 const mobile = useMediaQuery('(max-width: 768px)')
@@ -52,7 +52,6 @@ const eventId = computed(() => queryValue('event'))
 // Lyrics open on top of an album, so the album stays loaded underneath.
 const mode = computed(() => (lyricsId.value ? 'lyrics' : albumId.value ? 'album' : 'event'))
 const open = computed(() => !!(lyricsId.value || albumId.value || eventId.value))
-const visibleLyrics = ref<string[]>(['original', 'translation'])
 let opener: HTMLElement | null = null
 let lyricsOpener = ''
 watch(
@@ -121,9 +120,7 @@ function openLyrics(track: Track) {
 watch(mode, async (next, previous) => {
   if (!open.value || previous !== 'lyrics' || next !== 'album' || !lyricsOpener) return
   await nextTick()
-  document
-    .querySelector<HTMLElement>(`[data-lyrics-id="${CSS.escape(lyricsOpener)}"]`)
-    ?.focus()
+  document.querySelector<HTMLElement>(`[data-lyrics-id="${CSS.escape(lyricsOpener)}"]`)?.focus()
 })
 function reload() {
   resources[mode.value].reload()
@@ -214,36 +211,7 @@ async function restoreFocus(event: Event) {
             >
               가사 출처
             </a>
-            <div class="lyrics-toolbar">
-              <ToggleGroup
-                type="multiple"
-                v-model="visibleLyrics"
-                variant="outline"
-                aria-label="가사 표시 언어"
-              >
-                <ToggleGroupItem value="original">원문</ToggleGroupItem>
-                <ToggleGroupItem value="translation">번역</ToggleGroupItem>
-                <ToggleGroupItem value="pronunciation">발음</ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-            <div class="lyric-stanzas">
-              <div
-                v-for="(line, i) in lyrics.original_lyrics.split('\n')"
-                :key="i"
-                class="lyric-line"
-              >
-                <p v-if="visibleLyrics.includes('original')" lang="ja">{{ line }}</p>
-                <p v-if="visibleLyrics.includes('pronunciation')" class="lyric-pronunciation">
-                  {{ lyrics.pronunciation_ko.split('\n')[i] }}
-                </p>
-                <p v-if="visibleLyrics.includes('translation')" class="lyric-translation">
-                  {{ lyrics.translation_ko.split('\n')[i] }}
-                </p>
-              </div>
-              <p v-if="!visibleLyrics.length" class="text-muted-foreground">
-                표시할 언어를 선택해 주세요.
-              </p>
-            </div>
+            <LyricsLines :key="lyricsId" :lyrics="lyrics" />
           </div>
           <ReleaseTracks
             v-if="release"
@@ -257,7 +225,11 @@ async function restoreFocus(event: Event) {
               <ArtistAvatar v-if="concertDetail.artist" :artist="concertDetail.artist" />
               <div>
                 <h3>{{ concertDetail.artist?.name }}</h3>
-                <p>{{ concertDetail.concert.event_format === 'online' ? 'ONLINE LIVE' : 'LIVE EVENT' }}</p>
+                <p>
+                  {{
+                    concertDetail.concert.event_format === 'online' ? 'ONLINE LIVE' : 'LIVE EVENT'
+                  }}
+                </p>
               </div>
             </div>
             <dl class="concert-facts">
@@ -276,7 +248,9 @@ async function restoreFocus(event: Event) {
                   }}
                   <small>
                     {{
-                      concertDetail.concert.starts_at.length === 10 ? '시간 미정' : '한국·일본 시간 (UTC+9)'
+                      concertDetail.concert.starts_at.length === 10
+                        ? '시간 미정'
+                        : '한국·일본 시간 (UTC+9)'
                     }}
                   </small>
                 </dd>
@@ -302,13 +276,19 @@ async function restoreFocus(event: Event) {
               </div>
             </dl>
             <Button
-              v-if="concertDetail.concert.ticket_url || concertDetail.concert.source_url || concertDetail.artist?.official_url"
+              v-if="
+                concertDetail.concert.ticket_url ||
+                concertDetail.concert.source_url ||
+                concertDetail.artist?.official_url
+              "
               as-child
               class="w-full"
             >
               <a
                 :href="
-                  concertDetail.concert.ticket_url || concertDetail.concert.source_url || concertDetail.artist?.official_url
+                  concertDetail.concert.ticket_url ||
+                  concertDetail.concert.source_url ||
+                  concertDetail.artist?.official_url
                 "
                 target="_blank"
                 rel="noopener noreferrer"

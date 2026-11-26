@@ -2,6 +2,8 @@
 
 최종 확인 2026-11-25. 요구사항과 검증 기록은 [016-original-lyrics-review](../specs/016-original-lyrics-review/spec.md)에 있다.
 
+2026-11-26 신규 통합 DB의 기존 원문에 한글 독음과 한국어 번역을 줄별로 추가하기 시작했다. 현재 반영 범위와 실데이터 검증 결과는 [반영 및 검증 기록](records/data/original-lyrics-annotations-2026-11-26.md)에 있다.
+
 가사는 사람이 검토해 승인한 항목만 `recording_lyrics`에 저장한다. **저장 즉시 `/api/recordings/{id}/lyrics`와 발매곡 목록의 `has_lyrics`로 공개된다.** 설명란·댓글 가사도 저작권은 원저작자에게 있고, YouTube API 데이터 보관 정책이 적용될 수 있으므로 공개 여부는 항목별로 판단한다. 팬 댓글은 정확도를 보장하지 않는다.
 
 ## 1. 후보·직접 입력 파일 만들기 (DB 변경 없음)

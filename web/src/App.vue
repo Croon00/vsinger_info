@@ -9,6 +9,7 @@ import CompassIcon from '@/components/icons/CompassIcon.vue'
 import HomeIcon from '@/components/icons/HomeIcon.vue'
 import MultiviewIcon from '@/components/icons/MultiviewIcon.vue'
 import SettingsIcon from '@/components/icons/SettingsIcon.vue'
+import TrophyIcon from '@/components/icons/TrophyIcon.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +31,7 @@ const mobile = useMediaQuery('(max-width: 768px)')
 const nav = [
   { title: '홈', href: '/', icon: HomeIcon },
   { title: '탐색', href: '/explore', icon: CompassIcon },
+  { title: '월드컵', href: '/worldcup', icon: TrophyIcon },
   { title: '멀티뷰', href: '/multiview', icon: MultiviewIcon },
   { title: '캘린더', href: '/calendar', icon: CalendarIcon },
   { title: '설정', href: '/settings', icon: SettingsIcon },
@@ -37,7 +39,7 @@ const nav = [
 const active = computed(() =>
   ['/', '/search'].includes(route.path)
     ? '/'
-    : ['/calendar', '/settings'].includes(route.path)
+    : ['/calendar', '/settings', '/worldcup'].includes(route.path)
       ? route.path
       : '/explore',
 )

@@ -30,7 +30,7 @@ def register(conn, items: list[dict], *, write: bool) -> dict:
     identity = conn.execute("SELECT id::text,schema_version FROM catalog_instance").fetchone()
     revisions = [row[0] for row in conn.execute("SELECT version FROM catalog_schema_migrations ORDER BY version")]
     if not identity or identity[1] != "catalog-v2" or revisions not in (
-        [f"{n:03}" for n in range(1, 7)], [f"{n:03}" for n in range(1, 8)],
+        [f"{n:03}" for n in range(1, 7)], [f"{n:03}" for n in range(1, 8)], [f"{n:03}" for n in range(1, 9)],
     ):
         raise RuntimeError("Unexpected unified catalog identity or revision")
     if write:

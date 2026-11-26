@@ -16,13 +16,14 @@ test('responsive navigation keeps named links, selected indicator and keyboard a
 
   await page.setViewportSize({ width: 390, height: 844 })
   const dock = page.getByRole('navigation', { name: '주 메뉴' })
-  await expect(dock.getByRole('link')).toHaveCount(4)
-  for (const name of ['홈', '탐색', '캘린더', '설정']) {
+  await expect(dock.getByRole('link')).toHaveCount(6)
+  for (const name of ['홈', '탐색', '월드컵', '멀티뷰', '캘린더', '설정']) {
     const link = dock.getByRole('link', { name, exact: true })
     await expect(link).toHaveText('')
     await expect(link).toHaveCSS('width', '44px')
   }
   await dock.getByRole('link', { name: '탐색', exact: true }).click()
+  await expect(page).toHaveURL(/\/explore$/)
   await dock.getByRole('link', { name: '캘린더', exact: true }).click()
   await expect(page).toHaveURL(/\/calendar$/)
   await page.goBack()
@@ -32,6 +33,9 @@ test('responsive navigation keeps named links, selected indicator and keyboard a
     const selected = await dock.locator('[aria-current="page"]').boundingBox()
     return Math.abs(indicator!.x - selected!.x)
   }).toBeLessThan(1)
+  await dock.getByRole('link', { name: '월드컵', exact: true }).click()
+  await expect(page).toHaveURL(/\/worldcup$/)
+  await expect(dock.getByRole('link', { name: '월드컵', exact: true })).toHaveAttribute('aria-current', 'page')
   await dock.getByRole('link', { name: '설정', exact: true }).focus()
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(/\/settings$/)

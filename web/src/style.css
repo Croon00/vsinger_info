@@ -533,6 +533,49 @@ button.original-song-thumb {
   max-height: calc(100dvh - 2rem);
   overflow-y: auto;
 }
+.song-video-player {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  min-height: 200px;
+  /* Keep the whole dialog on screen: header and footer take about 11rem. */
+  max-height: calc(100dvh - 11rem);
+  background: #000;
+}
+.song-video-dialog.with-lyrics .song-video-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+}
+.song-video-lyrics {
+  position: relative;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+}
+/* The lyrics column is as tall as the video and scrolls by itself. */
+.song-video-lyrics-scroll {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 20px 8px;
+}
+/* Narrow side columns: tighter lines so more of the song fits beside the video. */
+:is(.song-video-lyrics, .original-lyrics-panel-body) .lyric-line {
+  margin-bottom: 10px;
+  line-height: 1.7;
+}
+:is(.song-video-lyrics, .original-lyrics-panel-body) .lyric-line > p:first-child {
+  font-size: 15px;
+}
+@media (max-width: 900px) {
+  .song-video-dialog.with-lyrics .song-video-body {
+    display: block;
+  }
+  .song-video-lyrics {
+    height: 38dvh;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+}
 .song-explore-copy p {
   font-size: 12px;
   color: var(--muted-foreground);
@@ -1159,7 +1202,12 @@ button.original-song-thumb {
 }
 .lyric-pronunciation {
   color: var(--muted-foreground);
-  font-size: 11px;
+  font-size: 13px;
+}
+/* With a reading or translation underneath, the original line is tinted to stand apart. */
+.lyric-stanzas-annotated .lyric-line > p[lang='ja'] {
+  color: var(--primary);
+  font-weight: 600;
 }
 .concert-detail-art {
   display: flex;
@@ -1391,6 +1439,372 @@ button.original-song-thumb {
 .mobile-dock .dock-item:active {
   transform: scale(0.92);
 }
+/* Original-song world cup */
+.worldcup-page {
+  width: min(100%, 1680px);
+  --pick-left: #ff8fb8;
+  --pick-left-strong: #ff6aa2;
+  --pick-left-text: #2b0716;
+  --pick-right: #73d2ff;
+  --pick-right-strong: #45c1fa;
+  --pick-right-text: #04202f;
+}
+.worldcup-intro {
+  color: var(--muted-foreground);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.worldcup-fields {
+  gap: 20px;
+  max-width: 640px;
+}
+.worldcup-select {
+  width: min(100%, 320px);
+}
+.worldcup-hint {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+.worldcup-start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+.worldcup-pool {
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+.worldcup-status {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.worldcup-label {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+.worldcup-round {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+.worldcup-round span {
+  margin-left: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.worldcup-actions {
+  display: flex;
+  gap: 6px;
+}
+.worldcup-progress {
+  height: 4px;
+  margin: 14px 0 24px;
+  border-radius: 999px;
+  background: var(--muted);
+  overflow: hidden;
+}
+.worldcup-progress span {
+  display: block;
+  height: 100%;
+  background: var(--foreground);
+  transition: width var(--duration-fast) var(--ease-smooth-out);
+}
+.worldcup-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 28px;
+}
+.worldcup-vs {
+  align-self: center;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--pick-left), var(--pick-right));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.worldcup-card,
+.worldcup-winner {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--card);
+  animation: page-arrive var(--duration-fast) var(--ease-smooth-out) both;
+}
+.worldcup-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--muted);
+}
+.worldcup-media iframe,
+.worldcup-thumb,
+.worldcup-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.worldcup-thumb {
+  position: relative;
+  cursor: pointer;
+}
+.worldcup-thumb img {
+  object-fit: cover;
+  transition: transform var(--duration-fast) var(--ease-smooth-out);
+}
+/* Listening is the point here, so the play control is always shown. */
+.worldcup-thumb .live-play {
+  opacity: 1;
+  background: rgb(0 0 0 / 22%);
+}
+.worldcup-thumb .live-play svg {
+  box-sizing: content-box;
+  width: 22px;
+  height: 22px;
+  padding: 16px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 60%);
+  transition: transform var(--duration-quick) var(--ease-smooth-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .worldcup-thumb:hover img {
+    transform: scale(1.035);
+  }
+  .worldcup-thumb:hover .live-play svg {
+    transform: scale(1.1);
+  }
+}
+.worldcup-thumb:focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: -3px;
+}
+.worldcup-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.worldcup-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.worldcup-artist {
+  font-size: 15px;
+  color: var(--muted-foreground);
+}
+.worldcup-views {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.worldcup-pick {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 700;
+  border: 0;
+  transition:
+    background-color var(--duration-quick) var(--ease-smooth-out),
+    transform var(--duration-quick) var(--ease-smooth-out);
+}
+.worldcup-pick:active {
+  transform: scale(0.98);
+}
+/* Left and right picks get their own colors so the two sides read apart at a glance. */
+.worldcup-left .worldcup-pick {
+  background: var(--pick-left);
+  color: var(--pick-left-text);
+}
+.worldcup-right .worldcup-pick {
+  background: var(--pick-right);
+  color: var(--pick-right-text);
+}
+.worldcup-left .worldcup-pick:hover {
+  background: var(--pick-left-strong);
+}
+.worldcup-right .worldcup-pick:hover {
+  background: var(--pick-right-strong);
+}
+.worldcup-card {
+  transition: border-color var(--duration-quick) var(--ease-smooth-out);
+}
+.worldcup-left:is(:hover, :has(:focus-visible)) {
+  border-color: var(--pick-left);
+}
+.worldcup-right:is(:hover, :has(:focus-visible)) {
+  border-color: var(--pick-right);
+}
+.worldcup-winner {
+  max-width: 720px;
+  margin: 12px auto 28px;
+}
+.worldcup-winner .worldcup-card-body {
+  align-items: flex-start;
+  gap: 6px;
+}
+.worldcup-winner .worldcup-title {
+  font-size: 22px;
+}
+.worldcup-badge {
+  background: #ffd23f;
+  color: #3a2a00;
+}
+.worldcup-ranks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 720px;
+  margin: 0 auto 32px;
+}
+.worldcup-ranks h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  margin-bottom: 6px;
+}
+.worldcup-ranks p {
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.worldcup-ranks p span {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+@media (max-width: 768px) {
+  .worldcup-match {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .worldcup-vs {
+    justify-self: center;
+    font-size: 20px;
+  }
+  .worldcup-title {
+    font-size: 17px;
+  }
+  .worldcup-round {
+    font-size: 22px;
+  }
+}
+
+.worldcup-winner-stats {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+.worldcup-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.worldcup-ranking-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.worldcup-rank-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.worldcup-rank-row {
+  display: grid;
+  grid-template-columns: 32px 112px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.worldcup-rank-number {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.worldcup-rank-row:nth-child(-n + 3) .worldcup-rank-number {
+  color: #e0a800;
+}
+.worldcup-rank-thumb {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--muted);
+}
+.worldcup-rank-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.worldcup-rank-title {
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.worldcup-rank-artist {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.worldcup-rank-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(64px, auto));
+  gap: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.worldcup-rank-stats dt {
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.worldcup-rank-stats dd {
+  font-size: 14px;
+  font-weight: 600;
+}
+@media (max-width: 768px) {
+  .worldcup-rank-row {
+    grid-template-columns: 24px 88px minmax(0, 1fr);
+    row-gap: 8px;
+  }
+  .worldcup-rank-stats {
+    grid-column: 2 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    text-align: left;
+    gap: 8px;
+  }
+}
+
 /* Explore page view tabs: icon-only, the label shows in a tooltip. */
 .explore-view-tabs .explore-view-tab {
   flex: none;
@@ -1440,6 +1854,24 @@ button.original-song-thumb {
 .nav-icon-compass {
   --compass-dial: #bfe9ff;
   --compass-needle: #ff7b7b;
+}
+.nav-icon-trophy {
+  --trophy-bowl: #ffd23f;
+}
+.nav-icon .nav-icon-trophy-cup {
+  transform-box: view-box;
+  transform-origin: 12px 22px;
+  transition: transform var(--duration-quick) var(--ease-smooth-out);
+}
+.nav-icon .nav-icon-trophy-spark {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.2);
+  stroke: #ffd23f;
+  transition:
+    opacity var(--duration-quick) var(--ease-smooth-out),
+    transform var(--duration-quick) var(--ease-smooth-out);
 }
 .nav-icon-music {
   --music-left: #ff8fb8;
@@ -1512,6 +1944,9 @@ button.original-song-thumb {
   .nav-icon-music-head-right {
     fill: var(--music-right);
   }
+  .nav-icon-trophy-bowl {
+    fill: var(--trophy-bowl);
+  }
 }
 :is(.sidebar-nav-item, .dock-item, .explore-view-tab):is(:hover, :focus-visible) > .nav-icon {
   &.nav-icon-home {
@@ -1535,6 +1970,13 @@ button.original-song-thumb {
   &.nav-icon-music {
     animation: nav-icon-music-sway 420ms ease-in-out infinite alternate;
   }
+  .nav-icon-trophy-cup {
+    transform: translateY(-1.5px) rotate(-6deg);
+  }
+  .nav-icon-trophy-spark {
+    opacity: 1;
+    transform: scale(1.6);
+  }
 }
 :is(.sidebar-nav-item, .dock-item, .explore-view-tab):active > .nav-icon {
   --home-wall: #ffc531;
@@ -1551,11 +1993,13 @@ button.original-song-thumb {
   --compass-needle: #ff4d4d;
   --music-left: #ff5c98;
   --music-right: #33bdf5;
+  --trophy-bowl: #ffb800;
   transform: scale(0.92);
 }
 @media (prefers-reduced-motion: reduce) {
   .nav-icon,
   .nav-icon .nav-icon-compass-needle,
+  .nav-icon .nav-icon-trophy-cup,
   .nav-icon :is(.nav-icon-calendar-page, .nav-icon-calendar-rings, .nav-icon-knob) {
     transform: none !important;
     animation: none !important;
@@ -3134,5 +3578,99 @@ button.original-song-thumb {
   .multiview-chat {
     border-left: 0;
     border-top: 1px solid var(--border);
+  }
+}
+
+/* Original songs: lyrics button and the docked player + lyrics panel. */
+.original-song-views {
+  gap: 12px;
+}
+.original-song-lyrics.active {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.original-songs-layout.docked {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+  align-items: start;
+  gap: 20px;
+}
+.original-songs-list {
+  min-width: 0;
+}
+.original-lyrics-panel {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 32px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  background: var(--card);
+}
+.original-lyrics-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 10px 12px 16px;
+}
+.original-lyrics-panel-head h3 {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.original-lyrics-panel-head p {
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+.original-lyrics-panel-player {
+  aspect-ratio: 16 / 9;
+  flex: none;
+  background: #000;
+}
+.original-lyrics-panel-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.original-lyrics-panel-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 16px 8px;
+}
+.lyric-line.lyric-gap {
+  margin-bottom: 0;
+  min-height: 0.6em;
+}
+.original-lyrics-dialog {
+  display: flex;
+  flex-direction: column;
+  max-height: min(86dvh, 900px);
+}
+.original-lyrics-dialog .overlay-scroll {
+  flex: 1;
+}
+@media (max-width: 1023px) {
+  .original-songs-layout.docked {
+    display: block;
+  }
+  .original-lyrics-panel {
+    position: fixed;
+    inset: auto 12px 12px;
+    top: auto;
+    z-index: 40;
+    max-height: 62dvh;
+    box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+  }
+  .original-lyrics-panel-player {
+    max-height: 26dvh;
+    aspect-ratio: auto;
+    height: 26dvh;
+  }
+  .original-songs-layout.docked .original-songs-list {
+    padding-bottom: 64dvh;
   }
 }

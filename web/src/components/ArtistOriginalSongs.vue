@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onScopeDispose, ref, shallowRef, watch } from 'vue'
-import { ChevronDown, Music2, Play, Search } from '@lucide/vue'
+import { ChevronDown, FileText, Music2, Play, Search } from '@lucide/vue'
 import { api } from '@/api/client'
 import type { ExploredSong } from '@/api/types'
 import { useResource } from '@/composables/useResource'
@@ -27,6 +27,8 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import ResourceState from '@/components/ResourceState.vue'
 import SongVideoDialog from '@/components/SongVideoDialog.vue'
+import OriginalLyricsDialog from '@/components/OriginalLyricsDialog.vue'
+import OriginalLyricsPanel from '@/components/OriginalLyricsPanel.vue'
 
 const props = defineProps<{ artistId: number }>()
 const order = ref('latest')
@@ -51,6 +53,9 @@ const moreError = ref('')
 const failedImages = ref(new Set<string>())
 let moreController: AbortController | undefined
 const playing = shallowRef<ExploredSong | null>(null)
+const lyricsSong = shallowRef<ExploredSong | null>(null)
+// Song playing in the docked panel beside the list (player + lyrics).
+const docked = shallowRef<ExploredSong | null>(null)
 let trigger: HTMLElement | null = null
 watch(data, (value) => {
   moreController?.abort()
@@ -60,6 +65,7 @@ watch(data, (value) => {
   moreLoading.value = false
   moreError.value = ''
   playing.value = null
+  lyricsSong.value = null
 })
 const songs = computed(() => [
   ...new Map(
@@ -99,8 +105,27 @@ function playable(song: ExploredSong) {
   return /^[A-Za-z0-9_-]{11}$/.test(song.youtube_video_id ?? '')
 }
 function open(song: ExploredSong, event: MouseEvent) {
+  // While the panel is docked, other songs play there instead of in a dialog.
+  if (docked.value) {
+    docked.value = song
+    return
+  }
   trigger = event.currentTarget as HTMLElement
   playing.value = song
+}
+function openLyrics(song: ExploredSong, event: MouseEvent) {
+  trigger = event.currentTarget as HTMLElement
+  lyricsSong.value = song
+}
+function closeLyrics() {
+  lyricsSong.value = null
+  nextTick(() => {
+    if (trigger?.isConnected) trigger.focus()
+  })
+}
+function listen(song: ExploredSong) {
+  lyricsSong.value = null
+  docked.value = song
 }
 function close() {
   playing.value = null
@@ -154,85 +179,112 @@ onScopeDispose(() => {
         </Field>
       </FieldGroup>
     </form>
-    <ResourceState
-      :loading="loading"
-      :error="error"
-      :empty="!songs.length"
-      :title="searchTerm ? '검색한 오리지널 곡이 없습니다' : '등록된 오리지널 곡이 없습니다'"
-      description="등록된 곡이 추가되면 여기에 표시됩니다."
-      @retry="reload"
-    >
-      <ItemGroup aria-label="오리지널 곡 목록">
-        <Item
-          v-for="song in songs"
-          :key="song.key"
-          as="article"
-          role="listitem"
-          variant="outline"
-          class="original-song-item"
+    <div class="original-songs-layout" :class="{ docked: !!docked }">
+      <div class="original-songs-list">
+        <ResourceState
+          :loading="loading"
+          :error="error"
+          :empty="!songs.length"
+          :title="searchTerm ? '검색한 오리지널 곡이 없습니다' : '등록된 오리지널 곡이 없습니다'"
+          description="등록된 곡이 추가되면 여기에 표시됩니다."
+          @retry="reload"
         >
-          <button
-            v-if="playable(song)"
-            type="button"
-            class="original-song-thumb"
-            :aria-label="`${song.title_ko || song.title} 재생`"
-            aria-haspopup="dialog"
-            @click="open(song, $event)"
-          >
-            <img
-              v-if="!failedImages.has(song.key)"
-              :src="`https://i.ytimg.com/vi/${song.youtube_video_id}/mqdefault.jpg`"
-              alt=""
-              width="320"
-              height="180"
-              loading="lazy"
-              @error="failedImages.add(song.key)"
-            />
-            <Music2 v-else aria-hidden="true" />
-            <span class="live-play" aria-hidden="true"><Play fill="currentColor" /></span>
-          </button>
-          <div v-else class="original-song-thumb" aria-hidden="true"><Music2 /></div>
-          <ItemContent>
-            <ItemTitle>
+          <ItemGroup aria-label="오리지널 곡 목록">
+            <Item
+              v-for="song in songs"
+              :key="song.key"
+              as="article"
+              role="listitem"
+              variant="outline"
+              class="original-song-item"
+            >
               <button
                 v-if="playable(song)"
                 type="button"
-                class="song-title-button"
+                class="original-song-thumb"
+                :aria-label="`${song.title_ko || song.title} 재생`"
                 aria-haspopup="dialog"
                 @click="open(song, $event)"
               >
-                {{ song.title_ko || song.title }}
+                <img
+                  v-if="!failedImages.has(song.key)"
+                  :src="`https://i.ytimg.com/vi/${song.youtube_video_id}/mqdefault.jpg`"
+                  alt=""
+                  width="320"
+                  height="180"
+                  loading="lazy"
+                  @error="failedImages.add(song.key)"
+                />
+                <Music2 v-else aria-hidden="true" />
+                <span class="live-play" aria-hidden="true"><Play fill="currentColor" /></span>
               </button>
-              <span v-else>{{ song.title_ko || song.title }}</span>
-            </ItemTitle>
-            <ItemDescription v-if="song.title_ko">{{ song.title }}</ItemDescription>
-            <ItemDescription>{{ song.artist_name }}</ItemDescription>
-            <ItemDescription>
-              <time v-if="song.published_at" :datetime="song.published_at">
-                {{ formatDate(song.published_at) }}
-              </time>
-              <span v-else>{{ playable(song) ? '게시일 미등록' : '등록된 영상 없음' }}</span>
-            </ItemDescription>
-          </ItemContent>
-          <ItemActions v-if="song.view_count != null" class="original-song-views">
-            <span class="text-sm text-muted-foreground">
-              {{ formatSubscribers(song.view_count) }}회
-            </span>
-          </ItemActions>
-        </Item>
-      </ItemGroup>
-      <Button
-        v-if="data && nextOffset < data.total"
-        variant="outline"
-        class="mx-auto mt-6 flex"
-        :disabled="moreLoading"
-        @click="loadMore"
-      >
-        {{ moreLoading ? '불러오는 중' : '더보기' }}
-        <ChevronDown data-icon="inline-end" />
-      </Button>
-      <p v-if="moreError" role="alert" class="mt-3 text-sm text-destructive">{{ moreError }}</p>
-    </ResourceState>
+              <div v-else class="original-song-thumb" aria-hidden="true"><Music2 /></div>
+              <ItemContent>
+                <ItemTitle>
+                  <button
+                    v-if="playable(song)"
+                    type="button"
+                    class="song-title-button"
+                    aria-haspopup="dialog"
+                    @click="open(song, $event)"
+                  >
+                    {{ song.title_ko || song.title }}
+                  </button>
+                  <span v-else>{{ song.title_ko || song.title }}</span>
+                </ItemTitle>
+                <ItemDescription v-if="song.title_ko">{{ song.title }}</ItemDescription>
+                <ItemDescription>{{ song.artist_name }}</ItemDescription>
+                <ItemDescription>
+                  <time v-if="song.published_at" :datetime="song.published_at">
+                    {{ formatDate(song.published_at) }}
+                  </time>
+                  <span v-else>{{ playable(song) ? '게시일 미등록' : '등록된 영상 없음' }}</span>
+                </ItemDescription>
+              </ItemContent>
+              <ItemActions
+                v-if="song.view_count != null || song.lyrics_recording_id"
+                class="original-song-views"
+              >
+                <Button
+                  v-if="song.lyrics_recording_id"
+                  variant="outline"
+                  size="sm"
+                  class="original-song-lyrics"
+                  :class="{ active: docked?.key === song.key }"
+                  aria-haspopup="dialog"
+                  :aria-label="`${song.title_ko || song.title} 가사 보기`"
+                  @click="openLyrics(song, $event)"
+                >
+                  <FileText data-icon="inline-start" />
+                  가사
+                </Button>
+                <span v-if="song.view_count != null" class="text-sm text-muted-foreground">
+                  {{ formatSubscribers(song.view_count) }}회
+                </span>
+              </ItemActions>
+            </Item>
+          </ItemGroup>
+          <Button
+            v-if="data && nextOffset < data.total"
+            variant="outline"
+            class="mx-auto mt-6 flex"
+            :disabled="moreLoading"
+            @click="loadMore"
+          >
+            {{ moreLoading ? '불러오는 중' : '더보기' }}
+            <ChevronDown data-icon="inline-end" />
+          </Button>
+          <p v-if="moreError" role="alert" class="mt-3 text-sm text-destructive">{{ moreError }}</p>
+        </ResourceState>
+      </div>
+      <OriginalLyricsPanel v-if="docked" :song="docked" @close="docked = null" />
+    </div>
     <SongVideoDialog :song="playing" @close="close" />
+    <OriginalLyricsDialog
+      :song="lyricsSong"
+      :can-listen="!!lyricsSong && playable(lyricsSong)"
+      @close="closeLyrics"
+      @listen="listen"
+    />
   </section>
 </template>

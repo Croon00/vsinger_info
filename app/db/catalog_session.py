@@ -13,6 +13,8 @@ from app.core.config import settings
 # 003/004 only add constraints and new tables, so code runs before and after they are applied.
 SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "003", "004"), ("001", "002", "003", "004", "005"), ("001", "002", "003", "004", "005", "006")}
 SUPPORTED_REVISIONS.add(tuple(f'{n:03}' for n in range(1, 8)))
+# 008 only adds the world cup tables; deploy this code before applying it.
+SUPPORTED_REVISIONS.add(tuple(f'{n:03}' for n in range(1, 9)))
 
 
 class CatalogIdentityError(RuntimeError):

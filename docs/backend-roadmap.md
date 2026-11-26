@@ -25,6 +25,7 @@
   - YouTube 오리지널 일일 수집: poll·collect worker 모두 새 코드 적용 후 일일 수집·실제 조회 검증. [012](../specs/012-youtube-original-daily/tasks.md), [계약](youtube-original-collection.md)
   - HONK THE HORN·NUROJUNK 멤버별 수집·일일 재대조 worker/API. [013](../specs/013-shared-member-catalog/tasks.md)
   - 홈 최근 곡·즐겨찾기 캐러셀(PC·모바일 화면 검수 포함). [011](../specs/011-home-recent-songs/tasks.md)
+  - 오리지널 곡 월드컵과 결과 통계: **008 지원 백엔드·프론트를 먼저 배포한 뒤 migration 008 적용**. [월드컵](worldcup.md), [018](../specs/018-original-worldcup/tasks.md)
   - 오리지널 곡 목록의 발매 커버 제외(실데이터 2,471→2,141). [017](../specs/017-released-cover-exclusion/tasks.md)
   - 아티스트 상세 Spotify 장르(실데이터 저장 완료, 화면 검수 포함). [015](../specs/015-artist-spotify-genres/tasks.md)
 - [ ] 로컬 PostgreSQL이 없어 건너뛴 DB fixture 테스트를 CI 또는 PostgreSQL이 있는 환경에서 실행한다. 여러 스펙의 검증에서 반복해서 남은 항목이다(011·012·013 포함).

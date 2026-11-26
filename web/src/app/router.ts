@@ -10,6 +10,7 @@ export const router = createRouter({
     { path: '/', component: HomePage },
     { path: '/explore', component: () => import('@/pages/ExplorePage.vue') },
     { path: '/multiview', component: () => import('@/pages/MultiviewPage.vue') },
+    { path: '/worldcup', component: () => import('@/pages/WorldcupPage.vue') },
     { path: '/artists/:artistId', component: () => import('@/pages/ArtistPage.vue') },
     { path: '/lives/:archiveId', component: () => import('@/pages/LivePage.vue') },
     { path: '/calendar', component: () => import('@/pages/CalendarPage.vue') },
@@ -32,5 +33,5 @@ router.beforeEach((to, from) => {
   if (to.path !== from.path) positions.set(key(from.fullPath), window.scrollY)
 })
 router.afterEach((to) => {
-  document.title = `${to.path === '/multiview' ? '멀티뷰' : to.path === '/' ? '홈' : to.path.startsWith('/calendar') ? '캘린더' : to.path.startsWith('/settings') ? '설정' : to.path.startsWith('/search') ? '검색' : '탐색'} · UtaMowa (우타모와)`
+  document.title = `${to.path === '/multiview' ? '멀티뷰' : to.path === '/worldcup' ? '월드컵' : to.path === '/' ? '홈' : to.path.startsWith('/calendar') ? '캘린더' : to.path.startsWith('/settings') ? '설정' : to.path.startsWith('/search') ? '검색' : '탐색'} · UtaMowa (우타모와)`
 })
