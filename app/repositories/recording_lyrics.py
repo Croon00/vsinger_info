@@ -1,8 +1,14 @@
 """Write reviewed lyrics with their source document; existing lyrics are never replaced."""
 import hashlib
 import json
+from uuid import uuid4
 
 from sqlalchemy import bindparam, text
+
+from app.repositories.original_song_groups import ORIGINAL_GROUPS_CTE
+from app.repositories.song_explore import (
+    ORIGINAL_ARTIST_SQL, ORIGINAL_RECORDING_PARAMS, ORIGINAL_RECORDING_SQL, ORIGINAL_VIDEO_JOIN_SQL,
+)
 
 
 def original_entries(session, catalog):
@@ -64,6 +70,58 @@ def insert(session, recording_id, entry, document_id):
         VALUES (:recording,:original,NULLIF(:translation,''),NULLIF(:pronunciation,''),:document)'''),
         dict(recording=recording_id, original=entry.original_lyrics.strip(), translation=entry.translation_ko.strip(),
              pronunciation=entry.pronunciation_ko.strip(), document=document_id))
+
+
+def lock_original(session, recording_id):
+    return session.execute(text(f"""WITH {ORIGINAL_GROUPS_CTE}
+        SELECT r.title_native FROM recordings r {ORIGINAL_VIDEO_JOIN_SQL}
+        WHERE r.id=:recording AND {ORIGINAL_RECORDING_SQL}
+          AND EXISTS (
+            SELECT 1 FROM recording_artists ra
+            JOIN artists credited ON credited.id=ra.artist_id AND credited.archived_at IS NULL
+            LEFT JOIN original_groups og ON og.member_id=ra.artist_id
+            JOIN artists a ON a.id=COALESCE(og.group_id,ra.artist_id)
+            WHERE ra.recording_id=r.id AND {ORIGINAL_ARTIST_SQL}
+          ) FOR UPDATE OF r"""), ORIGINAL_RECORDING_PARAMS | {'recording': recording_id}).scalar_one_or_none()
+
+
+def current_for_edit(session, recording_id):
+    return session.execute(text("""SELECT to_jsonb(l) snapshot,d.source_url
+        FROM recording_lyrics l LEFT JOIN source_documents d ON d.id=l.source_document_id
+        WHERE l.recording_id=:recording FOR UPDATE OF l"""), {'recording': recording_id}).mappings().one_or_none()
+
+
+def save_edit(session, recording_id, draft, document_id, previous):
+    params = draft.model_dump() | {'recording': recording_id, 'document': document_id}
+    if previous is None:
+        after = session.execute(text("""INSERT INTO recording_lyrics AS l
+            (recording_id,original_lyrics,translation_ko,pronunciation_ko,source_document_id)
+            VALUES (:recording,:original_lyrics,NULLIF(:translation_ko,''),NULLIF(:pronunciation_ko,''),:document)
+            ON CONFLICT (recording_id) DO NOTHING RETURNING to_jsonb(l)"""), params).scalar_one_or_none()
+        if after is None:
+            return False
+    else:
+        after = session.execute(text("""UPDATE recording_lyrics l SET original_lyrics=:original_lyrics,
+            translation_ko=NULLIF(:translation_ko,''),pronunciation_ko=NULLIF(:pronunciation_ko,''),
+            source_document_id=:document
+            WHERE recording_id=:recording RETURNING to_jsonb(l)"""), params).scalar_one()
+    summary = json.dumps({'recording_id': recording_id, 'source_document_id': document_id})
+    canonical = json.dumps({'recording_id': recording_id, **draft.model_dump()}, sort_keys=True)
+    receipt = session.execute(text("""INSERT INTO catalog_imports
+        (operation_id,catalog_instance_id,manifest_hash,source_kind,result_mapping,result_summary)
+        SELECT :operation,id,:digest,'manual',CAST(:mapping AS jsonb),CAST(:summary AS jsonb)
+        FROM catalog_instance RETURNING id"""), {
+        'operation': uuid4(), 'digest': hashlib.sha256(canonical.encode()).hexdigest(), 'summary': summary,
+        'mapping': json.dumps([{'entity_type': 'recording_lyrics', 'id': after['id'], 'version': after['version']}]),
+    }).scalar_one()
+    session.execute(text("""INSERT INTO catalog_changes
+        (import_id,entity_type,entity_id,action,before_data,after_data,provenance)
+        VALUES (:receipt,'recording_lyrics',:id,:action,CAST(:before AS jsonb),CAST(:after AS jsonb),
+                CAST(:summary AS jsonb))"""), {
+        'receipt': receipt, 'id': after['id'], 'action': 'create' if previous is None else 'update',
+        'before': None if previous is None else json.dumps(previous), 'after': json.dumps(after), 'summary': summary,
+    })
+    return True
 
 
 def released_cover_entries(session):

@@ -117,8 +117,10 @@ export interface ExploredSong {
   archive_id: number | null
   start_seconds: number | null
   published_at: string | null
+  recording_id?: number | null
   /** Originals: recording whose lyrics are registered, if any. */
   lyrics_recording_id?: number | null
+  lyrics_version?: number
 }
 export interface Statistics extends ReturnType<
   typeof import('@/lib/artist-statistics').artistStatistics

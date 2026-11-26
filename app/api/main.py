@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routers.read_api import router as catalog_router
 from app.api.routers.worldcup import router as worldcup_router
+from app.api.routers.lyrics_edit import router as lyrics_edit_router
 from app.core.config import settings
 from app.schemas.worker_jobs import WorkerReadiness
 from app.services.worker_readiness import inspect_readiness
@@ -14,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_allowed_origin_list,
     allow_credentials=True,
-    allow_methods=["GET", "HEAD", "OPTIONS"],
+    allow_methods=["GET", "HEAD", "OPTIONS", "PUT"],
     allow_headers=["*"],
 )
 
@@ -37,3 +38,4 @@ async def ready(response: Response) -> WorkerReadiness:
 app.include_router(catalog_router, prefix="/api")
 app.include_router(catalog_router, prefix="/api/v2", include_in_schema=False)
 app.include_router(worldcup_router, prefix="/api")
+app.include_router(lyrics_edit_router, prefix="/api")

@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     new_database_instance_id: str | None = None
     catalog_schema_version: str = "catalog-v2"
     api_key: str | None = None
+    lyrics_editor_key: str | None = Field(default=None, repr=False)
     discord_bot_token: str | None = None
     worker_idle_seconds: int = Field(default=900, ge=1, le=86400)
     agent_interval_seconds: int = 86400
@@ -75,6 +76,7 @@ class Settings(BaseSettings):
         "database_url",
         "new_database_instance_id",
         "api_key",
+        "lyrics_editor_key",
         "x_bearer_token",
         "twscrape_auth_token",
         "twscrape_ct0",

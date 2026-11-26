@@ -6,6 +6,7 @@
 - [x] T004 브라우저 통합 테스트(`web/tests/integration/worldcup.spec.ts`)와 내비게이션 e2e 갱신.
 - [x] T007 FR-008~010 결과 저장·통계 API, migration 008, 프록시 쓰기 경로, 결과 통계·랭킹 화면(2026-11-26).
 - [x] T009 FR-012 커버 월드컵, 곡 수 요약 API, 종류별 통계·랭킹(2026-11-26). migration 008에 `song_kind`를 추가했다(미적용 상태에서 수정).
+- [x] T010 FR-007 월드컵 소속사 복수 선택과 영상 합집합 조회. [2026-11-26 검증](../../docs/records/backend/worldcup-agencies-2026-11-26.md)
 - [ ] T008 배포 순서: 008 지원 백엔드·프론트 배포 → `migrate_catalog.py --apply`(008) → `--verify` → 운영 제출·랭킹 확인.
 - [ ] T005 배포 후 실제 MV 재생·모바일 사용성 확인.
 - [ ] T006 2단계(통계·공유·커버 월드컵) 범위 결정.

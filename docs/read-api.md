@@ -1,6 +1,6 @@
 # 조회 API
 
-최종 확인 2026-11-23. 사용자 프론트 `web/`이 신규 통합 DB를 읽는 조회 전용 HTTP 계약이다. 날짜별 결정과 검증 결과는 [변경·검증 기록](records/backend/read-api-history.md)에 있다.
+최종 확인 2026-11-26. 사용자 프론트 `web/`이 신규 통합 DB를 읽는 HTTP 계약이다. 월드컵 결과와 권한을 확인하는 가사 저장 경로를 함께 기록한다. 날짜별 결정과 검증 결과는 [변경·검증 기록](records/backend/read-api-history.md)에 있다.
 
 ## 연결과 실행
 
@@ -38,14 +38,21 @@ API는 기본 8000, 프론트는 http://localhost:5174 이다. `web/.env.local`�
 | GET /search?q=... | 아래 [검색](#검색) |
 | GET /search/performers?q=... | 전체 검색 결과의 공개 가창자 선택지. [곡 탐색](song-exploration.md) |
 | GET /explore/songs, /explore/song-performers | 우타와꾸·커버·오리지널 곡 탐색. 홈 최근 곡·즐겨찾기 캐러셀·아티스트 오리지널 탭도 이 경로를 쓴다(`published_only`). [곡 탐색](song-exploration.md) |
-| POST /worldcup/results, GET /worldcup/stats, GET /worldcup/pool-summary | 월드컵 결과 저장(유일한 브라우저 쓰기), 곡별 통계, 설정용 곡 수 요약(오리지널·커버). [월드컵](worldcup.md) |
+| POST /worldcup/results, GET /worldcup/stats, GET /worldcup/pool-summary | 월드컵 결과 저장, 곡별 통계, 설정용 곡 수 요약(오리지널·커버). [월드컵](worldcup.md) |
 | GET /explore/music-tags | 오리지널 장르·분위기 태그. [음악 분류](original-music-tags.md) |
 | GET /streams, /stream-groups | 아래 [생방송 멀티뷰](#생방송-멀티뷰) |
 | GET /concerts | 보관/취소 제외 공연. `artist_id`, `start`(포함), `end`(제외) 선택 필터 |
 | GET /concerts/{id} | 공연·도시·장소·출처 링크·첫 티켓 정보 |
 | GET /artists/{id}/albums | 앨범 명의(album_artists) 또는 수록 녹음의 가창 명의(recording_artists)로 연결된 앨범. 발매 연월일 내림차순+ID. `is_primary`는 해당 아티스트가 앨범 명의에 있으면 true, 트랙 명의로만 연결된 참여 발매면 false. 승인된 오리지널 그룹(VESPERBELL·KMNZ·HONK THE HORN·NUROJUNK)의 멤버는 그룹 발매도 함께 표시하며 그룹 명의는 `is_primary`에 포함한다(2026-11-25). 저장된 명의는 바꾸지 않는다 |
 | GET /albums/{id} | 앨범과 디스크/트랙 순 수록 녹음, 가사 존재 여부, `youtube_url`(연결된 공개/일부 공개 영상만, 없으면 null). 아티스트 기준이 없으므로 `is_primary`는 null |
-| GET /recordings/{id}/lyrics | 해당 녹음의 저장된 가사·번역·독음과 출처 URL. 등록 절차는 [가사 등록](original-lyrics.md) |
+| GET /recordings/{id}/lyrics | 해당 녹음의 가사·번역·독음과 출처 URL, 수정에 쓰는 `version`. [가사 등록](original-lyrics.md) |
+| PUT /recordings/{id}/lyrics | 편집 키가 일치할 때 활성 오리지널 녹음의 가사를 저장한다. [가사 등록](original-lyrics.md) |
+
+곡 탐색의 오리지널 항목은 대표 녹음인 `recording_id`와 활성 가사가 연결된 `lyrics_recording_id`를 반환한다. 같은 영상의 녹음이 묶인 경우 각각의 조건에 맞는 가장 작은 ID를 사용한다.
+
+곡 탐색의 `agency_names`는 소속사 이름을 반복해 전달하는 필터다. 하나라도 일치하는 소속사의 곡을 기존 그룹화·페이지 기준으로 반환한다. `agency`의 기본값인 `all`과 함께 사용하며 특정 단일 소속사 필터와 함께 보내면 422다.
+
+가사 저장은 `version`(등록은 `null`, 수정은 최근 조회 번호), `original_lyrics`, 선택 필드 `translation_ko`·`pronunciation_ko`·`lyrics_source_url`을 받으며 가사 조회와 같은 모양의 응답을 반환한다. 편집 키 불일치는 403, 대상 녹음 없음은 404, 버전 충돌이나 보관 가사는 409, 입력 오류는 422, 편집 키 미설정 또는 DB 장애는 503이다. 같은 내용의 재요청은 기존 저장 결과를 반환한다.
 
 ## 검색
 

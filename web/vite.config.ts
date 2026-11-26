@@ -40,7 +40,10 @@ export default defineConfig(({ mode }) => {
     name: 'read-only-backend-proxy',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        const writable = req.method === 'POST' && req.url?.split('?')[0] === '/api/worldcup/results'
+        const path = req.url?.split('?')[0] ?? ''
+        const writable =
+          (req.method === 'POST' && path === '/api/worldcup/results') ||
+          (req.method === 'PUT' && /^\/api\/recordings\/[1-9]\d*\/lyrics$/.test(path))
         if (
           req.url?.startsWith('/api/') &&
           !writable &&

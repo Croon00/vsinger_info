@@ -63,7 +63,7 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
     if (url.pathname === '/api/artists') return route.fulfill({ json: artists })
     if (url.pathname === '/api/worldcup/pool-summary') {
       summaries.push(url.searchParams.get('song_kind') ?? '')
-      // 'Other' has too few songs for a 16-song bracket and must not be offered; Solo has none.
+      // 'Other' can join another agency's pool; Solo has no playable songs.
       return route.fulfill({
         json: {
           song_kind: url.searchParams.get('song_kind'),
@@ -126,10 +126,9 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
       requests.push(url.searchParams)
       const offset = Number(url.searchParams.get('offset'))
       const limit = Number(url.searchParams.get('limit'))
-      // 'Other' has too few MV originals for a 16-song bracket and must not be offered.
       const ids = url.searchParams.getAll('artist_ids')
       const pool =
-        url.searchParams.get('agency') === 'Other'
+        url.searchParams.getAll('agency_names').join() === 'Other'
           ? songs.slice(0, 5)
           : ids.length
             ? songs.filter((song) => ids.some((id) => names[id] === song.artist_name))
@@ -147,11 +146,11 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
   )
   const first = requests.find((params) => params.get('limit') === '100')!
   expect(first.get('kind')).toBe('original')
-  expect(first.get('agency')).toBe('Label')
+  expect(first.getAll('agency_names')).toEqual(['Label'])
   expect(first.get('published_only')).toBe('true')
   expect(first.get('limit')).toBe('100')
   await page.getByRole('combobox', { name: '소속사' }).click()
-  await expect(page.getByRole('option')).toHaveText(['Label · 40곡'])
+  await expect(page.getByRole('option')).toHaveText(['Label · 40곡', 'Other · 5곡'])
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: '64강', exact: true })).toBeDisabled()
   await expect(page.getByRole('button', { name: '128강', exact: true })).toBeDisabled()
@@ -255,4 +254,41 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
   await page.getByRole('button', { name: '16강', exact: true }).click()
   await page.getByRole('button', { name: '16강 시작하기' }).click()
   await expect(page.locator('.worldcup-label')).toHaveText('Label 커버 · 16강')
+})
+
+test('multiple small agencies contribute to one video pool without duplicate candidates', async ({ page }) => {
+  const combinations: string[][] = []
+  await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
+    const url = new URL(route.request().url())
+    if (url.pathname === '/api/artists') return route.fulfill({ json: artists })
+    if (url.pathname === '/api/worldcup/pool-summary')
+      return route.fulfill({
+        json: {
+          song_kind: url.searchParams.get('song_kind'), total: 17, artists: [],
+          agencies: [{ name: 'Label', count: 10 }, { name: 'Other', count: 8 }],
+        },
+      })
+    if (url.pathname === '/api/explore/songs') {
+      const selected = url.searchParams.getAll('agency_names')
+      combinations.push(selected)
+      const pool = selected.length === 2
+        ? [...songs.slice(0, 17), { ...songs[9], key: 'recording:shared' }]
+        : selected.includes('Label') ? songs.slice(0, 10) : songs.slice(9, 17)
+      return route.fulfill({ json: { items: pool, total: 17, offset: 0, limit: 100 } })
+    }
+    return route.fulfill({ json: { items: [], total: 0, offset: 0, limit: 24 } })
+  })
+  await page.goto('/worldcup')
+  const count = page.getByRole('status').filter({ hasText: 'MV가 있는 오리지널' })
+  await expect(count).toContainText('10곡')
+  await expect(page.getByRole('button', { name: '16강', exact: true })).toBeDisabled()
+  const select = page.getByRole('combobox', { name: '소속사' })
+  await select.click()
+  await page.getByRole('option', { name: 'Other · 8곡' }).click()
+  await page.keyboard.press('Escape')
+  await expect(select).toContainText('소속사 2곳 선택')
+  await expect(count).toContainText('17곡')
+  expect(combinations.at(-1)).toEqual(['Label', 'Other'])
+  await page.getByRole('button', { name: '16강 시작하기' }).click()
+  await expect(page.locator('.worldcup-label')).toHaveText('Label, Other 오리지널 · 16강')
 })

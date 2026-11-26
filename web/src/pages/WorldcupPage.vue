@@ -74,7 +74,7 @@ const KINDS: { value: SongKind; label: string }[] = [
 ]
 const songKind = ref<SongKind>('original')
 const mode = ref<WorldcupMode>('agency')
-const agency = ref('')
+const agencyNames = ref<string[]>([])
 const artistIds = ref<string[]>([])
 const size = ref<WorldcupSize>(32)
 const draw = ref<WorldcupDraw>('random')
@@ -114,11 +114,13 @@ const {
 } = useResource((signal) => worldcupPoolSummary(songKind.value, signal), [songKind])
 const eligibleAgencies = computed(() =>
   (summary.value?.agencies ?? [])
-    .filter((option) => option.count >= MIN_POOL)
+    .filter((option) => option.count > 0)
     .sort((a, b) => b.count - a.count),
 )
 watch(eligibleAgencies, (options) => {
-  if (!options.some((option) => option.name === agency.value)) agency.value = options[0]?.name ?? ''
+  if (!summary.value) return
+  const selected = agencyNames.value.filter((name) => options.some((option) => option.name === name))
+  agencyNames.value = selected.length ? selected : options.slice(0, 1).map((option) => option.name)
 })
 // Originals credit approved groups (VESPERBELL, KMNZ, ...) as one artist, like the song tab;
 // covers are credited to each member.
@@ -157,11 +159,12 @@ const poolNoun = computed(() =>
 const PAGE = 100
 const MAX_PAGES = 20
 // Large pools (thousands of covers) are sampled from random pages instead of read in full.
-async function fetchPool(scope: string, ids: number[], signal: AbortSignal) {
+async function fetchPool(names: string[], ids: number[], signal: AbortSignal) {
+  const kind = songKind.value
   const read = (offset: number) =>
     api.songPage(
-      songKind.value,
-      scope,
+      kind,
+      'all',
       '',
       'high',
       offset,
@@ -172,6 +175,7 @@ async function fetchPool(scope: string, ids: number[], signal: AbortSignal) {
       {
         limit: PAGE,
         publishedOnly: true,
+        agencyNames: names,
       },
     )
   const first = await read(0)
@@ -181,29 +185,31 @@ async function fetchPool(scope: string, ids: number[], signal: AbortSignal) {
       ? Array.from({ length: pages - 1 }, (_, i) => (i + 1) * PAGE)
       : shuffle(Array.from({ length: pages - 1 }, (_, i) => (i + 1) * PAGE)).slice(0, MAX_PAGES - 1)
   const rest = await Promise.all(offsets.map(read))
-  return toCandidates([first, ...rest].flatMap((page) => page.items as ExploredSong[]))
+  return {
+    songs: toCandidates([first, ...rest].flatMap((page) => page.items as ExploredSong[])),
+    total: first.total,
+  }
 }
 const {
-  data: pool,
+  data: poolData,
   loading: poolLoading,
   error: poolError,
   reload: reloadPool,
 } = useResource(
-  async (signal): Promise<WorldcupSong[]> => {
-    if (mode.value === 'agency') return agency.value ? fetchPool(agency.value, [], signal) : []
+  async (signal) => {
+    if (mode.value === 'agency')
+      return summary.value?.song_kind === songKind.value && agencyNames.value.length
+        ? fetchPool(agencyNames.value, [], signal)
+        : null
     if (mode.value === 'artists')
-      return artistIds.value.length ? fetchPool('all', artistIds.value.map(Number), signal) : []
-    return fetchPool('all', [], signal)
+      return artistIds.value.length ? fetchPool([], artistIds.value.map(Number), signal) : null
+    return fetchPool([], [], signal)
   },
-  [songKind, mode, agency, artistIds],
+  [songKind, mode, agencyNames, artistIds],
 )
+const pool = computed(() => poolData.value?.songs)
 const sampled = computed(() => {
-  const total =
-    mode.value === 'agency'
-      ? eligibleAgencies.value.find((option) => option.name === agency.value)?.count
-      : mode.value === 'random'
-        ? summary.value?.total
-        : undefined
+  const total = poolData.value?.total
   return total != null && total > PAGE * MAX_PAGES ? total : null
 })
 const sizes = computed(() => availableSizes(pool.value?.length ?? 0))
@@ -214,7 +220,10 @@ watch(sizes, (options) => {
 const poolArtists = computed(() => new Set((pool.value ?? []).map((song) => song.artist)).size)
 const canStart = computed(() => !poolLoading.value && sizes.value.includes(size.value))
 const label = computed(() => {
-  if (mode.value === 'agency') return agency.value
+  if (mode.value === 'agency')
+    return agencyNames.value.length > 2
+      ? `${agencyNames.value.slice(0, 2).join(', ')} 외 ${agencyNames.value.length - 2}곳`
+      : agencyNames.value.join(', ')
   if (mode.value === 'random') return '무작위 아티스트'
   const names = artistOptions.value
     .filter((option) => artistIds.value.includes(String(option.id)))
@@ -376,15 +385,17 @@ function views(song: WorldcupSong) {
                   : `${poolNoun}을 가진 아티스트가 없어요`
               "
               :description="
-                mode === 'agency' ? `${poolNoun}이 ${MIN_POOL}곡 이상인 소속사만 보여요.` : ''
+                mode === 'agency' ? `${poolNoun}이 있는 소속사만 보여요.` : ''
               "
               @retry="artistsError ? reloadArtists() : reloadSummary()"
             >
               <Field v-if="mode === 'agency'">
                 <FieldLabel for="worldcup-agency">소속사</FieldLabel>
-                <Select v-model="agency">
+                <Select v-model="agencyNames" multiple>
                   <SelectTrigger id="worldcup-agency" class="worldcup-select" aria-label="소속사">
-                    <SelectValue placeholder="소속사 선택" />
+                    <SelectValue>
+                      {{ agencyNames.length > 1 ? `소속사 ${agencyNames.length}곳 선택` : agencyNames[0] || '소속사 선택' }}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
@@ -399,7 +410,7 @@ function views(song: WorldcupSong) {
                   </SelectContent>
                 </Select>
                 <p class="worldcup-hint">
-                  {{ poolNoun }}이 {{ MIN_POOL }}곡 이상인 소속사만 보여요.
+                  소속사를 여러 곳 고를 수 있어요. 합쳐서 {{ MIN_POOL }}곡 이상이면 시작할 수 있어요.
                 </p>
               </Field>
               <Field v-else>
@@ -478,6 +489,9 @@ function views(song: WorldcupSong) {
               </template>
               <template v-else-if="mode === 'artists' && !artistIds.length">
                 아티스트를 한 명 이상 골라 주세요.
+              </template>
+              <template v-else-if="mode === 'agency' && !agencyNames.length">
+                소속사를 한 곳 이상 골라 주세요.
               </template>
               <template v-else>
                 {{ poolNoun }} {{ (pool?.length ?? 0).toLocaleString('ko-KR') }}곡 · 아티스트

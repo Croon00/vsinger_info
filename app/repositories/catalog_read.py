@@ -438,7 +438,7 @@ class CatalogReadRepository:
         WHERE t.album_id=:id ORDER BY t.disc_number,t.track_number,t.id""",{"id":album_id})
 
     def lyrics(self, recording_id):
-        rows = self.rows("""SELECT r.id recording_id,r.song_id,r.title_native original_title,
+        rows = self.rows("""SELECT r.id recording_id,r.song_id,l.version,r.title_native original_title,
         COALESCE((SELECT string_agg(a.name_native,' · ' ORDER BY ra.position,ra.id) FROM recording_artists ra
           JOIN artists a ON a.id=ra.artist_id AND a.archived_at IS NULL WHERE ra.recording_id=r.id),'') artist_name,
         l.original_lyrics,COALESCE(l.translation_ko,'') translation_ko,COALESCE(l.pronunciation_ko,'') pronunciation_ko,

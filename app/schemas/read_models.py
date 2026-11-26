@@ -188,6 +188,7 @@ class CatalogAlbumRead(BaseModel):
 
 class CatalogLyricsRead(BaseModel):
     recording_id: int
+    version: int
     song_id: int | None = None
     original_title: str
     artist_name: str

@@ -28,7 +28,7 @@ const recordingId = computed(() => props.song.lyrics_recording_id ?? null)
 const { data, loading, error, reload } = useResource(
   (signal) =>
     recordingId.value ? api.lyrics(String(recordingId.value), signal) : Promise.resolve(null),
-  [recordingId],
+  [recordingId, () => props.song.lyrics_version],
 )
 </script>
 

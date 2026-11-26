@@ -1,8 +1,8 @@
 # 곡 월드컵(오리지널·커버) 결과·통계
 
-최종 확인 2026-11-26. 요구사항과 검증 기록은 [018-original-worldcup](../specs/018-original-worldcup/spec.md)에 있다.
+최종 확인 2026-11-26. 요구사항은 [018-original-worldcup](../specs/018-original-worldcup/spec.md), 복수 소속사 검증 결과는 [작업 기록](records/backend/worldcup-agencies-2026-11-26.md)에 있다.
 
-서비스에서 유일한 브라우저 쓰기 경로다. 완료된 월드컵 한 판의 경기 결과만 받으며 그 외 `/api`는 조회 전용이다.
+월드컵 결과 저장 경로는 완료된 한 판의 경기 결과를 받는다. 설정과 랭킹 조회는 읽기 전용이다.
 
 ## 저장 (migration 008)
 
@@ -28,6 +28,7 @@
 `GET /api/worldcup/pool-summary?song_kind=` → `{song_kind,total,agencies[{name,count}],artists[{id,count}]}`
 
 - 설정 화면용. `/api/explore/songs?kind=…&published_only=true`와 같은 탐색 쿼리 결과를 명의별·소속사별로 센다(협업 곡은 각 명의에 1회). 오리지널은 승인된 그룹 명의, 커버는 멤버 명의다. 종류별로 프로세스 메모리에 10분 캐시한다(2026-11-26 실측 첫 계산 오리지널 0.7초·747곡, 커버 2.1초·4,571곡).
+- 소속사 모드에서 영상이 있는 소속사를 여러 곳 고를 수 있다. `GET /api/explore/songs`에 `agency_names`를 반복해 보내고, 선택 중 하나에 속하는 영상의 합집합으로 대진을 만든다. 여러 소속사가 참여한 영상은 한 번만 포함하고, 최소 16곡이 있어야 시작할 수 있다.
 - 화면은 2,000곡을 넘는 후보(무작위 커버 등)를 100곡 단위 페이지 20개를 무작위로 골라 표본으로 쓰고 "전체 N곡 중 무작위 표본"이라고 표시한다.
 
 ## 로컬 판 구분
@@ -36,7 +37,7 @@
 
 ## 프록시
 
-로컬 Vite와 운영 `web/server.mjs`는 `/api/worldcup/results`의 POST만 전달한다. 운영 프록시는 본문 64KB 초과를 413으로 막고 `X-Forwarded-For`를 붙이며, 그 밖의 POST는 405다.
+로컬 Vite와 운영 `web/server.mjs`는 `/api/worldcup/results`의 POST를 전달한다. 운영 프록시는 본문 64KB 초과를 413으로 막고 `X-Forwarded-For`를 붙이며, 그 밖의 POST는 405다.
 
 ## 배포 순서
 

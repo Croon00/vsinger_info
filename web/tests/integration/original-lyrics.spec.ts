@@ -102,3 +102,76 @@ test('original songs open lyrics and dock the player beside the list', async ({ 
   await panel.getByRole('button', { name: '가사 패널 닫기' }).click()
   await expect(panel).toHaveCount(0)
 })
+
+test('original lyrics can be registered and revised across the two song lists', async ({ page }) => {
+  const original = {
+    key: 'recording:211',
+    title: 'Original fixture',
+    artist_name: 'Artist',
+    recording_id: 211,
+    youtube_video_id: null,
+    lyrics_recording_id: null as number | null,
+  }
+  const lyric = {
+    recording_id: 211,
+    version: 0,
+    original_title: original.title,
+    artist_name: original.artist_name,
+    original_lyrics: '',
+    pronunciation_ko: '',
+    translation_ko: '',
+    lyrics_source_url: '',
+  }
+  await page.route(/^http:\/\/localhost:5196\/api\//, async (route) => {
+    const request = route.request()
+    const url = new URL(request.url())
+    if (url.pathname === '/api/artists')
+      return route.fulfill({ json: [{ id: 42, name: 'Artist', sources: [], related_artist_ids: [42] }] })
+    if (url.pathname === '/api/explore/songs')
+      return route.fulfill({ json: { items: [original], total: 1, offset: 0, limit: 24 } })
+    if (url.pathname === '/api/recordings/211/lyrics') {
+      if (request.method() === 'PUT') {
+        if (request.headers()['x-lyrics-editor-key'] !== 'fixture-editor')
+          return route.fulfill({ status: 403, json: {} })
+        const body = request.postDataJSON()
+        if (body.version !== (lyric.version || null)) return route.fulfill({ status: 409, json: {} })
+        Object.assign(lyric, body, { version: lyric.version + 1 })
+        original.lyrics_recording_id = 211
+      }
+      return route.fulfill({ status: lyric.version ? 200 : 404, json: lyric })
+    }
+    if (url.pathname === '/api/explore/music-tags')
+      return route.fulfill({ json: { genres: [], moods: [] } })
+    return route.fulfill({ json: { items: [], total: 0, offset: 0, limit: 12 } })
+  })
+
+  await page.goto('/artists/42?tab=originals')
+  const trigger = page.getByRole('button', { name: '가사 등록' })
+  await trigger.click()
+  const dialog = page.getByRole('dialog', { name: '가사 등록' })
+  await dialog.getByLabel('원문 가사').fill('First line\n\nSecond line')
+  await dialog.getByLabel('한글 발음').fill('퍼스트 라인\n\n세컨드 라인')
+  await dialog.getByLabel('출처 URL').fill('https://example.com/lyrics')
+  const key = dialog.getByLabel('가사 편집 키')
+  await key.fill('wrong-key')
+  await dialog.getByRole('button', { name: '가사 등록' }).click()
+  await expect(dialog.getByRole('alert')).toContainText('편집 키가 올바르지')
+  await expect(dialog.getByLabel('원문 가사')).toHaveValue('First line\n\nSecond line')
+  await key.fill('fixture-editor')
+  await dialog.getByRole('button', { name: '가사 등록' }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '가사 수정' })).toBeFocused()
+
+  await page.goto('/explore?view=songs&kind=original')
+  await page.getByRole('button', { name: '가사 수정' }).click()
+  const edit = page.getByRole('dialog', { name: '가사 수정' })
+  await expect(edit.getByLabel('원문 가사')).toHaveValue('First line\n\nSecond line')
+  await expect(edit.getByLabel('출처 URL')).toHaveValue('https://example.com/lyrics')
+  await expect(edit.getByLabel('가사 편집 키')).toHaveValue('')
+  await edit.getByLabel('한국어 번역').fill('첫째 줄\n\n둘째 줄')
+  await edit.getByLabel('가사 편집 키').fill('fixture-editor')
+  await edit.getByRole('button', { name: '수정 저장' }).click()
+  await expect(edit).toHaveCount(0)
+  await page.getByRole('button', { name: '가사', exact: true }).click()
+  await expect(page.getByRole('dialog')).toContainText('첫째 줄')
+})

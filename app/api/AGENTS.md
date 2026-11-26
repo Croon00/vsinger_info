@@ -5,8 +5,8 @@
 
 ## 현재 범위
 
-- `app/api/main.py`는 `routers/read_api.py`만 `/api`와 숨김 별칭 `/api/v2`에 마운트한다. 그 밖의 공개 경로는 `/health`, `/ready`다.
-- 현재 API는 조회 전용 GET이다. 설정된 경우 `X-API-Key`를 `app/core/security.py`의 `require_api_key`로 검사한다.
+- `app/api/main.py`는 `routers/read_api.py`를 `/api`와 숨김 별칭 `/api/v2`에 마운트한다. 월드컵과 오리지널 곡의 가사 저장은 `/api`에 마운트한다. 그 밖의 공개 경로는 `/health`, `/ready`다.
+- 카탈로그 라우터는 설정된 경우 `X-API-Key`를 검사한다. 가사 쓰기는 별도 `X-Lyrics-Editor-Key`와 대상 녹음의 오리지널 범위를 검증한다.
 - `routers/`의 `artists.py`, `songs.py`, `youtube.py`, `spotify.py`, `auth.py`는 마운트하지 않은 보존 코드다. 사용자 요청 없이 다시 마운트하거나 기능을 추가하지 않는다.
 - 계약과 페이지·필터·정렬 기준은 [조회 API](../../docs/read-api.md)에 유지한다.
 
@@ -27,7 +27,7 @@
 
 ## 관리 API를 다시 도입할 때
 
-현재 운영 경로에는 관리·쓰기 API가 없다. 사용자 결정으로 도입하면 다음을 지킨다.
+사용자 결정으로 쓰기 API를 추가할 때는 다음을 지킨다.
 
 - 상태를 바꾸는 동작은 GET으로 만들지 않고, 장시간 작업은 요청과 worker 실행을 분리한다.
 - 인증된 사용자만 호출하게 하고, `guild_id` 같은 범위 값은 클라이언트 입력을 신뢰하지 않고 접근 권한을 검증한다. Discord 서버 설정 변경은 `manage_guild`를 확인한다.

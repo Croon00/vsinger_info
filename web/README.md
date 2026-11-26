@@ -18,7 +18,7 @@ npm run dev
 
 프론트: http://localhost:5174
 
-`.env.local`의 `BACKEND_URL`을 실행 중인 FastAPI 주소로 설정합니다. 기본값은 `http://127.0.0.1:8000`입니다. Vite가 `/api/*`를 이 주소로 전달하므로 로컬 프론트의 CORS 설정 변경은 필요하지 않습니다. 백엔드 `API_KEY` 인증을 사용한다면 같은 값을 프론트의 **서버 전용** `BACKEND_API_KEY`로 설정합니다. `VITE_` 접두사로 키를 넣지 마세요. 프록시는 GET/HEAD만 전달합니다.
+`.env.local`의 `BACKEND_URL`을 실행 중인 FastAPI 주소로 설정합니다. 기본값은 `http://127.0.0.1:8000`입니다. Vite가 `/api/*`를 이 주소로 전달하므로 로컬 프론트의 CORS 설정 변경은 필요하지 않습니다. 백엔드 `API_KEY` 인증을 사용한다면 같은 값을 프론트의 **서버 전용** `BACKEND_API_KEY`로 설정합니다. `VITE_` 접두사로 키를 넣지 마세요. 프록시는 GET/HEAD와 월드컵 결과 제출 및 가사 저장의 지정 경로를 전달합니다. [가사 편집 키 설정](../docs/original-lyrics.md#웹에서-등록수정)
 
 상위 프로젝트의 `.env`에 있는 `DATABASE_URL`이 사용자 조회 API와 신규 runtime의 단일 DB 설정입니다. 이전 도구의 구 DB 주소는 `LEGACY_DATABASE_URL`로 별도 지정합니다. 프론트에서 이 값을 자동으로 읽거나 복사하지 않습니다. DB 주소는 HTTP API 주소로 사용할 수 없습니다.
 

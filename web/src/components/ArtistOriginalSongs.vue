@@ -29,6 +29,8 @@ import ResourceState from '@/components/ResourceState.vue'
 import SongVideoDialog from '@/components/SongVideoDialog.vue'
 import OriginalLyricsDialog from '@/components/OriginalLyricsDialog.vue'
 import OriginalLyricsPanel from '@/components/OriginalLyricsPanel.vue'
+import OriginalLyricsEditor from '@/components/OriginalLyricsEditor.vue'
+import { useOriginalLyricsEditor } from '@/composables/useOriginalLyricsEditor'
 
 const props = defineProps<{ artistId: number }>()
 const order = ref('latest')
@@ -56,6 +58,8 @@ const playing = shallowRef<ExploredSong | null>(null)
 const lyricsSong = shallowRef<ExploredSong | null>(null)
 // Song playing in the docked panel beside the list (player + lyrics).
 const docked = shallowRef<ExploredSong | null>(null)
+const { editingSong, openEditor, closeEditor, onLyricsSaved, saveStatus, withLyrics } =
+  useOriginalLyricsEditor()
 let trigger: HTMLElement | null = null
 watch(data, (value) => {
   moreController?.abort()
@@ -71,7 +75,7 @@ const songs = computed(() => [
   ...new Map(
     [...(data.value?.items ?? []), ...extra.value].map((song) => [song.key, song]),
   ).values(),
-])
+].map(withLyrics))
 async function loadMore() {
   if (moreLoading.value || !data.value) return
   const initial = data.value
@@ -242,7 +246,7 @@ onScopeDispose(() => {
                 </ItemDescription>
               </ItemContent>
               <ItemActions
-                v-if="song.view_count != null || song.lyrics_recording_id"
+                v-if="song.view_count != null || song.lyrics_recording_id || song.recording_id"
                 class="original-song-views"
               >
                 <Button
@@ -257,6 +261,15 @@ onScopeDispose(() => {
                 >
                   <FileText data-icon="inline-start" />
                   가사
+                </Button>
+                <Button
+                  v-if="song.recording_id || song.lyrics_recording_id"
+                  variant="ghost"
+                  size="sm"
+                  aria-haspopup="dialog"
+                  @click="openEditor(song, $event)"
+                >
+                  {{ song.lyrics_recording_id ? '가사 수정' : '가사 등록' }}
                 </Button>
                 <span v-if="song.view_count != null" class="text-sm text-muted-foreground">
                   {{ formatSubscribers(song.view_count) }}회
@@ -277,7 +290,7 @@ onScopeDispose(() => {
           <p v-if="moreError" role="alert" class="mt-3 text-sm text-destructive">{{ moreError }}</p>
         </ResourceState>
       </div>
-      <OriginalLyricsPanel v-if="docked" :song="docked" @close="docked = null" />
+      <OriginalLyricsPanel v-if="docked" :song="withLyrics(docked)" @close="docked = null" />
     </div>
     <SongVideoDialog :song="playing" @close="close" />
     <OriginalLyricsDialog
@@ -286,5 +299,7 @@ onScopeDispose(() => {
       @close="closeLyrics"
       @listen="listen"
     />
+    <OriginalLyricsEditor :song="editingSong" @close="closeEditor" @saved="onLyricsSaved" />
+    <p role="status" class="sr-only">{{ saveStatus }}</p>
   </section>
 </template>

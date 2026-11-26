@@ -7,12 +7,22 @@ from app.repositories.released_cover_rules import RELEASED_COVER_PARAMS, RELEASE
 from app.repositories.shared_youtube import COVER_CREDITS_CTE, SHARED_PARAMS
 import json
 
+ORIGINAL_ARTIST_SQL = """a.archived_at IS NULL AND
+  (a.show_in_catalog OR EXISTS(SELECT 1 FROM original_groups sm WHERE sm.group_id=a.id))"""
+ORIGINAL_VIDEO_JOIN_SQL = """LEFT JOIN videos v ON v.id=r.official_video_id AND v.archived_at IS NULL
+  AND v.availability IN ('public','unlisted','unknown') AND v.platform='youtube'"""
+ORIGINAL_RECORDING_SQL = f"""r.archived_at IS NULL
+  AND NOT EXISTS(SELECT 1 FROM covers c WHERE c.video_id=r.official_video_id AND c.archived_at IS NULL AND {COVER_TITLE_SQL})
+  AND NOT {RELEASED_COVER_SQL}"""
+ORIGINAL_RECORDING_PARAMS = COVER_TITLE_PARAMS | RELEASED_COVER_PARAMS
+AGENCY_SCOPE_SQL = """(:agency='all' OR (:agency='independent' AND g.id IS NULL) OR g.name_native=:agency)
+  AND (cardinality(CAST(:agency_names AS text[]))=0 OR g.name_native=ANY(CAST(:agency_names AS text[])))"""
 
-def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, start=None, end=None, genres=None, moods=None, music_tags=None, published_only=False):
+
+def explore(session, *, kind, agency, q, order, offset, limit, repository=None, artist_ids=None, agency_names=None, start=None, end=None, genres=None, moods=None, music_tags=None, published_only=False):
     repo = repository or CatalogReadRepository(session)
-    params = {'agency': agency, 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **RELEASED_COVER_PARAMS, **SHARED_PARAMS}
-    scope = """a.archived_at IS NULL AND a.show_in_catalog AND
-      (:agency='all' OR (:agency='independent' AND g.id IS NULL) OR g.name_native=:agency)"""
+    params = {'agency': agency, 'agency_names': agency_names or [], 'artists':artist_ids or [], 'start':start,'end':end,'query': '%' + q.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_') + '%', 'short_marker': SHORT_MARKER, **COVER_TITLE_PARAMS, **RELEASED_COVER_PARAMS, **SHARED_PARAMS}
+    scope = f"a.archived_at IS NULL AND a.show_in_catalog AND {AGENCY_SCOPE_SQL}"
     if kind == 'utawaku':
         sql = f"""WITH artist_search AS MATERIALIZED (
           SELECT a.id,concat_ws(' ',a.name_native,a.name_ko,a.name_latin,
@@ -55,10 +65,10 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
           v.published_at,NULL::bigint performance_count,NULL::bigint artist_count,
           NULL::integer archive_id,NULL::integer start_seconds"""
         if kind == 'cover':
-            cover_scope = """a.archived_at IS NULL AND
+            cover_scope = f"""a.archived_at IS NULL AND
               (a.show_in_catalog OR EXISTS(SELECT 1 FROM shared_members shared
                 WHERE shared.group_id=a.id AND shared.account_id=v.source_account_id))
-              AND (:agency='all' OR (:agency='independent' AND g.id IS NULL) OR g.name_native=:agency)"""
+              AND {AGENCY_SCOPE_SQL}"""
             sql = f"""WITH {COVER_CREDITS_CTE} SELECT 'cover:'||c.id::text key,v.title title,NULL::text title_ko,
               string_agg(DISTINCT a.name_native,' · ' ORDER BY a.name_native) artist_name,{common},
               string_agg(DISTINCT concat_ws(' ',a.name_native,a.name_ko,a.name_latin,
@@ -80,14 +90,12 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
             # recordings without a visible video keep their own identity.
             # Grouping applies only to original-song display/filtering; stored
             # artist credits and the other song tabs retain their identities.
-            original_scope = scope.replace('a.show_in_catalog',
-                '(a.show_in_catalog OR EXISTS(SELECT 1 FROM original_groups sm WHERE sm.group_id=a.id))')
             sql = f"""WITH {ORIGINAL_GROUPS_CTE}, original_credits AS (
               SELECT ra.recording_id,ra.artist_id source_artist_id,COALESCE(og.group_id,ra.artist_id) artist_id
               FROM recording_artists ra LEFT JOIN original_groups og ON og.member_id=ra.artist_id
             ) SELECT 'recording:'||min(r.id)::text key,min(r.title_native) title,min(r.title_ko) title_ko,
               string_agg(DISTINCT a.name_native,' · ' ORDER BY a.name_native) artist_name,{common},
-              min(r.id) FILTER (WHERE EXISTS(SELECT 1 FROM recording_lyrics rl
+              min(r.id) recording_id,min(r.id) FILTER (WHERE EXISTS(SELECT 1 FROM recording_lyrics rl
                 WHERE rl.recording_id=r.id AND rl.archived_at IS NULL)) lyrics_recording_id,
               string_agg(DISTINCT concat_ws(' ',r.title_native,r.title_ko,a.name_native,a.name_ko,a.name_latin,credited.name_native,credited.name_ko,credited.name_latin,
                 (SELECT string_agg(al.alias,' ') FROM artist_aliases al WHERE al.artist_id=a.id),
@@ -98,12 +106,10 @@ def explore(session, *, kind, agency, q, order, offset, limit, repository=None, 
               FROM recordings r JOIN original_credits ra ON ra.recording_id=r.id
               JOIN artists credited ON credited.id=ra.source_artist_id AND credited.archived_at IS NULL
               JOIN artists a ON a.id=ra.artist_id LEFT JOIN agencies g ON g.id=a.agency_id AND g.archived_at IS NULL
-              LEFT JOIN videos v ON v.id=r.official_video_id AND v.archived_at IS NULL
-                AND v.availability IN ('public','unlisted','unknown') AND v.platform='youtube'
+              {ORIGINAL_VIDEO_JOIN_SQL}
               LEFT JOIN collection_states cs ON cs.external_account_id=v.source_account_id
-              WHERE r.archived_at IS NULL AND {original_scope}
-                AND NOT EXISTS(SELECT 1 FROM covers c WHERE c.video_id=r.official_video_id AND c.archived_at IS NULL AND {COVER_TITLE_SQL})
-                AND NOT {RELEASED_COVER_SQL}
+              WHERE {ORIGINAL_RECORDING_SQL} AND {ORIGINAL_ARTIST_SQL}
+                AND {AGENCY_SCOPE_SQL}
               GROUP BY CASE WHEN v.id IS NULL THEN r.id END,v.id,cs.external_account_id
               HAVING cardinality(CAST(:artists AS integer[]))=0 OR bool_or(
                 a.id=ANY(CAST(:artists AS integer[])) OR ra.source_artist_id=ANY(CAST(:artists AS integer[])) OR EXISTS(

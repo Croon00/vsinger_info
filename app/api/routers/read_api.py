@@ -28,6 +28,7 @@ Limit = Annotated[int, Query(ge=1,le=100)]
 def explore_songs(service:Catalog,response:Response,
                   kind:Literal['utawaku','cover','original']='utawaku',
                   agency:Annotated[str,Query(min_length=1,max_length=200)]='all',
+                  agency_names:Annotated[list[Annotated[str,Field(min_length=1,max_length=200)]]|None,Query(max_length=100)]=None,
                   q:Annotated[str,Query(max_length=200)]='',
                   order:Literal['high','low','name','latest']='high',offset:Offset=0,limit:Limit=24,
                   artist_ids:Annotated[list[Annotated[int,Field(ge=1)]]|None,Query(max_length=100)]=None,
@@ -42,8 +43,10 @@ def explore_songs(service:Catalog,response:Response,
         raise HTTPException(422,'영상 등록일 범위는 커버·오리지널 탐색에서 사용합니다.')
     if kind=='utawaku' and published_only:
         raise HTTPException(422,'게시된 영상 필터는 커버·오리지널 탐색에서 사용합니다.')
+    if agency_names and agency != 'all':
+        raise HTTPException(422,'복수 소속사와 단일 소속사 필터는 함께 사용할 수 없습니다.')
     try:
-        result = service.explore_songs(kind=kind,agency=agency,q=q.strip(),order=order,offset=offset,limit=limit,artist_ids=sorted(set(artist_ids or [])),start=start,end=end,genres=sorted(set(genres or [])),moods=sorted(set(moods or [])),published_only=published_only)
+        result = service.explore_songs(kind=kind,agency=agency,agency_names=sorted(set(agency_names or [])),q=q.strip(),order=order,offset=offset,limit=limit,artist_ids=sorted(set(artist_ids or [])),start=start,end=end,genres=sorted(set(genres or [])),moods=sorted(set(moods or [])),published_only=published_only)
     except MusicTagCatalogUnavailable:
         raise HTTPException(503, '음악 분류 자료를 사용할 수 없습니다. 장르·분위기 필터를 해제하거나 잠시 후 다시 시도하세요.') from None
     return finish(response,service,result)

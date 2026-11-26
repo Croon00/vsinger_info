@@ -7,13 +7,11 @@ const port = Number(process.env.PORT || 3000)
 const backendUrl = process.env.BACKEND_URL
 const apiKey = process.env.BACKEND_API_KEY
 const distDir = resolve('dist')
-// The only browser write: finished world cup brackets. Everything else stays read-only.
-const writePaths = new Set(['/api/worldcup/results'])
-const maxBodyBytes = 64 * 1024
+const lyricsWritePath = /^\/api\/recordings\/[1-9]\d*\/lyrics$/
 
 class BodyTooLarge extends Error {}
 
-async function readBody(request) {
+async function readBody(request, maxBodyBytes) {
   const chunks = []
   let size = 0
   for await (const chunk of request) {
@@ -48,7 +46,7 @@ function serveFile(response, filePath) {
   createReadStream(filePath).pipe(response)
 }
 
-async function proxyApi(request, response, path, write = false) {
+async function proxyApi(request, response, path, write = false, lyricsEdit = false) {
   if (!backendUrl) {
     response.writeHead(503, { 'Content-Type': 'application/json; charset=utf-8' })
     response.end(JSON.stringify({ detail: 'BACKEND_URL is not configured for the frontend service.' }))
@@ -63,7 +61,7 @@ async function proxyApi(request, response, path, write = false) {
   let requestBody
   if (write) {
     try {
-      requestBody = await readBody(request)
+      requestBody = await readBody(request, (lyricsEdit ? 160 : 64) * 1024)
     } catch (error) {
       if (!(error instanceof BodyTooLarge)) throw error
       response.writeHead(413, { 'Content-Type': 'application/json; charset=utf-8' })
@@ -71,6 +69,8 @@ async function proxyApi(request, response, path, write = false) {
       return
     }
     headers['content-type'] = 'application/json'
+    if (lyricsEdit && request.headers['x-lyrics-editor-key'])
+      headers['x-lyrics-editor-key'] = request.headers['x-lyrics-editor-key']
     // The backend rate-limits by client address; it does not store it.
     const forwarded = request.headers['x-forwarded-for']
     const address = request.socket.remoteAddress || ''
@@ -78,7 +78,9 @@ async function proxyApi(request, response, path, write = false) {
   }
 
   try {
-    const upstream = await fetch(target, { method: request.method, headers, body: requestBody })
+    const upstream = await fetch(target, {
+      method: request.method, headers, body: requestBody, ...(lyricsEdit ? { redirect: 'error' } : {}),
+    })
     const body = Buffer.from(await upstream.arrayBuffer())
     const upstreamHeaders = {}
     for (const [name, value] of upstream.headers) {
@@ -105,8 +107,9 @@ const server = createServer(async (request, response) => {
     const pathname = parsed.pathname
 
     if (pathname.startsWith('/api/')) {
-      if (method === 'POST' && writePaths.has(pathname)) {
-        await proxyApi(request, response, pathname + parsed.search, true)
+      const lyricsEdit = method === 'PUT' && lyricsWritePath.test(pathname)
+      if (lyricsEdit || (method === 'POST' && pathname === '/api/worldcup/results')) {
+        await proxyApi(request, response, pathname + parsed.search, true, lyricsEdit)
         return
       }
       if (!['GET', 'HEAD'].includes(method)) {

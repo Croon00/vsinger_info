@@ -22,6 +22,9 @@ import {
 import { InputGroup, InputGroupInput, InputGroupAddon } from '@/components/ui/input-group'
 import ResourceState from '@/components/ResourceState.vue'
 import SongVideoDialog from '@/components/SongVideoDialog.vue'
+import OriginalLyricsDialog from '@/components/OriginalLyricsDialog.vue'
+import OriginalLyricsEditor from '@/components/OriginalLyricsEditor.vue'
+import { useOriginalLyricsEditor } from '@/composables/useOriginalLyricsEditor'
 import BroadcastPeriodFilter from '@/components/BroadcastPeriodFilter.vue'
 const route = useRoute()
 const router = useRouter()
@@ -185,7 +188,21 @@ onScopeDispose(() => {
 const agencies = computed(() =>
   [...new Set((artistCatalog.value ?? []).map((a) => a.agency).filter(Boolean))].sort(),
 )
-const songs = computed(() => [...(data.value?.page.items ?? []), ...extra.value])
+const { editingSong, openEditor, closeEditor, onLyricsSaved, saveStatus, withLyrics } =
+  useOriginalLyricsEditor()
+const songs = computed(() => [...(data.value?.page.items ?? []), ...extra.value].map(withLyrics))
+const lyricsSong = shallowRef<ExploredSong | null>(null)
+let lyricsTrigger: HTMLElement | null = null
+function openLyrics(song: ExploredSong, event: MouseEvent) {
+  lyricsTrigger = event.currentTarget as HTMLElement
+  lyricsSong.value = song
+}
+function closeLyrics() {
+  lyricsSong.value = null
+  nextTick(() => {
+    if (lyricsTrigger?.isConnected) lyricsTrigger.focus()
+  })
+}
 const playingSong = shallowRef<ExploredSong | null>(null)
 let playerTrigger: HTMLElement | null = null
 function openPlayer(song: ExploredSong, event: MouseEvent) {
@@ -480,6 +497,14 @@ function videoUrl(song: ExploredSong) {
             <span v-if="kind !== 'utawaku' && song.published_at" :title="song.published_at">
               {{ formatDate(song.published_at) }} 등록
             </span>
+            <div v-if="kind === 'original'" class="flex flex-wrap justify-end gap-1">
+              <Button v-if="song.lyrics_recording_id" size="sm" variant="outline" aria-haspopup="dialog" @click="openLyrics(song, $event)">
+                가사
+              </Button>
+              <Button v-if="song.recording_id || song.lyrics_recording_id" size="sm" variant="ghost" aria-haspopup="dialog" @click="openEditor(song, $event)">
+                {{ song.lyrics_recording_id ? '가사 수정' : '가사 등록' }}
+              </Button>
+            </div>
           </div>
           <Button v-if="kind === 'utawaku'" as-child variant="outline" size="sm">
             <RouterLink
@@ -521,5 +546,8 @@ function videoUrl(song: ExploredSong) {
       <p v-if="moreError" role="alert" class="mt-3 text-sm text-destructive">{{ moreError }}</p>
     </ResourceState>
     <SongVideoDialog :song="playingSong" @close="closePlayer" />
+    <OriginalLyricsDialog :song="lyricsSong" :can-listen="false" @close="closeLyrics" />
+    <OriginalLyricsEditor :song="editingSong" @close="closeEditor" @saved="onLyricsSaved" />
+    <p role="status" class="sr-only">{{ saveStatus }}</p>
   </section>
 </template>

@@ -3,6 +3,12 @@
 // request has a timeout, including when all subscribers navigate away.
 import { request } from './http'
 const entries = new Map<string, { expires: number; promise: Promise<unknown> }>()
+export function invalidateReads(predicate: (path: string) => boolean) {
+  for (const path of entries.keys()) {
+    if (predicate(path)) entries.delete(path)
+  }
+}
+
 export function cachedRead<T>(path: string, signal?: AbortSignal, ttl = 30_000): Promise<T> {
   if (signal?.aborted) return Promise.reject(new DOMException('Aborted', 'AbortError'))
   let entry = entries.get(path)
