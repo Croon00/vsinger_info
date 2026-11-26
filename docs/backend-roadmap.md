@@ -44,7 +44,7 @@
 - [ ] 오염된 곡·중복 영상·미확정 가창자 연결 검수와 남은 음악 데이터 반영. 덤프 집계와 조회 최적화가 데이터를 정제한 것은 아니다. [이관 결과](records/backend/setlist-migration-report.md)
 - [ ] 발매 음원의 오리지널/커버 여부 검수 확대, source 계정이 없는 발매 영상의 업로더 근거·소유권 검수. [009](../specs/009-song-exploration/tasks.md) T004
 - [ ] 오리지널 음악 분류: 미분류 음원 조사, 공식 영상 연결 보완, 분위기 근거 확대. [010](../specs/010-original-music-tags/tasks.md) T003, T005
-- [ ] 오리지널 곡 가사: 후보 608개 검토·등록, 직접 입력 2,244개 작성, 공개 전 권리 확인. [가사 등록](original-lyrics.md), [016](../specs/016-original-lyrics-review/tasks.md)
+- [ ] 오리지널 곡 가사: 일괄 등록한 후보 608개 원문 검수, 직접 입력 파일 작성, 공개 권리 확인. 기존 가사 594개(녹음 647건)에 한글 독음·한국어 번역을 반영했고, 보류 원문 14개(녹음 15건)의 출처 확인과 음원 대조 검수가 남았다. [가사 반영 기록](records/data/original-lyrics-annotations-2026-11-26.md), [016](../specs/016-original-lyrics-review/tasks.md)
 - [ ] Spotify 아티스트 장르가 빈 계정(표시 대상 75개 중 67개) 보완 방법 결정. [015](../specs/015-artist-spotify-genres/tasks.md) T007
 - [ ] YouTube 오리지널: 미확정 후보·별도 유통 채널 검수(2026-11-22 공식 채널 138개 조사, 신규 녹음 40곡·영상 연결 14건 반영 후 잔여). [누락곡 보완 기록](records/data/youtube-original-backfill-2026-11-22.md), [012](../specs/012-youtube-original-daily/tasks.md)
 - [ ] HONK THE HORN·NUROJUNK 진행자 미확정 방송 3개 검토. [013](../specs/013-shared-member-catalog/tasks.md)
