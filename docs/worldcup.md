@@ -1,6 +1,10 @@
 # 곡 월드컵(오리지널·커버) 결과·통계
 
-최종 확인 2026-11-26. 요구사항은 [018-original-worldcup](../specs/018-original-worldcup/spec.md), 복수 소속사 검증 결과는 [작업 기록](records/backend/worldcup-agencies-2026-11-26.md)에 있다.
+최종 확인 2026-11-27. 운영 DB에 migration 008을 적용했고 오리지널·커버 공개 랭킹 조회를 확인했다. [운영 검증 기록](records/backend/worldcup-ranking-2026-11-27.md)
+
+8강은 코드와 로컬 검증까지 완료했다. 운영에서는 8강 지원 백엔드, migration 009, 웹 배포가 필요하다. [8강 검증 기록](records/backend/worldcup-eight-2026-11-27.md)
+
+요구사항은 [018-original-worldcup](../specs/018-original-worldcup/spec.md), 복수 소속사 검증 결과는 [작업 기록](records/backend/worldcup-agencies-2026-11-26.md)에 있다.
 
 월드컵 결과 저장 경로는 완료된 한 판의 경기 결과를 받는다. 설정과 랭킹 조회는 읽기 전용이다.
 
@@ -14,7 +18,7 @@
 
 `POST /api/worldcup/results` → 201 `{run_id, duplicate, winner}` (같은 `submission_id` 재전송은 200, `duplicate: true`)
 
-- 본문: `submission_id`, `client_id`, `song_kind`(original 기본·cover), `scope_kind`(agency·artists·random), `scope_label`, `size`(16·32·64·128), `duration_seconds`, `matches[{round, winner, loser}]`(경기 순서).
+- 본문: `submission_id`, `client_id`, `song_kind`(original 기본·cover), `scope_kind`(agency·artists·random), `scope_label`, `size`(8·16·32·64·128, 8은 migration 009 적용 후), `duration_seconds`, `matches[{round, winner, loser}]`(경기 순서).
 - 거부(422 `invalid_bracket:<code>`): 경기 수가 규모−1이 아님(`match_count`), 라운드 순서(`round_order`), 1라운드 중복 곡(`duplicate_song`), 이전 라운드 승자끼리의 대결이 아님(`pairing`), 경기당 1초 미만(`too_fast`), 곡 종류에 맞지 않는 영상(`unknown_song`: 오리지널은 활성 녹음의 공식 MV, 커버는 저장된 커버).
 - 429: 같은 브라우저 ID 1시간 20판 초과, 또는 같은 전달 주소 1시간 60판 초과(프로세스 메모리, 주소는 저장하지 않음).
 - 503: 테이블이 아직 없음(migration 008 적용 전) 또는 DB 연결 불가.
@@ -28,7 +32,7 @@
 `GET /api/worldcup/pool-summary?song_kind=` → `{song_kind,total,agencies[{name,count}],artists[{id,count}]}`
 
 - 설정 화면용. `/api/explore/songs?kind=…&published_only=true`와 같은 탐색 쿼리 결과를 명의별·소속사별로 센다(협업 곡은 각 명의에 1회). 오리지널은 승인된 그룹 명의, 커버는 멤버 명의다. 종류별로 프로세스 메모리에 10분 캐시한다(2026-11-26 실측 첫 계산 오리지널 0.7초·747곡, 커버 2.1초·4,571곡).
-- 소속사 모드에서 영상이 있는 소속사를 여러 곳 고를 수 있다. `GET /api/explore/songs`에 `agency_names`를 반복해 보내고, 선택 중 하나에 속하는 영상의 합집합으로 대진을 만든다. 여러 소속사가 참여한 영상은 한 번만 포함하고, 최소 16곡이 있어야 시작할 수 있다.
+- 소속사 모드에서 영상이 있는 소속사를 여러 곳 고를 수 있다. `GET /api/explore/songs`에 `agency_names`를 반복해 보내고, 선택 중 하나에 속하는 영상의 합집합으로 대진을 만든다. 여러 소속사가 참여한 영상은 한 번만 포함한다. 8강 배포 후에는 후보 8곡부터 시작할 수 있다.
 - 화면은 2,000곡을 넘는 후보(무작위 커버 등)를 100곡 단위 페이지 20개를 무작위로 골라 표본으로 쓰고 "전체 N곡 중 무작위 표본"이라고 표시한다.
 
 ## 로컬 판 구분

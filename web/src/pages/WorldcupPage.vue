@@ -499,12 +499,12 @@ function views(song: WorldcupSong) {
                 <template v-if="sampled">
                   (전체 {{ sampled.toLocaleString('ko-KR') }}곡 중 무작위 표본)
                 </template>
-                <span v-if="(pool?.length ?? 0) < 16">
+                <span v-if="(pool?.length ?? 0) < MIN_POOL">
                   —
                   {{
                     mode === 'artists'
-                      ? '16곡 이상이 되도록 아티스트를 더 골라 주세요.'
-                      : '16곡 이상이어야 시작할 수 있어요.'
+                      ? `${MIN_POOL}곡 이상이 되도록 아티스트를 더 골라 주세요.`
+                      : `${MIN_POOL}곡 이상이어야 시작할 수 있어요.`
                   }}
                 </span>
               </template>

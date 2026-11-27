@@ -231,7 +231,7 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
   expect(requests.at(-1)?.get('agency')).toBe('all')
   expect(new Set(summaries)).toEqual(new Set(['original']))
   await expect(page.getByRole('status').filter({ hasText: '5곡' })).toContainText(
-    '16곡 이상이 되도록 아티스트를 더 골라 주세요.',
+    '8곡 이상이 되도록 아티스트를 더 골라 주세요.',
   )
   await expect(start).toBeDisabled()
   await page.getByRole('combobox', { name: '아티스트' }).click()
@@ -251,9 +251,16 @@ test('world cup draws originals, plays a bracket, undoes, resumes and shows the 
   await page.getByRole('button', { name: '소속사', exact: true }).click()
   await expect.poll(() => requests.at(-1)?.get('kind')).toBe('cover')
   await expect(page.getByRole('status').filter({ hasText: '커버 영상' })).toContainText('40곡')
-  await page.getByRole('button', { name: '16강', exact: true }).click()
-  await page.getByRole('button', { name: '16강 시작하기' }).click()
-  await expect(page.locator('.worldcup-label')).toHaveText('Label 커버 · 16강')
+  await page.getByRole('button', { name: '8강', exact: true }).click()
+  await page.getByRole('button', { name: '8강 시작하기' }).click()
+  await expect(page.locator('.worldcup-label')).toHaveText('Label 커버 · 8강')
+  for (let i = 0; i < 7; i++)
+    await cards.first().getByRole('button', { name: /선택$/ }).click()
+  await expect(page.locator('.worldcup-winner-stats')).toContainText('우승 3회')
+  expect(submissions).toHaveLength(2)
+  expect(submissions[1]).toMatchObject({ size: 8, song_kind: 'cover' })
+  const cover = submissions[1] as { matches: { round: number }[] }
+  expect(cover.matches.map((match) => match.round)).toEqual([8, 8, 8, 8, 4, 4, 2])
 })
 
 test('multiple small agencies contribute to one video pool without duplicate candidates', async ({ page }) => {
@@ -281,6 +288,7 @@ test('multiple small agencies contribute to one video pool without duplicate can
   await page.goto('/worldcup')
   const count = page.getByRole('status').filter({ hasText: 'MV가 있는 오리지널' })
   await expect(count).toContainText('10곡')
+  await expect(page.getByRole('button', { name: '8강 시작하기' })).toBeEnabled()
   await expect(page.getByRole('button', { name: '16강', exact: true })).toBeDisabled()
   const select = page.getByRole('combobox', { name: '소속사' })
   await select.click()
@@ -289,6 +297,7 @@ test('multiple small agencies contribute to one video pool without duplicate can
   await expect(select).toContainText('소속사 2곳 선택')
   await expect(count).toContainText('17곡')
   expect(combinations.at(-1)).toEqual(['Label', 'Other'])
+  await page.getByRole('button', { name: '16강', exact: true }).click()
   await page.getByRole('button', { name: '16강 시작하기' }).click()
   await expect(page.locator('.worldcup-label')).toHaveText('Label, Other 오리지널 · 16강')
 })

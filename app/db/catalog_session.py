@@ -15,6 +15,7 @@ SUPPORTED_REVISIONS = {("001", "002"), ("001", "002", "003"), ("001", "002", "00
 SUPPORTED_REVISIONS.add(tuple(f'{n:03}' for n in range(1, 8)))
 # 008 only adds the world cup tables; deploy this code before applying it.
 SUPPORTED_REVISIONS.add(tuple(f'{n:03}' for n in range(1, 9)))
+SUPPORTED_REVISIONS.add(tuple(f'{n:03}' for n in range(1, 10)))
 
 
 class CatalogIdentityError(RuntimeError):

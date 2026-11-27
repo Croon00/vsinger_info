@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 VideoId = Annotated[str, StringConstraints(pattern=r'^[A-Za-z0-9_-]{11}$')]
 RoundSize = Literal[2, 4, 8, 16, 32, 64, 128]
-BracketSize = Literal[16, 32, 64, 128]
+BracketSize = Literal[8, 16, 32, 64, 128]
 
 
 class WorldcupMatchIn(BaseModel):
@@ -26,7 +26,7 @@ class WorldcupSubmission(BaseModel):
     scope_label: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
     size: BracketSize
     duration_seconds: int = Field(ge=0, le=604800)
-    matches: list[WorldcupMatchIn] = Field(min_length=15, max_length=127)
+    matches: list[WorldcupMatchIn] = Field(min_length=7, max_length=127)
 
 
 class WorldcupSongStat(BaseModel):

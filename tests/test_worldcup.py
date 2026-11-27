@@ -29,7 +29,7 @@ def bracket(size=16, seconds=600, **extra):
                 size=size, duration_seconds=seconds, matches=matches, **extra)
 
 
-@pytest.mark.parametrize('size', [16, 32, 64, 128])
+@pytest.mark.parametrize('size', [8, 16, 32, 64, 128])
 def test_complete_brackets_validate(size):
     first, champion = validate_bracket(WorldcupSubmission(**bracket(size)))
     assert len(first) == size and champion == video(0)
@@ -109,10 +109,10 @@ def test_submit_stores_once_and_flags_local_runs(api):
     assert state.stats_calls[-1]['include_local'] is True
     again = client.post('/api/worldcup/results', json=data)
     assert again.status_code == 200 and again.json()['duplicate'] is True and len(state.runs) == 1
-    public = client.post('/api/worldcup/results', json=bracket(16))
+    public = client.post('/api/worldcup/results', json=bracket(8, seconds=7))
     assert public.status_code == 201 and list(state.runs.values())[-1].is_local is False
     assert state.kinds[-1] == 'original' and state.stats_calls[-1]['song_kind'] == 'original'
-    cover = client.post('/api/worldcup/results', json=bracket(16, song_kind='cover'))
+    cover = client.post('/api/worldcup/results', json=bracket(8, seconds=7, song_kind='cover'))
     assert cover.status_code == 201 and list(state.runs.values())[-1].song_kind == 'cover'
     assert state.kinds[-1] == 'cover' and state.stats_calls[-1]['song_kind'] == 'cover'
     assert client.post('/api/worldcup/results', json=bracket(16, song_kind='live')).status_code == 422

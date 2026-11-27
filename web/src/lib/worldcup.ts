@@ -1,7 +1,7 @@
 // Original-song world cup: candidate draw, bracket progress and results.
 // Pure functions over plain data so a run can be saved to localStorage and resumed.
 
-export const WORLDCUP_SIZES = [16, 32, 64, 128] as const
+export const WORLDCUP_SIZES = [8, 16, 32, 64, 128] as const
 export type WorldcupSize = (typeof WORLDCUP_SIZES)[number]
 export type WorldcupMode = 'agency' | 'artists' | 'random'
 export type WorldcupDraw = 'random' | 'popular'

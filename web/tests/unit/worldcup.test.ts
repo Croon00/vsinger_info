@@ -71,9 +71,10 @@ describe('candidates', () => {
     ])
   })
   it('offers only sizes the pool can fill, up to 128', () => {
-    expect(availableSizes(15)).toEqual([])
-    expect(availableSizes(40)).toEqual([16, 32])
-    expect(availableSizes(500)).toEqual([16, 32, 64, 128])
+    expect(availableSizes(7)).toEqual([])
+    expect(availableSizes(8)).toEqual([8])
+    expect(availableSizes(40)).toEqual([8, 16, 32])
+    expect(availableSizes(500)).toEqual([8, 16, 32, 64, 128])
   })
   it('draws popular songs by views with unknown counts last', () => {
     const pool = [song(1, 'A', null), song(2, 'B', 50), song(3, 'C', 900)]
@@ -101,7 +102,7 @@ describe('bracket', () => {
       expect(new Set(order.map((s) => s.key)).size).toBe(32)
     }
   })
-  it.each([16, 32, 64, 128])(
+  it.each([8, 16, 32, 64, 128])(
     'plays a %i bracket in size - 1 picks and ranks the finalists',
     (size) => {
       let state = start(
